@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #07070f;
+  --color-panel: #0d0d1a;
+  --color-line: #1e1e33;
+  --color-mist: #9b9bb5;
+  --color-snow: #ecECF6;
+  --color-teal: #2dd4bf;
+  --color-grape: #a78bfa;
+  --color-amber: #fbbf24;
+  --color-sky: #60a5fa;
+  --font-display: var(--font-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetmono), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-snow);
+  font-family: var(--font-display);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-teal) 40%, transparent);
+}
+
+/* Gradient text utility */
+.grad-text {
+  background: linear-gradient(100deg, var(--color-teal), var(--color-grape) 55%, var(--color-amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass card */
+.glass {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(12px);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.glass:hover {
+  border-color: color-mix(in srgb, var(--color-teal) 45%, var(--color-line));
+  box-shadow: 0 0 42px -12px color-mix(in srgb, var(--color-teal) 35%, transparent);
+}
+
+/* Scroll-reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Blinking terminal cursor */
+.cursor-blink {
+  animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Slow float for decorative orbs */
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(28px, -34px) scale(1.08); }
+}
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.16;
+  pointer-events: none;
+  animation: drift 16s ease-in-out infinite;
+}
+
+/* Immersive mode (konami easter egg) */
+.immersive-mode {
+  animation: immersive-pulse 0.9s ease;
+}
+@keyframes immersive-pulse {
+  0% { filter: hue-rotate(0deg) saturate(1); }
+  35% { filter: hue-rotate(160deg) saturate(2.2); }
+  100% { filter: hue-rotate(0deg) saturate(1); }
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 36s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
