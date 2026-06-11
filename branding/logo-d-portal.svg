@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2dd4bf"/><stop offset="0.55" stop-color="#a78bfa"/><stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="light" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity="0.55"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- door frame -->
+  <rect x="58" y="30" width="96" height="140" rx="6" stroke="url(#g)" stroke-width="6"/>
+  <!-- open door, swung toward viewer -->
+  <path d="M154 30 L 196 48 L 196 188 L 154 170 Z" stroke="url(#g)" stroke-width="5" fill="#0d0d1a"/>
+  <circle cx="186" cy="120" r="4" fill="#fbbf24"/>
+  <!-- light spilling out of the doorway, to the left -->
+  <path d="M58 40 L 18 178 L 58 178 Z" fill="url(#light)"/>
+  <!-- star inside -->
+  <path d="M106 92 l5 12 12 5 -12 5 -5 12 -5 -12 -12 -5 12 -5 Z" fill="#ecedf6"/>
+  <!-- wordmark -->
+  <text x="240" y="92" font-family="'Space Grotesk','Arial',sans-serif" font-size="42" font-weight="700" fill="#ecedf6">Alex Coulombe</text>
+  <text x="240" y="140" font-family="'Space Grotesk','Arial',sans-serif" font-size="30" font-weight="500" fill="url(#g)" letter-spacing="12">PRESENTS</text>
+</svg>

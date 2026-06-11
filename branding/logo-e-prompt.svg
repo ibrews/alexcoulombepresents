@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2dd4bf"/><stop offset="0.55" stop-color="#a78bfa"/><stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+  <!-- prompt chevron -->
+  <path d="M40 74 L 76 100 L 40 126" stroke="url(#g)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- wordmark, terminal style -->
+  <text x="104" y="92" font-family="'JetBrains Mono','SFMono-Regular',monospace" font-size="37" font-weight="700" fill="#ecedf6">alex coulombe</text>
+  <text x="104" y="140" font-family="'JetBrains Mono','SFMono-Regular',monospace" font-size="37" font-weight="700" fill="url(#g)">presents</text>
+  <!-- block cursor -->
+  <rect x="296" y="112" width="20" height="34" fill="#2dd4bf"/>
+</svg>

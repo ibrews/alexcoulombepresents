@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2dd4bf"/><stop offset="0.55" stop-color="#a78bfa"/><stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+  <!-- badge -->
+  <circle cx="100" cy="100" r="86" stroke="#1e1e33" stroke-width="2"/>
+  <!-- index finger: enters from top-right, tip points at the spark -->
+  <path d="M158 50 Q 122 58 102 84" stroke="url(#g)" stroke-width="16" stroke-linecap="round"/>
+  <!-- thumb: enters from bottom-right, tip points at the spark -->
+  <path d="M160 146 Q 124 142 104 118" stroke="url(#g)" stroke-width="16" stroke-linecap="round"/>
+  <!-- the spark, held in the almost-pinch -->
+  <path d="M70 101 L79 92 L88 101 L79 110 Z" fill="#fbbf24"/>
+  <path d="M79 74 v9 M79 119 v9 M52 101 h9 M97 101 h9" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- wordmark -->
+  <text x="220" y="92" font-family="'Space Grotesk','Arial',sans-serif" font-size="44" font-weight="700" fill="#ecedf6">Alex Coulombe</text>
+  <text x="220" y="142" font-family="'Space Grotesk','Arial',sans-serif" font-size="44" font-weight="700" fill="url(#g)" letter-spacing="6">PRESENTS</text>
+</svg>
