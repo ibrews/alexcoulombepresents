@@ -503,14 +503,33 @@ export const courses: { name: string; blurb: string; isNew?: boolean }[] = [
 
 // ── Links ───────────────────────────────────────────────────────────────────
 
-export const externalLinks: { label: string; url: string; note: string; vibe?: "serious" | "joke" }[] = [
+export const externalLinks: {
+  label: string;
+  url: string;
+  note: string;
+  vibe?: "serious" | "joke";
+  extra?: { label: string; url: string };
+}[] = [
   { label: "Agile Lens", url: "https://agilelens.com", note: "The immersive design studio. Ten years of XR for architecture, theatre, and brands you've heard of.", vibe: "serious" },
   { label: "alexcoulombe.com", url: "http://alexcoulombe.com", note: "Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine, as nature intended.", vibe: "joke" },
   { label: "GitHub — @ibrews", url: "https://github.com/ibrews", note: "Where the code lives. Engines plural, agents plural.", vibe: "serious" },
+  {
+    label: "Unreal NYC",
+    url: "https://agilelens.com/unrealnyc",
+    note: "The NYC Unreal Engine meetup, led by Alex — talks, demos, and the only room in Manhattan where 'nanite' is small talk.",
+    vibe: "serious",
+    extra: { label: "Official Epic community page", url: "https://communities.unrealengine.com/new-york" },
+  },
+  {
+    label: "The (Unofficial) Unreal Engine Podcast",
+    url: "https://uepodcast.com",
+    note: "Co-hosted with Jacob Feldman. Unreal news, takes, and guests.",
+    vibe: "serious",
+    extra: { label: "All platforms (Linktree)", url: "https://linktr.ee/unoffunrealpod" },
+  },
   { label: "LinkedIn", url: "https://linkedin.com/in/alexcoulombe", note: "16,000+ followers' worth of XR hot takes and project reveals.", vibe: "serious" },
   { label: "X / Twitter — @ibrews", url: "https://twitter.com/ibrews", note: "Shorter hot takes.", vibe: "serious" },
   { label: "YouTube", url: "https://youtube.com/user/ibrews", note: "Tutorials ('I Wish I Learned This Sooner'), Unity→UE5 migration guides, MetaHuman deep dives.", vibe: "serious" },
-  { label: "The (Unofficial) Unreal Engine Podcast", url: "https://uepodcast.com", note: "Co-hosted with Jacob Feldman. Unreal news, takes, and guests.", vibe: "serious" },
 ];
 
 export const site = {

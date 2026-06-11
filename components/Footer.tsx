@@ -5,9 +5,8 @@ export default function Footer() {
     <footer className="border-t border-line">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-3">
         <div>
-          <p className="font-bold">
-            Alex Coulombe <span className="grad-text">Presents</span>
-          </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.svg" alt="Alex Coulombe Presents" className="-ml-3 w-48" />
           <p className="mt-2 text-sm text-mist">
             Unreal Engine · Godot · Apple Vision Pro · AI agents · live immersive theatre. Made in New York.
           </p>
@@ -33,6 +32,7 @@ export default function Footer() {
             <a className="text-mist hover:text-snow" href="https://twitter.com/ibrews" target="_blank" rel="noopener noreferrer">X / @ibrews</a>
             <a className="text-mist hover:text-snow" href="https://agilelens.com" target="_blank" rel="noopener noreferrer">Agile Lens</a>
             <a className="text-mist hover:text-snow" href="https://uepodcast.com" target="_blank" rel="noopener noreferrer">UE Podcast</a>
+            <a className="text-mist hover:text-snow" href="https://agilelens.com/unrealnyc" target="_blank" rel="noopener noreferrer">Unreal NYC</a>
             <a className="text-mist hover:text-snow" href="https://youtube.com/user/ibrews" target="_blank" rel="noopener noreferrer">YouTube</a>
           </div>
         </div>

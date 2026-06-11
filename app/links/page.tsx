@@ -25,20 +25,32 @@ export default function Links() {
       <div className="mt-12 space-y-4">
         {serious.map((l, i) => (
           <Reveal key={l.url} delay={Math.min(i * 60, 240)}>
-            <a
-              href={l.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass group flex items-center justify-between gap-6 rounded-2xl p-6"
-            >
-              <div>
-                <h2 className="font-bold group-hover:text-teal">{l.label}</h2>
-                <p className="mt-1 text-sm text-mist">{l.note}</p>
-              </div>
-              <span className="font-mono text-mist transition-transform group-hover:translate-x-1 group-hover:text-teal">
-                →
-              </span>
-            </a>
+            <div className="glass group relative rounded-2xl p-6">
+              <a
+                href={l.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between gap-6"
+              >
+                <div>
+                  <h2 className="font-bold group-hover:text-teal">{l.label}</h2>
+                  <p className="mt-1 text-sm text-mist">{l.note}</p>
+                </div>
+                <span className="font-mono text-mist transition-transform group-hover:translate-x-1 group-hover:text-teal">
+                  →
+                </span>
+              </a>
+              {l.extra && (
+                <a
+                  href={l.extra.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-block rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+                >
+                  {l.extra.label} ↗
+                </a>
+              )}
+            </div>
           </Reveal>
         ))}
       </div>

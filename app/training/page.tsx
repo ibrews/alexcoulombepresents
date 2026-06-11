@@ -150,6 +150,24 @@ export default function Training() {
               Alex leads the NYC Unreal Engine meetup — talks, demos, and the only room in Manhattan
               where &quot;nanite&quot; is small talk. Come say hi before committing to a class.
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href="https://agilelens.com/unrealnyc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+              >
+                agilelens.com/unrealnyc ↗
+              </a>
+              <a
+                href="https://communities.unrealengine.com/new-york"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+              >
+                Epic community page ↗
+              </a>
+            </div>
           </div>
           <div className="glass rounded-2xl p-7">
             <h3 className="font-bold">Free stuff first</h3>
@@ -164,6 +182,16 @@ export default function Training() {
               </a>{" "}
               are free. Start there, then bring your questions to class.
             </p>
+            <div className="mt-4">
+              <a
+                href="https://linktr.ee/unoffunrealpod"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+              >
+                Podcast on all platforms ↗
+              </a>
+            </div>
           </div>
         </div>
       </Reveal>
