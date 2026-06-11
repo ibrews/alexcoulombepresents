@@ -20,8 +20,9 @@ export const metadata: Metadata = {
     url: site.url,
     siteName: site.title,
     type: "website",
+    images: [{ url: "/social.png", width: 1200, height: 630, alt: site.title }],
   },
-  twitter: { card: "summary_large_image", creator: "@ibrews" },
+  twitter: { card: "summary_large_image", creator: "@ibrews", images: ["/social.png"] },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

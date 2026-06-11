@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alex Coulombe Presents — social card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: #060810;
+    color: #ecedf6;
+    position: relative;
+  }
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 700px 500px at 18% 55%, rgba(155, 140, 255, 0.16), transparent 70%),
+      radial-gradient(ellipse 600px 420px at 88% 8%, rgba(45, 212, 191, 0.14), transparent 70%),
+      radial-gradient(ellipse 500px 380px at 70% 95%, rgba(251, 191, 36, 0.08), transparent 70%);
+  }
+  canvas#stars { position: absolute; inset: 0; }
+  .content {
+    position: absolute; left: 70px; top: 0; bottom: 0; width: 640px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .tag {
+    display: inline-flex; align-self: flex-start; align-items: center; gap: 10px;
+    border: 1px solid rgba(45, 212, 191, 0.45); border-radius: 999px;
+    padding: 8px 18px; font-size: 17px; letter-spacing: 2.5px;
+    text-transform: uppercase; color: #2dd4bf; margin-bottom: 30px;
+  }
+  .tag .dot { width: 8px; height: 8px; border-radius: 50%; background: #2dd4bf; }
+  h1 {
+    font-size: 88px; line-height: 0.98; font-weight: 700; letter-spacing: -2px;
+    background: linear-gradient(130deg, #fff 20%, #a5d8ff 55%, #9b8cff 90%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  h1 .presents {
+    background: linear-gradient(100deg, #2dd4bf, #a78bfa 55%, #fbbf24);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .tagline { margin-top: 26px; font-size: 26px; line-height: 1.45; color: #9b9bb5; max-width: 600px; }
+  .tagline strong { color: #ecedf6; font-weight: 500; }
+  .pill {
+    margin-top: 36px; align-self: flex-start;
+    background: #ecedf6; color: #060810; border-radius: 999px;
+    padding: 13px 28px; font-size: 21px; font-weight: 700;
+  }
+  .corner { position: absolute; bottom: 34px; font-size: 15px; letter-spacing: 3px; text-transform: uppercase; color: #5b5b78; }
+  .corner.left { left: 70px; }
+  .corner.right { right: 64px; }
+  /* headset constellation */
+  .graphic { position: absolute; right: 30px; top: 70px; width: 470px; height: 470px; }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <canvas id="stars" width="1200" height="630"></canvas>
+
+  <svg class="graphic" viewBox="0 0 470 470" fill="none">
+    <defs>
+      <linearGradient id="wire" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2dd4bf"/>
+        <stop offset="0.55" stop-color="#a78bfa"/>
+        <stop offset="1" stop-color="#fbbf24"/>
+      </linearGradient>
+    </defs>
+    <!-- VR headset wireframe -->
+    <g stroke="url(#wire)" stroke-width="2.5" opacity="0.9">
+      <rect x="105" y="170" width="260" height="130" rx="56"/>
+      <path d="M105 235 C 60 235 60 205 95 198" />
+      <path d="M365 235 C 410 235 410 205 375 198" />
+      <path d="M180 300 q 55 36 110 0" />
+    </g>
+    <!-- lens glows -->
+    <circle cx="185" cy="232" r="34" stroke="#2dd4bf" stroke-width="2" opacity="0.8"/>
+    <circle cx="285" cy="232" r="34" stroke="#a78bfa" stroke-width="2" opacity="0.8"/>
+    <circle cx="185" cy="232" r="10" fill="#2dd4bf" opacity="0.5"/>
+    <circle cx="285" cy="232" r="10" fill="#a78bfa" opacity="0.5"/>
+    <!-- constellation around it -->
+    <g stroke="#9b9bb5" stroke-width="1" opacity="0.45">
+      <line x1="90" y1="90" x2="170" y2="125"/>
+      <line x1="170" y1="125" x2="280" y2="95"/>
+      <line x1="280" y1="95" x2="380" y2="140"/>
+      <line x1="380" y1="140" x2="420" y2="240"/>
+      <line x1="60" y1="220" x2="90" y2="90"/>
+      <line x1="90" y1="360" x2="170" y2="395"/>
+      <line x1="170" y1="395" x2="300" y2="380"/>
+      <line x1="300" y1="380" x2="400" y2="330"/>
+    </g>
+    <g fill="#ecedf6">
+      <circle cx="90" cy="90" r="4"/>
+      <circle cx="170" cy="125" r="3"/>
+      <circle cx="280" cy="95" r="4.5"/>
+      <circle cx="380" cy="140" r="3"/>
+      <circle cx="420" cy="240" r="4"/>
+      <circle cx="60" cy="220" r="3.5"/>
+      <circle cx="90" cy="360" r="4"/>
+      <circle cx="170" cy="395" r="3"/>
+      <circle cx="300" cy="380" r="4.5"/>
+      <circle cx="400" cy="330" r="3.5"/>
+    </g>
+    <!-- pinch hand hint -->
+    <g stroke="#fbbf24" stroke-width="2" opacity="0.85">
+      <path d="M225 360 q 10 -22 32 -18"/>
+      <path d="M268 348 q -14 -4 -11 6"/>
+      <circle cx="246" cy="345" r="5" fill="#fbbf24" stroke="none" opacity="0.7"/>
+    </g>
+  </svg>
+
+  <div class="content">
+    <div class="tag"><span class="dot"></span> alexcoulombepresents.com</div>
+    <h1>Alex Coulombe<br><span class="presents">Presents</span></h1>
+    <p class="tagline"><strong>Unreal Engine · Godot · Vision Pro · AI agents</strong> — worlds you can step inside, and the training to build your own.</p>
+    <div class="pill">Enter the site →</div>
+  </div>
+
+  <div class="corner left">XR-chitect · NYC</div>
+  <div class="corner right">Training · Open Source · The Lab</div>
+
+  <script>
+    const c = document.getElementById('stars');
+    const ctx = c.getContext('2d');
+    for (let i = 0; i < 130; i++) {
+      const x = Math.random() * 1200, y = Math.random() * 630;
+      const r = Math.random() * 1.4 + 0.3;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(236, 237, 246, ${Math.random() * 0.5 + 0.12})`;
+      ctx.fill();
+    }
+  </script>
+</body>
+</html>
