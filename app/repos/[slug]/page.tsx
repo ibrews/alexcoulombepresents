@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
+import Ethereal from "@/components/Ethereal";
 import StarCount from "@/components/StarCount";
 import { repos } from "@/lib/data";
 
@@ -25,6 +26,7 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-32">
+      <Ethereal variant="nebula" />
       <Reveal>
         <Link href="/repos" className="font-mono text-sm text-mist hover:text-teal">
           ← all repos

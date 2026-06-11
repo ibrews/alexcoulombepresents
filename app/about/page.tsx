@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
+import Ethereal from "@/components/Ethereal";
+import OriginVenn from "@/components/hxr/OriginVenn";
+import PowerUpIntro from "@/components/hxr/PowerUpIntro";
 import { timeline } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -18,6 +21,7 @@ const stats = [
 export default function About() {
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
+      <Ethereal variant="ghost" />
       <Reveal>
         <p className="font-mono text-sm text-teal">/about</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
@@ -70,6 +74,60 @@ export default function About() {
           </div>
         </div>
       </Reveal>
+
+      {/* From the HarvardXR keynote — the origin story, in 8-bit */}
+      <div className="mt-24">
+        <Reveal>
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">
+            Live from the HarvardXR 2026 closing keynote
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">The origin story, in 8-bit</h2>
+          <p className="mt-3 max-w-2xl text-mist">
+            These two interactive slides opened &quot;10 Lessons from 10 Years&quot; at Harvard.
+            2010 Alex pinballs between his three passions — until 2016 Alex finds the block that
+            merges them. Built in{" "}
+            <a
+              href="https://github.com/ibrews/spatial-deck"
+              className="text-snow underline decoration-teal/50 hover:decoration-teal"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Spatial Deck
+            </a>
+            ;{" "}
+            <a
+              href="https://ibrews.github.io/harvardxr-keynote/"
+              className="text-snow underline decoration-teal/50 hover:decoration-teal"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              watch the whole deck here
+            </a>
+            .
+          </p>
+        </Reveal>
+        <Reveal>
+          <div className="glass mt-8 rounded-3xl p-4 md:p-8">
+            <OriginVenn />
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="mt-6 grid items-center gap-8 lg:grid-cols-[1fr_1.2fr]">
+            <div className="glass rounded-3xl p-4">
+              <PowerUpIntro />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold">2016: the power-up</h3>
+              <p className="mt-3 leading-relaxed text-mist">
+                Architecture, theatre, and realtime tech were three separate careers until a
+                headset turned them into one. Press start and watch it happen — sound on for the
+                full chiptune experience. (Every sound is synthesized live with the Web Audio
+                API. No audio files were harmed.)
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </div>
 
       {/* Timeline */}
       <div className="mt-24">

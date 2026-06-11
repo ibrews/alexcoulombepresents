@@ -24,6 +24,7 @@ with no configuration.
 | `/lab/pinchwork` | Pinchwork — universal OpenXR hand tracking template |
 | `/lab/unreal-visionos` | The Unreal × visionOS engine-improvement punch list |
 | `/links` | Agile Lens, socials, podcast — and alexcoulombe.com, lovingly preserved in 2013 amber |
+| `/store` | Direct sales (courses, skills, templates) — Stripe Checkout, no marketplace cut. Ships in preview mode (mailto fallback) until `NEXT_PUBLIC_STORE_LIVE=1` |
 
 ## Quickstart
 
@@ -66,6 +67,30 @@ npm run build && npm start
 All copy lives in one file: [`lib/data.ts`](lib/data.ts) — repos, products, timeline, courses,
 links. Add a repo or product there and its card *and* detail page appear automatically. No CMS,
 no Markdown pipeline, just a typed array.
+
+## Store / payments
+
+The point-of-sale bones live in [`lib/store.ts`](lib/store.ts) (catalog),
+[`app/api/checkout/route.ts`](app/api/checkout/route.ts) (Stripe Checkout session — raw REST,
+no SDK dependency), and [`app/api/stripe-webhook/route.ts`](app/api/stripe-webhook/route.ts)
+(signature-verified fulfillment stubs). Stripe is a processor, not a marketplace — the only fee
+anywhere is card processing; every item also offers a zero-fee invoice path by email.
+
+To go live: copy [.env.example](.env.example) into Vercel env vars, set real prices in
+`lib/store.ts` (all current prices are placeholders), wire the fulfillment TODOs in the webhook,
+and flip `NEXT_PUBLIC_STORE_LIVE=1`. Until then the store runs in honest preview mode — buy
+buttons open a pre-filled email. **Before listing anything also sold elsewhere, check the channel
+terms** (Fab is non-exclusive for your own products; confirm Capafy's creator agreement; never
+sell Epic-owned content off-Fab) — guardrail notes are in `lib/store.ts`.
+
+## The HarvardXR slides & ethereal backgrounds
+
+The About page embeds ports of slides 2–3 from the [HarvardXR keynote](https://ibrews.github.io/harvardxr-keynote/)
+([`components/hxr/`](components/hxr/)): the Architecture/Theatre/Realtime-Tech Venn with the
+orbiting pixel Alex, and the Mario power-up (click to play — all SFX synthesized via Web Audio).
+Every page also gets a [Spatial Deck](https://github.com/ibrews/spatial-deck)-style ethereal
+overlay ([`components/Ethereal.tsx`](components/Ethereal.tsx)): aurora (home/skills/store),
+ghost (about/links), ember (training/videos), nebula (repos/lab).
 
 ## Architecture notes
 

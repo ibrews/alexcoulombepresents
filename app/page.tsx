@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Ethereal from "@/components/Ethereal";
 import ParticleField from "@/components/ParticleField";
 import Typewriter from "@/components/Typewriter";
 import Reveal from "@/components/Reveal";
@@ -15,6 +16,7 @@ export default function Home() {
 
   return (
     <>
+      <Ethereal variant="aurora" />
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="relative flex min-h-[92vh] items-center overflow-hidden">
         <ParticleField />

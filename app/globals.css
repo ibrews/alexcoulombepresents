@@ -103,3 +103,81 @@ body {
 .marquee-track:hover {
   animation-play-state: paused;
 }
+
+/* === Ethereal background overlays — ported from Spatial Deck === */
+.ethereal {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+.ethereal .blob { position: absolute; border-radius: 50%; will-change: transform; }
+
+/* Aurora — drifting teal/purple/amber */
+.ethereal--aurora .blob { filter: blur(110px); }
+.ethereal--aurora .b1 { width: 55%; aspect-ratio: 1; background: radial-gradient(circle, rgba(0,212,255,.55), rgba(0,212,255,0)); top: -10%; left: -10%; animation: bgAur1 26s linear infinite; }
+.ethereal--aurora .b2 { width: 48%; aspect-ratio: 1; background: radial-gradient(circle, rgba(167,139,250,.5), rgba(167,139,250,0)); top: 30%; right: -10%; animation: bgAur2 32s linear infinite; }
+.ethereal--aurora .b3 { width: 62%; aspect-ratio: 1; background: radial-gradient(circle, rgba(245,158,11,.32), rgba(245,158,11,0)); bottom: -20%; left: 10%; animation: bgAur3 38s linear infinite; }
+@keyframes bgAur1 { 0%{transform:translate(0,0)} 25%{transform:translate(28vw,18vh)} 50%{transform:translate(40vw,38vh)} 75%{transform:translate(12vw,28vh)} 100%{transform:translate(0,0)} }
+@keyframes bgAur2 { 0%{transform:translate(0,0)} 25%{transform:translate(-20vw,-15vh)} 50%{transform:translate(-32vw,8vh)} 75%{transform:translate(-15vw,22vh)} 100%{transform:translate(0,0)} }
+@keyframes bgAur3 { 0%{transform:translate(0,0)} 25%{transform:translate(18vw,-15vh)} 50%{transform:translate(28vw,-30vh)} 75%{transform:translate(8vw,-18vh)} 100%{transform:translate(0,0)} }
+
+/* Ember — warm pulse, distant firelight */
+.ethereal--ember .blob { filter: blur(140px); will-change: transform, opacity; }
+.ethereal--ember .b1 { width: 60%; aspect-ratio: 1; background: radial-gradient(circle, rgba(245,158,11,.5), rgba(245,158,11,0)); top: -15%; left: 20%; animation: bgEm1 32s linear infinite, bgEmP1 9s ease-in-out infinite alternate; }
+.ethereal--ember .b2 { width: 50%; aspect-ratio: 1; background: radial-gradient(circle, rgba(244,63,94,.35), rgba(244,63,94,0)); bottom: -10%; right: -5%; animation: bgEm2 40s linear infinite, bgEmP2 12s ease-in-out infinite alternate; }
+.ethereal--ember .b3 { width: 40%; aspect-ratio: 1; background: radial-gradient(circle, rgba(254,215,170,.18), rgba(254,215,170,0)); top: 50%; left: -10%; animation: bgEm3 36s linear infinite, bgEmP3 14s ease-in-out infinite alternate; }
+@keyframes bgEm1 { 0%{transform:translate(0,0)} 25%{transform:translate(-15vw,18vh)} 50%{transform:translate(-22vw,28vh)} 75%{transform:translate(-8vw,18vh)} 100%{transform:translate(0,0)} }
+@keyframes bgEm2 { 0%{transform:translate(0,0)} 25%{transform:translate(-18vw,-12vh)} 50%{transform:translate(-28vw,-22vh)} 75%{transform:translate(-12vw,-10vh)} 100%{transform:translate(0,0)} }
+@keyframes bgEm3 { 0%{transform:translate(0,0)} 25%{transform:translate(28vw,-6vh)} 50%{transform:translate(38vw,-12vh)} 75%{transform:translate(20vw,-4vh)} 100%{transform:translate(0,0)} }
+@keyframes bgEmP1 { 0%{opacity:.7} 100%{opacity:1} }
+@keyframes bgEmP2 { 0%{opacity:.55} 100%{opacity:1} }
+@keyframes bgEmP3 { 0%{opacity:.5} 100%{opacity:.95} }
+
+/* Ghost — pale wisps, Christmas Carol audience feel */
+.ethereal--ghost .blob { filter: blur(140px); }
+.ethereal--ghost .b1 { width: 50%; aspect-ratio: 1; background: radial-gradient(circle, rgba(180,210,255,.32), rgba(180,210,255,0)); top: 10%; left: 5%; animation: bgGh1 28s linear infinite; }
+.ethereal--ghost .b2 { width: 42%; aspect-ratio: 1; background: radial-gradient(circle, rgba(220,200,255,.28), rgba(220,200,255,0)); top: 30%; right: 5%; animation: bgGh2 36s linear infinite; }
+.ethereal--ghost .b3 { width: 55%; aspect-ratio: 1; background: radial-gradient(circle, rgba(160,180,220,.24), rgba(160,180,220,0)); bottom: -5%; left: 30%; animation: bgGh3 32s linear infinite; }
+.ethereal--ghost .b4 { width: 38%; aspect-ratio: 1; background: radial-gradient(circle, rgba(200,210,250,.22), rgba(200,210,250,0)); top: 55%; left: -5%; animation: bgGh4 44s linear infinite; }
+@keyframes bgGh1 { 0%{transform:translate(0,0)} 25%{transform:translate(20vw,12vh)} 50%{transform:translate(28vw,-2vh)} 75%{transform:translate(10vw,-12vh)} 100%{transform:translate(0,0)} }
+@keyframes bgGh2 { 0%{transform:translate(0,0)} 25%{transform:translate(-15vw,14vh)} 50%{transform:translate(-18vw,28vh)} 75%{transform:translate(-6vw,16vh)} 100%{transform:translate(0,0)} }
+@keyframes bgGh3 { 0%{transform:translate(0,0)} 25%{transform:translate(-12vw,-12vh)} 50%{transform:translate(8vw,-22vh)} 75%{transform:translate(14vw,-8vh)} 100%{transform:translate(0,0)} }
+@keyframes bgGh4 { 0%{transform:translate(0,0)} 25%{transform:translate(22vw,-4vh)} 50%{transform:translate(36vw,12vh)} 75%{transform:translate(18vw,18vh)} 100%{transform:translate(0,0)} }
+
+/* Nebula — fullest texture, slow conic swirl */
+.ethereal--nebula .blob { filter: blur(120px); }
+.ethereal--nebula .swirl { position: absolute; inset: -25%; background: conic-gradient(from 0deg, rgba(0,212,255,.05), rgba(167,139,250,.04), rgba(245,158,11,.05), rgba(244,63,94,.04), rgba(0,212,255,.05)); filter: blur(80px); will-change: transform; animation: bgNebSwirl 80s linear infinite; }
+.ethereal--nebula .b1 { width: 45%; aspect-ratio: 1; background: radial-gradient(circle, rgba(0,212,255,.32), rgba(0,212,255,0)); top: -5%; left: 0; animation: bgNeb1 30s linear infinite; }
+.ethereal--nebula .b2 { width: 42%; aspect-ratio: 1; background: radial-gradient(circle, rgba(167,139,250,.30), rgba(167,139,250,0)); bottom: -5%; right: 5%; animation: bgNeb2 36s linear infinite; }
+.ethereal--nebula .b3 { width: 35%; aspect-ratio: 1; background: radial-gradient(circle, rgba(245,158,11,.22), rgba(245,158,11,0)); top: 50%; left: 50%; animation: bgNeb3 26s linear infinite; }
+@keyframes bgNeb1 { 0%{transform:translate(0,0)} 25%{transform:translate(22vw,18vh)} 50%{transform:translate(32vw,8vh)} 75%{transform:translate(14vw,-8vh)} 100%{transform:translate(0,0)} }
+@keyframes bgNeb2 { 0%{transform:translate(0,0)} 25%{transform:translate(-18vw,-14vh)} 50%{transform:translate(-28vw,4vh)} 75%{transform:translate(-12vw,12vh)} 100%{transform:translate(0,0)} }
+@keyframes bgNeb3 { 0%{transform:translate(-50%,-50%)} 25%{transform:translate(-30%,-58%)} 50%{transform:translate(-22%,-42%)} 75%{transform:translate(-58%,-44%)} 100%{transform:translate(-50%,-50%)} }
+@keyframes bgNebSwirl { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+@media (prefers-reduced-motion: reduce) {
+  .ethereal .blob, .ethereal .swirl { animation: none !important; }
+}
+
+/* Pixel avatar arm-frame toggles (HXR port) */
+.avatar .av-arms-up { visibility: hidden; }
+.avatar.arm-up .av-arms-down { visibility: hidden; }
+.avatar.arm-up .av-arms-up { visibility: visible; }
+
+/* Mario power-up stage (HXR port) */
+@keyframes introWalk { 0% { transform: translate(-180px, 0); } 100% { transform: translate(160px, 0); } }
+@keyframes introJumpUp { 0% { transform: translate(160px, 0) scale(1,1); } 30% { transform: translate(160px, -20px) scale(.95, 1.05); } 100% { transform: translate(160px, -95px) scale(1,1); } }
+@keyframes introFallDown { 0% { transform: translate(160px, -95px) scale(1.5); } 100% { transform: translate(160px, 0) scale(1.5); } }
+@keyframes introHeadsetBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes introHeadsetGrab { 0% { opacity: 1; transform: translateY(0) scale(1); } 40% { opacity: 1; transform: translateY(-6px) scale(1.4); } 100% { opacity: 0; transform: translateY(-30px) scale(0); } }
+@keyframes introPowerUp { 0% { transform: translate(160px, -95px) scale(1); filter: brightness(1); } 30% { transform: translate(160px, -95px) scale(1.2); filter: brightness(1.7); } 55% { transform: translate(160px, -95px) scale(.95); filter: brightness(1.3); } 100% { transform: translate(160px, -95px) scale(1.5); filter: brightness(1); } }
+@keyframes introSparkle { 0% { opacity: 0; transform: translate(0,0) scale(.3); } 10% { opacity: 1; transform: translate(calc(var(--tx) * .15), calc(var(--ty) * .15)) scale(1.6); } 50% { opacity: 1; transform: translate(calc(var(--tx) * .6), calc(var(--ty) * .6)) scale(1); } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(.3); } }
+@keyframes introFlash { 0% { opacity: 0; } 8% { opacity: .75; } 100% { opacity: 0; } }
+.hxr-stage .stage-floor { fill: rgba(0,212,255,.12); stroke: rgba(0,212,255,.3); stroke-width: 1; }
+.hxr-stage .stage-walker { transform-origin: center bottom; }
+.hxr-stage .hxr-anim { transform-box: fill-box; transform-origin: center bottom; }
+.hxr-stage .headset-block { transform-origin: center; }

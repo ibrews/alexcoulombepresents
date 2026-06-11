@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
+import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
 import { courses, trainingPlaylist } from "@/lib/data";
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default function Training() {
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
+      <Ethereal variant="ember" />
       <Reveal>
         <p className="font-mono text-sm text-teal">/training</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">

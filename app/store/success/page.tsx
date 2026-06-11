@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { storeItems } from "@/lib/store";
+
+export const metadata: Metadata = { title: "Thank you!" };
+
+export default async function Success({
+  searchParams,
+}: {
+  searchParams: Promise<{ item?: string }>;
+}) {
+  const { item: slug } = await searchParams;
+  const item = storeItems.find((i) => i.slug === slug);
+
+  return (
+    <div className="flex min-h-[80vh] flex-col items-center justify-center px-5 text-center">
+      <p className="font-mono text-sm text-teal">payment received ✓</p>
+      <h1 className="mt-4 max-w-xl text-4xl font-bold tracking-tight md:text-5xl">
+        You just funded <span className="grad-text">more weird experiments.</span>
+      </h1>
+      <p className="mt-5 max-w-md text-mist">
+        {item ? (
+          <>
+            <span className="text-snow">{item.name}</span> is yours. {item.delivery} If anything
+            doesn&apos;t arrive within the hour, email{" "}
+            <a className="text-teal hover:underline" href="mailto:info@alexcoulombepresents.com">
+              info@alexcoulombepresents.com
+            </a>{" "}
+            and a human (the human, actually) will fix it.
+          </>
+        ) : (
+          <>
+            Your receipt is in your inbox. Delivery details follow shortly — and if anything
+            looks off, email{" "}
+            <a className="text-teal hover:underline" href="mailto:info@alexcoulombepresents.com">
+              info@alexcoulombepresents.com
+            </a>
+            .
+          </>
+        )}
+      </p>
+      <Link
+        href="/"
+        className="mt-8 rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+      >
+        Back to the site →
+      </Link>
+    </div>
+  );
+}

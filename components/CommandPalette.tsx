@@ -31,6 +31,7 @@ export default function CommandPalette() {
       { label: "AI Skills", hint: "page", action: () => go("/skills") },
       { label: "Videos", hint: "page", action: () => go("/videos") },
       { label: "The Lab", hint: "page", action: () => go("/lab") },
+      { label: "Store", hint: "page", action: () => go("/store") },
       { label: "Links", hint: "page", action: () => go("/links") },
       { label: "YouTube — @ibrews", hint: "external", action: () => go("https://youtube.com/@ibrews") },
       ...products.map((p) => ({ label: p.name, hint: "lab", action: () => go(`/lab/${p.slug}`) })),

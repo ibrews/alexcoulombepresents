@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2dd4bf"/><stop offset="0.55" stop-color="#a78bfa"/><stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+  <!-- marquee sign -->
+  <rect x="120" y="22" width="320" height="156" rx="18" stroke="#1e1e33" stroke-width="3" fill="#0d0d1a"/>
+  <!-- bulbs -->
+  <g fill="url(#g)">
+    <circle cx="146" cy="44" r="5"/><circle cx="190" cy="44" r="5"/><circle cx="234" cy="44" r="5"/><circle cx="280" cy="44" r="5"/><circle cx="326" cy="44" r="5"/><circle cx="370" cy="44" r="5"/><circle cx="414" cy="44" r="5"/>
+    <circle cx="146" cy="156" r="5"/><circle cx="190" cy="156" r="5"/><circle cx="234" cy="156" r="5"/><circle cx="280" cy="156" r="5"/><circle cx="326" cy="156" r="5"/><circle cx="370" cy="156" r="5"/><circle cx="414" cy="156" r="5"/>
+  </g>
+  <!-- stacked name -->
+  <text x="280" y="92" text-anchor="middle" font-family="'Space Grotesk','Arial',sans-serif" font-size="34" font-weight="700" fill="#ecedf6" letter-spacing="2">ALEX COULOMBE</text>
+  <!-- gradient banner -->
+  <rect x="200" y="106" width="160" height="32" rx="16" fill="url(#g)"/>
+  <text x="280" y="128" text-anchor="middle" font-family="'Space Grotesk','Arial',sans-serif" font-size="16" font-weight="700" fill="#07070f" letter-spacing="6">PRESENTS</text>
+  <defs>
+    <linearGradient id="beamL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fbbf24" stop-opacity="0.45"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="beamR" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#2dd4bf" stop-opacity="0.45"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- left spotlight aiming at banner -->
+  <g transform="translate(152,104)">
+    <path d="M6 4 L 50 12 L 50 26 L 6 12 Z" fill="url(#beamL)"/>
+    <rect x="-7" y="-4" width="13" height="13" rx="4" transform="rotate(18)" fill="#0d0d1a" stroke="#fbbf24" stroke-width="2.5"/>
+    <circle cx="1" cy="3" r="2.4" fill="#fbbf24"/>
+  </g>
+  <!-- right spotlight aiming at banner -->
+  <g transform="translate(408,104)">
+    <path d="M-6 4 L -50 12 L -50 26 L -6 12 Z" fill="url(#beamR)"/>
+    <rect x="-6" y="-4" width="13" height="13" rx="4" transform="rotate(-18)" fill="#0d0d1a" stroke="#2dd4bf" stroke-width="2.5"/>
+    <circle cx="-1" cy="3" r="2.4" fill="#2dd4bf"/>
+  </g>
+</svg>

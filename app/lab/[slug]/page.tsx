@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
+import Ethereal from "@/components/Ethereal";
 import { products } from "@/lib/data";
 
 export function generateStaticParams() {
@@ -32,6 +33,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-32">
+      <Ethereal variant="nebula" />
       <Reveal>
         <Link href="/lab" className="font-mono text-sm text-mist hover:text-teal">
           ← the lab

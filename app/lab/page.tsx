@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import Ethereal from "@/components/Ethereal";
 import ParticleField from "@/components/ParticleField";
 import { products } from "@/lib/data";
 
@@ -20,6 +21,7 @@ const accentText: Record<string, string> = {
 export default function Lab() {
   return (
     <div className="pb-24 pt-32">
+      <Ethereal variant="nebula" />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 opacity-50">
           <ParticleField density={0.00005} />
