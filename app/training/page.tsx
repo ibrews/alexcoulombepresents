@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
-import { courses } from "@/lib/data";
+import LiteVideo from "@/components/LiteVideo";
+import { courses, trainingPlaylist } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Unreal Engine Training",
@@ -74,6 +75,29 @@ export default function Training() {
           ))}
         </div>
       </div>
+
+      {/* Try before you book */}
+      <Reveal>
+        <div className="mt-20 grid items-center gap-8 lg:grid-cols-[1fr_1.4fr]">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">Try the teaching first</p>
+            <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">{trainingPlaylist.title}</h2>
+            <p className="mt-3 leading-relaxed text-mist">{trainingPlaylist.blurb}</p>
+            <a
+              href={`https://www.youtube.com/playlist?list=${trainingPlaylist.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+            >
+              All {trainingPlaylist.count} talks on YouTube →
+            </a>
+          </div>
+          <LiteVideo
+            id={trainingPlaylist.featuredVideoId}
+            title="I Wish I Learned This Sooner! Part 2 — Unreal Fest Stockholm 2025"
+          />
+        </div>
+      </Reveal>
 
       {/* Why train here */}
       <Reveal>

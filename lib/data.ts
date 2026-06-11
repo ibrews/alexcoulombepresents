@@ -519,3 +519,125 @@ export const site = {
     "Unreal Engine, Godot, Apple Vision Pro, AI agents, and a decade of immersive design — plus Manhattan's first Unreal Authorized Training Center.",
   url: "https://alexcoulombepresents.com",
 };
+
+// ── Videos ──────────────────────────────────────────────────────────────────
+
+export type Video = { id: string; title: string; tag: string; blurb?: string };
+
+export const featuredVideo: Video = {
+  id: "ilxU8mcJvC0",
+  title: "Everything I've Built for Apple Vision Pro So Far",
+  tag: "Vision Pro",
+  blurb: "The grand tour: Unreal, Godot, RealityKit, Gaussian splats, hand tracking — every AVP experiment in one sitting.",
+};
+
+export const videos: Video[] = [
+  { id: "AJC9-nNenAk", title: "UnRealityKit — Unreal Engine + RealityKit Bridge", tag: "Vision Pro", blurb: "The Lab project, running live: UE simulating, RealityKit rendering." },
+  { id: "SfmLwmJ4bkg", title: "SHARP splats generated & viewed on Apple Vision Pro", tag: "Vision Pro" },
+  { id: "PLynIuxA9r8", title: "Translucency over Mixed Reality for Vision Pro", tag: "Vision Pro", blurb: "The engine fix from the Unreal × visionOS punch list, demonstrated." },
+  { id: "R6NGhLpUZnw", title: "Unreal Engine AVP — Improved Hand Tracking & Interaction", tag: "Unreal", blurb: "The work that became Pinchwork." },
+  { id: "C6FQKW2uNXo", title: "MetaHuman to Godot", tag: "Godot", blurb: "The pipeline behind the MetaHumanGodot repo." },
+  { id: "lWBnHLWnNjs", title: "Apple just released a Godot RealityKit Plugin!", tag: "Godot" },
+  { id: "VnNzJV61dxs", title: "My First Godot Experience for Apple Vision Pro", tag: "Godot" },
+  { id: "qk5RzMD_ffQ", title: "This week I built a Claude-Fleet", tag: "AI", blurb: "The multi-machine agent system, explained by its operator." },
+  { id: "Q-wwh8Sw8Eg", title: "Claude Desktop is What We've Been Looking For", tag: "AI" },
+  { id: "6uoo9r0rpSs", title: "Unreal Engine WebXR Pixel Streaming to Apple Vision Pro (and Quest too!)", tag: "Unreal" },
+  { id: "NUOpEwT0YUs", title: "MetaHuman Full Body Mocap Using Only Meta Quest Pro!", tag: "Unreal" },
+  { id: "_h8mE20vzlw", title: "A Christmas Carol VR — How we do the livestream!", tag: "Theatre", blurb: "Behind the scenes of live actors performing in headsets." },
+  { id: "M1J25jJ79U8", title: "I Wish I Learned This Sooner! Part 2 — Unreal Fest Stockholm 2025", tag: "Talks" },
+  { id: "m0T8euG9Rh8", title: "I Wish I Learned This Sooner! — Unreal Fest 2024", tag: "Talks" },
+  { id: "8NOcf3RsH1k", title: "GDC 2022 — Up Close & Virtual: The Power of Live Actors in VR", tag: "Talks" },
+  { id: "vT1T2unF8EI", title: "What You Didn't Know About VR Development in Unreal | Inside Unreal", tag: "Talks" },
+];
+
+export const trainingPlaylist = {
+  id: "PLBHPEwkDnRDemC1EPbDIyKhkXu5gPGWFN",
+  title: "Alex Coulombe Unreal Engine Talks",
+  count: 46,
+  blurb: "Every conference talk in one playlist — Unreal Fest, GDC, Inside Unreal, and more. The free preview of how Alex teaches.",
+  featuredVideoId: "M1J25jJ79U8",
+};
+
+export const playlists: { id: string; title: string; blurb: string }[] = [
+  { id: "PLBHPEwkDnRDemC1EPbDIyKhkXu5gPGWFN", title: "Alex Coulombe Unreal Engine Talks", blurb: "46 conference talks: Unreal Fest, GDC, Inside Unreal." },
+  { id: "PLBHPEwkDnRDfa4kxE7u4idWvBkbHoEkk-", title: "Alex Vision Pro", blurb: "Every Apple Vision Pro experiment, in order." },
+  { id: "PLBHPEwkDnRDco-vxai_cyhnQII_sys5DI", title: "VR Talks, Tests & Tutorials", blurb: "The deep archive — a decade of headset honesty." },
+  { id: "PLBHPEwkDnRDd2EaCeOBMNUg_RdOmXdif7", title: "MetaHuman Animator", blurb: "Digital humans, animated for real productions." },
+  { id: "PLBHPEwkDnRDeGHS1mW8p1LPfL0aPisjWN", title: "Pixel Streaming Stuff!", blurb: "Unreal in the browser, from quickstart to multi-camera." },
+  { id: "PLBHPEwkDnRDe4m8PcrNBgv5_DWJTWsbJ2", title: "The (Unofficial) Unreal Engine Podcast", blurb: "Episodes with co-host Jacob Feldman." },
+  { id: "PLBHPEwkDnRDf7JV8iJM2kV-n3zAP6mIZ7", title: "A Christmas Carol VR", blurb: "The annual live VR theatre production." },
+  { id: "PLBHPEwkDnRDeo1g9OnZSSDLJsKk8iOTPg", title: "Introducing Stage Presence", blurb: "The live performance platform, unveiled." },
+];
+
+// ── AI Skills (Capafy + open source) ────────────────────────────────────────
+
+export type AgentSkill = {
+  name: string;
+  status: "live" | "coming-soon" | "free";
+  blurb: string;
+  detail: string;
+  link?: { label: string; url: string };
+};
+
+export const agentSkills: AgentSkill[] = [
+  {
+    name: "ue5-testflight",
+    status: "live",
+    blurb: "Ship Unreal Engine 5 projects to TestFlight — macOS, iOS, and visionOS.",
+    detail:
+      "The autonomous UE5 → TestFlight pipeline, packaged as a skill your own Claude runs. Cook, stage, sign, version-bump, upload, distribute — every gotcha from shipping real visionOS apps documented inside.",
+    link: { label: "Get it on Capafy", url: "https://capafy.io" },
+  },
+  {
+    name: "ios-testflight",
+    status: "live",
+    blurb: "Archive and upload iOS / visionOS / macOS Xcode projects to TestFlight via CLI.",
+    detail:
+      "The native-Xcode sibling: altool-free uploads, signing-identity sanity checks, build-number discipline, and the export-options matrix that actually works. Runs entirely in your own Claude.",
+    link: { label: "Get it on Capafy", url: "https://capafy.io" },
+  },
+  {
+    name: "godot-visionos",
+    status: "coming-soon",
+    blurb: "Build Godot apps for Apple Vision Pro — flat-plane and full immersive.",
+    detail:
+      "Everything learned shipping Cascade Countdown: the build switcher, simulator input, hand tracking, and the silent-failure traps that cost device round-trips.",
+  },
+  {
+    name: "spatial-deck-maker",
+    status: "coming-soon",
+    blurb: "Turn messy slides, PDFs, or notes into an interactive Spatial Deck presentation you share as a link.",
+    detail:
+      "Feed it your raw content; get back a single-file web presentation in the Spatial Deck framework — the one that powered the HarvardXR closing keynote.",
+  },
+  {
+    name: "app-store-aso",
+    status: "coming-soon",
+    blurb: "Generate a character-perfect, ASO-optimized App Store listing kit from your app's features.",
+    detail:
+      "Titles, subtitles, keyword fields, descriptions, promotional text — every character limit respected, every field tuned for App Store search.",
+  },
+  {
+    name: "metahuman-godot-pipeline",
+    status: "coming-soon",
+    blurb: "The complete MetaHuman → Blender → Godot conversion workflow, as a skill.",
+    detail:
+      "The paid counterpart to the free MetaHumanGodot viewer: full export, ARKit morph-target bake, material reassembly, and the shader stack — with real scripts, not prose. In final review.",
+  },
+  {
+    name: "ue5-mcp",
+    status: "free",
+    blurb: "A field manual for AI agents driving Unreal Engine 5 through MCP.",
+    detail:
+      "Free and open source. Reflection gotchas, crash patterns, subsystem quirks — install it and your agent stops rediscovering UE's sharp edges every session.",
+    link: { label: "GitHub", url: "https://github.com/ibrews/ue5-mcp" },
+  },
+  {
+    name: "apple-platform-skills",
+    status: "free",
+    blurb: "Claude Code skills for visionOS SharePlay, SpriteKit, and GameKit multiplayer.",
+    detail:
+      "Free and open source. npx skills add ibrews/apple-platform-skills — and your agent knows the session.join() trap before it falls in.",
+    link: { label: "GitHub", url: "https://github.com/ibrews/apple-platform-skills" },
+  },
+];

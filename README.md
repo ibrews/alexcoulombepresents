@@ -16,6 +16,8 @@ with no configuration.
 | `/training` | The Unreal Authorized Training Center: 11 course tracks (including the new AI for Unreal class), formats, booking |
 | `/repos` | Curated open-source catalog by category — each repo gets its own beautifully formatted page linking to its living GitHub wiki |
 | `/repos/[slug]` | Per-repo deep dive: story, highlights, clone command, live stars |
+| `/skills` | AI skills for Claude Code — live on Capafy (ue5-testflight, ios-testflight), in the pipeline (godot-visionos, spatial-deck-maker, app-store-aso, metahuman-godot-pipeline), and free open source |
+| `/videos` | Curated YouTube videos by theme + real channel playlists, with click-to-load embeds |
 | `/lab` | Teaser for upcoming products (the private repos) |
 | `/lab/forage` | Forage — AI-first asset scout for your owned Fab library |
 | `/lab/unrealitykit-bridge` | UnRealityKit Bridge — UE simulation + RealityKit rendering |
@@ -56,6 +58,8 @@ npm run build && npm start
    fetched live from the GitHub API with a baked fallback, so it's always current.
 5. **Visit `/links` and click "Visit anyway (brave)"** under the vintage alexcoulombe.com card.
    You were warned.
+6. **Play a video on `/videos`** — embeds are click-to-load (zero YouTube JS until you press play),
+   served via youtube-nocookie.
 
 ## Editing content
 
