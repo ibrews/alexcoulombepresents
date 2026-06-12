@@ -64,9 +64,28 @@ npm run build && npm start
 
 ## Editing content
 
-All copy lives in one file: [`lib/data.ts`](lib/data.ts) — repos, products, timeline, courses,
-links. Add a repo or product there and its card *and* detail page appear automatically. No CMS,
-no Markdown pipeline, just a typed array.
+Structured content (repos, products, timeline, courses, links) lives in [`lib/data.ts`](lib/data.ts);
+the store catalog in [`lib/store.ts`](lib/store.ts); page prose in the page files under `app/`.
+
+### Plain-English copy editing — [`CONTENT.md`](CONTENT.md)
+
+To rewrite wording without touching code, edit **[`CONTENT.md`](CONTENT.md)** — a generated,
+human-readable dump of *every* user-facing string on the site. Change the words after each `▸`;
+leave the `[id]` tags alone. Lists (e.g. the rotating "Currently:" descriptors) are marked
+`(N items — add or remove lines freely)` — add or delete `-` lines to grow or shrink them.
+
+The round-trip:
+
+```bash
+node scripts/gen-content.mjs     # regenerate CONTENT.md + snapshot from source
+#   …edit CONTENT.md…
+node scripts/diff-content.mjs    # show exactly what changed, and which file each edit maps to
+```
+
+`diff-content` reports every reworded string and every list add/remove against
+`content/strings.snapshot.json` (the baseline from the last `gen-content` run). Apply the changes
+to the source files it names, then `gen-content` again to refresh the baseline. (Editing assistant:
+"sweep the copy" runs `diff-content`, applies each change, rebuilds, and redeploys.)
 
 ## Store / payments
 
