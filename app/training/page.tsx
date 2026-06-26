@@ -7,7 +7,7 @@ import { courses, trainingPlaylist } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Unreal Engine Training",
   description:
-    "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR, MetaHumans, and more.",
+    "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR, MetaHumans, archviz, virtual production, and much much more.",
 };
 
 export default function Training() {
@@ -17,14 +17,15 @@ export default function Training() {
       <Reveal>
         <p className="font-mono text-sm text-teal">/training</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
-          Learn Unreal from someone who <span className="grad-text">ships with it.</span>
+          Learn Unreal from someone who <span className="grad-text">ships with it every day.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
           Alex is a top-rated <strong className="text-snow">Epic Games Authorized Instructor</strong>{" "}
           running <strong className="text-snow">Manhattan&apos;s first Unreal Authorized Training
-          Center</strong>, in association with Agile Lens. Not slideware — the curriculum comes from a
-          decade of real client work: photoreal archviz, live virtual production, multiplayer VR, and
-          now AI-driven workflows.
+          Center</strong>, in association with Agile Lens. He has taught 300+ courses on behalf of
+          Epic Games to their key partners. These curriculums come from nearly a decade of real client
+          work in Unreal: photoreal archviz, live virtual production, multiplayer VR, and now
+          AI-driven workflows. You&apos;ll learn methodologies you won&apos;t find anywhere else.
         </p>
       </Reveal>
 
@@ -34,22 +35,21 @@ export default function Training() {
           <div className="glass rounded-2xl p-6">
             <p className="font-mono text-xs text-teal">FORMAT</p>
             <p className="mt-2 text-sm leading-relaxed text-mist">
-              Live, two-hour classes — à la carte or as curriculum bundles. Solo deep-dives or team
+              Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team
               training for studios.
             </p>
           </div>
           <div className="glass rounded-2xl p-6">
             <p className="font-mono text-xs text-grape">SCHEDULE</p>
             <p className="mt-2 text-sm leading-relaxed text-mist">
-              Intro classes typically run the first Monday of the month at 1pm ET, with additional
+              Intro classes typically start on the first Monday of the month at 1pm ET, with additional
               sessions throughout the week.
             </p>
           </div>
           <div className="glass rounded-2xl p-6">
             <p className="font-mono text-xs text-amber">CREDENTIALS</p>
             <p className="mt-2 text-sm leading-relaxed text-mist">
-              Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games, in
-              the building since UE4.
+              Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
             </p>
           </div>
         </div>
@@ -59,7 +59,7 @@ export default function Training() {
       <div className="mt-20">
         <Reveal>
           <h2 className="text-3xl font-bold tracking-tight">The curriculum</h2>
-          <p className="mt-3 text-mist">Eleven tracks. Take one, take them all, or tell me what your team needs.</p>
+          <p className="mt-3 text-mist">Eleven tracks. Take one, take them all, or tell us what your team needs.</p>
         </Reveal>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((c, i) => (

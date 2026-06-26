@@ -7,8 +7,10 @@ import RepoCard from "@/components/RepoCard";
 import { repos, products, roles } from "@/lib/data";
 
 const venues = [
-  "SIGGRAPH", "Harvard", "Unreal Fest", "Venice Biennale", "AWE", "FMX",
-  "NXT BLD", "Kennedy Center", "Autodesk University", "Raindance Immersive",
+  "SIGGRAPH", "HarvardXR", "Unreal Fest", "Venice Biennale", "AWE", "FMX",
+  "NXT BLD", "Lincoln Center", "Autodesk University", "Raindance Immersive",
+  "Park Avenue Armory", "Theatre Communications Group", "USITT", "NXT DEV",
+  "NATEAC", "Opera America", "VRTO",
 ];
 
 export default function Home() {
@@ -30,8 +32,9 @@ export default function Home() {
             Building worlds you can <span className="grad-text">step inside.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist md:text-xl">
-            Architect turned XR-chitect. A decade of immersive design across Unreal Engine, Godot,
-            Apple Vision Pro, and live theatre — now teaching machines to build alongside us.
+            Architect turned XR-chitect. 10+ yrs of running Agile Lens, 16+ yrs of immersive design
+            across the built environment, live theatre, and emerging technology. Unreal Engine Gold
+            Authorized Instructor. Now teaching machines to build alongside us.
           </p>
           <p className="mt-5 text-lg md:text-xl">
             Currently: <Typewriter words={roles} />
@@ -47,7 +50,7 @@ export default function Home() {
               href="/training"
               className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
             >
-              Learn Unreal with me
+              Learn Unreal with us
             </Link>
             <Link
               href="/repos"
@@ -78,33 +81,32 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-5 py-24">
         <Reveal>
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Three obsessions, <span className="grad-text">one through-line</span>
+            Three passions, <span className="grad-text">one through-line</span>
           </h2>
           <p className="mt-3 max-w-2xl text-mist">
-            Every project here answers the same question: how do you make digital space feel as real
-            as the room you&apos;re standing in?
+            Every project: how do we make digital space feel as visceral as reality? And can we go further?
           </p>
         </Reveal>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           <Reveal delay={0}>
             <Link href="/lab/unreal-visionos" className="glass block h-full rounded-2xl p-7">
               <p className="font-mono text-xs text-teal">01 / ENGINES</p>
-              <h3 className="mt-3 text-xl font-bold">Unreal & Godot, pushed past the docs</h3>
+              <h3 className="mt-3 text-xl font-bold">Unreal & Godot, let&apos;s go further than the documentation</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                Engine-level fixes for Vision Pro, the first Godot physics game at 90 fps on AVP,
-                MetaHumans in engines they were never meant for. When the platform says
-                &quot;Experimental,&quot; the fun is just starting.
+                Engine-level fixes &amp; improvements for Vision Pro, Godot physics game at 90 fps on AVP,
+                MetaHumans like you&apos;ve never seen them before. When the plugin says
+                &quot;Experimental,&quot; the real fun begins.
               </p>
             </Link>
           </Reveal>
           <Reveal delay={120}>
             <Link href="/repos" className="glass block h-full rounded-2xl p-7">
               <p className="font-mono text-xs text-grape">02 / AI</p>
-              <h3 className="mt-3 text-xl font-bold">Agents that ship, not demo</h3>
+              <h3 className="mt-3 text-xl font-bold">Agents that ship real work. No tech for tech&apos;s sake.</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                A fleet of machines running AI coding agents around the clock. Field manuals so agents
-                drive Unreal without crashing it. Pipelines where the overnight build greets you in
-                TestFlight by morning.
+                A fleet of machines at Agile Lens running AI coding agents around the clock. Field manuals so agents
+                drive Unreal without crashing it. Pipelines where the overnight build greets you with a new
+                TestFlight-approved app waiting on device by morning.
               </p>
             </Link>
           </Reveal>
@@ -113,9 +115,9 @@ export default function Home() {
               <p className="font-mono text-xs text-amber">03 / STAGES</p>
               <h3 className="mt-3 text-xl font-bold">Theatre is the original VR</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                Live actors performing in headsets since before it was a genre. The Venice Biennale&apos;s
-                first global live VR show, an annual Christmas Carol in VR, and published SIGGRAPH
-                research on performing as your own avatar.
+                Live actors performing in headsets since 2018. Worked on Venice Biennale&apos;s first global
+                live VR show, an annual Christmas Carol in VR, mixed reality theatre with an actor
+                surrounded by digital assets, and published SIGGRAPH papers on all of it.
               </p>
             </Link>
           </Reveal>
@@ -128,7 +130,7 @@ export default function Home() {
           <div className="flex items-end justify-between">
             <div>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Fresh from the repo</h2>
-              <p className="mt-3 text-mist">Live star counts. Real tools. Zero abandonware energy.</p>
+              <p className="mt-3 text-mist">Real tools built for Agile Lens, now available to you.</p>
             </div>
             <Link href="/repos" className="hidden font-mono text-sm text-teal hover:underline md:block">
               all repos →
@@ -150,7 +152,7 @@ export default function Home() {
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-widest text-grape">The Lab</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-              Four things are coming. <span className="grad-text">They&apos;re all spatial.</span>
+              Here&apos;s <span className="grad-text">what&apos;s coming:</span>
             </h2>
           </Reveal>
           <div className="mt-10 grid gap-5 md:grid-cols-2">

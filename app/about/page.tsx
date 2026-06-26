@@ -8,7 +8,7 @@ import { timeline } from "@/lib/data";
 export const metadata: Metadata = {
   title: "About Alex Coulombe",
   description:
-    "Architect turned XR-chitect: a decade of immersive design across Unreal Engine, Godot, Apple Vision Pro, AI agents, and live theatre.",
+    "Architect turned XR-chitect: 16+ years of immersive design across Unity, Unreal Engine, Godot, live theatre, XR devices, and now: AI agents.",
 };
 
 const stats = [
@@ -25,7 +25,7 @@ export default function About() {
       <Reveal>
         <p className="font-mono text-sm text-teal">/about</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
-          Trained as an architect. <span className="grad-text">Builds in dimensions buildings can&apos;t reach.</span>
+          Trained as a theatre architect. <span className="grad-text">Constructing the cognitive ladder to virtual experiences that real venues can&apos;t reach.</span>
         </h1>
       </Reveal>
 
@@ -37,30 +37,31 @@ export default function About() {
               <a href="https://agilelens.com" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
                 Agile Lens
               </a>
-              , a New York immersive design studio that one client described as &quot;an XR SEAL Team
-              Six.&quot; He got here the long way: a B.Arch from Syracuse (with a drama minor that turned
-              out to be load-bearing), years at Rafael Viñoly and ZGF designing real buildings, then a
-              jump to theatre planning — where, in 2013, he strapped on an Oculus DK1 and ran the
-              world&apos;s first VR theatrical sightline test. Nobody had told him you couldn&apos;t yet.
+              , a New York immersive design studio that one client described as &quot;XR SEAL Team
+              Six.&quot; With a B.Arch from Syracuse (with a drama minor that turned out to be
+              load-bearing), and years at firms like Rafael Viñoly and ZGF designing real buildings,
+              then a jump to Fisher Dachs Associates: Theatre Planning &amp; Design — where, in 2013,
+              he strapped on an Oculus DK1 and pioneered the world&apos;s first VR theatrical sightline
+              experiments.
             </p>
             <p>
-              Since then: photoreal VR holodecks that drove nine figures in pre-construction real estate
-              sales, a mixed-reality rehearsal tool for the Royal Shakespeare Company, the Venice
-              Biennale&apos;s first globally viewable live VR show, and an annual{" "}
+              Since co-founding Agile Lens with Joshua Dachs: photoreal VR holodecks driving nine
+              figures in pre-construction real estate sales, a mixed-reality rehearsal tool for the
+              Royal Shakespeare Company, and{" "}
               <em className="text-snow not-italic">A Christmas Carol VR</em> performed live in headsets
-              every December since 2021. His SIGGRAPH-published research on multi-avatar performance
-              comes from actually doing it on stage, not just writing about it.
+              every December since 2021. SIGGRAPH-published research on VR performances come from
+              hard-won lessons from real stages, not just theory.
             </p>
             <p>
               These days the obsession is the intersection of game engines, Apple Vision Pro, and AI
-              agents: engine-level Unreal fixes for visionOS, the first publicly documented Godot
-              physics game running at 90 fps on AVP hardware, and a fleet of machines running AI coding
-              agents that build, test, and ship to TestFlight while he sleeps.
+              agents: engine-level Unreal fixes for visionOS, pushing Godot in new directions while
+              maintaining 90 fps on AVP hardware, and a fleet of machines running AI coding agents
+              that build, test, and ship to TestFlight while he sleeps.
             </p>
             <p>
               He also teaches all of it — as a top-rated Epic Games Authorized Instructor running
               Manhattan&apos;s first Unreal Authorized Training Center, as the lead organizer of the
-              Unreal NYC meetup, and as co-host of The (Unofficial) Unreal Engine Podcast.
+              Unreal NYC meetup (1400+ members), and as host of The (Unofficial) Unreal Engine Podcast.
             </p>
           </div>
 
@@ -83,7 +84,7 @@ export default function About() {
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">The origin story, in 8-bit</h2>
           <p className="mt-3 max-w-2xl text-mist">
-            These two interactive slides opened &quot;10 Lessons from 10 Years&quot; at Harvard.
+            These two interactive slides opened &quot;10 Lessons from 10 Years&quot; at Harvard in April 2026.
             2010 Alex pinballs between his three passions — until 2016 Alex finds the block that
             merges them. Built in{" "}
             <a
@@ -156,23 +157,23 @@ export default function About() {
           <div className="glass rounded-2xl p-7">
             <p className="font-mono text-xs text-amber">UNNECESSARY DETAIL #1</p>
             <p className="mt-3 text-sm leading-relaxed text-mist">
-              Has written, produced, designed, and acted in actual stage plays — including playing
-              Albert Einstein in <em>Picasso at the Lapin Agile</em>. The theatre thing isn&apos;t a
-              metaphor.
+              Has written, produced, designed, and acted in dozens of stage plays — including playing
+              Albert Einstein in <em>Picasso at the Lapin Agile</em> (no relation to Agile Lens).
             </p>
           </div>
           <div className="glass rounded-2xl p-7">
             <p className="font-mono text-xs text-amber">UNNECESSARY DETAIL #2</p>
             <p className="mt-3 text-sm leading-relaxed text-mist">
-              Co-designed published board games, including <em>The Rum Run</em>, and won a Game
-              Crafter design contest in 2011. Systems thinking with cardboard.
+              Has designed several board games since experimenting with architecture laser cutter scrap
+              in 2008. Won The Game Crafter&apos;s Mash-Up Contest with <em>Rum Run</em>, a bootlegger
+              cross between mancala and dominos.
             </p>
           </div>
           <div className="glass rounded-2xl p-7">
             <p className="font-mono text-xs text-amber">UNNECESSARY DETAIL #3</p>
             <p className="mt-3 text-sm leading-relaxed text-mist">
-              Composes digital music as &quot;Idle Eyebrows.&quot; Plays voice, guitar, piano, and
-              drums. The procedural soundtrack in Cascade Countdown was not a fluke.
+              Kids have names that each only rhyme with one other word in the English language. Has
+              written and performed songs for them with slant rhymes that stretch credulity.
             </p>
           </div>
         </div>

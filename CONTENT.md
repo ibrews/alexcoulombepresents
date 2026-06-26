@@ -29,18 +29,18 @@
 - `[home.12]` ▸ Unreal & Godot, let's go further than the documentation
 - `[home.13]` ▸ Engine-level fixes & improvements for Vision Pro, Godot physics game at 90 fps on AVP, MetaHumans like you've never seen them before. When the plugin says "Experimental," the real fun begins.
 - `[home.14]` ▸ 02 / AI
-- `[home.15]` ▸ Agents that ship real work. No tech for tech's sake. 
+- `[home.15]` ▸ Agents that ship real work. No tech for tech's sake.
 - `[home.16]` ▸ A fleet of machines at Agile Lens running AI coding agents around the clock. Field manuals so agents drive Unreal without crashing it. Pipelines where the overnight build greets you with a new TestFlight-approved app waiting on device by morning.
 - `[home.17]` ▸ 03 / STAGES
 - `[home.18]` ▸ Theatre is the original VR
-- `[home.19]` ▸ Live actors performing in headsets since 2018. Worked on Venice Biennale's first global live VR show, an annual Christmas Carol in VR, mixed reality theatre with an actor surrounded by digital assets, and published SIGGRAPH papers on all of it, 
+- `[home.19]` ▸ Live actors performing in headsets since 2018. Worked on Venice Biennale's first global live VR show, an annual Christmas Carol in VR, mixed reality theatre with an actor surrounded by digital assets, and published SIGGRAPH papers on all of it.
 - `[home.20]` ▸ Fresh from the repo
 - `[home.21]` ▸ Real tools built for Agile Lens, now available to you.
 - `[home.22]` ▸ all repos →
 - `[home.23]` ▸ The Lab
 - `[home.24]` ▸ Here's what's coming:
 
-**List: venues**  (10 items — add or remove lines freely)
+**List: venues**  (17 items — add or remove lines freely)
 
 - SIGGRAPH
 - HarvardXR
@@ -72,7 +72,7 @@
 
 **On the page**
 
-- `[about.1]` ▸ Trained as an theatre architect. Constructing the cognitive ladder to virtual experiences that real venues can't reach.
+- `[about.1]` ▸ Trained as a theatre architect. Constructing the cognitive ladder to virtual experiences that real venues can't reach.
 - `[about.2]` ▸ Alex Coulombe is the co-founder and CEO of Agile Lens , a New York immersive design studio that one client described as "XR SEAL Team Six." With a B.Arch from Syracuse (with a drama minor that turned out to be load-bearing), and years at firms like Rafael Viñoly and ZGF designing real buildings, then a jump to Fisher Dachs Associates: Theatre Planning & Design — where, in 2013, he strapped on an Oculus DK1 and pioneered the world's first VR theatrical sightline experiments.
 - `[about.3]` ▸ Since co-founding Agile Lens with Joshua Dachs: photoreal VR holodecks driving nine figures in pre-construction real estate sales, a mixed-reality rehearsal tool for the Royal Shakespeare Company, and A Christmas Carol VR performed live in headsets every December since 2021. SIGGRAPH-published research on VR performances come from hard-won lessons from real stages, not just theory.
 - `[about.4]` ▸ These days the obsession is the intersection of game engines, Apple Vision Pro, and AI agents: engine-level Unreal fixes for visionOS, pushing Godot in new directions while maintaining 90 fps on AVP hardware, and a fleet of machines running AI coding agents that build, test, and ship to TestFlight while he sleeps.
@@ -88,7 +88,7 @@
 - `[about.14]` ▸ UNNECESSARY DETAIL #2
 - `[about.15]` ▸ Has designed several board games since experimenting with architecture laser cutter scrap in 2008. Won The Game Crafter's Mash-Up Contest with Rum Run, a bootlegger cross between mancala and dominos.
 - `[about.16]` ▸ UNNECESSARY DETAIL #3
-- `[about.17]` ▸ Kids have names that each only rhyme with one other words in the English language. Has written and performed songs for them with slant rhymes that stretch credulity.
+- `[about.17]` ▸ Kids have names that each only rhyme with one other word in the English language. Has written and performed songs for them with slant rhymes that stretch credulity.
 
 ---
 
@@ -103,7 +103,7 @@
 **On the page**
 
 - `[training.1]` ▸ Learn Unreal from someone who ships with it every day.
-- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens. He has taught over 300+ courses on behalf of Epic Games to their key partners. These curriculums come from nearly a decade of real client work in Unreal: photoreal archviz, live virtual production, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
+- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens. He has taught 300+ courses on behalf of Epic Games to their key partners. These curriculums come from nearly a decade of real client work in Unreal: photoreal archviz, live virtual production, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
 - `[training.3]` ▸ FORMAT
 - `[training.4]` ▸ Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team training for studios.
 - `[training.5]` ▸ SCHEDULE
