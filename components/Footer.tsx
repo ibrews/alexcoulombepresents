@@ -6,9 +6,10 @@ export default function Footer() {
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-3">
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="Alex Coulombe Presents" className="-ml-3 w-48" />
-          <p className="mt-2 text-sm text-mist">
-            Unreal Engine · Godot · Apple Vision Pro · AI agents · live immersive theatre. Made in New York.
+          <img src="/logo.svg" alt="Alex Coulombe Presents" className="-ml-3 w-64" />
+          <p className="mt-3 text-sm text-mist">
+            Unreal Engine · Godot · Apple Vision Pro · AI agents · live immersive theatre.<br />
+            Made in New York.
           </p>
         </div>
         <div className="text-sm">
