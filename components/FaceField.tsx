@@ -176,7 +176,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
     <>
       {/* Image sits BELOW the canvas so particles render on top of the face */}
       <div
-        className="absolute right-0 top-0 hidden h-full w-[44%] overflow-hidden lg:block"
+        className="absolute right-0 top-0 hidden h-full w-[26%] overflow-hidden lg:block"
         style={{
           maskImage: "linear-gradient(to right, transparent 0%, black 28%)",
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 28%)",
