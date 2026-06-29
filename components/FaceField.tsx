@@ -198,10 +198,19 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
     <>
       {/* Image below canvas so particles render on top of the face */}
       <div
-        className="absolute right-4 top-0 hidden h-full w-[26%] overflow-hidden lg:block"
+        className="absolute top-0 hidden overflow-hidden lg:block"
         style={{
-          maskImage: "linear-gradient(to right, transparent 0%, black 14%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 14%)",
+          right: "8%",
+          width: "30%",
+          height: "74vh",
+          maskImage:
+            "linear-gradient(to right, transparent 0%, black 10%, black 92%, transparent 100%), " +
+            "linear-gradient(to bottom, transparent 0%, black 6%, black 86%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent 0%, black 10%, black 92%, transparent 100%), " +
+            "linear-gradient(to bottom, transparent 0%, black 6%, black 86%, transparent 100%)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "destination-in",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -209,7 +218,8 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
           ref={imgRef}
           src="/alex-headshot.webp"
           alt="Alex Coulombe"
-          className="pointer-events-none h-full w-full select-none object-cover object-center"
+          className="pointer-events-none h-full w-full select-none object-cover"
+          style={{ objectPosition: "center top" }}
         />
       </div>
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
