@@ -29,7 +29,7 @@ export default function Home() {
         <div className="orb bottom-[10%] left-[40%] h-64 w-64 bg-amber" style={{ animationDelay: "-11s" }} />
 
         <div className="relative mx-auto w-full max-w-6xl px-5 pt-24 lg:pr-[30%]">
-          <p className="mb-4 font-mono text-sm text-teal">~/alex-coulombe $ whoami</p>
+          <p className="mb-4 font-mono text-sm text-teal">~/alex-coulombe $ whodis?</p>
           <h1 className="max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
             Building worlds you can <span className="grad-text">step inside.</span>
           </h1>
@@ -52,7 +52,7 @@ export default function Home() {
               href="/training"
               className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
             >
-              Learn Unreal with us
+              Learn Unreal
             </Link>
             <Link
               href="/repos"
@@ -68,14 +68,21 @@ export default function Home() {
       </section>
 
       {/* ── Venue marquee ─────────────────────────────────────── */}
-      <section className="overflow-hidden border-y border-line py-5">
-        <div className="marquee-track flex w-max gap-12 whitespace-nowrap font-mono text-sm text-mist">
-          {[...venues, ...venues].map((v, i) => (
-            <span key={i} className="flex items-center gap-12">
-              <span>{v}</span>
-              <span className="text-teal">✦</span>
-            </span>
-          ))}
+      <section className="border-y border-line py-5">
+        <div className="flex items-center">
+          <span className="shrink-0 pl-5 pr-8 font-mono text-xs uppercase tracking-widest text-teal">
+            Featured in:
+          </span>
+          <div className="overflow-hidden">
+            <div className="marquee-track flex w-max gap-12 whitespace-nowrap font-mono text-sm text-mist">
+              {[...venues, ...venues].map((v, i) => (
+                <span key={i} className="flex items-center gap-12">
+                  <span>{v}</span>
+                  <span className="text-teal">✦</span>
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
