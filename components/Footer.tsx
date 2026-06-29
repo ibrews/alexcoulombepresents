@@ -31,14 +31,14 @@ export default function Footer() {
             <a className="text-mist hover:text-snow" href="https://linkedin.com/in/alexcoulombe" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a className="text-mist hover:text-snow" href="https://twitter.com/ibrews" target="_blank" rel="noopener noreferrer">X / @ibrews</a>
             <a className="text-mist hover:text-snow" href="https://agilelens.com" target="_blank" rel="noopener noreferrer">Agile Lens</a>
-            <a className="text-mist hover:text-snow" href="https://uepodcast.com" target="_blank" rel="noopener noreferrer">UE Podcast</a>
+            <a className="text-mist hover:text-snow" href="https://linktr.ee/unoffunrealpod" target="_blank" rel="noopener noreferrer">UE Podcast</a>
             <a className="text-mist hover:text-snow" href="https://agilelens.com/unrealnyc" target="_blank" rel="noopener noreferrer">Unreal NYC</a>
             <a className="text-mist hover:text-snow" href="https://youtube.com/user/ibrews" target="_blank" rel="noopener noreferrer">YouTube</a>
           </div>
         </div>
       </div>
       <div className="border-t border-line py-5 text-center font-mono text-xs text-mist">
-        © {new Date().getFullYear()} Alex Coulombe · built with an AI co-pilot, naturally · try the Konami code
+        © {new Date().getFullYear()} Alex Coulombe · built with Claude Fable before it was forced back in the box · try the Konami code
       </div>
     </footer>
   );

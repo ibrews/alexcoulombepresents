@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Ethereal from "@/components/Ethereal";
-import ParticleField from "@/components/ParticleField";
+import FaceField from "@/components/FaceField";
 import Typewriter from "@/components/Typewriter";
 import Reveal from "@/components/Reveal";
 import RepoCard from "@/components/RepoCard";
@@ -23,12 +23,12 @@ export default function Home() {
       <Ethereal variant="aurora" />
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="relative flex min-h-[92vh] items-center overflow-hidden">
-        <ParticleField />
+        <FaceField />
         <div className="orb left-[10%] top-[20%] h-72 w-72 bg-teal" />
         <div className="orb right-[12%] top-[40%] h-80 w-80 bg-grape" style={{ animationDelay: "-6s" }} />
         <div className="orb bottom-[10%] left-[40%] h-64 w-64 bg-amber" style={{ animationDelay: "-11s" }} />
 
-        <div className="relative mx-auto w-full max-w-6xl px-5 pt-24">
+        <div className="relative mx-auto w-full max-w-6xl px-5 pt-24 lg:pr-[38%]">
           <p className="mb-4 font-mono text-sm text-teal">~/alex-coulombe $ whoami</p>
           <h1 className="max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
             Building worlds you can <span className="grad-text">step inside.</span>

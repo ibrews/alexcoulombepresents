@@ -534,7 +534,7 @@ export const externalLinks: {
   },
   {
     label: "The (Unofficial) Unreal Engine Podcast",
-    url: "https://uepodcast.com",
+    url: "https://linktr.ee/unoffunrealpod",
     note: "Co-hosted with Jacob Feldman. Unreal news, takes, and guests.",
     vibe: "serious",
     extra: { label: "All platforms (Linktree)", url: "https://linktr.ee/unoffunrealpod" },
