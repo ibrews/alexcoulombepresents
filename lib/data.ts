@@ -523,7 +523,7 @@ export const externalLinks: {
     vibe: "serious",
     extra: { label: "Browse the portfolio", url: "https://agilelens.com/portfolio" },
   },
-  { label: "alexcoulombe.com", url: "http://alexcoulombe.com", note: "Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine, as nature intended.", vibe: "joke" },
+  { label: "alexcoulombe.com", url: "http://alexcoulombe.com", note: "Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine to experience it in its full Macromedia Flash glory, as nature intended.", vibe: "joke" },
   { label: "GitHub — @ibrews", url: "https://github.com/ibrews", note: "Where the code lives. Engines plural, agents plural.", vibe: "serious" },
   {
     label: "Unreal NYC",

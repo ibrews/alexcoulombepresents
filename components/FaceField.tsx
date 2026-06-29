@@ -2,10 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-// Facial landmark positions as fractions of image (0=top/left, 1=bottom/right).
-// Face contour + key features so particles trace the face silhouette.
 const LANDMARKS = [
-  // Face outline
   { fx: 0.50, fy: 0.08 }, // crown
   { fx: 0.33, fy: 0.18 }, // left hairline
   { fx: 0.65, fy: 0.18 }, // right hairline
@@ -18,7 +15,6 @@ const LANDMARKS = [
   { fx: 0.32, fy: 0.73 }, // left jaw
   { fx: 0.68, fy: 0.73 }, // right jaw
   { fx: 0.50, fy: 0.82 }, // chin
-  // Interior features
   { fx: 0.37, fy: 0.34 }, // left eyebrow
   { fx: 0.62, fy: 0.34 }, // right eyebrow
   { fx: 0.37, fy: 0.40 }, // left eye
@@ -43,9 +39,10 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
     let raf = 0;
     let w = 0, h = 0, dpr = 1;
     const pointer = { x: -9999, y: -9999 };
+    let lastMove = performance.now();
     let particles: { x: number; y: number; vx: number; vy: number; r: number; hue: number }[] = [];
 
-    const palette = [174, 262, 42]; // teal, purple, amber
+    const palette = [174, 262, 42];
 
     function resize() {
       if (!canvas) return;
@@ -84,6 +81,12 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
       const linkDist = Math.min(w, h) * 0.16;
       const attractors = getAttractors();
 
+      // After 30s idle, ramp in particle-particle repulsion so the field
+      // settles into an even distribution with no giant empty patches.
+      const idleSec = (performance.now() - lastMove) / 1000;
+      const settleFactor = Math.max(0, Math.min(1, (idleSec - 30) / 10));
+      const repelR = Math.min(w, h) * 0.22;
+
       for (const p of particles) {
         // pointer repulsion
         const dx = p.x - pointer.x;
@@ -95,7 +98,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
           p.vy += (dy / d) * 0.18;
         }
 
-        // face attractor — gentle gravitation toward facial landmarks
+        // face attractor
         for (const att of attractors) {
           const ax = att.x - p.x;
           const ay = att.y - p.y;
@@ -124,6 +127,24 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
         ctx!.fill();
       }
 
+      // Settling: mutual repulsion pushes particles apart evenly
+      if (settleFactor > 0) {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i], b = particles[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < repelR * repelR && d2 > 0) {
+              const d = Math.sqrt(d2);
+              const f = (1 - d / repelR) * 0.014 * settleFactor;
+              const fx = (dx / d) * f, fy = (dy / d) * f;
+              a.vx += fx; a.vy += fy;
+              b.vx -= fx; b.vy -= fy;
+            }
+          }
+        }
+      }
+
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const a = particles[i], b = particles[j];
@@ -147,6 +168,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
       const rect = canvas!.getBoundingClientRect();
       pointer.x = e.clientX - rect.left;
       pointer.y = e.clientY - rect.top;
+      lastMove = performance.now();
     }
     function onLeave() {
       pointer.x = -9999;
@@ -174,12 +196,12 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
 
   return (
     <>
-      {/* Image sits BELOW the canvas so particles render on top of the face */}
+      {/* Image below canvas so particles render on top of the face */}
       <div
-        className="absolute right-0 top-0 hidden h-full w-[26%] overflow-hidden lg:block"
+        className="absolute right-4 top-0 hidden h-full w-[26%] overflow-hidden lg:block"
         style={{
-          maskImage: "linear-gradient(to right, transparent 0%, black 28%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 28%)",
+          maskImage: "linear-gradient(to right, transparent 0%, black 14%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 14%)",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -190,7 +212,6 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
           className="pointer-events-none h-full w-full select-none object-cover object-center"
         />
       </div>
-      {/* Canvas on top — particles are visible over the portrait */}
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
     </>
   );

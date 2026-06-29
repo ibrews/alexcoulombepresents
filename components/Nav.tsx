@@ -13,6 +13,7 @@ const links = [
   { href: "/lab", label: "The Lab" },
   { href: "/store", label: "Store" },
   { href: "/links", label: "Links" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Nav() {
