@@ -198,19 +198,10 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
     <>
       {/* Image below canvas so particles render on top of the face */}
       <div
-        className="absolute top-0 hidden overflow-hidden lg:block"
+        className="absolute right-4 top-0 hidden h-full w-[30%] overflow-hidden lg:block"
         style={{
-          right: "8%",
-          width: "30%",
-          height: "74vh",
-          maskImage:
-            "linear-gradient(to right, transparent 0%, black 10%, black 92%, transparent 100%), " +
-            "linear-gradient(to bottom, transparent 0%, black 6%, black 86%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent 0%, black 10%, black 92%, transparent 100%), " +
-            "linear-gradient(to bottom, transparent 0%, black 6%, black 86%, transparent 100%)",
-          maskComposite: "intersect",
-          WebkitMaskComposite: "destination-in",
+          maskImage: "linear-gradient(to right, transparent 0%, black 4%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 4%)",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
