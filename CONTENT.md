@@ -101,7 +101,7 @@
 
 **Browser tab / SEO**
 
-- `[training.meta.title]` ▸ Unreal Engine Training
+- `[training.meta.title]` ▸ Unreal Engine Training in NYC
 - `[training.meta.description]` ▸ Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR including Vision Pro, MetaHumans, ArchViz, virtual production, and much much more.
 
 **On the page**
@@ -141,7 +141,7 @@
 
 **Browser tab / SEO**
 
-- `[repos.meta.title]` ▸ Open Source
+- `[repos.meta.title]` ▸ Open Source: Unreal, Godot & visionOS
 - `[repos.meta.description]` ▸ Public repositories from Alex Coulombe (@ibrews): Unreal Engine plugins, Godot on Apple Vision Pro, visionOS tools, AI agent skills, and developer utilities.
 
 **On the page**
@@ -174,7 +174,7 @@
 
 **Browser tab / SEO**
 
-- `[skills.meta.title]` ▸ AI Skills
+- `[skills.meta.title]` ▸ AI Skills for Claude Code
 - `[skills.meta.description]` ▸ Claude Code skills by Alex Coulombe — UE5 and iOS TestFlight pipelines live on Capafy, plus free open-source skills for Unreal MCP and Apple platforms.
 
 **On the page**
@@ -192,7 +192,7 @@
 
 **Browser tab / SEO**
 
-- `[videos.meta.title]` ▸ Videos
+- `[videos.meta.title]` ▸ Unreal, Vision Pro & Godot Videos
 - `[videos.meta.description]` ▸ Key videos and playlists from Alex Coulombe's YouTube channel — Vision Pro experiments, Unreal Engine talks, Godot pioneering, AI agent builds, and live VR theatre.
 
 **On the page**
@@ -214,7 +214,7 @@
 
 **Browser tab / SEO**
 
-- `[lab.meta.title]` ▸ The Lab
+- `[lab.meta.title]` ▸ The Lab: Upcoming XR Tools
 - `[lab.meta.description]` ▸ Upcoming products from Alex Coulombe: Forage, UnRealityKit Bridge, Pinchwork universal OpenXR hand tracking, and Unreal Engine × visionOS engine work.
 
 **On the page**
@@ -246,7 +246,7 @@
 
 **Browser tab / SEO**
 
-- `[store.meta.title]` ▸ Store
+- `[store.meta.title]` ▸ Store: Courses, Skills & Templates
 - `[store.meta.description]` ▸ Courses, AI skills, and templates — sold directly. No marketplace, no middleman: the only cut is card processing.
 
 **On the page**

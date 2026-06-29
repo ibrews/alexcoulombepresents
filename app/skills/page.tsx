@@ -4,7 +4,7 @@ import Ethereal from "@/components/Ethereal";
 import { agentSkills } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "AI Skills",
+  title: "AI Skills for Claude Code",
   description:
     "Claude Code skills by Alex Coulombe — UE5 and iOS TestFlight pipelines live on Capafy, plus free open-source skills for Unreal MCP and Apple platforms.",
   alternates: { canonical: "/skills" },

@@ -15,7 +15,10 @@ const jetmono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetmono" 
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: site.title, template: `%s · ${site.title}` },
+  title: {
+    default: "Alex Coulombe Presents · Unreal Engine Instructor & XR Developer",
+    template: `%s · ${site.title}`,
+  },
   description: site.description,
   alternates: { canonical: "/" },
   keywords: [

@@ -6,7 +6,7 @@ import ParticleField from "@/components/ParticleField";
 import { products } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "The Lab",
+  title: "The Lab: Upcoming XR Tools",
   description:
     "Upcoming products from Alex Coulombe: Forage, UnRealityKit Bridge, Pinchwork universal OpenXR hand tracking, and Unreal Engine × visionOS engine work.",
   alternates: { canonical: "/lab" },

@@ -7,7 +7,7 @@ import { courses, trainingPlaylist } from "@/lib/data";
 import { trainingCourse } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Unreal Engine Training",
+  title: "Unreal Engine Training in NYC",
   description:
     "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR including Vision Pro, MetaHumans, ArchViz, virtual production, and much much more.",
   alternates: { canonical: "/training" },

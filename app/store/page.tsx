@@ -5,7 +5,7 @@ import BuyButton from "@/components/BuyButton";
 import { storeItems, formatPrice, STORE_LIVE } from "@/lib/store";
 
 export const metadata: Metadata = {
-  title: "Store",
+  title: "Store: Courses, Skills & Templates",
   description:
     "Courses, AI skills, and templates — sold directly. No marketplace, no middleman: the only cut is card processing.",
   alternates: { canonical: "/store" },

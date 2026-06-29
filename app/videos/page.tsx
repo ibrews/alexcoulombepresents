@@ -5,7 +5,7 @@ import LiteVideo from "@/components/LiteVideo";
 import { featuredVideo, videos, playlists } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Videos",
+  title: "Unreal, Vision Pro & Godot Videos",
   description:
     "Key videos and playlists from Alex Coulombe's YouTube channel — Vision Pro experiments, Unreal Engine talks, Godot pioneering, AI agent builds, and live VR theatre.",
   alternates: { canonical: "/videos" },

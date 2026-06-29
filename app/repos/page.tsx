@@ -5,7 +5,7 @@ import RepoCard from "@/components/RepoCard";
 import { repos } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Open Source",
+  title: "Open Source: Unreal, Godot & visionOS",
   description:
     "Public repositories from Alex Coulombe (@ibrews): Unreal Engine plugins, Godot on Apple Vision Pro, visionOS tools, AI agent skills, and developer utilities.",
   alternates: { canonical: "/repos" },
