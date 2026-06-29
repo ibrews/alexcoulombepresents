@@ -4,6 +4,7 @@ import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
 import JsonLd from "@/components/JsonLd";
 import { courses, trainingPlaylist } from "@/lib/data";
+import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -76,7 +77,7 @@ export default function Training() {
                   </span>
                 )}
                 <h3 className="font-bold">{c.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-mist">{c.blurb}</p>
+                <p className="mt-2 text-sm leading-relaxed text-mist">{renderBreaks(c.blurb)}</p>
               </div>
             </Reveal>
           ))}
@@ -89,7 +90,7 @@ export default function Training() {
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-teal">Try the teaching first</p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">{trainingPlaylist.title}</h2>
-            <p className="mt-3 leading-relaxed text-mist">{trainingPlaylist.blurb}</p>
+            <p className="mt-3 leading-relaxed text-mist">{renderBreaks(trainingPlaylist.blurb)}</p>
             <a
               href={`https://www.youtube.com/playlist?list=${trainingPlaylist.id}`}
               target="_blank"

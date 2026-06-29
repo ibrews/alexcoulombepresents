@@ -4,6 +4,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import ParticleField from "@/components/ParticleField";
 import { products } from "@/lib/data";
+import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
   title: "The Lab: Upcoming XR Tools",
@@ -59,11 +60,11 @@ export default function Lab() {
                   {p.status}
                 </span>
               </div>
-              <p className="mt-4 max-w-3xl text-lg text-mist">{p.tagline}</p>
+              <p className="mt-4 max-w-3xl text-lg text-mist">{renderBreaks(p.tagline)}</p>
               <div className="mt-6 flex flex-wrap gap-2">
                 {p.bullets.slice(0, 3).map((b) => (
                   <span key={b} className="rounded-full bg-line/50 px-3 py-1.5 text-xs text-mist">
-                    {b}
+                    {renderBreaks(b)}
                   </span>
                 ))}
               </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { storeItems } from "@/lib/store";
+import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = { title: "Thank you!" };
 
@@ -21,7 +22,7 @@ export default async function Success({
       <p className="mt-5 max-w-md text-mist">
         {item ? (
           <>
-            <span className="text-snow">{item.name}</span> is yours. {item.delivery} If anything
+            <span className="text-snow">{item.name}</span> is yours. {renderBreaks(item.delivery)} If anything
             doesn&apos;t arrive within the hour, email{" "}
             <a className="text-teal hover:underline" href="mailto:info@alexcoulombepresents.com">
               info@alexcoulombepresents.com

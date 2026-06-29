@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
 import { featuredVideo, videos, playlists } from "@/lib/data";
+import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
   title: "Unreal, Vision Pro & Godot Videos",
@@ -55,7 +56,7 @@ export default function Videos() {
               Featured · {featuredVideo.tag}
             </p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight">{featuredVideo.title}</h2>
-            <p className="mt-3 leading-relaxed text-mist">{featuredVideo.blurb}</p>
+            <p className="mt-3 leading-relaxed text-mist">{renderBreaks(featuredVideo.blurb)}</p>
           </div>
         </div>
       </Reveal>
@@ -76,7 +77,7 @@ export default function Videos() {
                 <Reveal key={v.id} delay={Math.min(i * 70, 210)}>
                   <div>
                     <LiteVideo id={v.id} title={v.title} />
-                    {v.blurb && <p className="mt-2 px-1 text-xs leading-relaxed text-mist">{v.blurb}</p>}
+                    {v.blurb && <p className="mt-2 px-1 text-xs leading-relaxed text-mist">{renderBreaks(v.blurb)}</p>}
                   </div>
                 </Reveal>
               ))}
@@ -102,7 +103,7 @@ export default function Videos() {
               >
                 <span className="font-mono text-xs text-teal">≡ playlist</span>
                 <h3 className="mt-2 font-bold leading-snug group-hover:text-teal">{p.title}</h3>
-                <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{p.blurb}</p>
+                <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{renderBreaks(p.blurb)}</p>
                 <span className="mt-3 font-mono text-xs text-mist opacity-0 transition-opacity group-hover:opacity-100">
                   watch on YouTube →
                 </span>

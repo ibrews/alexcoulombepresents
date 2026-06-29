@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import { agentSkills } from "@/lib/data";
+import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
   title: "AI Skills for Claude Code",
@@ -39,8 +40,8 @@ export default function Skills() {
                     {badge.label}
                   </span>
                 </div>
-                <p className="mt-3 text-sm font-medium leading-relaxed">{s.blurb}</p>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{s.detail}</p>
+                <p className="mt-3 text-sm font-medium leading-relaxed">{renderBreaks(s.blurb)}</p>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{renderBreaks(s.detail)}</p>
                 {s.link && (
                   <a
                     href={s.link.url}

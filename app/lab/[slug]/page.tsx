@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import { products } from "@/lib/data";
+import { renderBreaks, plainText } from "@/components/Lines";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!product) return {};
   return {
     title: product.name,
-    description: product.tagline,
+    description: plainText(product.tagline),
     alternates: { canonical: `/lab/${product.slug}` },
   };
 }
@@ -48,11 +49,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.status}
           </span>
         </div>
-        <p className={`mt-5 text-xl leading-relaxed md:text-2xl ${accent}`}>{product.tagline}</p>
+        <p className={`mt-5 text-xl leading-relaxed md:text-2xl ${accent}`}>{renderBreaks(product.tagline)}</p>
       </Reveal>
 
       <Reveal>
-        <p className="mt-8 text-lg leading-relaxed text-mist">{product.pitch}</p>
+        <p className="mt-8 text-lg leading-relaxed text-mist">{renderBreaks(product.pitch)}</p>
       </Reveal>
 
       <div className="mt-12 space-y-6">
@@ -60,7 +61,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <Reveal key={s.heading} delay={i * 80}>
             <div className="glass rounded-3xl p-8">
               <h2 className="text-lg font-bold">{s.heading}</h2>
-              <p className="mt-3 leading-relaxed text-mist">{s.body}</p>
+              <p className="mt-3 leading-relaxed text-mist">{renderBreaks(s.body)}</p>
             </div>
           </Reveal>
         ))}
@@ -73,7 +74,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.bullets.map((b) => (
               <li key={b} className="flex gap-3 text-sm leading-relaxed text-mist">
                 <span className={`mt-0.5 ${accent}`}>✦</span>
-                <span>{b}</span>
+                <span>{renderBreaks(b)}</span>
               </li>
             ))}
           </ul>
@@ -126,7 +127,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {others.map((o) => (
               <Link key={o.slug} href={`/lab/${o.slug}`} className="glass rounded-xl p-5">
                 <p className="text-sm font-bold">{o.name}</p>
-                <p className="mt-1.5 line-clamp-2 text-xs text-mist">{o.tagline}</p>
+                <p className="mt-1.5 line-clamp-2 text-xs text-mist">{renderBreaks(o.tagline)}</p>
               </Link>
             ))}
           </div>

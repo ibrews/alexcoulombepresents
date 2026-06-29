@@ -23,7 +23,12 @@ const rel = (p) => path.relative(root, p);
 // ── helpers ──────────────────────────────────────────────────────────────────
 const ENTITIES = { "&apos;": "'", "&quot;": '"', "&amp;": "&", "&lt;": "<", "&gt;": ">", "&mdash;": "—", "&nbsp;": " " };
 const decode = (s) => s.replace(/&apos;|&quot;|&amp;|&lt;|&gt;|&mdash;|&nbsp;/g, (m) => ENTITIES[m]);
-const squish = (s) => decode(s).replace(/\s+/g, " ").trim();
+const squish = (s) => {
+  // Normalize any HTML br variant (<br/>, <br />, <BR />) → canonical <br> token, then
+  // squish whitespace in each segment independently so the marker survives collapsing.
+  const normalized = decode(s).replace(/\s*<br\s*\/?>\s*/gi, "<br>");
+  return normalized.split("<br>").map((p) => p.replace(/\s+/g, " ").trim()).join("<br>");
+};
 const hasLetters = (s) => /[A-Za-z]/.test(s);
 // Skip runs that are pure punctuation / arrows / symbols / single glyphs.
 const isContent = (s) => s.length >= 2 && hasLetters(s) && !/^[#/\d.\s]+$/.test(s);
@@ -37,6 +42,7 @@ const tagName = (node) => {
 };
 
 // Collect all JSX text under a node, in order, joined + squished.
+// <br /> self-closing elements are emitted as the canonical <br> token.
 function innerText(node, sf) {
   let out = "";
   const visit = (n) => {
@@ -46,6 +52,10 @@ function innerText(node, sf) {
       const expr = n.expression;
       if (expr && ts.isStringLiteralLike(expr)) out += expr.text;
       else out += " ";
+    } else if (ts.isJsxSelfClosingElement(n)) {
+      // Capture <br /> as the canonical line-break token.
+      if (tagName(n).toLowerCase() === "br") { out += "<br>"; return; }
+      n.forEachChild(visit);
     } else n.forEachChild(visit);
   };
   node.forEachChild(visit);
@@ -170,7 +180,7 @@ const snapshot = {};
 let md = "";
 md += `# Alex Coulombe Presents — all website copy\n\n`;
 md += `> **Generated file — edit the text, not the structure.** Regenerate anytime with \`node scripts/gen-content.mjs\`.\n>\n`;
-md += `> **How to edit:** change the words after each \`▸\`. Leave the \`[id]\` tags alone — they tell Claude exactly where each line lives.\n>\n`;
+md += `> **How to edit:** change the words after each \`▸\`. Leave the \`[id]\` tags alone — they tell Claude exactly where each line lives. Type \`<br>\` anywhere in a string to insert a line break (e.g. \`▸ Line one<br>Line two\`).\n>\n`;
 md += `> **Lists** are marked \`(N items — add or remove lines freely)\`. Add a new \`- \` line to grow a list; delete a line to shrink it. Claude will notice the count change and update the site (e.g. the rotating "Currently:" descriptors).\n>\n`;
 md += `> **When you're done:** tell Claude *"sweep the copy"* and your edits get applied to the live site, then redeployed.\n\n`;
 md += `---\n\n`;

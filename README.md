@@ -74,6 +74,14 @@ human-readable dump of *every* user-facing string on the site. Change the words 
 leave the `[id]` tags alone. Lists (e.g. the rotating "Currently:" descriptors) are marked
 `(N items — add or remove lines freely)` — add or delete `-` lines to grow or shrink them.
 
+To insert a **line break** inside any string, type the literal token `<br>`:
+```
+▸ First line<br>Second line
+```
+The site renders it as a real `<br />`. Data strings (taglines, blurbs, story text, bullets)
+all support this. The token round-trips through `gen-content` unchanged and is stripped
+automatically from meta descriptions so SEO copy stays clean.
+
 The round-trip:
 
 ```bash

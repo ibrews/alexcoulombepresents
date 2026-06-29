@@ -5,6 +5,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import StarCount from "@/components/StarCount";
 import { repos } from "@/lib/data";
+import { renderBreaks, plainText } from "@/components/Lines";
 
 export function generateStaticParams() {
   return repos.map((r) => ({ slug: r.slug }));
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!repo) return {};
   return {
     title: repo.name,
-    description: repo.tagline,
+    description: plainText(repo.tagline),
     alternates: { canonical: `/repos/${repo.slug}` },
   };
 }
@@ -39,7 +40,7 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
           <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{repo.name}</h1>
           <StarCount repo={repo.slug} fallback={repo.stars} />
         </div>
-        <p className="mt-4 text-xl leading-relaxed text-mist">{repo.tagline}</p>
+        <p className="mt-4 text-xl leading-relaxed text-mist">{renderBreaks(repo.tagline)}</p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <a
@@ -87,7 +88,7 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
       <Reveal>
         <div className="glass mt-12 rounded-3xl p-8 md:p-10">
           <p className="font-mono text-xs uppercase tracking-widest text-teal">The story</p>
-          <p className="mt-4 leading-relaxed text-mist">{repo.story}</p>
+          <p className="mt-4 leading-relaxed text-mist">{renderBreaks(repo.story)}</p>
         </div>
       </Reveal>
 
@@ -98,7 +99,7 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
             {repo.highlights.map((h) => (
               <li key={h} className="flex gap-3 text-sm leading-relaxed text-mist">
                 <span className="mt-0.5 text-teal">✦</span>
-                <span>{h}</span>
+                <span>{renderBreaks(h)}</span>
               </li>
             ))}
           </ul>
@@ -121,7 +122,7 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
               {siblings.map((s) => (
                 <Link key={s.slug} href={`/repos/${s.slug}`} className="glass rounded-xl p-5">
                   <p className="text-sm font-bold">{s.name}</p>
-                  <p className="mt-1.5 line-clamp-2 text-xs text-mist">{s.tagline}</p>
+                  <p className="mt-1.5 line-clamp-2 text-xs text-mist">{renderBreaks(s.tagline)}</p>
                 </Link>
               ))}
             </div>

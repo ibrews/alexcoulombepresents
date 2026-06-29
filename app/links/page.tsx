@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import { externalLinks } from "@/lib/data";
+import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
   title: "Links",
@@ -35,7 +36,7 @@ export default function Links() {
               >
                 <div>
                   <h2 className="font-bold group-hover:text-teal">{l.label}</h2>
-                  <p className="mt-1 text-sm text-mist">{l.note}</p>
+                  <p className="mt-1 text-sm text-mist">{renderBreaks(l.note)}</p>
                 </div>
                 <span className="font-mono text-mist transition-transform group-hover:translate-x-1 group-hover:text-teal">
                   →
@@ -64,7 +65,7 @@ export default function Links() {
             </span>
             <p className="font-mono text-xs uppercase tracking-widest text-amber">⚠ Historical artifact</p>
             <h2 className="mt-3 font-bold">{joke.label}</h2>
-            <p className="mt-1 max-w-xl text-sm text-mist">{joke.note}</p>
+            <p className="mt-1 max-w-xl text-sm text-mist">{renderBreaks(joke.note)}</p>
             <div className="mt-4 flex flex-wrap gap-3 font-mono text-xs">
               <a
                 href={joke.url}

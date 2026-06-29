@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import BuyButton from "@/components/BuyButton";
 import { storeItems, formatPrice, STORE_LIVE } from "@/lib/store";
+import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
   title: "Store: Courses, Skills & Templates",
@@ -54,9 +55,9 @@ export default function Store() {
                 </span>
               </div>
               <h2 className="mt-4 font-bold leading-snug">{item.name}</h2>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{item.blurb}</p>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{renderBreaks(item.blurb)}</p>
               <p className="mt-3 text-xs leading-relaxed text-mist">
-                <span className="text-snow">You get:</span> {item.delivery}
+                <span className="text-snow">You get:</span> {renderBreaks(item.delivery)}
               </p>
               <div className="mt-5">
                 {item.priceCents !== null ? (

@@ -5,6 +5,7 @@ import Typewriter from "@/components/Typewriter";
 import Reveal from "@/components/Reveal";
 import RepoCard from "@/components/RepoCard";
 import { repos, products, roles } from "@/lib/data";
+import { renderBreaks } from "@/components/Lines";
 
 const venues = [
   "SIGGRAPH", "HarvardXR", "Unreal Fest", "Venice Biennale", "AWE", "FMX",
@@ -166,7 +167,7 @@ export default function Home() {
                       {p.status}
                     </span>
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed text-mist">{p.tagline}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-mist">{renderBreaks(p.tagline)}</p>
                 </Link>
               </Reveal>
             ))}

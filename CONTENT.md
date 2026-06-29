@@ -2,7 +2,7 @@
 
 > **Generated file — edit the text, not the structure.** Regenerate anytime with `node scripts/gen-content.mjs`.
 >
-> **How to edit:** change the words after each `▸`. Leave the `[id]` tags alone — they tell Claude exactly where each line lives.
+> **How to edit:** change the words after each `▸`. Leave the `[id]` tags alone — they tell Claude exactly where each line lives. Type `<br>` anywhere in a string to insert a line break (e.g. `▸ Line one<br>Line two`).
 >
 > **Lists** are marked `(N items — add or remove lines freely)`. Add a new `- ` line to grow a list; delete a line to shrink it. Claude will notice the count change and update the site (e.g. the rotating "Currently:" descriptors).
 >
