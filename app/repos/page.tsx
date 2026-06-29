@@ -55,7 +55,7 @@ export default function Repos() {
           <a href="https://github.com/ibrews" className="text-teal hover:underline" target="_blank" rel="noopener noreferrer">
             github.com/ibrews
           </a>{" "}
-          — including the forks, the experiments, and the repos that should probably be archived.
+          — including the forks, the experiments, and the hyper-targeted repos to solve absurdly specific problems.
         </p>
       </Reveal>
     </div>

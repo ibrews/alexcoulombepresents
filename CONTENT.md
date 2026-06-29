@@ -40,7 +40,7 @@
 - `[home.23]` ▸ The Lab
 - `[home.24]` ▸ Here's what's bubbling:
 
-**List: venues**  (17 items — add or remove lines freely)
+**List: venues**  (21 items — add or remove lines freely)
 
 - SIGGRAPH
 - HarvardXR
@@ -83,7 +83,7 @@
 - `[about.5]` ▸ Alex also teaches all of it — as a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, as the lead organizer of the Unreal NYC meetup (1400+ members), and as host of The (Unofficial) Unreal Engine Podcast.
 - `[about.6]` ▸ Live from the HarvardXR 2026 closing keynote
 - `[about.7]` ▸ The origin story, in 8-bit
-- `[about.8]` ▸ These two interactive slides opened "10 Lessons from 10 Years" at Harvard in April 2026. 2010 Alex pinballs between his three passions — until 2013 Alex finds the upgrade that merges them. Presentation built alongside Spatial Deck, a new kind of presentation tool ; explore the whole presentation here.
+- `[about.8]` ▸ These two interactive slides opened "10 Lessons from 10 Years" at Harvard in April 2026. 2010 Alex pinballs between his three passions — until 2013 Alex finds the upgrade that merges them. Presentation built alongside Spatial Deck, a new kind of presentation tool ; explore the whole presentation here .
 - `[about.9]` ▸ 2013: the power-up
 - `[about.10]` ▸ Architecture, theatre, and realtime tech were three separate careers until a headset turned them into one. Press start and watch it happen — sound on for the full chiptune experience. (Every sound is synthesized live with the Web Audio API. No audio files were harmed.)
 - `[about.11]` ▸ The road so far
@@ -107,7 +107,7 @@
 **On the page**
 
 - `[training.1]` ▸ Learn Unreal from someone who ships with it every day.
-- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens. He has collaborated on the creation of 50+ courses and taught 300+ sessions on behalf of Epic Games to their key partners. Our curriculums come from those lesson mereged with nearly a decade of real client work from Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
+- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens. He has collaborated on the creation of 50+ courses and taught 300+ sessions on behalf of Epic Games to their key partners. Our curriculums come from those lessons merged with nearly a decade of real client work from Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
 - `[training.3]` ▸ FORMAT
 - `[training.4]` ▸ Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team training for entire studios.
 - `[training.5]` ▸ SCHEDULE
@@ -127,7 +127,7 @@
 - `[training.19]` ▸ Book a class →
 - `[training.20]` ▸ Team / studio training
 - `[training.21]` ▸ Unreal NYC
-- `[training.22]` ▸ Alex and Agile Lens leads the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
+- `[training.22]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
 - `[training.23]` ▸ agilelens.com/unrealnyc ↗
 - `[training.24]` ▸ Epic community page ↗
 - `[training.25]` ▸ Free stuff first

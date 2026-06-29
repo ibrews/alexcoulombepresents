@@ -64,7 +64,7 @@ export default function Skills() {
       <Reveal>
         <p className="font-mono text-sm text-teal">/skills</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
-          Teach your AI what took me <span className="grad-text">a decade to learn.</span>
+          Teach your AI what took Alex <span className="grad-text">over a decade to learn.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
           Skills are install-once knowledge packs for Claude Code: every gotcha, crash pattern, and

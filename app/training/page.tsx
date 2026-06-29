@@ -7,7 +7,7 @@ import { courses, trainingPlaylist } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Unreal Engine Training",
   description:
-    "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR, MetaHumans, archviz, virtual production, and much much more.",
+    "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR including Vision Pro, MetaHumans, ArchViz, virtual production, and much much more.",
 };
 
 export default function Training() {
@@ -22,9 +22,10 @@ export default function Training() {
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
           Alex is a top-rated <strong className="text-snow">Epic Games Authorized Instructor</strong>{" "}
           running <strong className="text-snow">Manhattan&apos;s first Unreal Authorized Training
-          Center</strong>, in association with Agile Lens. He has taught 300+ courses on behalf of
-          Epic Games to their key partners. These curriculums come from nearly a decade of real client
-          work in Unreal: photoreal archviz, live virtual production, multiplayer VR, and now
+          Center</strong>, in association with Agile Lens. He has collaborated on the creation of 50+
+          courses and taught 300+ sessions on behalf of Epic Games to their key partners. Our
+          curriculums come from those lessons merged with nearly a decade of real client work from
+          Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now
           AI-driven workflows. You&apos;ll learn methodologies you won&apos;t find anywhere else.
         </p>
       </Reveal>
@@ -36,7 +37,7 @@ export default function Training() {
             <p className="font-mono text-xs text-teal">FORMAT</p>
             <p className="mt-2 text-sm leading-relaxed text-mist">
               Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team
-              training for studios.
+              training for entire studios.
             </p>
           </div>
           <div className="glass rounded-2xl p-6">
@@ -105,7 +106,7 @@ export default function Training() {
       <Reveal>
         <div className="glass mt-20 rounded-3xl p-10 md:p-14">
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
-            Why learn here and not from a 40-hour video course?
+            Why learn here and not from an on-demand video course?
           </h2>
           <div className="mt-6 grid gap-6 text-sm leading-relaxed text-mist md:grid-cols-3">
             <p>
@@ -115,8 +116,8 @@ export default function Training() {
             </p>
             <p>
               <strong className="text-snow">It&apos;s current.</strong> The new AI for Unreal Engine
-              class covers MCP servers and AI build agents — material that didn&apos;t exist a year ago
-              and that Alex is actively building in public.
+              class covers MCP servers and AI build agents — practical workflows that we stay on the
+              cutting edge of.
             </p>
             <p>
               <strong className="text-snow">It&apos;s proven.</strong> The same techniques drove
@@ -147,8 +148,8 @@ export default function Training() {
           <div className="glass rounded-2xl p-7">
             <h3 className="font-bold">Unreal NYC</h3>
             <p className="mt-2 text-sm leading-relaxed text-mist">
-              Alex leads the NYC Unreal Engine meetup — talks, demos, and the only room in Manhattan
-              where &quot;nanite&quot; is small talk. Come say hi before committing to a class.
+              Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag.
+              Come meet the community before committing to a class.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <a

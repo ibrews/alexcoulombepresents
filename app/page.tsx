@@ -11,6 +11,7 @@ const venues = [
   "NXT BLD", "Lincoln Center", "Autodesk University", "Raindance Immersive",
   "Park Avenue Armory", "Theatre Communications Group", "USITT", "NXT DEV",
   "NATEAC", "Opera America", "VRTO",
+  "Columbia", "Princeton", "Cornell", "Yale",
 ];
 
 export default function Home() {
@@ -84,7 +85,7 @@ export default function Home() {
             Three passions, <span className="grad-text">one through-line</span>
           </h2>
           <p className="mt-3 max-w-2xl text-mist">
-            Every project: how do we make digital space feel as visceral as reality? And can we go further?
+            Every project: how do we make digital space feel visceral and alive?
           </p>
         </Reveal>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -94,7 +95,7 @@ export default function Home() {
               <h3 className="mt-3 text-xl font-bold">Unreal & Godot, let&apos;s go further than the documentation</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
                 Engine-level fixes &amp; improvements for Vision Pro, Godot physics game at 90 fps on AVP,
-                MetaHumans like you&apos;ve never seen them before. When the plugin says
+                MetaHumans like you&apos;ve never seen them before. When a plugin says
                 &quot;Experimental,&quot; the real fun begins.
               </p>
             </Link>
@@ -104,7 +105,7 @@ export default function Home() {
               <p className="font-mono text-xs text-grape">02 / AI</p>
               <h3 className="mt-3 text-xl font-bold">Agents that ship real work. No tech for tech&apos;s sake.</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                A fleet of machines at Agile Lens running AI coding agents around the clock. Field manuals so agents
+                A fleet of machines at Agile Lens running AI agents around the clock without breaking the bank. Field manuals so agents
                 drive Unreal without crashing it. Pipelines where the overnight build greets you with a new
                 TestFlight-approved app waiting on device by morning.
               </p>
@@ -152,7 +153,7 @@ export default function Home() {
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-widest text-grape">The Lab</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-              Here&apos;s <span className="grad-text">what&apos;s coming:</span>
+              Here&apos;s <span className="grad-text">what&apos;s bubbling:</span>
             </h2>
           </Reveal>
           <div className="mt-10 grid gap-5 md:grid-cols-2">
