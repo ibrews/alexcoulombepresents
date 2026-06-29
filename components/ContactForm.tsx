@@ -7,22 +7,34 @@ export default function ContactForm() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [human, setHuman] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const body = [
-      name && `Name: ${name}`,
-      email && `Email: ${email}`,
-      "",
-      message,
-    ]
-      .filter((l) => l !== undefined)
-      .join("\n");
-    window.location.href = `mailto:info@alexcoulombepresents.com?subject=${encodeURIComponent(
-      subject || "General inquiry"
-    )}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    setError("");
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, subject, message, honeypot, human }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Something went wrong. Try emailing directly.");
+      } else {
+        setSent(true);
+      }
+    } catch {
+      setError("Couldn't reach the server. Try emailing directly.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const field =
@@ -32,16 +44,9 @@ export default function ContactForm() {
     return (
       <div className="glass rounded-3xl p-10 text-center">
         <p className="text-4xl">✦</p>
-        <p className="mt-4 font-bold">Opening your mail client…</p>
+        <p className="mt-4 font-bold">Message sent.</p>
         <p className="mt-2 text-sm text-mist">
-          If it didn&apos;t open,{" "}
-          <a
-            className="text-teal hover:underline"
-            href="mailto:info@alexcoulombepresents.com"
-          >
-            email directly
-          </a>
-          .
+          You&apos;ll hear back at <span className="text-snow">{email}</span>.
         </p>
       </div>
     );
@@ -49,6 +54,17 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Honeypot — invisible to real users, bots fill it in */}
+      <input
+        type="text"
+        name="website"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        aria-hidden="true"
+        style={{ position: "absolute", opacity: 0, height: 0, pointerEvents: "none" }}
+      />
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1.5 block font-mono text-xs uppercase tracking-widest text-mist">
@@ -64,7 +80,7 @@ export default function ContactForm() {
         </div>
         <div>
           <label className="mb-1.5 block font-mono text-xs uppercase tracking-widest text-mist">
-            Email
+            Email <span className="text-teal">*</span>
           </label>
           <input
             className={field}
@@ -72,9 +88,11 @@ export default function ContactForm() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
       </div>
+
       <div>
         <label className="mb-1.5 block font-mono text-xs uppercase tracking-widest text-mist">
           Subject
@@ -87,9 +105,10 @@ export default function ContactForm() {
           onChange={(e) => setSubject(e.target.value)}
         />
       </div>
+
       <div>
         <label className="mb-1.5 block font-mono text-xs uppercase tracking-widest text-mist">
-          Message
+          Message <span className="text-teal">*</span>
         </label>
         <textarea
           className={`${field} min-h-[160px] resize-y`}
@@ -99,11 +118,32 @@ export default function ContactForm() {
           required
         />
       </div>
+
+      <label className="flex cursor-pointer items-center gap-3 select-none">
+        <input
+          type="checkbox"
+          checked={human}
+          onChange={(e) => setHuman(e.target.checked)}
+          className="h-4 w-4 accent-teal"
+        />
+        <span className="text-sm text-mist">I&apos;m not a robot</span>
+      </label>
+
+      {error && (
+        <p className="text-sm text-red-400">
+          {error}{" "}
+          <a className="underline" href="mailto:info@alexcoulombepresents.com">
+            Email directly →
+          </a>
+        </p>
+      )}
+
       <button
         type="submit"
-        className="rounded-full bg-snow px-7 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+        disabled={submitting}
+        className="rounded-full bg-snow px-7 py-3 font-semibold text-ink transition-transform hover:scale-[1.03] disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Send message →
+        {submitting ? "Sending…" : "Send message →"}
       </button>
     </form>
   );
