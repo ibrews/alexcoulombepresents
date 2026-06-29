@@ -5,7 +5,10 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
 import Konami from "@/components/Konami";
+import EasterEgg from "@/components/EasterEgg";
+import JsonLd from "@/components/JsonLd";
 import { site } from "@/lib/data";
+import { siteGraph } from "@/lib/seo";
 
 const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-grotesk" });
 const jetmono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetmono" });
@@ -14,6 +17,20 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: site.title, template: `%s · ${site.title}` },
   description: site.description,
+  alternates: { canonical: "/" },
+  keywords: [
+    "Alex Coulombe",
+    "Unreal Engine training",
+    "Unreal Authorized Instructor",
+    "Apple Vision Pro developer",
+    "Godot Vision Pro",
+    "XR developer NYC",
+    "MetaHuman",
+    "immersive theatre",
+    "Agile Lens",
+  ],
+  authors: [{ name: "Alex Coulombe", url: site.url }],
+  creator: "Alex Coulombe",
   openGraph: {
     title: site.title,
     description: site.description,
@@ -29,6 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${grotesk.variable} ${jetmono.variable}`}>
       <body className="min-h-screen antialiased">
+        <JsonLd data={siteGraph} />
+        <EasterEgg />
         <Nav />
         <CommandPalette />
         <Konami />

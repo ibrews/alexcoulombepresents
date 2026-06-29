@@ -13,6 +13,7 @@ export type Repo = {
   links: { label: string; url: string }[];
   github: string;
   wiki?: string;
+  video?: string; // YouTube id for a "watch the demo" link
 };
 
 export const repos: Repo[] = [
@@ -130,6 +131,7 @@ export const repos: Repo[] = [
     ],
     links: [],
     github: "https://github.com/ibrews/MetaHumanGodot",
+    video: "C6FQKW2uNXo",
     wiki: "https://github.com/ibrews/MetaHumanGodot/wiki",
   },
   {
@@ -334,6 +336,7 @@ export type Product = {
   bullets: string[];
   links: { label: string; url: string }[];
   accent: string; // tailwind-friendly hue token
+  video?: string; // YouTube id for a "watch the demo" link
 };
 
 export const products: Product[] = [
@@ -395,6 +398,7 @@ export const products: Product[] = [
       "UE material graph → MaterialX ShaderGraph translation pipeline",
     ],
     links: [],
+    video: "AJC9-nNenAk",
     accent: "purple",
   },
   {
@@ -425,6 +429,7 @@ export const products: Product[] = [
       "Level travel via gesture, with assets kept resident across loads",
     ],
     links: [],
+    video: "R6NGhLpUZnw",
     accent: "teal",
   },
   {
@@ -456,6 +461,7 @@ export const products: Product[] = [
       "Layered parallax app icons, simulator builds, headless cook pipelines",
     ],
     links: [],
+    video: "PLynIuxA9r8",
     accent: "blue",
   },
 ];
@@ -510,7 +516,13 @@ export const externalLinks: {
   vibe?: "serious" | "joke";
   extra?: { label: string; url: string };
 }[] = [
-  { label: "Agile Lens", url: "https://agilelens.com", note: "The immersive design studio. Ten years of XR for architecture, theatre, and brands you've heard of.", vibe: "serious" },
+  {
+    label: "Agile Lens",
+    url: "https://agilelens.com",
+    note: "The immersive design studio Alex co-founded. Ten years of XR for architecture, theatre, and brands you've heard of — Hyperreal Estate, Holodeck Anywhere, Stage Presence, and more.",
+    vibe: "serious",
+    extra: { label: "Browse the portfolio", url: "https://agilelens.com/portfolio" },
+  },
   { label: "alexcoulombe.com", url: "http://alexcoulombe.com", note: "Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine, as nature intended.", vibe: "joke" },
   { label: "GitHub — @ibrews", url: "https://github.com/ibrews", note: "Where the code lives. Engines plural, agents plural.", vibe: "serious" },
   {
@@ -527,7 +539,13 @@ export const externalLinks: {
     vibe: "serious",
     extra: { label: "All platforms (Linktree)", url: "https://linktr.ee/unoffunrealpod" },
   },
-  { label: "LinkedIn", url: "https://linkedin.com/in/alexcoulombe", note: "16,000+ followers' worth of XR hot takes and project reveals.", vibe: "serious" },
+  {
+    label: "LinkedIn",
+    url: "https://linkedin.com/in/alexcoulombe",
+    note: "16,000+ followers' worth of XR hot takes and project reveals.",
+    vibe: "serious",
+    extra: { label: "Recent: the Europe tour recap (FMX + NXT BLD)", url: "https://www.linkedin.com/posts/alexcoulombe_long-overdue-europe-post-1-of-2-this-activity-7464479226625265665-d8dF" },
+  },
   { label: "X / Twitter — @ibrews", url: "https://twitter.com/ibrews", note: "Shorter hot takes.", vibe: "serious" },
   { label: "YouTube", url: "https://youtube.com/user/ibrews", note: "Tutorials ('I Wish I Learned This Sooner'), Unity→UE5 migration guides, MetaHuman deep dives.", vibe: "serious" },
 ];
@@ -605,7 +623,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "Ship Unreal Engine 5 projects to TestFlight — macOS, iOS, and visionOS.",
     detail:
       "The autonomous UE5 → TestFlight pipeline, packaged as a skill your own Claude runs. Cook, stage, sign, version-bump, upload, distribute — every gotcha from shipping real visionOS apps documented inside.",
-    link: { label: "Get it on Capafy", url: "https://capafy.io" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
   },
   {
     name: "ios-testflight",
@@ -613,7 +631,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "Archive and upload iOS / visionOS / macOS Xcode projects to TestFlight via CLI.",
     detail:
       "The native-Xcode sibling: altool-free uploads, signing-identity sanity checks, build-number discipline, and the export-options matrix that actually works. Runs entirely in your own Claude.",
-    link: { label: "Get it on Capafy", url: "https://capafy.io" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
   },
   {
     name: "godot-visionos",

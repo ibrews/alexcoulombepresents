@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Store",
   description:
     "Courses, AI skills, and templates — sold directly. No marketplace, no middleman: the only cut is card processing.",
+  alternates: { canonical: "/store" },
 };
 
 const kindLabel: Record<string, string> = {

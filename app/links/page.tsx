@@ -6,6 +6,7 @@ import { externalLinks } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Links",
   description: "Agile Lens, social channels, the podcast — and one website lovingly preserved in 2013 amber.",
+  alternates: { canonical: "/links" },
 };
 
 export default function Links() {

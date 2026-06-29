@@ -39,14 +39,20 @@ export default function CommandPalette() {
       { label: "Agile Lens", hint: "external", action: () => go("https://agilelens.com") },
       { label: "GitHub @ibrews", hint: "external", action: () => go("https://github.com/ibrews") },
       { label: "Email Alex", hint: "external", action: () => go("mailto:info@alexcoulombepresents.com") },
+      // hidden easter egg — only surfaces when you search "rage" / "smash" / "secret"
+      { label: "🧨 Rage Room VR — an old chestnut", hint: "secret", action: () => go("https://tinyurl.com/rageroomvr") },
     ],
     [go]
   );
 
   const filtered = useMemo(() => {
-    if (!query) return commands;
     const q = query.toLowerCase();
-    return commands.filter((c) => c.label.toLowerCase().includes(q) || c.hint.includes(q));
+    if (!query) return commands.filter((c) => c.hint !== "secret");
+    const eggWords = ["rage", "smash", "secret", "egg", "room"];
+    return commands.filter((c) => {
+      if (c.hint === "secret") return eggWords.some((w) => q.includes(w));
+      return c.label.toLowerCase().includes(q) || c.hint.includes(q);
+    });
   }, [commands, query]);
 
   useEffect(() => {

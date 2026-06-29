@@ -13,7 +13,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const product = products.find((p) => p.slug === slug);
   if (!product) return {};
-  return { title: product.name, description: product.tagline };
+  return {
+    title: product.name,
+    description: product.tagline,
+    alternates: { canonical: `/lab/${product.slug}` },
+  };
 }
 
 const accentText: Record<string, string> = {
@@ -101,6 +105,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {l.label}
               </a>
             ))}
+            {product.video && (
+              <a
+                href={`https://www.youtube.com/watch?v=${product.video}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-line px-6 py-3 text-sm font-semibold transition-colors hover:border-amber/60"
+              >
+                ▶ See it running
+              </a>
+            )}
           </div>
         </div>
       </Reveal>

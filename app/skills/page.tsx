@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "AI Skills",
   description:
     "Claude Code skills by Alex Coulombe — UE5 and iOS TestFlight pipelines live on Capafy, plus free open-source skills for Unreal MCP and Apple platforms.",
+  alternates: { canonical: "/skills" },
 };
 
 const statusBadge: Record<string, { label: string; cls: string }> = {
@@ -72,7 +73,7 @@ export default function Skills() {
           Built from real shipped apps — the same pipelines that put Unreal and Godot builds on
           TestFlight overnight. Premium skills live on{" "}
           <a
-            href="https://capafy.io"
+            href="https://capafy.ai/publisher/alex-coulombe-presents"
             target="_blank"
             rel="noopener noreferrer"
             className="text-snow underline decoration-teal/50 hover:decoration-teal"

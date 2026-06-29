@@ -2,17 +2,21 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
+import JsonLd from "@/components/JsonLd";
 import { courses, trainingPlaylist } from "@/lib/data";
+import { trainingCourse } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Unreal Engine Training",
   description:
     "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR including Vision Pro, MetaHumans, ArchViz, virtual production, and much much more.",
+  alternates: { canonical: "/training" },
 };
 
 export default function Training() {
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
+      <JsonLd data={trainingCourse} />
       <Ethereal variant="ember" />
       <Reveal>
         <p className="font-mono text-sm text-teal">/training</p>

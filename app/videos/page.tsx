@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Videos",
   description:
     "Key videos and playlists from Alex Coulombe's YouTube channel — Vision Pro experiments, Unreal Engine talks, Godot pioneering, AI agent builds, and live VR theatre.",
+  alternates: { canonical: "/videos" },
 };
 
 const tags = ["Vision Pro", "Unreal", "Godot", "AI", "Theatre", "Talks"] as const;

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Open Source",
   description:
     "Public repositories from Alex Coulombe (@ibrews): Unreal Engine plugins, Godot on Apple Vision Pro, visionOS tools, AI agent skills, and developer utilities.",
+  alternates: { canonical: "/repos" },
 };
 
 const categories = ["Unreal Engine", "Godot × Vision Pro", "visionOS & Spatial", "AI & Agents", "Tools"] as const;

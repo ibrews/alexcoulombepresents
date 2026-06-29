@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "About Alex Coulombe",
   description:
     "Architect turned XR-chitect: 16+ years of immersive design across Unity, Unreal Engine, Godot, live theatre, XR devices, and now: AI agents.",
+  alternates: { canonical: "/about" },
 };
 
 const stats = [

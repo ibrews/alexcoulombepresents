@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "The Lab",
   description:
     "Upcoming products from Alex Coulombe: Forage, UnRealityKit Bridge, Pinchwork universal OpenXR hand tracking, and Unreal Engine × visionOS engine work.",
+  alternates: { canonical: "/lab" },
 };
 
 const accentText: Record<string, string> = {

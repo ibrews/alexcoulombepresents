@@ -160,11 +160,12 @@
 - `[repos-slug.1]` ▸ ← all repos
 - `[repos-slug.2]` ▸ View on GitHub →
 - `[repos-slug.3]` ▸ Living wiki / docs
-- `[repos-slug.4]` ▸ The story
-- `[repos-slug.5]` ▸ Highlights
-- `[repos-slug.6]` ▸ git clone
-- `[repos-slug.7]` ▸ .git
-- `[repos-slug.8]` ▸ More in
+- `[repos-slug.4]` ▸ ▶ Watch the demo
+- `[repos-slug.5]` ▸ The story
+- `[repos-slug.6]` ▸ Highlights
+- `[repos-slug.7]` ▸ git clone
+- `[repos-slug.8]` ▸ .git
+- `[repos-slug.9]` ▸ More in
 
 ---
 
@@ -235,7 +236,8 @@
 - `[lab-slug.3]` ▸ Want in early?
 - `[lab-slug.4]` ▸ is in active development. Early-access spots, pilot projects, and collaborations are all on the table.
 - `[lab-slug.5]` ▸ Get in touch →
-- `[lab-slug.6]` ▸ Also in the lab
+- `[lab-slug.6]` ▸ ▶ See it running
+- `[lab-slug.7]` ▸ Also in the lab
 
 ---
 
@@ -415,6 +417,7 @@
   - The MatMADNESS skin shader stack, fully sliderized
   - 52 ARKit facial blendshape drivers
   - Orbit camera + turntable for look-dev comparisons
+- `[data.repos.MetaHumanGodot.video]` ▸ C6FQKW2uNXo
 - `[data.repos.VitruvianGodot.name]` ▸ VitruvianGodot
 - `[data.repos.VitruvianGodot.tagline]` ▸ A fully CC0, EULA-free photoreal digital human in stock Godot — ship it anywhere.
 - `[data.repos.VitruvianGodot.story]` ▸ The free counterpart to MetaHumanGodot: a CC0 real-time digital human — rigged body, expressive FACS face, eyes, physics hair — running in stock Godot 4.6 Forward+, with no Epic MetaHuman EULA attached. Everything can be redistributed, cloud-rendered, and shipped in closed-source commercial products. Same rendering tech as the MetaHuman pipeline, different (free) source character.
@@ -539,6 +542,7 @@
   - Verified on device: room mirror, live lights, graph materials, spatial audio, physics input
   - Mixed / Immersive / Volume presentation modes from one simulation
   - UE material graph → MaterialX ShaderGraph translation pipeline
+- `[data.products.unrealitykit-bridge.video]` ▸ AJC9-nNenAk
 - `[data.products.pinchwork.name]` ▸ Pinchwork
 - `[data.products.pinchwork.tagline]` ▸ Universal OpenXR hand tracking. Built in Unreal first — designed for every headset, not just one.
 - `[data.products.pinchwork.pitch]` ▸ Hand tracking should be a starting point, not a research project. Pinchwork is a template that treats hands as the primary input across the whole OpenXR ecosystem — Apple Vision Pro today, every OpenXR headset by design. Pinch to grab, throw with real physics, rotate objects with your hand, swap entire levels with a pinky-pinch — every gesture codified into Unreal's Enhanced Input system so your gameplay code never knows it's reading a hand.
@@ -554,6 +558,7 @@
   - Gesture → Enhanced Input codification — rebindable, platform-agnostic
   - Passthrough-safe material library for mixed immersion
   - Level travel via gesture, with assets kept resident across loads
+- `[data.products.pinchwork.video]` ▸ R6NGhLpUZnw
 - `[data.products.unreal-visionos.name]` ▸ Unreal × visionOS
 - `[data.products.unreal-visionos.tagline]` ▸ The punch list for making Unreal Engine on Apple Vision Pro feel production-ready.
 - `[data.products.unreal-visionos.pitch]` ▸ Unreal's Vision Pro support is officially Experimental: source-only builds, sparse docs, and a set of sharp edges every team hits in the same order. Rather than working around them, this is an ongoing effort to fix them at the engine level — contributed through the community fork ecosystem where visionOS UE development actually lives.
@@ -570,6 +575,7 @@
   - Passthrough translucency depth/alpha fix — real glass in mixed reality
   - Native arm64 Lightmass — baked lighting on Apple Silicon
   - Layered parallax app icons, simulator builds, headless cook pipelines
+- `[data.products.unreal-visionos.video]` ▸ PLynIuxA9r8
 
 ### agentSkills  (8 entries — add or remove whole entries)
 
@@ -659,7 +665,8 @@
 ### externalLinks  (8 entries — add or remove whole entries)
 
 - `[data.externalLinks.0.label]` ▸ Agile Lens
-- `[data.externalLinks.0.note]` ▸ The immersive design studio. Ten years of XR for architecture, theatre, and brands you've heard of.
+- `[data.externalLinks.0.note]` ▸ The immersive design studio Alex co-founded. Ten years of XR for architecture, theatre, and brands you've heard of — Hyperreal Estate, Holodeck Anywhere, Stage Presence, and more.
+- `[data.externalLinks.0.extra.label]` ▸ Browse the portfolio
 - `[data.externalLinks.1.label]` ▸ alexcoulombe.com
 - `[data.externalLinks.1.note]` ▸ Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine, as nature intended.
 - `[data.externalLinks.2.label]` ▸ GitHub — @ibrews
@@ -672,6 +679,7 @@
 - `[data.externalLinks.4.extra.label]` ▸ All platforms (Linktree)
 - `[data.externalLinks.5.label]` ▸ LinkedIn
 - `[data.externalLinks.5.note]` ▸ 16,000+ followers' worth of XR hot takes and project reveals.
+- `[data.externalLinks.5.extra.label]` ▸ Recent: the Europe tour recap (FMX + NXT BLD)
 - `[data.externalLinks.6.label]` ▸ X / Twitter — @ibrews
 - `[data.externalLinks.6.note]` ▸ Shorter hot takes.
 - `[data.externalLinks.7.label]` ▸ YouTube

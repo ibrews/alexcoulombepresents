@@ -14,7 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const repo = repos.find((r) => r.slug === slug);
   if (!repo) return {};
-  return { title: repo.name, description: repo.tagline };
+  return {
+    title: repo.name,
+    description: repo.tagline,
+    alternates: { canonical: `/repos/${repo.slug}` },
+  };
 }
 
 export default async function RepoPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -67,6 +71,16 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
               {l.label}
             </a>
           ))}
+          {repo.video && (
+            <a
+              href={`https://www.youtube.com/watch?v=${repo.video}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-amber/60"
+            >
+              ▶ Watch the demo
+            </a>
+          )}
         </div>
       </Reveal>
 
