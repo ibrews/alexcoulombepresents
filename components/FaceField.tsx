@@ -29,7 +29,7 @@ const LANDMARKS = [
   { fx: 0.60, fy: 0.66 }, // right mouth corner
 ];
 
-export default function FaceField({ density = 0.00008 }: { density?: number }) {
+export default function FaceField({ density = 0.00016 }: { density?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -55,7 +55,7 @@ export default function FaceField({ density = 0.00008 }: { density?: number }) {
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(Math.floor(w * h * density), 160);
+      const count = Math.min(Math.floor(w * h * density), 320);
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
@@ -174,23 +174,24 @@ export default function FaceField({ density = 0.00008 }: { density?: number }) {
 
   return (
     <>
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={imgRef}
-        src="/alex-headshot.webp"
-        alt="Alex Coulombe"
-        className="pointer-events-none absolute bottom-0 right-0 hidden w-[36%] max-w-[520px] select-none lg:block"
+      {/* Image sits BELOW the canvas so particles render on top of the face */}
+      <div
+        className="absolute right-0 top-0 hidden h-full w-[44%] overflow-hidden lg:block"
         style={{
-          height: "auto",
-          maskImage:
-            "linear-gradient(to right, transparent 0%, black 24%), linear-gradient(to top, black 90%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent 0%, black 24%), linear-gradient(to top, black 90%, transparent 100%)",
-          maskComposite: "intersect",
-          WebkitMaskComposite: "destination-in",
+          maskImage: "linear-gradient(to right, transparent 0%, black 28%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 28%)",
         }}
-      />
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          ref={imgRef}
+          src="/alex-headshot.webp"
+          alt="Alex Coulombe"
+          className="pointer-events-none h-full w-full select-none object-cover object-center"
+        />
+      </div>
+      {/* Canvas on top — particles are visible over the portrait */}
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
     </>
   );
 }
