@@ -344,28 +344,43 @@ export const products: Product[] = [
     slug: "forage",
     name: "Forage",
     status: "Private beta — wishlist open",
-    tagline: "Fab's best friend. An AI-first asset scout for the Unreal Engine packs you already own.",
+    tagline: "Fab's best friend. An AI-first scout and installer for the Unreal Engine packs you already own.",
     pitch:
-      "You've bought hundreds of asset packs over years of Fab and Marketplace sales — and you can't remember what's in any of them. Forage takes a creative intent like \"amazing castle with horses running around the gates\" and matches it against your owned library: the 2–3 best-fit packs, the hero assets inside them, and which project versions are dead weight you can prune.",
+      "You've bought hundreds of asset packs over years of Fab and Marketplace sales — and you can't remember what's in any of them. Forage takes a creative intent like \"amazing castle with horses running around the gates\" and matches it against your owned library: the 2–3 best-fit packs, the hero assets inside them, and which project versions are dead weight you can prune. Then it installs them.",
     sections: [
       {
         heading: "Built for the AI-build-agent era",
-        body: "Forage ships its own MCP server — run `forage mcp` and your AI agent can query your owned library directly, no copy-paste. It also returns structured JSON for any build agent to consume: 'You already own Medieval Castle Walls Pro; hero asset is SM_CastleGate; the UE 5.5 artifact is the one you want.' Your agent builds; Forage scouts.",
+        body: "Forage ships its own MCP server — run `forage mcp` and your AI agent can query your owned library directly, no copy-paste. It also returns structured JSON designed to hand straight to any build agent: 'You already own Medieval Castle Walls Pro; hero asset is SM_CastleGate; the UE 5.5 artifact is the one you want.' Your agent builds; Forage scouts.",
+      },
+      {
+        heading: "Find it, then get it",
+        body: "Forage doesn't stop at telling you what to grab — it installs it. Once you've picked a pack, Forage drives the install inside the Unreal editor: it navigates the Fab pane, sets everything up, and hands you the one click that matters. Or dial it all the way to hands-free. You set the level; Forage does the rest.",
+      },
+      {
+        heading: "Your entire library, one local database",
+        body: "Run `forage refresh-library` once: Forage walks your entire Fab-owned catalog, pulls every pack, and stores it locally in SQLite — titles, categories, descriptions, project versions, bloat estimates, all of it. Every search after that is instant, offline, and completely private. The What's New feed tells you what changed since last time: new packs in your library, wishlist items that just landed, packs with updates.",
       },
       {
         heading: "A wishlist without the cap",
-        body: "Fab caps your wishlist around 150 items. Forage keeps an unlimited local one — and alerts you when a wishlisted pack lands in your owned library. There's a local web UI too: `forage ui` opens a browser dashboard for searching your library and managing the wishlist without touching the CLI.",
+        body: "Fab caps your wishlist around 150 items. Forage keeps an unlimited local one — and alerts you the moment a wishlisted pack lands in your owned library. `forage ui` opens a local browser dashboard for searching your library and managing the wishlist without touching the CLI.",
+      },
+      {
+        heading: "More on the way",
+        body: "A Chrome extension is in development: owned and wishlisted badges that appear directly on fab.com as you browse, so you never accidentally buy something you already have. Multi-engine support is planned — groundwork is already in for Unity and Godot alongside Unreal. Megascans and Cosmos integration is on the roadmap.",
       },
       {
         heading: "Not a marketplace, not a generator",
-        body: "Forage doesn't sell assets and doesn't synthesize them. It's a really good scout for the packs you already paid for — which it turns out is the thing everyone actually needed.",
+        body: "Forage doesn't sell assets and doesn't synthesize them. It's a really good scout and installer for the packs you already paid for — which it turns out is the thing everyone actually needed.",
       },
     ],
     bullets: [
-      "Creative intent in, ranked owned-pack matches out",
+      "Creative intent in, 2–3 best-fit owned packs out",
       "MCP server + structured JSON handoff to any AI build agent",
-      "Unlimited local wishlist with owned-library sync alerts",
-      "Bloat estimates: know which pack versions are dead weight",
+      "Guided install — from open-it-and-you-click to hands-free, your choice",
+      "Unlimited local wishlist with What's New alerts",
+      "Bloat report: spot the dead project versions in every pack",
+      "Local web UI (`forage ui`) — library search + wishlist, no CLI needed",
+      "Chrome extension coming: owned + wishlisted badges on fab.com",
     ],
     links: [{ label: "Landing page + wishlist", url: "https://ibrews.github.io/forage-site/" }],
     video: "oQf8w26a36M",
