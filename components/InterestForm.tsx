@@ -42,10 +42,12 @@ export default function InterestForm({ track }: { track: "unreal" | "ai" }) {
     return (
       <div className="glass rounded-2xl p-6 text-center">
         <p className="text-2xl">✦</p>
-        <p className="mt-3 font-bold">You&apos;re on the list.</p>
-        <p className="mt-1 text-sm text-mist">
-          We&apos;ll email <span className="text-snow">{email}</span> when{" "}
-          {track === "ai" ? "AI" : "Unreal"} sessions open up.
+        <p className="mt-3 font-bold">Thank you for your interest!</p>
+        <p className="mt-2 text-sm text-mist">
+          We&apos;ll be in touch as soon as there&apos;s something exciting to share.
+        </p>
+        <p className="mt-2 text-sm text-mist">
+          —Alex and the Alex Coulombe Presents Team
         </p>
       </div>
     );
