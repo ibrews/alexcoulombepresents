@@ -344,17 +344,17 @@ export const products: Product[] = [
     slug: "forage",
     name: "Forage",
     status: "Private beta — wishlist open",
-    tagline: "Fab's ultimate companion. An AI-first asset scout for the Unreal Engine packs you already own.",
+    tagline: "Fab's best friend. An AI-first asset scout for the Unreal Engine packs you already own.",
     pitch:
       "You've bought hundreds of asset packs over years of Fab and Marketplace sales — and you can't remember what's in any of them. Forage takes a creative intent like \"amazing castle with horses running around the gates\" and matches it against your owned library: the 2–3 best-fit packs, the hero assets inside them, and which project versions are dead weight you can prune.",
     sections: [
       {
         heading: "Built for the AI-build-agent era",
-        body: "Forage returns structured JSON designed to hand straight to an AI build agent — an in-editor MCP plugin, Cursor driving UE, or a human reading the output. 'You already own Medieval Castle Walls Pro; hero asset is SM_CastleGate; the UE 5.5 artifact is the one you want.' Your agent builds; Forage scouts.",
+        body: "Forage ships its own MCP server — run `forage mcp` and your AI agent can query your owned library directly, no copy-paste. It also returns structured JSON for any build agent to consume: 'You already own Medieval Castle Walls Pro; hero asset is SM_CastleGate; the UE 5.5 artifact is the one you want.' Your agent builds; Forage scouts.",
       },
       {
         heading: "A wishlist without the cap",
-        body: "Fab caps your wishlist around 150 items. Forage keeps an unlimited local one — and tells you when a wishlisted pack lands in your owned library. For things you don't own yet, it opens Fab in your browser so you can shop like a human.",
+        body: "Fab caps your wishlist around 150 items. Forage keeps an unlimited local one — and alerts you when a wishlisted pack lands in your owned library. There's a local web UI too: `forage ui` opens a browser dashboard for searching your library and managing the wishlist without touching the CLI.",
       },
       {
         heading: "Not a marketplace, not a generator",
@@ -363,11 +363,12 @@ export const products: Product[] = [
     ],
     bullets: [
       "Creative intent in, ranked owned-pack matches out",
-      "Structured JSON handoff to any AI build agent",
+      "MCP server + structured JSON handoff to any AI build agent",
       "Unlimited local wishlist with owned-library sync alerts",
       "Bloat estimates: know which pack versions are dead weight",
     ],
     links: [{ label: "Landing page + wishlist", url: "https://ibrews.github.io/forage-site/" }],
+    video: "oQf8w26a36M",
     accent: "amber",
   },
   {
