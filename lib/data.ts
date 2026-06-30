@@ -569,7 +569,7 @@ export const externalLinks: {
     extra: { label: "Recent: the Europe tour recap (FMX + NXT BLD)", url: "https://www.linkedin.com/posts/alexcoulombe_long-overdue-europe-post-1-of-2-this-activity-7464479226625265665-d8dF" },
   },
   { label: "X / Twitter — @ibrews", url: "https://twitter.com/ibrews", note: "Shorter hot takes.", vibe: "serious" },
-  { label: "YouTube", url: "https://youtube.com/user/ibrews", note: "Tutorials ('I Wish I Learned This Sooner'), Unity→UE5 migration guides, MetaHuman deep dives.", vibe: "serious" },
+  { label: "YouTube", url: "https://youtube.com/@ibrews", note: "Tutorials ('I Wish I Learned This Sooner'), Unity→UE5 migration guides, MetaHuman deep dives.", vibe: "serious" },
 ];
 
 export const site = {

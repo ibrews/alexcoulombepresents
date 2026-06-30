@@ -60,8 +60,8 @@ export default function Contact() {
               Say hello. <span className="grad-text">Let&apos;s make something.</span>
             </h1>
             <p className="mt-4 text-mist">
-              Fill out the form and your mail client will open with everything pre-loaded — or
-              email directly if you prefer.
+              Fill out the form below and I&apos;ll get back to you — or reach out directly by
+              email if you prefer.
             </p>
           </Reveal>
           <Reveal>
