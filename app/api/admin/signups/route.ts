@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSignups, getListCounts } from "@/lib/db";
+import { getSignups, getListCounts, deleteSignup } from "@/lib/db";
 import { LISTS } from "@/lib/lists";
 
 // Protected export of signups.
@@ -41,5 +41,26 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error("Admin signups error:", err);
     return NextResponse.json({ error: "Query failed." }, { status: 500 });
+  }
+}
+
+// Remove a signup (cleanup / unsubscribe).
+//   DELETE /api/admin/signups?key=ADMIN_KEY&email=foo@bar.com[&list=forage]
+export async function DELETE(req: NextRequest) {
+  const key = req.nextUrl.searchParams.get("key");
+  if (!process.env.ADMIN_KEY || key !== process.env.ADMIN_KEY) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+  const email = req.nextUrl.searchParams.get("email");
+  const list = req.nextUrl.searchParams.get("list") ?? undefined;
+  if (!email) {
+    return NextResponse.json({ error: "email is required." }, { status: 400 });
+  }
+  try {
+    const deleted = await deleteSignup(email, list);
+    return NextResponse.json({ ok: true, deleted });
+  } catch (err) {
+    console.error("Admin delete error:", err);
+    return NextResponse.json({ error: "Delete failed." }, { status: 500 });
   }
 }

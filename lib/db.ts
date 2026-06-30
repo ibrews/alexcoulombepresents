@@ -65,6 +65,16 @@ export async function getSignups(list?: string): Promise<SignupRow[]> {
   return rows as SignupRow[];
 }
 
+// Remove a signup (admin cleanup / unsubscribe). Scoped to one list, or all
+// lists when `list` is omitted. Returns how many rows were deleted.
+export async function deleteSignup(email: string, list?: string): Promise<number> {
+  await ensureTable();
+  const rows = list
+    ? await sql()`DELETE FROM signups WHERE email = ${email} AND list = ${list} RETURNING id`
+    : await sql()`DELETE FROM signups WHERE email = ${email} RETURNING id`;
+  return (rows as unknown[]).length;
+}
+
 // Per-list counts for an at-a-glance dashboard.
 export async function getListCounts(): Promise<{ list: string; count: number }[]> {
   await ensureTable();
