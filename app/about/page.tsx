@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import OriginVenn from "@/components/hxr/OriginVenn";
 import PowerUpIntro from "@/components/hxr/PowerUpIntro";
+import SensAIIntro from "@/components/hxr/SensAIIntro";
 import CounterStat from "@/components/CounterStat";
 import AvatarCorner from "@/components/hxr/AvatarCorner";
 import { timeline } from "@/lib/data";
@@ -128,6 +129,26 @@ export default function About() {
                 API. No audio files were harmed.)
               </p>
             </div>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="mt-10">
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">
+              Fast-forward to 2026 · SensAI Hackademy
+            </p>
+            <h3 className="mt-3 text-xl font-bold">
+              From power-up to pipeline
+            </h3>
+            <p className="mt-3 max-w-2xl leading-relaxed text-mist">
+              Those three worlds that merged in 2013 grew into a studio, a curriculum, and an
+              engine fleet. Here&apos;s where things stand — from the opening slides of the
+              SensAI Hackademy 2026 talk.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="glass mt-6 rounded-3xl p-6 md:p-10">
+            <SensAIIntro />
           </div>
         </Reveal>
       </div>
