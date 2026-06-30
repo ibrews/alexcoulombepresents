@@ -645,7 +645,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "Ship Unreal Engine 5 projects to TestFlight — macOS, iOS, and visionOS.",
     detail:
       "The autonomous UE5 → TestFlight pipeline, packaged as a skill your own Claude runs. Cook, stage, sign, version-bump, upload, distribute — every gotcha from shipping real visionOS apps documented inside.",
-    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/product/ue5-testflight" },
   },
   {
     name: "ios-testflight",
@@ -653,7 +653,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "Archive and upload iOS / visionOS / macOS Xcode projects to TestFlight via CLI.",
     detail:
       "The native-Xcode sibling: altool-free uploads, signing-identity sanity checks, build-number discipline, and the export-options matrix that actually works. Runs entirely in your own Claude.",
-    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/product/ios-testflight" },
   },
   {
     name: "metahuman-godot-pipeline",
@@ -661,7 +661,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "The complete MetaHuman → Blender → Godot conversion workflow, as a skill.",
     detail:
       "Full export, ARKit morph-target bake, material reassembly, and the shader stack — with real scripts, not prose. The paid counterpart to the free MetaHumanGodot viewer.",
-    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/product/metahuman-godot-pipeline" },
   },
   {
     name: "spatial-deck-maker",
@@ -669,7 +669,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "Turn messy slides, PDFs, or notes into an interactive Spatial Deck presentation you share as a link.",
     detail:
       "Feed it your raw content; get back a single-file web presentation in the Spatial Deck framework — the one that powered the HarvardXR closing keynote.",
-    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/product/spatial-deck-maker" },
   },
   {
     name: "app-store-aso",
@@ -677,7 +677,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "Generate a character-perfect, ASO-optimized App Store listing kit from your app's features.",
     detail:
       "Titles, subtitles, keyword fields, descriptions, promotional text — every character limit respected, every field tuned for App Store search.",
-    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/product/app-store-aso" },
   },
   {
     name: "interview-coach-pro",
@@ -685,7 +685,7 @@ export const agentSkills: AgentSkill[] = [
     blurb: "Mock interviews and salary negotiation coaching — STAR method, FAANG structures, real comp research.",
     detail:
       "Runs behaviorals, system-design rounds, and offer-negotiation drills. Grounds every answer in documented interview frameworks and compensation data.",
-    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/product/interview-coach-pro" },
   },
   {
     name: "godot-visionos",
