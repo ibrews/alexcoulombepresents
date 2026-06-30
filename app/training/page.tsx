@@ -74,16 +74,32 @@ export default function Training() {
           {/* Headline credentials */}
           <div className="mt-9 flex flex-wrap items-end justify-center gap-x-12 gap-y-8">
             {[
-              { src: "authorized-instructor", alt: "Unreal Engine Authorized Instructor" },
-              { src: "authorized-training-center", alt: "Unreal Engine Authorized Training Center" },
+              {
+                src: "authorized-instructor",
+                alt: "Unreal Engine Authorized Instructor",
+                href: "https://credential.unrealengine.com/ae75c735-f7c6-4fc5-a633-f400ec2efd4b#acc.Mpe8GrAh",
+              },
+              {
+                src: "authorized-training-center",
+                alt: "Unreal Engine Authorized Training Center",
+                href: "https://credential.unrealengine.com/2e350d0f-ee6d-4239-a596-975ff749d550#acc.H86EwZ9F",
+              },
             ].map((b) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <a
                 key={b.src}
-                src={`/badges/${b.src}.png`}
-                alt={b.alt}
-                className="h-36 w-auto select-none md:h-44"
-              />
+                href={b.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-transform hover:scale-[1.04]"
+                title={`Verify: ${b.alt}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/badges/${b.src}.png`}
+                  alt={b.alt}
+                  className="h-36 w-auto select-none md:h-44"
+                />
+              </a>
             ))}
           </div>
 
@@ -154,6 +170,75 @@ export default function Training() {
           />
         </div>
       </Reveal>
+
+      {/* Official Epic Games courses */}
+      <div className="mt-20">
+        <Reveal>
+          <p className="font-mono text-xs uppercase tracking-widest text-grape">
+            From the Epic Games archives
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">
+            Courses I built <span className="grad-text">for Epic Games.</span>
+          </h2>
+          <p className="mt-3 max-w-3xl leading-relaxed text-mist">
+            Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games
+            courses. Some of the once-gated ones are finally coming online to the public — here are
+            a few worth your time.
+          </p>
+        </Reveal>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          {[
+            {
+              kind: "Video",
+              name: "Intro to OpenXR",
+              note: "The very first — adapted for Unreal Fest 2022.",
+              href: "https://youtu.be/JD95BklloHk",
+            },
+            {
+              kind: "Course",
+              name: "FBX: Data Ingestion",
+              note: "Getting FBX data into Unreal cleanly.",
+              href: "https://dev.epicgames.com/community/learning/courses/Lre/unreal-engine-fbx-data-ingestion/qEL5/unreal-engine-introduction",
+            },
+            {
+              kind: "Course",
+              name: "Datasmith Ingestion",
+              note: "Bringing CAD and DCC scenes in via Datasmith.",
+              href: "https://dev.epicgames.com/community/learning/courses/7Na/unreal-engine-datasmith-ingestion/L0YB/unreal-engine-introduction",
+            },
+            {
+              kind: "Talk",
+              name: "Mind the Gap: Transitioning from Unity to Unreal",
+              note: "Led by Whitt Sellers.",
+              href: "https://dev.epicgames.com/community/learning/talks-and-demos/0yX9/unreal-engine-mind-the-gap-transitioning-from-unity-to-unreal",
+            },
+            {
+              kind: "Course",
+              name: "Using Magic Leap in Unreal Engine",
+              note: "A 2019 classic that's still surprisingly relevant.",
+              href: "https://dev.epicgames.com/community/learning/courses/Ml7/using-magic-leap-in-unreal-engine/pbx/introducing-using-magic-leap-in-unreal-engine",
+            },
+          ].map((c, i) => (
+            <Reveal key={c.name} delay={Math.min(i * 60, 300)}>
+              <a
+                href={c.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass group flex h-full flex-col rounded-2xl p-6 transition-colors hover:border-grape/40"
+              >
+                <span className="self-start rounded-full border border-line px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-mist">
+                  {c.kind}
+                </span>
+                <h3 className="mt-3 font-bold leading-snug">{c.name}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{c.note}</p>
+                <span className="mt-3 font-mono text-xs text-grape transition-colors group-hover:text-snow">
+                  {c.kind === "Video" ? "Watch on YouTube →" : "Open on Epic Dev Community →"}
+                </span>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+      </div>
 
       {/* Why train here */}
       <Reveal>
