@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import WaitlistForm from "@/components/WaitlistForm";
+import LiteVideo from "@/components/LiteVideo";
 import { products } from "@/lib/data";
 import { renderBreaks, plainText } from "@/components/Lines";
 
@@ -82,8 +83,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
       </Reveal>
 
+      {product.video && (
+        <Reveal>
+          <div className="mt-14">
+            <LiteVideo id={product.video} title={product.name} />
+          </div>
+        </Reveal>
+      )}
+
       <Reveal>
-        <div className="glass mt-14 rounded-3xl p-8 text-center md:p-10">
+        <div className="glass mt-8 rounded-3xl p-8 text-center md:p-10">
           <h2 className="text-xl font-bold">Want in early?</h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-mist">
             {product.name} is in active development. Early-access spots, pilot projects, and
@@ -97,29 +106,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               successMessage={`We'll email you the moment ${product.name} opens up.`}
             />
           </div>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            {product.links.map((l) => (
-              <a
-                key={l.url}
-                href={l.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-line px-6 py-3 text-sm font-semibold transition-colors hover:border-teal/60"
-              >
-                {l.label}
-              </a>
-            ))}
-            {product.video && (
-              <a
-                href={`https://www.youtube.com/watch?v=${product.video}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-line px-6 py-3 text-sm font-semibold transition-colors hover:border-amber/60"
-              >
-                ▶ See it running
-              </a>
-            )}
-          </div>
+          {product.links.length > 0 && (
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              {product.links.map((l) => (
+                <a
+                  key={l.url}
+                  href={l.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-line px-6 py-3 text-sm font-semibold transition-colors hover:border-teal/60"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </Reveal>
 

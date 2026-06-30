@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import StarCount from "@/components/StarCount";
+import LiteVideo from "@/components/LiteVideo";
+import WikiContent from "@/components/WikiContent";
 import { repos } from "@/lib/data";
 import { renderBreaks, plainText } from "@/components/Lines";
 
@@ -51,16 +53,6 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
           >
             View on GitHub →
           </a>
-          {repo.wiki && (
-            <a
-              href={repo.wiki}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
-            >
-              Living wiki / docs
-            </a>
-          )}
           {repo.links.map((l) => (
             <a
               key={l.url}
@@ -72,18 +64,16 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
               {l.label}
             </a>
           ))}
-          {repo.video && (
-            <a
-              href={`https://www.youtube.com/watch?v=${repo.video}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-amber/60"
-            >
-              ▶ Watch the demo
-            </a>
-          )}
         </div>
       </Reveal>
+
+      {repo.video && (
+        <Reveal>
+          <div className="mt-12">
+            <LiteVideo id={repo.video} title={repo.name} />
+          </div>
+        </Reveal>
+      )}
 
       <Reveal>
         <div className="glass mt-12 rounded-3xl p-8 md:p-10">
@@ -105,6 +95,8 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
           </ul>
         </div>
       </Reveal>
+
+      {repo.wiki && <WikiContent githubUrl={repo.github} />}
 
       <Reveal>
         <div className="mt-12 rounded-2xl border border-line p-6 font-mono text-sm text-mist">

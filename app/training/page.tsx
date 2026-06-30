@@ -341,7 +341,7 @@ export default function Training() {
             <h3 className="font-bold">Free stuff first</h3>
             <p className="mt-2 text-sm leading-relaxed text-mist">
               The{" "}
-              <a href="https://youtube.com/user/ibrews" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
+              <a href="https://youtube.com/@ibrews" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
                 YouTube channel
               </a>{" "}
               (&quot;I Wish I Learned This Sooner&quot;) and{" "}
