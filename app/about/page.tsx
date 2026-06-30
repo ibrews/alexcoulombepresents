@@ -3,7 +3,6 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import OriginVenn from "@/components/hxr/OriginVenn";
 import PowerUpIntro from "@/components/hxr/PowerUpIntro";
-import SensAIIntro from "@/components/hxr/SensAIIntro";
 import CounterStat from "@/components/CounterStat";
 import AvatarCorner from "@/components/hxr/AvatarCorner";
 import { timeline } from "@/lib/data";
@@ -141,14 +140,28 @@ export default function About() {
             </h3>
             <p className="mt-3 max-w-2xl leading-relaxed text-mist">
               Those three worlds that merged in 2013 grew into a studio, a curriculum, and an
-              engine fleet. Here&apos;s where things stand — from the opening slides of the
-              SensAI Hackademy 2026 talk.
+              engine fleet. Opening slides from the SensAI Hackademy 2026 talk — click to step through.
             </p>
           </div>
         </Reveal>
         <Reveal>
-          <div className="glass mt-6 rounded-3xl p-6 md:p-10">
-            <SensAIIntro />
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="glass overflow-hidden rounded-3xl">
+              <iframe
+                src="https://ibrews.github.io/sensai-2026-mcp-engines/#2"
+                title="SensAI 2026 — WHO + WHY"
+                className="aspect-video w-full border-0"
+                loading="lazy"
+              />
+            </div>
+            <div className="glass overflow-hidden rounded-3xl">
+              <iframe
+                src="https://ibrews.github.io/sensai-2026-mcp-engines/#3"
+                title="SensAI 2026 — Agile Lens"
+                className="aspect-video w-full border-0"
+                loading="lazy"
+              />
+            </div>
           </div>
         </Reveal>
       </div>
