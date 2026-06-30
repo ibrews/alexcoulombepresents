@@ -61,6 +61,54 @@ export default function Training() {
         </div>
       </Reveal>
 
+      {/* Credentials / badges */}
+      <Reveal>
+        <div className="glass mt-12 rounded-3xl px-6 py-10 text-center md:px-10">
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">
+            Certified by Epic Games
+          </p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
+            Authorized, and re-authorized <span className="grad-text">every year.</span>
+          </h2>
+
+          {/* Headline credentials */}
+          <div className="mt-9 flex flex-wrap items-end justify-center gap-x-12 gap-y-8">
+            {[
+              { src: "authorized-instructor", alt: "Unreal Engine Authorized Instructor" },
+              { src: "authorized-training-center", alt: "Unreal Engine Authorized Training Center" },
+            ].map((b) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={b.src}
+                src={`/badges/${b.src}.png`}
+                alt={b.alt}
+                className="h-36 w-auto select-none md:h-44"
+              />
+            ))}
+          </div>
+
+          {/* Yearly partner tiers */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-9 gap-y-7">
+            {[
+              "instructor-partner-2024",
+              "instructor-partner-2025",
+              "instructor-partner-2026",
+              "training-partner-2024",
+              "training-partner-2025",
+              "training-partner-2026",
+            ].map((src) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={src}
+                src={`/badges/${src}.png`}
+                alt={src.replace(/-/g, " ")}
+                className="h-20 w-auto select-none md:h-24"
+              />
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
       {/* Curriculum */}
       <div className="mt-20">
         <Reveal>
