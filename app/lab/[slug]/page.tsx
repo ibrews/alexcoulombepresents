@@ -5,6 +5,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import WaitlistForm from "@/components/WaitlistForm";
 import LiteVideo from "@/components/LiteVideo";
+import VideoUpdates from "@/components/VideoUpdates";
 import { products } from "@/lib/data";
 import { renderBreaks, plainText } from "@/components/Lines";
 
@@ -87,6 +88,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <Reveal>
           <div className="mt-14">
             <LiteVideo id={product.video} title={product.name} />
+            {product.videos && product.videos.length > 0 && (
+              <VideoUpdates videos={product.videos} />
+            )}
           </div>
         </Reveal>
       )}

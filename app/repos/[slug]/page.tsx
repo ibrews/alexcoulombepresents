@@ -5,6 +5,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import StarCount from "@/components/StarCount";
 import LiteVideo from "@/components/LiteVideo";
+import VideoUpdates from "@/components/VideoUpdates";
 import WikiContent from "@/components/WikiContent";
 import { repos } from "@/lib/data";
 import { renderBreaks, plainText } from "@/components/Lines";
@@ -71,6 +72,9 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
         <Reveal>
           <div className="mt-12">
             <LiteVideo id={repo.video} title={repo.name} />
+            {repo.videos && repo.videos.length > 0 && (
+              <VideoUpdates videos={repo.videos} />
+            )}
           </div>
         </Reveal>
       )}

@@ -13,7 +13,8 @@ export type Repo = {
   links: { label: string; url: string }[];
   github: string;
   wiki?: string;
-  video?: string; // YouTube id for a "watch the demo" link
+  video?: string; // primary / featured YouTube id
+  videos?: { id: string; title: string }[]; // additional updates, newest first
 };
 
 export const repos: Repo[] = [
@@ -133,6 +134,10 @@ export const repos: Repo[] = [
     links: [],
     github: "https://github.com/ibrews/MetaHumanGodot",
     video: "C6FQKW2uNXo",
+    videos: [
+      { id: "iRnbWTv1HkQ", title: "MetaHumans in Godot? In VR?!" },
+      { id: "p0JoPJb4e84", title: "VR Depth of Field in Godot" },
+    ],
     wiki: "https://github.com/ibrews/MetaHumanGodot/wiki",
   },
   {
@@ -339,7 +344,8 @@ export type Product = {
   bullets: string[];
   links: { label: string; url: string }[];
   accent: string; // tailwind-friendly hue token
-  video?: string; // YouTube id for a "watch the demo" link
+  video?: string; // primary / featured YouTube id
+  videos?: { id: string; title: string }[]; // additional updates, newest first
 };
 
 export const products: Product[] = [
@@ -434,6 +440,10 @@ export const products: Product[] = [
     ],
     links: [{ label: "Join the TestFlight beta", url: "https://testflight.apple.com/join/hzXHAZ4B" }],
     video: "ZvIOucsVScw",
+    videos: [
+      { id: "LOnijsxamts", title: "Projection Mapping Update · Jun 2026" },
+      { id: "EqFayHb1AQo", title: "Frank and Bob Visit the Chicago Bean" },
+    ],
     accent: "blue",
   },
   {
@@ -475,6 +485,12 @@ export const products: Product[] = [
     ],
     links: [],
     video: "AJC9-nNenAk",
+    videos: [
+      { id: "uf9O7hkbYwQ", title: "Cropping a MetaHuman in visionOS 27" },
+      { id: "0xpZmB7ia1E", title: "Lumen Update" },
+      { id: "q1Y5C86BxP0", title: "Live Link Test" },
+      { id: "ePhtrL1mtBw", title: "Skinned Skeletal Mesh Testing" },
+    ],
     accent: "purple",
   },
   {
@@ -673,17 +689,26 @@ export const videos: Video[] = [
   { id: "AJC9-nNenAk", title: "UnRealityKit — Unreal Engine + RealityKit Bridge", tag: "Vision Pro", blurb: "The Lab project, running live: UE simulating, RealityKit rendering." },
   { id: "0xpZmB7ia1E", title: "UnRealityKit — Lumen Update", tag: "Vision Pro", blurb: "Lumen global illumination mirrored across the bridge into RealityKit." },
   { id: "q1Y5C86BxP0", title: "UnRealityKit — Live Link Test", tag: "Vision Pro", blurb: "The Live Link Previewer: streaming a live UE editor scene to device without a packaged build." },
+  { id: "uf9O7hkbYwQ", title: "Cropping a MetaHuman in visionOS 27", tag: "Vision Pro", blurb: "Spatial masking and cropping of a MetaHuman in the visionOS 27 runtime — UnRealityKit Bridge in action." },
+  { id: "0U0C2GRuPLA", title: "Quick Look at visionOS 27 New Environment Features", tag: "Vision Pro" },
+  { id: "-2zL1m6rzhU", title: "Apple Vision Pro Without Apple Vision Pro", tag: "Vision Pro" },
   { id: "SfmLwmJ4bkg", title: "SHARP splats generated & viewed on Apple Vision Pro", tag: "Vision Pro" },
   { id: "PLynIuxA9r8", title: "Translucency over Mixed Reality for Vision Pro", tag: "Vision Pro", blurb: "The engine fix from the Unreal × visionOS punch list, demonstrated." },
   { id: "R6NGhLpUZnw", title: "Unreal Engine AVP — Improved Hand Tracking & Interaction", tag: "Unreal", blurb: "The work that became Pinchwork." },
   { id: "C6FQKW2uNXo", title: "MetaHuman to Godot", tag: "Godot", blurb: "The pipeline behind the MetaHumanGodot repo." },
+  { id: "iRnbWTv1HkQ", title: "MetaHumans in Godot? In VR?!", tag: "Godot", blurb: "The VR preview build: room-scale MetaHuman on Quest via Godot 4.7-beta3." },
+  { id: "p0JoPJb4e84", title: "VR Depth of Field in Godot", tag: "Godot" },
+  { id: "ePhtrL1mtBw", title: "UnRealityKit Bridge — Skinned Skeletal Mesh Testing", tag: "Vision Pro", blurb: "Full skeletal mesh with skinning streaming across the UnRealityKit Bridge." },
   { id: "lWBnHLWnNjs", title: "Apple just released a Godot RealityKit Plugin!", tag: "Godot" },
   { id: "VnNzJV61dxs", title: "My First Godot Experience for Apple Vision Pro", tag: "Godot" },
   { id: "qk5RzMD_ffQ", title: "This week I built a Claude-Fleet", tag: "AI", blurb: "The multi-machine agent system, explained by its operator." },
+  { id: "hbqUwZbsj-E", title: "When Claude Gives You Surprise Tokens — Unreal, Godot, Vision Pro & More", tag: "AI" },
+  { id: "j_-by9Wk3A0", title: "Porting XR, Headless Godot, Humans in the /loop", tag: "AI" },
   { id: "Q-wwh8Sw8Eg", title: "Claude Desktop is What We've Been Looking For", tag: "AI" },
   { id: "6uoo9r0rpSs", title: "Unreal Engine WebXR Pixel Streaming to Apple Vision Pro (and Quest too!)", tag: "Unreal" },
   { id: "NUOpEwT0YUs", title: "MetaHuman Full Body Mocap Using Only Meta Quest Pro!", tag: "Unreal" },
   { id: "_h8mE20vzlw", title: "A Christmas Carol VR — How we do the livestream!", tag: "Theatre", blurb: "Behind the scenes of live actors performing in headsets." },
+  { id: "uGWej_6kjC8", title: "Unreal Fest 2026 — Live Dev Stream", tag: "Talks" },
   { id: "M1J25jJ79U8", title: "I Wish I Learned This Sooner! Part 2 — Unreal Fest Stockholm 2025", tag: "Talks" },
   { id: "m0T8euG9Rh8", title: "I Wish I Learned This Sooner! — Unreal Fest 2024", tag: "Talks" },
   { id: "8NOcf3RsH1k", title: "GDC 2022 — Up Close & Virtual: The Power of Live Actors in VR", tag: "Talks" },
