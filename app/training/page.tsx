@@ -4,6 +4,7 @@ import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
 import InterestForm from "@/components/InterestForm";
 import InquireButton from "@/components/InquireButton";
+import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
 import { courses, trainingPlaylist } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
@@ -20,6 +21,7 @@ export default function Training() {
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
       <JsonLd data={trainingCourse} />
+      <HashScroll />
       <Ethereal variant="ember" />
       <Reveal>
         <p className="font-mono text-sm text-teal">/training</p>
@@ -246,16 +248,20 @@ export default function Training() {
       <section id="learn-ai" className="mt-20 scroll-mt-28">
         <Reveal>
           <div className="glass overflow-hidden rounded-3xl p-8 md:p-12">
-            <p className="font-mono text-xs uppercase tracking-widest text-grape">New direction</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-grape">AI training · its own track</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-              Want to learn <span className="grad-text">AI, too?</span>
+              Learn AI workflows, <span className="grad-text">Unreal optional.</span>
             </h2>
             <p className="mt-4 max-w-3xl leading-relaxed text-mist">
-              Alex doesn&apos;t just teach Unreal — Agile Lens runs a fleet of machines with AI agents
-              working around the clock, shipping real production work without breaking the bank. The
-              plan is to teach that the same way the Unreal classes work: live, hands-on, using your
-              own project. Formal AI classes aren&apos;t scheduled yet — but if there&apos;s appetite,
-              they&apos;re next. Tell us what you&apos;d want to learn:
+              This is its own thing — you don&apos;t need to care about Unreal Engine to take it. Agile
+              Lens runs a fleet of machines with AI agents shipping real production work around the
+              clock without breaking the bank, and the plan is to teach that the way the Unreal classes
+              already do: live, hands-on, on your own project, whatever you&apos;re building.
+            </p>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-mist">
+              Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if
+              your use case actually calls for it. Formal AI classes aren&apos;t scheduled yet — tell us
+              what you&apos;d want and you&apos;ll be first to know.
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
