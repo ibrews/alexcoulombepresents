@@ -656,32 +656,43 @@ export const agentSkills: AgentSkill[] = [
     link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
   },
   {
+    name: "metahuman-godot-pipeline",
+    status: "live",
+    blurb: "The complete MetaHuman → Blender → Godot conversion workflow, as a skill.",
+    detail:
+      "Full export, ARKit morph-target bake, material reassembly, and the shader stack — with real scripts, not prose. The paid counterpart to the free MetaHumanGodot viewer.",
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+  },
+  {
+    name: "spatial-deck-maker",
+    status: "live",
+    blurb: "Turn messy slides, PDFs, or notes into an interactive Spatial Deck presentation you share as a link.",
+    detail:
+      "Feed it your raw content; get back a single-file web presentation in the Spatial Deck framework — the one that powered the HarvardXR closing keynote.",
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+  },
+  {
+    name: "app-store-aso",
+    status: "live",
+    blurb: "Generate a character-perfect, ASO-optimized App Store listing kit from your app's features.",
+    detail:
+      "Titles, subtitles, keyword fields, descriptions, promotional text — every character limit respected, every field tuned for App Store search.",
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+  },
+  {
+    name: "interview-coach-pro",
+    status: "live",
+    blurb: "Mock interviews and salary negotiation coaching — STAR method, FAANG structures, real comp research.",
+    detail:
+      "Runs behaviorals, system-design rounds, and offer-negotiation drills. Grounds every answer in documented interview frameworks and compensation data.",
+    link: { label: "Get it on Capafy", url: "https://capafy.ai/publisher/alex-coulombe-presents" },
+  },
+  {
     name: "godot-visionos",
     status: "coming-soon",
     blurb: "Build Godot apps for Apple Vision Pro — flat-plane and full immersive.",
     detail:
       "Everything learned shipping Cascade Countdown: the build switcher, simulator input, hand tracking, and the silent-failure traps that cost device round-trips.",
-  },
-  {
-    name: "spatial-deck-maker",
-    status: "coming-soon",
-    blurb: "Turn messy slides, PDFs, or notes into an interactive Spatial Deck presentation you share as a link.",
-    detail:
-      "Feed it your raw content; get back a single-file web presentation in the Spatial Deck framework — the one that powered the HarvardXR closing keynote.",
-  },
-  {
-    name: "app-store-aso",
-    status: "coming-soon",
-    blurb: "Generate a character-perfect, ASO-optimized App Store listing kit from your app's features.",
-    detail:
-      "Titles, subtitles, keyword fields, descriptions, promotional text — every character limit respected, every field tuned for App Store search.",
-  },
-  {
-    name: "metahuman-godot-pipeline",
-    status: "coming-soon",
-    blurb: "The complete MetaHuman → Blender → Godot conversion workflow, as a skill.",
-    detail:
-      "The paid counterpart to the free MetaHumanGodot viewer: full export, ARKit morph-target bake, material reassembly, and the shader stack — with real scripts, not prose. In final review.",
   },
   {
     name: "ue5-mcp",

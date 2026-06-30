@@ -20,6 +20,14 @@ const kindLabel: Record<string, string> = {
   "repo-access": "Repo access",
 };
 
+const kindStyle: Record<string, string> = {
+  course: "border-amber/60 text-amber",
+  "course-bundle": "border-amber/60 text-amber",
+  skill: "border-grape/60 text-grape",
+  template: "border-teal/60 text-teal",
+  "repo-access": "border-line text-mist",
+};
+
 export default function Store() {
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
@@ -63,7 +71,7 @@ export default function Store() {
         {storeItems.map((item, i) => (
           <Reveal key={item.slug} delay={Math.min(i * 70, 280)}>
             <div className="glass flex h-full flex-col rounded-2xl p-7">
-              <span className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-mist self-start">
+              <span className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-wider self-start ${kindStyle[item.kind] ?? "border-line text-mist"}`}>
                 {kindLabel[item.kind]}
               </span>
               <h2 className="mt-4 font-bold leading-snug">{item.name}</h2>

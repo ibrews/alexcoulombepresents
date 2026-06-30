@@ -36,7 +36,7 @@ export default function InquireButton({
   return (
     <button
       onClick={() => setOpen(true)}
-      className="inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+      className="inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-amber hover:border-amber hover:text-ink"
     >
       {label}
     </button>
