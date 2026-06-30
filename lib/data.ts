@@ -387,29 +387,86 @@ export const products: Product[] = [
     accent: "amber",
   },
   {
+    slug: "project-ion",
+    name: "Project Ion",
+    status: "Beta · 50+ TestFlight testers",
+    tagline: "Your Vision Pro is a projector now. Professional-grade projection-mapping previsualization — honest ambient simulation, real projector specs, and a full creative rig in your room.",
+    pitch:
+      "Professional projection-mapping previsualization has always meant expensive software and being on-site. Project Ion puts a real projector twin in your Vision Pro headset: cast images and video onto your actual walls, dial in the exact specs of your Christie, Barco, or Epson rig, and see the honest on-surface contrast as ambient light changes — before you rent a single piece of hardware. More than 50 testers are using it for venue previz, home theater planning, and creative experimentation.",
+    sections: [
+      {
+        heading: "You are the projector",
+        body: "In head-locked mode, you're standing in for the projector — the image throws from your exact viewpoint onto your real walls, sized and aimed by the projector twin's throw ratio and native aspect. Switch to placed mode and world-anchor it anywhere in the room. The projection casts real light onto your scanned walls through passthrough — a directional spotlight for the sharp image, and an omnidirectional fill that spills the projection's color across every scanned surface, even ones the beam can't reach.",
+      },
+      {
+        heading: "Real projector specs, honest results",
+        body: "Pick a real model — Christie, Barco, Epson, Samsung The Premiere, BenQ, Hisense — and Project Ion loads its actual lumens, throw ratio, native contrast, and resolution. Toggle Honest Ambient Preview and step from blackout to daylight: watch the on-surface contrast collapse, read the recommended lumens for a legible 20:1, and see sharpness in px/cm. You learn what your rig will actually do to the room before anything ships.",
+      },
+      {
+        heading: "A full multi-projector rig",
+        body: "Add as many projectors as the scene needs. Each has its own content, pose, creative look, and projector-twin spec. A DCC-style transform gizmo (axis-constrained arrows + rings, Maya/Blender-style) gives you precise placement. Affect All routes one content pick or look to every projector simultaneously; turn it off to target one at a time. Drop placeable spatial-audio speakers anywhere in the room for multichannel setups.",
+      },
+      {
+        heading: "Content, looks, and all the test patterns",
+        body: "Photos, looping video (streams in about one second regardless of clip length), procedural animated effects, and a full set of alignment test patterns — grid, crosshatch, color bars, focus, and white field. Per-projector creative looks: Black & White, Sepia, Invert, Vivid, Noir, plus manual Saturation / Contrast / Brightness. The rig auto-saves and restores on every launch.",
+      },
+      {
+        heading: "Export for MadMapper and Resolume",
+        body: "Tap Export rig and get two files: scene.projection.json (projectors with pose, real twin spec, and content) and a photometric rig sheet naming the real projector to rent for each surface — with throw, image size, recommended lumens, and on-surface washout estimate. Import the JSON straight into MadMapper or Resolume and start mapping.",
+      },
+      {
+        heading: "What's coming",
+        body: "True perspective projective texturing onto oblique and non-flat surfaces, USDZ import for venue and facade previz, NDI support, a Mac companion, SharePlay for co-directing the same space, and a three-tier split (Consumer · Hobbyist · Professional) once per-tier gating is ready. The tester base is growing — it's a good time to join.",
+      },
+    ],
+    bullets: [
+      "Head-locked or world-placed projectors — each with its own content, look, and real projector spec",
+      "Honest projector twin: Christie, Barco, Epson, Samsung, BenQ, Hisense presets + lumens/sharpness calculator",
+      "Real light spills into your room — directional spotlight + fill that colors every scanned surface",
+      "Photos, video (streams in ~1 s), procedural effects, and full alignment test patterns",
+      "Creative looks per projector (B&W, Sepia, Invert, Vivid, Noir) + Saturation/Contrast/Brightness",
+      "DCC-style transform gizmo: axis-constrained arrows + rings for precise placement",
+      "Export for MadMapper / Resolume — scene.projection.json + photometric rig sheet",
+      "50+ TestFlight testers — open beta, join free",
+    ],
+    links: [{ label: "Join the TestFlight beta", url: "https://testflight.apple.com/join/hzXHAZ4B" }],
+    video: "ZvIOucsVScw",
+    accent: "blue",
+  },
+  {
     slug: "unrealitykit-bridge",
     name: "UnRealityKit Bridge",
-    status: "In development — hardware-verified",
+    status: "Collaborator beta — hardware-verified",
     tagline: "Unreal Engine as the simulation brain. RealityKit as the renderer. The architecture ILM shipped, opened up.",
     pitch:
       "There are two ways to put Unreal Engine on Apple Vision Pro. One is the native path: UE renders every pixel itself. The other is the path ILM used for Marvel's \"What If…?\": UE runs as the simulation, logic, and asset source while RealityKit — Apple's own renderer — draws the frame. That second path gets you passthrough, occlusion, hover effects, anchors, spatial audio, and Personas for free, because you're rendering with the system. UnRealityKit Bridge is that architecture, productized.",
     sections: [
+      {
+        heading: "Preview before you build",
+        body: "The Live Link Previewer is the lead tool: connect your live Unreal Editor to the RealityKit viewer over the Remote Control API and see a translated preview on device — no packaged build, no full framework compile. Run `make previewer` and stream your scene through the bridge the moment you wire up the plugin (Window ▸ UnRealityKit Live Link). It's the fastest iteration loop for mixed-reality UE content that exists.",
+      },
+      {
+        heading: "Know what bridges before you build",
+        body: "The BridgeabilityAnalyzer classifies every material and Blueprint in your UE project before you invest in a full bridge build: native-mirror (direct MaterialX path), needs-seam (custom translation required), or hard-wall (manual intervention). Run it against your project and get a coverage score and per-material report so you know exactly what you're walking into — and can prioritize the right assets for your production.",
+      },
       {
         heading: "What's already real",
         body: "The live arc is hardware-verified end-to-end on Apple Vision Pro: UE boots headless inside the visionOS shell, a full room mirrors across the bridge with translated materials, lights mirror over the seam, audio is positional, and input flows back — tap-poke, pinch-grab-and-throw into Chaos physics, rotate-with-hand. One live simulation presents through a Mixed / Immersive / Volume (tabletop miniature) picker. At 90 fps. On device.",
       },
       {
         heading: "The material translator",
-        body: "The hardest single problem: every UE material has to become a RealityKit ShaderGraph. The bridge translates UE material graphs to MaterialX — texture binding, colorspace, lighting response, normal-map conventions, alpha and opacity, dynamic parameters — each milestone render-verified against ground truth.",
+        body: "The hardest single problem: every UE material has to become a RealityKit ShaderGraph. The bridge translates UE material graphs to MaterialX — texture binding, colorspace, lighting response, normal-map conventions, alpha and opacity, dynamic parameters — each milestone render-verified against ground truth. The BridgeabilityAnalyzer scores your project first so you know what to expect before touching the translator.",
       },
       {
         heading: "Why it matters",
-        body: "For polished mixed reality on Vision Pro, rendering with RealityKit beats fighting the compositor. A flagship Disney/Marvel production validated the architecture; an open bridge makes it available to everyone else. (The repo is private per Epic's Unreal Engine source-access policy — Epic-linked collaborators can request access.)",
+        body: "For polished mixed reality on Vision Pro, rendering with RealityKit beats fighting the compositor. A flagship Disney/Marvel production validated the architecture; an open bridge makes it available to everyone else. The repo is proprietary — bring your own Unreal Engine source license; Epic-linked GitHub accounts can request collaborator access. Royalty-free until $1M revenue.",
       },
     ],
     bullets: [
       "UE simulation + RealityKit rendering — best of both worlds for MR",
-      "Verified on device: room mirror, live lights, graph materials, spatial audio, physics input",
+      "Live Link Previewer: stream your live UE editor to device, no packaged build required",
+      "BridgeabilityAnalyzer: classify every material before you invest in a full bridge build",
+      "Verified on device: room mirror, live Lumen GI, materials, spatial audio, Chaos physics input",
       "Mixed / Immersive / Volume presentation modes from one simulation",
       "UE material graph → MaterialX ShaderGraph translation pipeline",
     ],
@@ -607,7 +664,12 @@ export const featuredVideo: Video = {
 };
 
 export const videos: Video[] = [
+  { id: "ZvIOucsVScw", title: "Project Ion — Projection Mapping Previz", tag: "Vision Pro", blurb: "The full demo: cast images and video onto real walls, dial in projector specs, and export a rig for MadMapper." },
+  { id: "LOnijsxamts", title: "Project Ion — Projection Mapping Update", tag: "Vision Pro", blurb: "June 2026 feature update: spatial audio speakers, multi-projector workflow, and the complete creative rig." },
+  { id: "EqFayHb1AQo", title: "Frank and Bob Visit the Chicago Bean", tag: "Vision Pro", blurb: "Shadow puppets meet projection mapping — a creative experiment built with Project Ion." },
   { id: "AJC9-nNenAk", title: "UnRealityKit — Unreal Engine + RealityKit Bridge", tag: "Vision Pro", blurb: "The Lab project, running live: UE simulating, RealityKit rendering." },
+  { id: "0xpZmB7ia1E", title: "UnRealityKit — Lumen Update", tag: "Vision Pro", blurb: "Lumen global illumination mirrored across the bridge into RealityKit." },
+  { id: "q1Y5C86BxP0", title: "UnRealityKit — Live Link Test", tag: "Vision Pro", blurb: "The Live Link Previewer: streaming a live UE editor scene to device without a packaged build." },
   { id: "SfmLwmJ4bkg", title: "SHARP splats generated & viewed on Apple Vision Pro", tag: "Vision Pro" },
   { id: "PLynIuxA9r8", title: "Translucency over Mixed Reality for Vision Pro", tag: "Vision Pro", blurb: "The engine fix from the Unreal × visionOS punch list, demonstrated." },
   { id: "R6NGhLpUZnw", title: "Unreal Engine AVP — Improved Hand Tracking & Interaction", tag: "Unreal", blurb: "The work that became Pinchwork." },

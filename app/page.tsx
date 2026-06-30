@@ -42,31 +42,35 @@ export default function Home() {
           <p className="mt-5 text-lg md:text-xl">
             Currently: <Typewriter words={roles} />
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Link
-              href="/lab"
-              className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
-            >
-              See what&apos;s cooking →
-            </Link>
-            <Link
-              href="/training"
-              className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
-            >
-              Learn Unreal
-            </Link>
-            <Link
-              href="/training#learn-ai"
-              className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-grape/60"
-            >
-              Learn AI
-            </Link>
-            <Link
-              href="/repos"
-              className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-amber/60"
-            >
-              Open source
-            </Link>
+          <div className="mt-10 flex flex-col gap-3">
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/lab"
+                className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+              >
+                See what&apos;s cooking →
+              </Link>
+              <Link
+                href="/repos"
+                className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-amber/60"
+              >
+                Open source
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/training#learn-ai"
+                className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-grape/60"
+              >
+                Learn AI
+              </Link>
+              <Link
+                href="/training"
+                className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
+              >
+                Learn Unreal
+              </Link>
+            </div>
           </div>
           <p className="mt-12 hidden font-mono text-xs text-mist lg:block">
             press <kbd className="rounded border border-line px-1.5 py-0.5">⌘K</kbd> to jump anywhere

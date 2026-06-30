@@ -10,7 +10,7 @@ import { renderBreaks } from "@/components/Lines";
 export const metadata: Metadata = {
   title: "The Lab: Upcoming XR Tools",
   description:
-    "Upcoming products from Alex Coulombe: Forage, UnRealityKit Bridge, Pinchwork universal OpenXR hand tracking, and Unreal Engine × visionOS engine work.",
+    "Upcoming products from Alex Coulombe: Forage (AI-first Fab asset scout), Project Ion (projection-mapping previz for Vision Pro), UnRealityKit Bridge, Pinchwork OpenXR hand tracking, and Unreal Engine × visionOS engine work.",
   alternates: { canonical: "/lab" },
 };
 
@@ -36,7 +36,7 @@ export default function Lab() {
               The private repos are <span className="grad-text">getting restless.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
-              Four products in active development, all pointed at the same future: spatial computing
+              Five products in active development, all pointed at the same future: spatial computing
               where the engines, the assets, and the AI agents finally cooperate. Hardware-verified,
               demo-ready, and approaching the launch pad.
             </p>
