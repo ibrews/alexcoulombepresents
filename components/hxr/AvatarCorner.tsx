@@ -161,7 +161,7 @@ export default function AvatarCorner() {
       <svg
         ref={svgRef}
         viewBox="-18 -43 36 71"
-        className="pointer-events-auto absolute right-0 top-16 w-20 cursor-pointer opacity-60 transition-opacity hover:opacity-100 md:right-2 md:top-20 md:w-28"
+        className="pointer-events-auto absolute right-4 top-72 w-20 cursor-pointer opacity-60 transition-opacity hover:opacity-100 md:right-16 md:top-80 md:w-28"
         aria-label="Meet Pixel Alex — click to go 3D"
         role="button"
         tabIndex={0}
