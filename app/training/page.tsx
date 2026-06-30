@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
 import InterestForm from "@/components/InterestForm";
+import InquireButton from "@/components/InquireButton";
 import JsonLd from "@/components/JsonLd";
 import { courses, trainingPlaylist } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
@@ -340,18 +341,20 @@ export default function Training() {
             </p>
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
-            <a
-              href="mailto:info@alexcoulombepresents.com?subject=Unreal%20Engine%20Training"
-              className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
-            >
-              Book a class →
-            </a>
-            <a
-              href="mailto:info@alexcoulombepresents.com?subject=Team%20Training%20Inquiry"
-              className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
-            >
-              Team / studio training
-            </a>
+            <InquireButton
+              label="Book a class →"
+              list="unreal"
+              context="Class booking"
+              withMessage
+              successMessage="Alex will be in touch to get you booked."
+            />
+            <InquireButton
+              label="Team / studio training"
+              list="unreal"
+              context="Team / studio training"
+              withMessage
+              successMessage="Alex will be in touch about team training."
+            />
           </div>
         </div>
       </Reveal>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
+import WaitlistForm from "@/components/WaitlistForm";
 import { products } from "@/lib/data";
 import { renderBreaks, plainText } from "@/components/Lines";
 
@@ -88,13 +89,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.name} is in active development. Early-access spots, pilot projects, and
             collaborations are all on the table.
           </p>
+          <div className="mx-auto mt-6 max-w-md">
+            <WaitlistForm
+              list={product.slug}
+              cta="Join the waitlist →"
+              successTitle="You're on the list."
+              successMessage={`We'll email you the moment ${product.name} opens up.`}
+            />
+          </div>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <a
-              href={`mailto:info@alexcoulombepresents.com?subject=${encodeURIComponent(product.name + " — early access")}`}
-              className="rounded-full bg-snow px-6 py-3 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
-            >
-              Get in touch →
-            </a>
             {product.links.map((l) => (
               <a
                 key={l.url}

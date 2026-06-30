@@ -110,6 +110,31 @@ buttons open a pre-filled email. **Before listing anything also sold elsewhere, 
 terms** (Fab is non-exclusive for your own products; confirm Capafy's creator agreement; never
 sell Epic-owned content off-Fab) — guardrail notes are in `lib/store.ts`.
 
+## Signup lists & broadcasts
+
+Every "join the waitlist / notify me / inquire" action on the site posts to
+[`app/api/subscribe/route.ts`](app/api/subscribe/route.ts), which saves the signup to a
+**Neon Postgres** database and emails `info@` a notification. The lists are defined in one place,
+[`lib/lists.ts`](lib/lists.ts) (`forage`, `unrealitykit-bridge`, `pinchwork`, `unreal-visionos`,
+`lab`, `skills`, `store`, plus `ai`/`unreal`). `ai` and `unreal` also mirror into Resend audiences
+so training demand can be compared in the Resend dashboard. The shared UI is
+[`components/WaitlistForm.tsx`](components/WaitlistForm.tsx) (+ the reveal wrapper
+[`components/InquireButton.tsx`](components/InquireButton.tsx)), both with a honeypot + "I'm not a
+robot" check.
+
+Setup: provision Neon from the Vercel **Storage** tab (auto-injects `DATABASE_URL`), then
+`vercel env pull .env.local`. Required env: `DATABASE_URL`, `RESEND_API_KEY`, `ADMIN_KEY`.
+
+- **See counts / export a list (CSV):**
+  `/api/admin/signups?key=$ADMIN_KEY` (all counts) ·
+  `…&list=forage&format=csv` (download one list). Keep `ADMIN_KEY` private.
+- **Email an entire list** via Resend:
+  ```bash
+  cd /Users/alex/GH/alexcoulombepresents
+  node scripts/broadcast.mjs --list forage --subject "Forage is live!" --body announce.html --dry-run
+  # drop --dry-run to actually send
+  ```
+
 ## The HarvardXR slides & ethereal backgrounds
 
 The About page embeds ports of slides 2–3 from the [HarvardXR keynote](https://ibrews.github.io/harvardxr-keynote/)

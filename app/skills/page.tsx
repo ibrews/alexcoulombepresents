@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
+import WaitlistForm from "@/components/WaitlistForm";
 import { agentSkills } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 
@@ -96,12 +97,15 @@ export default function Skills() {
             Custom skills for your team&apos;s engine, pipeline, or platform — built from the same
             battle-tested template.
           </p>
-          <a
-            href="mailto:info@alexcoulombepresents.com?subject=Custom%20AI%20Skill"
-            className="mt-6 inline-block rounded-full bg-snow px-6 py-3 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
-          >
-            Commission one →
-          </a>
+          <div className="mx-auto mt-6 max-w-lg">
+            <WaitlistForm
+              list="skills"
+              withMessage
+              cta="Commission one →"
+              successTitle="Request received."
+              successMessage="Alex will be in touch about your custom skill."
+            />
+          </div>
         </div>
       </Reveal>
     </div>

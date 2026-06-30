@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { STORE_LIVE } from "@/lib/store";
+import InquireButton from "@/components/InquireButton";
 
 export default function BuyButton({
   slug,
@@ -15,17 +16,16 @@ export default function BuyButton({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-launch: an honest mailto, exactly like the forage-site pattern.
+  // Pre-launch: show an inline form instead of a mailto link.
   if (!STORE_LIVE) {
     return (
-      <a
-        href={`mailto:info@alexcoulombepresents.com?subject=${encodeURIComponent(`Purchase: ${itemName}`)}&body=${encodeURIComponent(
-          `Hi Alex — I'd like to buy "${itemName}". What's the fastest way to pay?`
-        )}`}
-        className="rounded-full bg-snow px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
-      >
-        {label}
-      </a>
+      <InquireButton
+        label={label}
+        list="store"
+        context={itemName}
+        withMessage
+        successMessage={`Alex will be in touch about ${itemName}.`}
+      />
     );
   }
 

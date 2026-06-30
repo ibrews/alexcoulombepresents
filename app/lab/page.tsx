@@ -3,6 +3,7 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import ParticleField from "@/components/ParticleField";
+import WaitlistForm from "@/components/WaitlistForm";
 import { products } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 
@@ -77,12 +78,16 @@ export default function Lab() {
       </section>
 
       <Reveal>
-        <p className="mt-16 text-center font-mono text-sm text-mist">
-          Want early access to any of these?{" "}
-          <a href="mailto:info@alexcoulombepresents.com?subject=Lab%20Early%20Access" className="text-teal hover:underline">
-            Raise your hand →
-          </a>
-        </p>
+        <div className="mt-16 text-center">
+          <p className="font-mono text-sm text-mist">Want early access to any of these?</p>
+          <div className="mx-auto mt-4 max-w-md">
+            <WaitlistForm
+              list="lab"
+              cta="Raise your hand →"
+              successMessage="You'll hear first when any of these open up."
+            />
+          </div>
+        </div>
       </Reveal>
     </div>
   );

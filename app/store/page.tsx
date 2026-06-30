@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
+import InquireButton from "@/components/InquireButton";
 import { storeItems } from "@/lib/store";
 import { renderBreaks } from "@/components/Lines";
 
@@ -71,12 +72,13 @@ export default function Store() {
                 <span className="text-snow">You get:</span> {renderBreaks(item.delivery)}
               </p>
               <div className="mt-5">
-                <a
-                  href={`mailto:info@alexcoulombepresents.com?subject=${encodeURIComponent(`Inquiry: ${item.name}`)}`}
-                  className="inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
-                >
-                  Inquire →
-                </a>
+                <InquireButton
+                  label="Inquire →"
+                  list="store"
+                  context={item.name}
+                  withMessage
+                  successMessage={`Alex will be in touch about ${item.name}.`}
+                />
               </div>
             </div>
           </Reveal>
