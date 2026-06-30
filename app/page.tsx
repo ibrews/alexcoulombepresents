@@ -56,8 +56,14 @@ export default function Home() {
               Learn Unreal
             </Link>
             <Link
-              href="/repos"
+              href="/training#learn-ai"
               className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-grape/60"
+            >
+              Learn AI
+            </Link>
+            <Link
+              href="/repos"
+              className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-amber/60"
             >
               Open source
             </Link>

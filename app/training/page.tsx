@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
+import InterestForm from "@/components/InterestForm";
 import JsonLd from "@/components/JsonLd";
 import { courses, trainingPlaylist } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
@@ -239,6 +240,81 @@ export default function Training() {
           ))}
         </div>
       </div>
+
+      {/* Learn AI */}
+      <section id="learn-ai" className="mt-20 scroll-mt-28">
+        <Reveal>
+          <div className="glass overflow-hidden rounded-3xl p-8 md:p-12">
+            <p className="font-mono text-xs uppercase tracking-widest text-grape">New direction</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
+              Want to learn <span className="grad-text">AI, too?</span>
+            </h2>
+            <p className="mt-4 max-w-3xl leading-relaxed text-mist">
+              Alex doesn&apos;t just teach Unreal — Agile Lens runs a fleet of machines with AI agents
+              working around the clock, shipping real production work without breaking the bank. The
+              plan is to teach that the same way the Unreal classes work: live, hands-on, using your
+              own project. Formal AI classes aren&apos;t scheduled yet — but if there&apos;s appetite,
+              they&apos;re next. Tell us what you&apos;d want to learn:
+            </p>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  t: "Agents that ship real work",
+                  d: "Designing AI agents that do useful things — not demos. Guardrails, tools, and verification so they don't go off the rails.",
+                },
+                {
+                  t: "Claude Code & MCP",
+                  d: "Driving real codebases with Claude Code, writing MCP servers, and wiring agents into the tools you already use.",
+                },
+                {
+                  t: "AI for Unreal Engine",
+                  d: "MCP servers and build agents that drive Unreal — overnight builds that greet you with a TestFlight app by morning.",
+                },
+                {
+                  t: "Running a local model fleet",
+                  d: "Standing up your own machines and open models to offload work from the paid APIs and protect your budget.",
+                },
+                {
+                  t: "Prompting for production",
+                  d: "Moving past chat tricks into repeatable, testable prompt + context pipelines you can actually ship.",
+                },
+                {
+                  t: "You tell us",
+                  d: "This curriculum is being shaped right now. Sign up and say what you'd want — it helps decide what gets built first.",
+                },
+              ].map((c) => (
+                <div key={c.t} className="rounded-2xl border border-line p-5">
+                  <h3 className="text-sm font-bold">{c.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-mist">{c.d}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 grid gap-8 md:grid-cols-2">
+              <div className="rounded-2xl border border-grape/30 bg-grape/5 p-6">
+                <p className="font-mono text-xs uppercase tracking-widest text-grape">Learn AI</p>
+                <p className="mt-2 text-sm leading-relaxed text-mist">
+                  Get notified the moment AI sessions open — and help shape what they cover.
+                </p>
+                <div className="mt-4">
+                  <InterestForm track="ai" />
+                </div>
+              </div>
+              <div className="rounded-2xl border border-teal/30 bg-teal/5 p-6">
+                <p className="font-mono text-xs uppercase tracking-widest text-teal">Learn Unreal</p>
+                <p className="mt-2 text-sm leading-relaxed text-mist">
+                  Classes run now — but if you&apos;d rather be pinged about upcoming cohorts than book
+                  today, hop on the Unreal list.
+                </p>
+                <div className="mt-4">
+                  <InterestForm track="unreal" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       {/* Why train here */}
       <Reveal>

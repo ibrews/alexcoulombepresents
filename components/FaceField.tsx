@@ -198,14 +198,14 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
     <>
       {/* Image below canvas so particles render on top of the face */}
       <div
-        className="absolute right-0 top-0 hidden h-full w-[34%] overflow-hidden lg:block"
+        className="absolute bottom-0 right-0 hidden h-[68%] w-[26%] overflow-hidden lg:block"
         style={{
           maskImage:
-            "linear-gradient(to right, transparent 0%, black 36%), " +
-            "linear-gradient(to bottom, transparent 0%, black 14%)",
+            "linear-gradient(to right, transparent 0%, black 16%), " +
+            "linear-gradient(to top, transparent 0%, black 12%)",
           WebkitMaskImage:
-            "linear-gradient(to right, transparent 0%, black 36%), " +
-            "linear-gradient(to bottom, transparent 0%, black 14%)",
+            "linear-gradient(to right, transparent 0%, black 16%), " +
+            "linear-gradient(to top, transparent 0%, black 12%)",
           maskComposite: "intersect",
           WebkitMaskComposite: "destination-in",
         }}
@@ -216,7 +216,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
           src="/alex-headshot.webp"
           alt="Alex Coulombe"
           className="pointer-events-none h-full w-full select-none object-cover"
-          style={{ objectPosition: "60% top" }}
+          style={{ objectPosition: "58% top" }}
         />
       </div>
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
