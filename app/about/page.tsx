@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import OriginVenn from "@/components/hxr/OriginVenn";
 import PowerUpIntro from "@/components/hxr/PowerUpIntro";
+import CounterStat from "@/components/CounterStat";
 import { timeline } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -13,8 +14,11 @@ export const metadata: Metadata = {
 };
 
 const stats = [
+  { n: "80+", label: "conference talks worldwide" },
+  { n: "300+", label: "Unreal Engine courses taught" },
+  { n: "100+", label: "projects shipped" },
+  { n: "16+", label: "years in XR" },
   { n: "10+", label: "years of professional Unreal Engine" },
-  { n: "30+", label: "conference talks worldwide" },
   { n: "90", label: "fps, locked, on Vision Pro — always" },
   { n: "1st", label: "VR theatrical sightline test, ever (2013)" },
 ];
@@ -31,50 +35,45 @@ export default function About() {
       </Reveal>
 
       <Reveal>
-        <div className="mt-12 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
-          <div className="space-y-5 text-lg leading-relaxed text-mist">
-            <p>
-              Alex Coulombe is the co-founder and CEO of{" "}
-              <a href="https://agilelens.com" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
-                Agile Lens
-              </a>
-              , a New York immersive design studio that one client described as &quot;XR SEAL Team
-              Six.&quot; With a B.Arch from Syracuse (with a drama minor that turned out to be
-              load-bearing), and years at firms like Rafael Viñoly and Zimmer Gunsul Frasca designing real buildings,
-              then a jump to Fisher Dachs Associates: Theatre Planning &amp; Design — where, in 2013,
-              he strapped on an Oculus DK1 and pioneered the world&apos;s first VR theatrical sightline
-              tests with a rigor to give all stakeholders confidence in the final design.
-            </p>
-            <p>
-              Since co-founding Agile Lens with Joshua Dachs: photoreal VR holodecks driving nine
-              figures in pre-construction real estate sales, a mixed-reality rehearsal tool for the
-              Royal Shakespeare Company, and{" "}
-              <em className="text-snow not-italic">A Christmas Carol VR</em> performed live in headsets
-              every December since 2021. SIGGRAPH-published research on VR performances come from
-              hard-won lessons from real stages, not just theoretical ones.
-            </p>
-            <p>
-              These days it&apos;s the interplay of game engines and AI agents: Unreal optimized for
-              visionOS, pushing Godot to the limits of XR photorealism, and a fleet of machines running
-              AI coding agents that build, test, and ship to TestFlight overnight.
-            </p>
-            <p>
-              Alex also teaches all of it — as a top-rated Epic Games Authorized Instructor running
-              Manhattan&apos;s first Unreal Authorized Training Center, as the lead organizer of the
-              Unreal NYC meetup (1400+ members), and as host of The (Unofficial) Unreal Engine Podcast.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {stats.map((s) => (
-              <div key={s.label} className="glass rounded-2xl p-6">
-                <p className="grad-text text-4xl font-bold">{s.n}</p>
-                <p className="mt-1 text-sm text-mist">{s.label}</p>
-              </div>
-            ))}
-          </div>
+        <div className="mt-12 max-w-3xl space-y-5 text-lg leading-relaxed text-mist">
+          <p>
+            Alex Coulombe is the co-founder and CEO of{" "}
+            <a href="https://agilelens.com" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
+              Agile Lens
+            </a>
+            , a New York immersive design studio that one client described as &quot;XR SEAL Team
+            Six.&quot; With a B.Arch from Syracuse (with a drama minor that turned out to be
+            load-bearing), and years at firms like Rafael Viñoly and Zimmer Gunsul Frasca designing real buildings,
+            then a jump to Fisher Dachs Associates: Theatre Planning &amp; Design — where, in 2013,
+            he strapped on an Oculus DK1 and pioneered the world&apos;s first VR theatrical sightline
+            tests with a rigor to give all stakeholders confidence in the final design.
+          </p>
+          <p>
+            Since co-founding Agile Lens with Joshua Dachs: photoreal VR holodecks driving nine
+            figures in pre-construction real estate sales, a mixed-reality rehearsal tool for the
+            Royal Shakespeare Company, and{" "}
+            <em className="text-snow not-italic">A Christmas Carol VR</em> performed live in headsets
+            every December since 2021. SIGGRAPH-published research on VR performances come from
+            hard-won lessons from real stages, not just theoretical ones.
+          </p>
+          <p>
+            These days it&apos;s the interplay of game engines and AI agents: Unreal optimized for
+            visionOS, pushing Godot to the limits of XR photorealism, and a fleet of machines running
+            AI coding agents that build, test, and ship to TestFlight overnight.
+          </p>
+          <p>
+            Alex also teaches all of it — as a top-rated Epic Games Authorized Instructor running
+            Manhattan&apos;s first Unreal Authorized Training Center, as the lead organizer of the
+            Unreal NYC meetup (1400+ members), and as host of The (Unofficial) Unreal Engine Podcast.
+          </p>
         </div>
       </Reveal>
+
+      <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {stats.map((s, i) => (
+          <CounterStat key={s.label} n={s.n} label={s.label} delay={i * 80} />
+        ))}
+      </div>
 
       {/* From the HarvardXR keynote — the origin story, in 8-bit */}
       <div className="mt-24">
