@@ -29,7 +29,7 @@ export default function Home() {
         <div className="orb right-[12%] top-[40%] h-80 w-80 bg-grape" style={{ animationDelay: "-6s" }} />
         <div className="orb bottom-[10%] left-[40%] h-64 w-64 bg-amber" style={{ animationDelay: "-11s" }} />
 
-        <div className="relative mx-auto w-full max-w-6xl px-5 pt-24 lg:pr-[28%]">
+        <div className="relative mx-auto w-full max-w-6xl px-5 pt-24 lg:pr-[34%]">
           <p className="mb-4 font-mono text-sm text-teal">~/alex-coulombe $ whodis?</p>
           <h1 className="max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
             Building worlds you can <span className="grad-text">step inside.</span>

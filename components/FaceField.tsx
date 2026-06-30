@@ -2,27 +2,29 @@
 
 import { useEffect, useRef } from "react";
 
+// Calibrated for the transparent head-and-shoulders cutout: the face sits in
+// the top ~42% of the frame, centered horizontally around 0.45.
 const LANDMARKS = [
-  { fx: 0.50, fy: 0.08 }, // crown
-  { fx: 0.33, fy: 0.18 }, // left hairline
-  { fx: 0.65, fy: 0.18 }, // right hairline
-  { fx: 0.22, fy: 0.33 }, // left temple
-  { fx: 0.78, fy: 0.33 }, // right temple
-  { fx: 0.19, fy: 0.47 }, // left ear
-  { fx: 0.81, fy: 0.47 }, // right ear
-  { fx: 0.24, fy: 0.60 }, // left cheek
-  { fx: 0.75, fy: 0.60 }, // right cheek
-  { fx: 0.32, fy: 0.73 }, // left jaw
-  { fx: 0.68, fy: 0.73 }, // right jaw
-  { fx: 0.50, fy: 0.82 }, // chin
-  { fx: 0.37, fy: 0.34 }, // left eyebrow
-  { fx: 0.62, fy: 0.34 }, // right eyebrow
-  { fx: 0.37, fy: 0.40 }, // left eye
-  { fx: 0.61, fy: 0.40 }, // right eye
-  { fx: 0.50, fy: 0.27 }, // forehead
-  { fx: 0.50, fy: 0.56 }, // nose
-  { fx: 0.39, fy: 0.66 }, // left mouth corner
-  { fx: 0.60, fy: 0.66 }, // right mouth corner
+  { fx: 0.45, fy: 0.04 }, // crown
+  { fx: 0.36, fy: 0.09 }, // left hairline
+  { fx: 0.53, fy: 0.09 }, // right hairline
+  { fx: 0.30, fy: 0.17 }, // left temple
+  { fx: 0.60, fy: 0.17 }, // right temple
+  { fx: 0.28, fy: 0.24 }, // left ear
+  { fx: 0.62, fy: 0.24 }, // right ear
+  { fx: 0.31, fy: 0.31 }, // left cheek
+  { fx: 0.59, fy: 0.31 }, // right cheek
+  { fx: 0.35, fy: 0.37 }, // left jaw
+  { fx: 0.55, fy: 0.37 }, // right jaw
+  { fx: 0.45, fy: 0.42 }, // chin
+  { fx: 0.38, fy: 0.17 }, // left eyebrow
+  { fx: 0.52, fy: 0.17 }, // right eyebrow
+  { fx: 0.38, fy: 0.20 }, // left eye
+  { fx: 0.51, fy: 0.20 }, // right eye
+  { fx: 0.45, fy: 0.14 }, // forehead
+  { fx: 0.45, fy: 0.29 }, // nose
+  { fx: 0.39, fy: 0.34 }, // left mouth corner
+  { fx: 0.51, fy: 0.34 }, // right mouth corner
 ];
 
 export default function FaceField({ density = 0.00016 }: { density?: number }) {
@@ -196,27 +198,15 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
 
   return (
     <>
-      {/* Image below canvas so particles render on top of the face */}
-      <div
-        className="absolute bottom-0 right-0 hidden h-[83%] w-[30%] overflow-hidden lg:block"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent 0%, black 16%), " +
-            "linear-gradient(to top, transparent 0%, black 26%)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent 0%, black 16%), " +
-            "linear-gradient(to top, transparent 0%, black 26%)",
-          maskComposite: "intersect",
-          WebkitMaskComposite: "destination-in",
-        }}
-      >
+      {/* Transparent cutout, bottom-right. His left shoulder aligns to the page
+          edge; the full figure shows at natural aspect — no crop, no mask. */}
+      <div className="absolute bottom-0 right-0 hidden w-[34%] lg:block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
-          src="/alex-headshot.webp"
+          src="/alex-cutout.webp"
           alt="Alex Coulombe"
-          className="pointer-events-none h-full w-full select-none object-cover"
-          style={{ objectPosition: "58% top" }}
+          className="pointer-events-none block h-auto w-full select-none"
         />
       </div>
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
