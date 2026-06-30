@@ -505,6 +505,28 @@ export const courses: { name: string; blurb: string; isNew?: boolean }[] = [
   { name: "MetaHumans", blurb: "Creation, animation, mocap pipelines, and real-time digital humans that hold up close." },
   { name: "Virtual Production", blurb: "Live events, LED volumes, and broadcast — where game engines meet showtime." },
   { name: "Final Output", blurb: "Packaging, optimization, and delivery for every target — the last mile most courses skip." },
+  { name: "Unity to Unreal", blurb: "For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors." },
+];
+
+// ── AI Training Topics ───────────────────────────────────────────────────────
+
+export const aiTopics: { t: string; d: string }[] = [
+  { t: "Agents that ship real work", d: "Designing AI agents that do useful things — not demos. Guardrails, tools, and verification so they don't go off the rails." },
+  { t: "Claude Code & MCP", d: "Driving real codebases with Claude Code, writing MCP servers, and wiring agents into the tools you already use." },
+  { t: "AI for Unreal Engine", d: "MCP servers and build agents that drive Unreal — overnight builds that greet you with a TestFlight app by morning." },
+  { t: "Running a local model fleet", d: "Standing up your own machines and open models to offload work from the paid APIs and protect your budget." },
+  { t: "Prompting for production", d: "Moving past chat tricks into repeatable, testable prompt + context pipelines you can actually ship." },
+  { t: "You tell us", d: "This curriculum is being shaped right now. Sign up and say what you'd want — it helps decide what gets built first." },
+];
+
+// ── Epic Games Archive Courses ───────────────────────────────────────────────
+
+export const epicCourses: { kind: "Video" | "Course" | "Talk"; name: string; note: string; href: string }[] = [
+  { kind: "Video", name: "Intro to OpenXR", note: "The very first — adapted for Unreal Fest 2022.", href: "https://youtu.be/JD95BklloHk" },
+  { kind: "Course", name: "FBX: Data Ingestion", note: "Getting FBX data into Unreal cleanly.", href: "https://dev.epicgames.com/community/learning/courses/Lre/unreal-engine-fbx-data-ingestion/qEL5/unreal-engine-introduction" },
+  { kind: "Course", name: "Datasmith Ingestion", note: "Bringing CAD and DCC scenes in via Datasmith.", href: "https://dev.epicgames.com/community/learning/courses/7Na/unreal-engine-datasmith-ingestion/L0YB/unreal-engine-introduction" },
+  { kind: "Talk", name: "Mind the Gap: Transitioning from Unity to Unreal", note: "Led by Whitt Sellers.", href: "https://dev.epicgames.com/community/learning/talks-and-demos/0yX9/unreal-engine-mind-the-gap-transitioning-from-unity-to-unreal" },
+  { kind: "Course", name: "Using Magic Leap in Unreal Engine", note: "A 2019 classic that's still surprisingly relevant.", href: "https://dev.epicgames.com/community/learning/courses/Ml7/using-magic-leap-in-unreal-engine/pbx/introducing-using-magic-leap-in-unreal-engine" },
 ];
 
 // ── Links ───────────────────────────────────────────────────────────────────

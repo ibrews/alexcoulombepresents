@@ -15,30 +15,32 @@
 
 **On the page**
 
-- `[home.1]` ▸ ~/alex-coulombe $ whoami
+- `[home.1]` ▸ ~/alex-coulombe $ whodis?
 - `[home.2]` ▸ Building worlds you can step inside.
 - `[home.3]` ▸ Architect turned XR-chitect. 10+ yrs of running Agile Lens, 16+ yrs of immersive design across the built environment, live theatre, and emerging technology. Unreal Engine Gold Authorized Instructor. Now teaching machines to build alongside us.
 - `[home.4]` ▸ Currently:
 - `[home.5]` ▸ See what's cooking →
-- `[home.6]` ▸ Learn Unreal with us
-- `[home.7]` ▸ Open source
-- `[home.8]` ▸ press ⌘K to jump anywhere
-- `[home.9]` ▸ Three passions, one through-line
-- `[home.10]` ▸ Every project: how do we make digital space feel visceral and alive?
-- `[home.11]` ▸ 01 / ENGINES
-- `[home.12]` ▸ Unreal & Godot, let's go further than the documentation
-- `[home.13]` ▸ Engine-level fixes & improvements for Vision Pro, Godot physics game at 90 fps on AVP, MetaHumans like you've never seen them before. When a plugin says "Experimental," the real fun begins.
-- `[home.14]` ▸ 02 / AI
-- `[home.15]` ▸ Agents that ship real work. No tech for tech's sake.
-- `[home.16]` ▸ A fleet of machines at Agile Lens running AI agents around the clock without breaking the bank. Field manuals so agents drive Unreal without crashing it. Pipelines where the overnight build greets you with a new TestFlight-approved app waiting on device by morning.
-- `[home.17]` ▸ 03 / STAGES
-- `[home.18]` ▸ Theatre is the original VR
-- `[home.19]` ▸ Live actors performing in headsets since 2018. Worked on Venice Biennale's first global live VR show, an annual Christmas Carol in VR, mixed reality theatre with an actor surrounded by digital assets, and published SIGGRAPH papers on all of it.
-- `[home.20]` ▸ Fresh from the repo
-- `[home.21]` ▸ Real tools built for Agile Lens, now available to you.
-- `[home.22]` ▸ all repos →
-- `[home.23]` ▸ The Lab
-- `[home.24]` ▸ Here's what's bubbling:
+- `[home.6]` ▸ Open source
+- `[home.7]` ▸ Learn AI
+- `[home.8]` ▸ Learn Unreal
+- `[home.9]` ▸ press ⌘K to jump anywhere
+- `[home.10]` ▸ Featured in:
+- `[home.11]` ▸ Three passions, one through-line
+- `[home.12]` ▸ Every project: how do we make digital space feel visceral and alive?
+- `[home.13]` ▸ 01 / ENGINES
+- `[home.14]` ▸ Unreal & Godot, let's go further than the documentation
+- `[home.15]` ▸ Engine-level fixes & improvements for Vision Pro, Godot physics game at 90 fps on AVP, MetaHumans like you've never seen them before. When a plugin says "Experimental," the real fun begins.
+- `[home.16]` ▸ 02 / AI
+- `[home.17]` ▸ Agents that ship real work. No tech for tech's sake.
+- `[home.18]` ▸ A fleet of machines at Agile Lens running AI agents around the clock without breaking the bank. Field manuals so agents drive Unreal without crashing it. Pipelines where the overnight build greets you with a new TestFlight-approved app waiting on device by morning.
+- `[home.19]` ▸ 03 / STAGES
+- `[home.20]` ▸ Theatre is the original VR
+- `[home.21]` ▸ Live actors performing in headsets since 2018. Worked on Venice Biennale's first global live VR show, an annual Christmas Carol in VR, mixed reality theatre with an actor surrounded by digital assets, and published SIGGRAPH papers on all of it.
+- `[home.22]` ▸ Fresh from the repo
+- `[home.23]` ▸ Real tools built for Agile Lens, now available to you.
+- `[home.24]` ▸ all repos →
+- `[home.25]` ▸ The Lab
+- `[home.26]` ▸ Here's what's bubbling:
 
 **List: venues**  (21 items — add or remove lines freely)
 
@@ -114,25 +116,40 @@
 - `[training.6]` ▸ Intro classes typically start on the first Monday of the month at 1pm ET, with additional sessions throughout the week.
 - `[training.7]` ▸ CREDENTIALS
 - `[training.8]` ▸ Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
-- `[training.9]` ▸ The curriculum
-- `[training.10]` ▸ Eleven tracks. Take one, take them all, or tell us what your team needs.
-- `[training.11]` ▸ New
-- `[training.12]` ▸ Try the teaching first
-- `[training.13]` ▸ All
-- `[training.14]` ▸ talks on YouTube →
-- `[training.15]` ▸ Why learn here and not from an on-demand video course?
-- `[training.16]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
-- `[training.17]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
-- `[training.18]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
-- `[training.19]` ▸ Book a class →
-- `[training.20]` ▸ Team / studio training
-- `[training.21]` ▸ Unreal NYC
-- `[training.22]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
-- `[training.23]` ▸ agilelens.com/unrealnyc ↗
-- `[training.24]` ▸ Epic community page ↗
-- `[training.25]` ▸ Free stuff first
-- `[training.26]` ▸ The YouTube channel ("I Wish I Learned This Sooner") and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
-- `[training.27]` ▸ Podcast on all platforms ↗
+- `[training.9]` ▸ Certified by Epic Games
+- `[training.10]` ▸ Authorized, and re-authorized every year.
+- `[training.11]` ▸ The curriculum
+- `[training.12]` ▸ Twelve tracks. Take one, take them all, or tell us what your team needs.
+- `[training.13]` ▸ New
+- `[training.14]` ▸ Try the teaching first
+- `[training.15]` ▸ All
+- `[training.16]` ▸ talks on YouTube →
+- `[training.17]` ▸ From the Epic Games archives
+- `[training.18]` ▸ Courses built for Epic Games.
+- `[training.19]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
+- `[training.20]` ▸ AI training · its own track
+- `[training.21]` ▸ Learn AI workflows, Unreal optional.
+- `[training.22]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
+- `[training.23]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
+- `[training.24]` ▸ Learn AI
+- `[training.25]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
+- `[training.26]` ▸ Learn Unreal
+- `[training.27]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
+- `[training.28]` ▸ Why learn here and not from an on-demand video course?
+- `[training.29]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
+- `[training.30]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
+- `[training.31]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
+- `[training.32]` ▸ Unreal NYC
+- `[training.33]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
+- `[training.34]` ▸ agilelens.com/unrealnyc ↗
+- `[training.35]` ▸ Epic community page ↗
+- `[training.36]` ▸ Free stuff first
+- `[training.37]` ▸ The YouTube channel ("I Wish I Learned This Sooner") and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
+- `[training.38]` ▸ Podcast on all platforms ↗
+- `[training.39]` ▸ Book a class →
+- `[training.40]` ▸ Alex will be in touch to get you booked.
+- `[training.41]` ▸ Team / studio training
+- `[training.42]` ▸ Alex will be in touch about team training.
 
 ---
 
@@ -184,6 +201,7 @@
 - `[skills.3]` ▸ Want a skill that doesn't exist yet?
 - `[skills.4]` ▸ Custom skills for your team's engine, pipeline, or platform — built from the same battle-tested template.
 - `[skills.5]` ▸ Commission one →
+- `[skills.6]` ▸ Alex will be in touch about your custom skill.
 
 ---
 
@@ -222,7 +240,9 @@
 - `[lab.1]` ▸ The private repos are getting restless.
 - `[lab.2]` ▸ Four products in active development, all pointed at the same future: spatial computing where the engines, the assets, and the AI agents finally cooperate. Hardware-verified, demo-ready, and approaching the launch pad.
 - `[lab.3]` ▸ full briefing →
-- `[lab.4]` ▸ Want early access to any of these? Raise your hand →
+- `[lab.4]` ▸ Want early access to any of these?
+- `[lab.5]` ▸ Raise your hand →
+- `[lab.6]` ▸ You'll hear first when any of these open up.
 
 ---
 
@@ -235,9 +255,9 @@
 - `[lab-slug.2]` ▸ At a glance
 - `[lab-slug.3]` ▸ Want in early?
 - `[lab-slug.4]` ▸ is in active development. Early-access spots, pilot projects, and collaborations are all on the table.
-- `[lab-slug.5]` ▸ Get in touch →
-- `[lab-slug.6]` ▸ ▶ See it running
-- `[lab-slug.7]` ▸ Also in the lab
+- `[lab-slug.5]` ▸ ▶ See it running
+- `[lab-slug.6]` ▸ Also in the lab
+- `[lab-slug.7]` ▸ Join the waitlist →
 
 ---
 
@@ -246,20 +266,22 @@
 
 **Browser tab / SEO**
 
-- `[store.meta.title]` ▸ Store: Courses, Skills & Templates
-- `[store.meta.description]` ▸ Courses, AI skills, and templates — sold directly. No marketplace, no middleman: the only cut is card processing.
+- `[store.meta.title]` ▸ Work With Alex — Courses, Skills & Templates
+- `[store.meta.description]` ▸ Unreal Engine training, AI skills for Claude Code, and spatial computing templates. Reach out to get started.
 
 **On the page**
 
-- `[store.1]` ▸ Buy direct. Nobody takes a cut.
-- `[store.2]` ▸ Everything here is sold by Alex, to you, with no marketplace in between. Card payments run through Stripe — a processor, not a platform — so the only fee anywhere is card processing. Prefer literally zero fees? Every item can also be invoiced for ACH or check: just email.
-- `[store.3]` ▸ ⚠ Store preview — checkout opens soon. Buttons email Alex directly for now.
-- `[store.4]` ▸ You get:
-- `[store.5]` ▸ Inquire →
-- `[store.6]` ▸ Why direct?
-- `[store.7]` ▸ Marketplaces take 12–30%. Fab, app stores, course platforms — they all skim. Buying here means the person who made the thing keeps what you paid, minus pennies of card processing.
-- `[store.8]` ▸ Same product, same updates. Skills sold here are identical to their Capafy listings. Templates match their Fab versions. You just choose where your money lands.
-- `[store.9]` ▸ Zero-fee option, always. Email info@alexcoulombepresents.com for an invoice — ACH and checks clear with no processor at all.
+- `[store.1]` ▸ Let's work together. Get in touch to start.
+- `[store.2]` ▸ Training, AI skills, and spatial computing templates — all made by Alex, for people who want to move fast and build real things. Drop a line and we'll figure out the right format together.
+- `[store.3]` ▸ Also available at:
+- `[store.4]` ▸ Gumroad →
+- `[store.5]` ▸ Capafy →
+- `[store.6]` ▸ You get:
+- `[store.7]` ▸ Not sure where to start?
+- `[store.8]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
+- `[store.9]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
+- `[store.10]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — email info@alexcoulombepresents.com or use the contact form .
+- `[store.11]` ▸ Inquire →
 
 ---
 
@@ -333,7 +355,7 @@
 - `[data.timeline.8.title]` ▸ HarvardXR closing keynote
 - `[data.timeline.8.detail]` ▸ '10 Lessons from 10 Years of Running an XR Enterprise Studio' — delivered in Spatial Deck, a presentation framework built (with AI) for the occasion, then open-sourced.
 
-### courses  (11 entries — add or remove whole entries)
+### courses  (12 entries — add or remove whole entries)
 
 - `[data.courses.0.name]` ▸ AI for Unreal Engine
 - `[data.courses.0.blurb]` ▸ MCP servers, AI build agents, and LLM-assisted workflows inside the editor. The new frontier.
@@ -357,6 +379,8 @@
 - `[data.courses.9.blurb]` ▸ Live events, LED volumes, and broadcast — where game engines meet showtime.
 - `[data.courses.10.name]` ▸ Final Output
 - `[data.courses.10.blurb]` ▸ Packaging, optimization, and delivery for every target — the last mile most courses skip.
+- `[data.courses.11.name]` ▸ Unity to Unreal
+- `[data.courses.11.blurb]` ▸ For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors.
 
 ### repos  (16 entries — add or remove whole entries)
 
@@ -668,7 +692,7 @@
 - `[data.externalLinks.0.note]` ▸ The immersive design studio Alex co-founded. Ten years of XR for architecture, theatre, and brands you've heard of — Hyperreal Estate, Holodeck Anywhere, Stage Presence, and more.
 - `[data.externalLinks.0.extra.label]` ▸ Browse the portfolio
 - `[data.externalLinks.1.label]` ▸ alexcoulombe.com
-- `[data.externalLinks.1.note]` ▸ Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine, as nature intended.
+- `[data.externalLinks.1.note]` ▸ Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine to experience it in its full Macromedia Flash glory, as nature intended.
 - `[data.externalLinks.2.label]` ▸ GitHub — @ibrews
 - `[data.externalLinks.2.note]` ▸ Where the code lives. Engines plural, agents plural.
 - `[data.externalLinks.3.label]` ▸ Unreal NYC
@@ -689,6 +713,34 @@
 
 - `[data.site.title]` ▸ Alex Coulombe Presents
 - `[data.site.description]` ▸ Unreal Engine, Godot, Apple Vision Pro, AI agents, and a decade of immersive design — plus Manhattan's first Unreal Authorized Training Center.
+
+### aiTopics  (6 entries — add or remove whole entries)
+
+- `[data.aiTopics.0.t]` ▸ Agents that ship real work
+- `[data.aiTopics.0.d]` ▸ Designing AI agents that do useful things — not demos. Guardrails, tools, and verification so they don't go off the rails.
+- `[data.aiTopics.1.t]` ▸ Claude Code & MCP
+- `[data.aiTopics.1.d]` ▸ Driving real codebases with Claude Code, writing MCP servers, and wiring agents into the tools you already use.
+- `[data.aiTopics.2.t]` ▸ AI for Unreal Engine
+- `[data.aiTopics.2.d]` ▸ MCP servers and build agents that drive Unreal — overnight builds that greet you with a TestFlight app by morning.
+- `[data.aiTopics.3.t]` ▸ Running a local model fleet
+- `[data.aiTopics.3.d]` ▸ Standing up your own machines and open models to offload work from the paid APIs and protect your budget.
+- `[data.aiTopics.4.t]` ▸ Prompting for production
+- `[data.aiTopics.4.d]` ▸ Moving past chat tricks into repeatable, testable prompt + context pipelines you can actually ship.
+- `[data.aiTopics.5.t]` ▸ You tell us
+- `[data.aiTopics.5.d]` ▸ This curriculum is being shaped right now. Sign up and say what you'd want — it helps decide what gets built first.
+
+### epicCourses  (5 entries — add or remove whole entries)
+
+- `[data.epicCourses.0.name]` ▸ Intro to OpenXR
+- `[data.epicCourses.0.note]` ▸ The very first — adapted for Unreal Fest 2022.
+- `[data.epicCourses.1.name]` ▸ FBX: Data Ingestion
+- `[data.epicCourses.1.note]` ▸ Getting FBX data into Unreal cleanly.
+- `[data.epicCourses.2.name]` ▸ Datasmith Ingestion
+- `[data.epicCourses.2.note]` ▸ Bringing CAD and DCC scenes in via Datasmith.
+- `[data.epicCourses.3.name]` ▸ Mind the Gap: Transitioning from Unity to Unreal
+- `[data.epicCourses.3.note]` ▸ Led by Whitt Sellers.
+- `[data.epicCourses.4.name]` ▸ Using Magic Leap in Unreal Engine
+- `[data.epicCourses.4.note]` ▸ A 2019 classic that's still surprisingly relevant.
 
 ---
 

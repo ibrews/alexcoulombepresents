@@ -122,6 +122,36 @@ function extractPage(file) {
   };
   walk(sf);
 
+  // Custom-component string props (label=, successMessage=, cta=, placeholder=).
+  // Captures text on non-HTML components that the LEAF walk misses.
+  const CUSTOM_PROP_NAMES = new Set(["label", "successMessage", "cta", "placeholder"]);
+  const walkProps = (n) => {
+    let attrs = null;
+    if (ts.isJsxSelfClosingElement(n)) {
+      const tag = tagName(n);
+      if (tag && /^[A-Z]/.test(tag)) attrs = n.attributes.properties;
+    } else if (ts.isJsxOpeningElement(n)) {
+      const tag = n.tagName.getText(sf);
+      if (tag && /^[A-Z]/.test(tag)) attrs = n.attributes.properties;
+    }
+    if (attrs) {
+      for (const attr of attrs) {
+        if (!ts.isJsxAttribute(attr)) continue;
+        const name = attr.name?.getText(sf);
+        if (!CUSTOM_PROP_NAMES.has(name)) continue;
+        if (!attr.initializer) continue;
+        let txt = "";
+        if (ts.isStringLiteral(attr.initializer)) txt = squish(attr.initializer.text);
+        else if (ts.isJsxExpression(attr.initializer) && attr.initializer.expression && ts.isStringLiteralLike(attr.initializer.expression)) {
+          txt = squish(attr.initializer.expression.text);
+        }
+        if (txt && isContent(txt) && !seen.has(txt)) { seen.add(txt); prose.push(txt); }
+      }
+    }
+    n.forEachChild(walkProps);
+  };
+  walkProps(sf);
+
   return { meta, prose, lists };
 }
 
@@ -227,7 +257,7 @@ for (const [name, route, file] of pages) {
 md += `## Catalogs  ·  \`lib/data.ts\`\n`;
 md += `<sub>Structured content reused across pages. Each entry can be edited; whole entries can be added or removed.</sub>\n\n`;
 
-const catalogExports = ["roles", "timeline", "courses", "repos", "products", "agentSkills", "videos", "featuredVideo", "playlists", "trainingPlaylist", "externalLinks", "site"];
+const catalogExports = ["roles", "timeline", "courses", "repos", "products", "agentSkills", "videos", "featuredVideo", "playlists", "trainingPlaylist", "externalLinks", "site", "aiTopics", "epicCourses"];
 for (const ex of catalogExports) {
   if (!(ex in data)) continue;
   const out = [];

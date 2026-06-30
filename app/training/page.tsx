@@ -6,7 +6,7 @@ import InterestForm from "@/components/InterestForm";
 import InquireButton from "@/components/InquireButton";
 import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
-import { courses, trainingPlaylist } from "@/lib/data";
+import { courses, trainingPlaylist, aiTopics, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
 
@@ -133,7 +133,7 @@ export default function Training() {
       <div className="mt-20">
         <Reveal>
           <h2 className="text-3xl font-bold tracking-tight">The curriculum</h2>
-          <p className="mt-3 text-mist">Eleven tracks. Take one, take them all, or tell us what your team needs.</p>
+          <p className="mt-3 text-mist">Twelve tracks. Take one, take them all, or tell us what your team needs.</p>
         </Reveal>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((c, i) => (
@@ -182,7 +182,7 @@ export default function Training() {
             From the Epic Games archives
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">
-            Courses I built <span className="grad-text">for Epic Games.</span>
+            Courses built <span className="grad-text">for Epic Games.</span>
           </h2>
           <p className="mt-3 max-w-3xl leading-relaxed text-mist">
             Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games
@@ -191,38 +191,7 @@ export default function Training() {
           </p>
         </Reveal>
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          {[
-            {
-              kind: "Video",
-              name: "Intro to OpenXR",
-              note: "The very first — adapted for Unreal Fest 2022.",
-              href: "https://youtu.be/JD95BklloHk",
-            },
-            {
-              kind: "Course",
-              name: "FBX: Data Ingestion",
-              note: "Getting FBX data into Unreal cleanly.",
-              href: "https://dev.epicgames.com/community/learning/courses/Lre/unreal-engine-fbx-data-ingestion/qEL5/unreal-engine-introduction",
-            },
-            {
-              kind: "Course",
-              name: "Datasmith Ingestion",
-              note: "Bringing CAD and DCC scenes in via Datasmith.",
-              href: "https://dev.epicgames.com/community/learning/courses/7Na/unreal-engine-datasmith-ingestion/L0YB/unreal-engine-introduction",
-            },
-            {
-              kind: "Talk",
-              name: "Mind the Gap: Transitioning from Unity to Unreal",
-              note: "Led by Whitt Sellers.",
-              href: "https://dev.epicgames.com/community/learning/talks-and-demos/0yX9/unreal-engine-mind-the-gap-transitioning-from-unity-to-unreal",
-            },
-            {
-              kind: "Course",
-              name: "Using Magic Leap in Unreal Engine",
-              note: "A 2019 classic that's still surprisingly relevant.",
-              href: "https://dev.epicgames.com/community/learning/courses/Ml7/using-magic-leap-in-unreal-engine/pbx/introducing-using-magic-leap-in-unreal-engine",
-            },
-          ].map((c, i) => (
+          {epicCourses.map((c, i) => (
             <Reveal key={c.name} delay={Math.min(i * 60, 300)}>
               <a
                 href={c.href}
@@ -265,32 +234,7 @@ export default function Training() {
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  t: "Agents that ship real work",
-                  d: "Designing AI agents that do useful things — not demos. Guardrails, tools, and verification so they don't go off the rails.",
-                },
-                {
-                  t: "Claude Code & MCP",
-                  d: "Driving real codebases with Claude Code, writing MCP servers, and wiring agents into the tools you already use.",
-                },
-                {
-                  t: "AI for Unreal Engine",
-                  d: "MCP servers and build agents that drive Unreal — overnight builds that greet you with a TestFlight app by morning.",
-                },
-                {
-                  t: "Running a local model fleet",
-                  d: "Standing up your own machines and open models to offload work from the paid APIs and protect your budget.",
-                },
-                {
-                  t: "Prompting for production",
-                  d: "Moving past chat tricks into repeatable, testable prompt + context pipelines you can actually ship.",
-                },
-                {
-                  t: "You tell us",
-                  d: "This curriculum is being shaped right now. Sign up and say what you'd want — it helps decide what gets built first.",
-                },
-              ].map((c) => (
+              {aiTopics.map((c) => (
                 <div key={c.t} className="rounded-2xl border border-line p-5">
                   <h3 className="text-sm font-bold">{c.t}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-mist">{c.d}</p>
