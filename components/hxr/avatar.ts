@@ -129,6 +129,26 @@ export function buildAvatar(
   return root;
 }
 
+// Small CSS particle burst, fixed-positioned in viewport coords (cx, cy).
+export function spawnParticles(cx: number, cy: number) {
+  const colors = ["#fde68a", "#a78bfa", "#00d4ff", "#f43f5e", "#fff", "#f59e0b"];
+  for (let i = 0; i < 12; i++) {
+    const angle = (Math.PI * 2 * i) / 12;
+    const dist = 40 + Math.random() * 60;
+    const tx = Math.cos(angle) * dist;
+    const ty = Math.sin(angle) * dist;
+    const p = document.createElement("div");
+    const size = 4 + Math.random() * 4;
+    p.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;width:${size}px;height:${size}px;border-radius:50%;background:${colors[i % colors.length]};pointer-events:none;z-index:9999;transition:all .7s ease-out;transform:translate(-50%,-50%)`;
+    document.body.appendChild(p);
+    requestAnimationFrame(() => {
+      p.style.transform = `translate(calc(-50% + ${tx}px),calc(-50% + ${ty}px))`;
+      p.style.opacity = "0";
+    });
+    setTimeout(() => p.remove(), 800);
+  }
+}
+
 // Paints the VR headset onto the avatar's face after the power-up.
 export function paintWornHeadset(parentBody: SVGElement) {
   parentBody.querySelector(".worn-headset")?.remove();

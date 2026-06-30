@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import OriginVenn from "@/components/hxr/OriginVenn";
 import PowerUpIntro from "@/components/hxr/PowerUpIntro";
+import { AgileLensOrbit, ToolJourneyBurst } from "@/components/hxr/SpriteAnimations";
 import CounterStat from "@/components/CounterStat";
 import AvatarCorner from "@/components/hxr/AvatarCorner";
 import { timeline } from "@/lib/data";
@@ -138,29 +139,25 @@ export default function About() {
             <h3 className="mt-3 text-xl font-bold">
               From power-up to pipeline
             </h3>
-            <p className="mt-3 max-w-2xl leading-relaxed text-mist">
-              Those three worlds that merged in 2013 grew into a studio, a curriculum, and an
-              engine fleet. Opening slides from the SensAI Hackademy 2026 talk — click to step through.
-            </p>
           </div>
         </Reveal>
         <Reveal>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <div className="glass overflow-hidden rounded-3xl">
-              <iframe
-                src="https://ibrews.github.io/sensai-2026-mcp-engines/#2"
-                title="SensAI 2026 — WHO + WHY"
-                className="aspect-video w-full border-0"
-                loading="lazy"
-              />
+            <div className="glass overflow-hidden rounded-3xl p-5 md:p-7">
+              <p className="text-center font-mono text-[10px] uppercase tracking-widest text-mist">
+                Agile Lens · est. 2016
+              </p>
+              <div className="mt-2">
+                <AgileLensOrbit />
+              </div>
             </div>
-            <div className="glass overflow-hidden rounded-3xl">
-              <iframe
-                src="https://ibrews.github.io/sensai-2026-mcp-engines/#3"
-                title="SensAI 2026 — Agile Lens"
-                className="aspect-video w-full border-0"
-                loading="lazy"
-              />
+            <div className="glass overflow-hidden rounded-3xl p-5 md:p-7">
+              <p className="text-center font-mono text-[10px] uppercase tracking-widest text-mist">
+                Tool journey · expand — contract — expand
+              </p>
+              <div className="mt-2">
+                <ToolJourneyBurst />
+              </div>
             </div>
           </div>
         </Reveal>
