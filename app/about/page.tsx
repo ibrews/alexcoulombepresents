@@ -4,6 +4,7 @@ import Ethereal from "@/components/Ethereal";
 import OriginVenn from "@/components/hxr/OriginVenn";
 import PowerUpIntro from "@/components/hxr/PowerUpIntro";
 import CounterStat from "@/components/CounterStat";
+import AvatarCorner from "@/components/hxr/AvatarCorner";
 import { timeline } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -19,13 +20,15 @@ const stats = [
   { n: "100+", label: "projects shipped" },
   { n: "16+", label: "years in XR" },
   { n: "10+", label: "years of professional Unreal Engine" },
-  { n: "90", label: "fps, locked, on Vision Pro — always" },
   { n: "1st", label: "VR theatrical sightline test, ever (2013)" },
+  { n: "1400+", label: "Unreal NYC meetup members" },
+  { n: "5", label: "live A Christmas Carol VR seasons" },
 ];
 
 export default function About() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
+    <div className="relative mx-auto max-w-6xl px-5 pb-24 pt-32">
+      <AvatarCorner />
       <Ethereal variant="ghost" />
       <Reveal>
         <p className="font-mono text-sm text-teal">/about</p>
