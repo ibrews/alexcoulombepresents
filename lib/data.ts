@@ -611,6 +611,14 @@ export const aiTopics: { t: string; d: string }[] = [
   { t: "You tell us", d: "This curriculum is being shaped right now. Sign up and say what you'd want — it helps decide what gets built first." },
 ];
 
+export const aiTalk = {
+  videoId: "JR5397NUz3I",
+  title: "How to Use AI & MCP for Blender, Unreal & Godot",
+  blurb:
+    "A live 2-hour workshop for SIGGRAPH 2026 LA's Worlds in Action hackathon (with Sensei AI) — headless vs. MCP workflows, running a local model fleet, and the second-brain knowledge base behind all of it. Scheduled for one hour; the room didn't let Alex leave for two.",
+  host: "Sensei AI × SIGGRAPH 2026 LA",
+};
+
 // ── Epic Games Archive Courses ───────────────────────────────────────────────
 
 export const epicCourses: { kind: "Video" | "Course" | "Talk"; name: string; note: string; href: string }[] = [

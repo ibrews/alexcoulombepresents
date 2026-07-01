@@ -6,7 +6,7 @@ import InterestForm from "@/components/InterestForm";
 import InquireButton from "@/components/InquireButton";
 import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
-import { courses, trainingPlaylist, aiTopics, epicCourses } from "@/lib/data";
+import { courses, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
 
@@ -240,6 +240,23 @@ export default function Training() {
                   <p className="mt-2 text-sm leading-relaxed text-mist">{c.d}</p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-10 grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
+              <LiteVideo id={aiTalk.videoId} title={aiTalk.title} />
+              <div>
+                <p className="font-mono text-xs uppercase tracking-widest text-grape">{aiTalk.host}</p>
+                <h3 className="mt-2 text-xl font-bold tracking-tight">{aiTalk.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-mist">{aiTalk.blurb}</p>
+                <a
+                  href={`https://www.youtube.com/watch?v=${aiTalk.videoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-xs font-semibold transition-colors hover:border-grape/60"
+                >
+                  Watch the full talk →
+                </a>
+              </div>
             </div>
 
             <div className="mt-10 grid gap-8 md:grid-cols-2">
