@@ -330,6 +330,29 @@ export const repos: Repo[] = [
     github: "https://github.com/ibrews/gh-wiki-init",
     wiki: "https://github.com/ibrews/gh-wiki-init/wiki",
   },
+  {
+    slug: "swing-city",
+    name: "Swing City",
+    tagline: "A rain-soaked neon city you can swing across, Spider-Man style — now with multiplayer joust rules.",
+    category: "Tools",
+    stars: 0,
+    language: "JavaScript",
+    story:
+      "A low-poly Blade Runner grid, procedurally generated from a single seed — streets, traffic-light-obeying cars, rain, neon towers — built first as a Blender/Python generator, then ported line-for-line into a self-contained Three.js browser game. Web-swing between skyscrapers, knock cars flying, climb buildings, chain combos, and dodge a zombie wave or two. The multiplayer mode drops other players into the same city over a Cloudflare Worker + Durable Object relay: everyone's a different color, everyone can see everyone else's webs, and landing on someone's head sends them flying off the map.",
+    highlights: [
+      "Procedural city — same seed, same layout, in both Blender and the browser",
+      "Full physics: web-swinging, wall-crawling, car knockback with momentum-scaled combos",
+      "Gamepad, touchscreen, and WebXR input all map onto the same controls",
+      "Opt-in multiplayer — joust rules, random color per player, colored webs, knock players (and cars) around, land on a head to explode them",
+      "No build step — one HTML file, Three.js from a CDN",
+    ],
+    links: [
+      { label: "Play — single player", url: "https://ibrews.github.io/swing-city/" },
+      { label: "Play — multiplayer", url: "https://ibrews.github.io/swing-city/?mp=wss%3A%2F%2Fswing-city-multiplayer.alexcoulombe.workers.dev%2Fws" },
+    ],
+    github: "https://github.com/ibrews/swing-city",
+    wiki: "https://github.com/ibrews/swing-city/wiki",
+  },
 ];
 
 // ── Lab (upcoming products) ─────────────────────────────────────────────────
