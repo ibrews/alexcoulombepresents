@@ -15,6 +15,7 @@ export type Repo = {
   wiki?: string;
   video?: string; // primary / featured YouTube id
   videos?: { id: string; title: string }[]; // additional updates, newest first
+  devlog?: { url: string; teaser: string }; // link to a dedicated devlog subpage
 };
 
 export const repos: Repo[] = [
@@ -352,6 +353,11 @@ export const repos: Repo[] = [
     ],
     github: "https://github.com/ibrews/swing-city",
     wiki: "https://github.com/ibrews/swing-city/wiki",
+    devlog: {
+      url: "/repos/swing-city/devlog",
+      teaser:
+        "From a Blender script to a browser game with real physics, WebXR, and multiplayer — plus the bugs that got found along the way.",
+    },
   },
 ];
 

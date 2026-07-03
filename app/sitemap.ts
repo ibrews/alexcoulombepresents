@@ -33,6 +33,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  const devlogEntries: MetadataRoute.Sitemap = repos
+    .filter((r) => r.devlog)
+    .map((r) => ({
+      url: `${base}${r.devlog!.url}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    }));
+
   const productEntries: MetadataRoute.Sitemap = products.map((p) => ({
     url: `${base}/lab/${p.slug}`,
     lastModified: now,
@@ -40,5 +49,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...repoEntries, ...productEntries];
+  return [...staticEntries, ...repoEntries, ...devlogEntries, ...productEntries];
 }

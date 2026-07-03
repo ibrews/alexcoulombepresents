@@ -68,6 +68,21 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
         </div>
       </Reveal>
 
+      {repo.devlog && (
+        <Reveal>
+          <Link
+            href={repo.devlog.url}
+            className="glass mt-12 flex flex-col gap-3 rounded-3xl p-8 transition-transform hover:scale-[1.01] md:flex-row md:items-center md:justify-between md:p-10"
+          >
+            <div>
+              <p className="font-mono text-xs uppercase tracking-widest text-amber">Devlog</p>
+              <p className="mt-3 max-w-2xl leading-relaxed text-mist">{repo.devlog.teaser}</p>
+            </div>
+            <span className="font-mono text-sm whitespace-nowrap text-teal">Read the devlog →</span>
+          </Link>
+        </Reveal>
+      )}
+
       {repo.video && (
         <Reveal>
           <div className="mt-12">
