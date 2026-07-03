@@ -3,6 +3,7 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import DevlogNote from "@/components/DevlogNote";
+import ManifestItem from "@/components/ManifestItem";
 import { repos } from "@/lib/data";
 
 const repo = repos.find((r) => r.slug === "swing-city")!;
@@ -252,6 +253,346 @@ export default function SwingCityDevlogPage() {
               also how the whole relay — connect, remote-player sync, joust detection, the
               server-relayed broadcast, and the local game-over-on-being-jousted path — got verified
               before any of it shipped for real.
+            </p>
+          </div>
+        </div>
+      </Reveal>
+
+      {/* ── Appendix: sample delegation manifest ─────────────────── */}
+      <Reveal>
+        <div className="mt-14">
+          <p className="font-mono text-xs uppercase tracking-widest text-mist">06 · Appendix</p>
+          <h2 className="mt-3 text-2xl font-bold">Sample document: the delegation manifest</h2>
+          <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+            After a family playtest of the multiplayer build, the follow-up list — sixteen items,
+            everything from a two-line color fix to a full power-up framework — got routed by who
+            should actually build each one: the local model fleet, Gemini, or a given Claude tier.
+            This is the real planning document that came out of that pass, reproduced as-generated.
+            It&apos;s an internal task-routing artifact, not a feature list — kept here as a concrete
+            example of what that delegation process actually looks like on a real project.
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-2.5">
+            {[
+              { label: "Fleet — local, free", dot: "bg-teal" },
+              { label: "Gemini — cheap cloud", dot: "bg-sky" },
+              { label: "Sonnet — default Claude", dot: "bg-amber" },
+              { label: "Opus — reserve", dot: "bg-grape" },
+            ].map((l) => (
+              <span
+                key={l.label}
+                className="flex items-center gap-2 rounded-md border border-line bg-panel/40 px-2.5 py-1.5 font-mono text-xs text-mist"
+              >
+                <span className={`h-2 w-2 rounded-full ${l.dot}`} />
+                {l.label}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-6 flex flex-col gap-2.5">
+            <ManifestItem num="01" title="WebXR first-person mode, default in VR" tier="sonnet" confidence="90%">
+              <p>
+                Touches the <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">cameraRig</code> /{" "}
+                <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">isPresenting</code> branch built this
+                session — genuinely easy to get subtly wrong. That exact code already shipped one real
+                regression (the duplicate <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">requestAnimationFrame</code> framerate bug). Needs new
+                first-person math, a mode flag, and a toggle binding, still defaulting to third-person
+                outside VR.
+              </p>
+              <p>
+                Fleet-alone confidence: <strong className="text-snow">35%</strong>. Once the camera math exists, a narrower
+                &ldquo;wire up this toggle key&rdquo; slice could go to fleet or Gemini.
+              </p>
+              <p className="rounded border-l-2 border-mist/40 bg-ink/40 py-2 pl-3 text-xs">
+                Still can&apos;t test in-headset from here — needs your eyes once it ships.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="02" title="VR death screen — can't see the restart menu" tier="fleet" confidence="70%">
+              <p>
+                Simplest fix skips 3D UI entirely: auto-restart after a short delay when{" "}
+                <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">gameOver &amp;&amp; renderer.xr.isPresenting</code>. Small, precise diff.
+              </p>
+              <p>
+                If you&apos;d rather have a real head-locked menu — a text-sprite plane parented to the
+                camera — that&apos;s bigger, and shares infrastructure with the name-tag and leaderboard
+                work below, so it&apos;d sequence after those.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="03" title="Wall-climb: face the wall, reach the roof without releasing" tier="sonnet" confidence="75%">
+              <p>
+                Two parts. Orienting the pawn to face into the wall while climbing is mechanical once you
+                know the wall-normal is already computed per-axis in the collision code — that half alone
+                is roughly 60% fleet-able with a precise prompt. Smoothly transitioning onto the rooftop
+                at the top of a climb needs reasoning about how the wall-crawl state interacts with
+                ground/roof collision resolution — that half needs real context. Bundling as one task.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="04a" title="Rain sometimes audible but not visible" tier="fleet" confidence="55%">
+              <p>
+                Possibly the particle live-count rounds to near-zero at low intensity while the audio gain
+                stays audible. Isolatable and testable independent of the sync problem below.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="04b" title="Rain / world state doesn't sync in multiplayer" tier="opus" confidence="15%">
+              <p>
+                Root cause: every client independently consumes the <em>same</em> seeded RNG stream for
+                weather timers, but at different real-world moments depending on local frame timing — so
+                weather desyncs between clients almost immediately after load.
+              </p>
+              <p>
+                Fixing it properly means the server periodically broadcasts authoritative weather state, or
+                weather gets derived deterministically from wall-clock time instead of a per-client-consumed
+                PRNG stream. Genuine distributed-state design, not a tuning tweak — staying on Claude.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="05" title="Border walls bounce hard instead of grace-period death" tier="sonnet" confidence="65%">
+              <p>
+                Well-bounded physics change in code I know precisely. I&apos;ll write the first version —
+                reflecting velocity off the out-of-bounds check — then a fleet or Gemini pass can tune
+                bounce strength and feel iteratively once the mechanism exists. If I hand over a precise
+                spec with the exact code location up front, fleet could plausibly take the whole thing solo.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="06" title="City 4× bigger, more variety, named buildings, Katakana" tier="gemini" confidence="65–70%">
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mist/60">Scale + performance check</p>
+              <p>
+                Sonnet checks that 4× the buildings doesn&apos;t tank draw calls; fleet can write the
+                constant tuning once bounds are known. <strong className="text-snow">~70%.</strong>
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mist/60">More building &ldquo;type&rdquo; variety</p>
+              <p>New archetypes, not just recolors — more creative than mechanical, staying on Sonnet.</p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mist/60">Names + floating labels</p>
+              <p>
+                Gemini Flash generates the name banks, but I&apos;ll personally review the profanity
+                blocklist rather than delegate it. Names — English and Katakana both — will be{" "}
+                <em>invented</em> pseudo-words from syllable recombination, not real dictionary words: real
+                words (especially Japanese, which I can&apos;t fully vet for unintended meaning) carry a
+                rude-collision risk a nonsense generator doesn&apos;t. <strong className="text-snow">~65%</strong> on the generator;
+                the blocklist review stays with me regardless of tier.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="07" title="3-letter initials, profanity-filtered, floating over your pawn" tier="sonnet" confidence="75%">
+              <p>
+                The filter list is a judgment call with real kid-safety stakes — I&apos;ll curate that
+                myself, not delegate it. The mechanical half (text input UI, floating name-sprite
+                rendering) goes to fleet once I&apos;ve built a shared text-sprite helper, which the
+                leaderboard and building-name work below will also reuse.{" "}
+                <strong className="text-snow">75%</strong> on that mechanical half.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="08" title="Spinning, pulsing rooftop coin on every building" tier="fleet" confidence="75%">
+              <p>
+                Pure mechanical Three.js animation —{" "}
+                <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">rotation.y += dt*speed</code>, scale
+                following a sine pulse. The effect-trigger name broadcast (&ldquo;PLAYERNAME triggered X
+                MODE&rdquo;) is really part of the orb-effects framework below and sequences after it.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="09" title="Session leaderboard — overlay, 3D billboard, new-leader banner" tier="sonnet" confidence="65%">
+              <p>
+                Score isn&apos;t currently broadcast in multiplayer state at all — this touches the core
+                relay message shape, so the first wiring pass stays on Sonnet. Once that&apos;s in, and the
+                text-sprite/billboard helper exists (shared with items 6 and 7), the billboard rendering
+                itself is fleet-able at roughly <strong className="text-snow">65%</strong>.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="10" title="Streets read as pure black — want dark grey definition" tier="fleet" confidence="90%+">
+              <p>
+                Unlike the building-facade fix, which needed a raw-shader root-cause dig, the road and
+                sidewalk use plain <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">MeshStandardMaterial</code> — they already respond
+                normally to lighting. This is a two-line color bump. Trivial enough I might just fix it
+                directly regardless of who else touches this list.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="11" title="Car honks, plus missing collision sounds by type" tier="fleet" confidence="70%">
+              <p>
+                The honk mechanic already exists — quiet and probabilistic by design — you may just not
+                have caught one yet, or it&apos;s tuned too quiet; I&apos;ll do a quick live-audio check
+                myself first. The missing sounds (player-vs-building has none at all; player-vs-player soft
+                contact has none) follow an existing bump/knock template exactly. Good &ldquo;copy this
+                pattern for two more cases&rdquo; fleet task.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="12" title="Add trucks and jeeps to traffic" tier="fleet" confidence="65%">
+              <p>
+                New procedural box-based meshes following the existing car-mesh pattern are fleet-friendly.
+                I want a second look at whether bigger vehicles need their own collision radius, so
+                knockback and blocking still feel consistent against the smaller cars.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="13" title="Right trigger also fires the web, Spider-Man-style" tier="fleet" confidence="90%">
+              <p>
+                A one-line addition to the existing gamepad web-held check. Basically free — I might just
+                do this one directly.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem
+              num="14"
+              title="Orb power-ups — every effect gets a you-only AND an everyone version"
+              tier="opus"
+              confidence="framework"
+              defaultOpen
+            >
+              <p>
+                <strong className="text-snow">Finalized 2026-07-03.</strong> The single biggest, most
+                interconnected item on the list — now bigger, since almost every effect ships as two
+                separate pickups (a solid orb for you-only, the same orb with a rotating halo ring for
+                everyone). The framework — active-effect state, 30-second timers, stacking, torus
+                duration-extenders, multiplayer broadcast — plus the physics-heavy effects (energy blast,
+                pong mode, bomber, ghost, web-anywhere) need to not regress car, player, and building
+                collision while they&apos;re at it. Staying on Claude.
+              </p>
+              <p>
+                Once that scaffolding exists, the simple effects become genuinely fleet-delegable as
+                isolated &ldquo;add one more effect to the framework&rdquo; tasks — each roughly{" "}
+                <strong className="text-snow">60–70%</strong> with a precise per-effect prompt, since the
+                you/everyone plumbing is identical every time (self-apply vs. broadcast-and-everyone-
+                applies-to-self, reusing the joust/knock relay pattern already built).
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mist/60">Locked design notes from this round</p>
+              <p>
+                <strong className="text-snow">Fly</strong> is full Superman flight — gravity is disabled
+                entirely while active, not just floaty. Distinct from the new low-gravity idea below, which
+                keeps gravity but weakens it.
+              </p>
+              <p>
+                <strong className="text-snow">Pong mode</strong> and <strong className="text-snow">energy blast</strong> both fire
+                forward from the jousting stick, not omnidirectional — pong mode launches ball projectiles
+                dead ahead, energy blast is a forward beam. Same launch-origin/direction convention as the
+                existing web-fire aim logic, so this reuses code that already exists.
+              </p>
+              <div className="mt-3 overflow-x-auto rounded-lg border border-line">
+                <table className="w-full min-w-[520px] border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-line text-left font-mono text-[10px] uppercase tracking-wider text-mist/60">
+                      <th className="px-3 py-2">Effect</th>
+                      <th className="px-3 py-2">You-only</th>
+                      <th className="px-3 py-2">Everyone</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["Giant", "10× scale, your collision", "server-wide giant free-for-all"],
+                      ["Tiny", "you shrink", "everyone shrinks"],
+                      ["Fly (Superman)", "no gravity, just you", "whole city floating, no gravity"],
+                      ["Low-gravity (new)", "huge floaty jumps, gravity still applies", "whole city moonwalks"],
+                      ["Speed", "you move at 2×", "everyone at 2×, chaos"],
+                      ["Super jump", "your jumps 5×", "everyone's jumps 5×"],
+                      ["Invincibility", "you can't die", "nobody can die — goofy stalemate"],
+                      ["Fire", "you explode anyone you touch", "mutual — everyone explodes everyone on contact"],
+                      ["Energy blast", "your stick fires a forward beam", "everyone's stick fires a beam"],
+                      ["Pong mode", "balls launch forward from your stick", "everyone launches balls"],
+                      ["Bomber", "you drop bombs", "everyone drops bombs"],
+                      ["Ghost (new)", "you pass through everything", "whole city no-collision free-for-all"],
+                      [
+                        "Web-anywhere (new)",
+                        "your web always finds a phantom anchor",
+                        "nobody ever whiffs a web, city-wide swing party",
+                      ],
+                      ["Magnet (new)", "pulls nearby orbs toward you", "pulls all players toward the trigger point — dogpile"],
+                      ["Confetti (new)", "cosmetic trail, no gameplay effect", "everyone trails confetti"],
+                      ["Zombie summon (new)", "a personal chaser hunts your target", "triggers the full zombie wave early, city-wide"],
+                    ].map((row) => (
+                      <tr key={row[0]} className="border-b border-line last:border-none">
+                        {row.map((cell, i) => (
+                          <td key={i} className={`px-3 py-2 align-top ${i === 0 ? "font-semibold text-snow" : "text-mist"}`}>
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-3">
+                <strong className="text-snow">Three exceptions that don&apos;t take the you/everyone split:</strong>
+              </p>
+              <ul className="ml-4 list-disc space-y-1.5">
+                <li>
+                  <strong className="text-snow">Time-freeze</strong> — self-only only; an &ldquo;everyone&rdquo; version is just
+                  normal time, contradicting the point (the existing noir/slow-time powerup already covers
+                  that case).
+                </li>
+                <li>
+                  <strong className="text-snow">Disco / city recolor</strong> — everyone-only; it&apos;s an environment
+                  effect, so &ldquo;only you see it&rdquo; isn&apos;t meaningful.
+                </li>
+                <li>
+                  <strong className="text-snow">Shrink-tag</strong> — a genuinely different mechanic, not a variant of
+                  tiny-mode: touch another player to shrink <em>them</em> specifically, an offensive targeted
+                  tool rather than a self/everyone buff.
+                </li>
+              </ul>
+              <p className="rounded border-l-2 border-mist/40 bg-ink/40 py-2 pl-3 text-xs">
+                All new ideas and the you/everyone split confirmed as-is, 2026-07-03 — no longer a proposal.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="15" title="Jousting stick prop, fix head-stomp, add stick-poke kill" tier="sonnet" confidence="both mechanisms">
+              <p>
+                Per your answer, both should work: landing on someone&apos;s head, or poking them with the
+                stick from any angle.
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mist/60">Visible stick prop</p>
+              <p>
+                Pure cosmetic geometry — fleet, <strong className="text-snow">~80%</strong>.
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mist/60">Head-stomp reliability</p>
+              <p>
+                The fix from earlier this session is confirmed live, so this isn&apos;t a shipping bug. Best
+                working theory: the target&apos;s rendered position lags the true position by a network
+                tick or two, and a 0.9-unit height band is tight enough that lag alone can miss it most of
+                the time. Needs a real diagnosis before I just blindly widen numbers — staying on Sonnet.
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-mist/60">Stick-poke as a new kill trigger</p>
+              <p>
+                Needs actual interaction design: how does a poke coexist with the existing soft-push and
+                hard-knock tiers so it doesn&apos;t just always win over ordinary contact? Not
+                fleet-appropriate for the design call; implementation after that could move to fleet.
+              </p>
+            </ManifestItem>
+
+            <ManifestItem num="16" title="Start-screen copy — clarify points come from more than swinging" tier="fleet" confidence="95%">
+              <p>A copy edit. Free — might just do this one directly too.</p>
+            </ManifestItem>
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-teal/30 bg-gradient-to-b from-panel/70 to-panel/30 p-6 md:p-7">
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">Recommended first test</p>
+            <h3 className="mt-3 text-lg font-bold text-snow">Five cheap, high-confidence tickets to try the fleet on first</h3>
+            <ol className="mt-4 flex flex-col gap-2 text-sm text-snow">
+              {[
+                "Streets too black → two-line color bump (item 10)",
+                "Right trigger also fires web (item 13)",
+                "Start-screen copy update (item 16)",
+                "Missing collision sounds, copying the existing pattern (item 11)",
+                "Rooftop coin spin/pulse animation, visual only (item 8)",
+              ].map((item, i) => (
+                <li key={item} className="flex gap-3">
+                  <span className="font-mono text-xs text-teal">{i + 1}</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-mist">
+              All five are mechanical, well-specified, and low blast-radius — easy to eyeball pass or fail
+              against. If those land clean, the next tier up — border-wall bounce, truck and jeep geometry,
+              individual orb effects once the framework exists — is where the real token savings start
+              compounding.
             </p>
           </div>
         </div>
