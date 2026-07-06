@@ -3,17 +3,17 @@
 import { useEffect, useState } from "react";
 
 // Live star count from the GitHub API, with a session cache and baked fallback.
-export default function StarCount({ repo, fallback }: { repo: string; fallback: number }) {
+export default function StarCount({ repo, org = "ibrews", fallback }: { repo: string; org?: string; fallback: number }) {
   const [stars, setStars] = useState<number>(fallback);
 
   useEffect(() => {
-    const key = `stars:${repo}`;
+    const key = `stars:${org}/${repo}`;
     const cached = sessionStorage.getItem(key);
     if (cached !== null) {
       setStars(Number(cached));
       return;
     }
-    fetch(`https://api.github.com/repos/ibrews/${repo}`)
+    fetch(`https://api.github.com/repos/${org}/${repo}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         if (d && typeof d.stargazers_count === "number") {
@@ -22,7 +22,7 @@ export default function StarCount({ repo, fallback }: { repo: string; fallback: 
         }
       })
       .catch(() => {});
-  }, [repo]);
+  }, [repo, org]);
 
   return (
     <span className="inline-flex items-center gap-1 font-mono text-xs text-amber" title="GitHub stars (live)">

@@ -41,7 +41,7 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
         </Link>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{repo.name}</h1>
-          <StarCount repo={repo.slug} fallback={repo.stars} />
+          <StarCount repo={repo.slug} org={repo.org} fallback={repo.stars} />
         </div>
         <p className="mt-4 text-xl leading-relaxed text-mist">{renderBreaks(repo.tagline)}</p>
 

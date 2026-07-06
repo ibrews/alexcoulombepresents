@@ -6,6 +6,7 @@ export type Repo = {
   name: string;
   tagline: string;
   category: "Games" | "Unreal Engine" | "Godot × Vision Pro" | "visionOS & Spatial" | "AI & Agents" | "Tools";
+  org?: string; // GitHub org/owner — defaults to "ibrews" when omitted
   stars: number; // baked fallback — live count fetched client-side
   language: string;
   story: string;
@@ -399,6 +400,160 @@ export const repos: Repo[] = [
     links: [],
     github: "https://github.com/ibrews/TankCommanderVR",
   },
+  {
+    slug: "NeonSerpent",
+    name: "Neon Serpent",
+    tagline: "A cyberpunk Snake game built by a father-son team — the son is 10 — with a full 3D Vision Pro mode.",
+    category: "Games",
+    stars: 1,
+    language: "Swift",
+    story:
+      "Snake, reimagined as a neon synthwave grid: swipe to steer on iPhone/iPad, collect data orbs and neon bugs, unlock 14 skins through score milestones and trophy challenges — fire trails, rainbow cycling, circuit-board lines. The Vision Pro version is a genuinely different game: a full 3D snake living inside an 8×8×8 cube with six degrees of freedom, either shrunk to a tabletop volumetric puzzle or blown up to room-scale, where the snake winds through your actual living room and a game controller gives you precise 6-axis steering.",
+    highlights: [
+      "Built by a father-son team — the son is 10",
+      "iOS: SpriteKit, swipe controls, 14 unlockable skins with unique effects",
+      "visionOS: full 3D snake in an 8×8×8 cube, 6 degrees of freedom",
+      "Volumetric tabletop mode and room-scale mixed-reality mode, same game",
+      "PlayStation controller support for precise 6-axis steering in VR",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/NeonSerpent",
+  },
+  {
+    slug: "BurgerBandit",
+    name: "BurgerBandit",
+    tagline: "A fast-food heist game designed by an 8-year-old — the more you steal, the fatter and slower you get.",
+    category: "Games",
+    stars: 0,
+    language: "Swift",
+    story:
+      "Play a masked burglar breaking into four parody fast-food joints — Burger Barn, Queen Burger, Freckle's, Papa Rooster's — to steal as much food as you can carry while guards patrol and give chase. The core joke is also the core mechanic: finished food scores more than raw ingredients but fattens you up faster, and fatness is real physics — four visual stages, a growing collision radius, and a speed drop from sprint to waddle, until the final stage starts an 8-second countdown to get out before you're arrested. Rare veggie pickups heal and speed you up, which the burglar resents every time.",
+    highlights: [
+      "Designed by an 8-year-old, built in pure SpriteKit — no dependencies",
+      "Four parody restaurants, each with its own layout, security team, and tagline",
+      "Fat physics: 4 visual growth stages, bigger collision radius, speed drops to a waddle",
+      "Final fat stage starts an 8-second escape timer before you're arrested",
+      "3 difficulty levels; veggie pickups heal and boost speed (reluctantly)",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/BurgerBandit",
+  },
+  {
+    slug: "spellrot-ue",
+    name: "Spellrot",
+    tagline: "A wizard-vs-zombie-horde arena brawler where every hit corrupts your spells — and edges you closer to becoming a zombie yourself.",
+    category: "Games",
+    stars: 0,
+    language: "C++",
+    story:
+      "The last living wizard holds back endless zombie waves in this UE5.7 prototype. Every hit you take raises a corruption meter — your spells get stronger as it climbs, but at 1.0 you ragdoll and the level restarts. A capture-zone-style cleanse resets it to zero; a line-trace fireball kills enemies and claws corruption back down; a Niagara trail shifts from its base color to magenta in real time as a visual countdown to transformation. Built with Claude Code Game Studios, a sister framework that turns a single Claude Code session into a 49-agent, 73-skill studio — directors, department leads, specialists — so the prototype got design docs and QA passes instead of ad hoc vibe-coding.",
+    highlights: [
+      "Corruption mechanic: +0.25 per hit taken, ragdoll and restart at 1.0",
+      "Cleanse zone resets corruption to zero; fireball kills claw it back by 0.1",
+      "Niagara trail shifts color in real time as a visual corruption countdown",
+      "Built on UE5.7 Third Person Template + the ECABridge MCP plugin",
+      "Production framework: 49 AI agents, 73 skills, one coordinated Claude Code studio",
+    ],
+    links: [{ label: "The 49-agent studio that built it", url: "https://github.com/ibrews/spellrot" }],
+    github: "https://github.com/ibrews/spellrot-ue",
+  },
+  {
+    slug: "ue-openxr-passthrough",
+    name: "UE OpenXR Passthrough",
+    tagline: "PCVR passthrough for Unreal via raw OpenXR — no 500MB Meta XR Plugin required.",
+    category: "Unreal Engine",
+    org: "agilelens",
+    stars: 2,
+    language: "C++",
+    story:
+      "The official way to get Meta Quest passthrough working over Quest Link/Air Link in Unreal is the Meta XR Plugin — a ~500MB dependency that drags a lot of Meta-specific code into a project. This is the ~500-line alternative: it registers as an IOpenXRExtensionPlugin so UE's OpenXR runtime picks it up automatically, requests XR_FB_passthrough directly, and auto-detects PCVR vs. standalone by checking which blend modes the runtime actually supports — doing real work only on PCVR (flipping UE's alpha-inversion CVars so the compositor's underlay renders correctly) and quietly doing nothing on standalone Quest, where the engine-native path already handles it.",
+    highlights: [
+      "No Meta XR Plugin dependency — ~500 lines vs. a ~500MB SDK",
+      "Registers as an IOpenXRExtensionPlugin — UE's OpenXR runtime picks it up automatically",
+      "Auto-detects PCVR vs. standalone by blend mode, only acts where it's needed",
+      "Flips UE's alpha-inversion CVars so passthrough composites correctly through Quest Link",
+      "Runtime toggle via SetPassthroughEnabled(bool); Win64-only, auto-skipped elsewhere",
+    ],
+    links: [],
+    github: "https://github.com/agilelens/ue-openxr-passthrough",
+  },
+  {
+    slug: "UE5_AndroidXR",
+    name: "UE5 AndroidXR Template",
+    tagline: "A pre-configured UE5 VR Template for Android XR — package straight to a Galaxy XR headset.",
+    category: "Unreal Engine",
+    org: "agilelens",
+    stars: 13,
+    language: "Makefile",
+    story:
+      "Epic's stock VR Template doesn't know Android XR exists. This fork does the SDK/NDK/manifest wiring by hand — minimum and target SDK 32, NDK 25.1.8937393, JDK 17 — and bundles the AndroidXR plugin (started by Owlchemy Labs, now maintained by Agile Lens) so a Galaxy XR build is Platforms → Android → Android_ASTC → Package Project, not a week of trial-and-error. Passthrough is wired through OpenXR project settings out of the box, so mixed reality works the moment the APK lands on the headset.",
+    highlights: [
+      "Stock UE5 VR Template, pre-configured for Android XR from a clean checkout",
+      "AndroidXR plugin bundled — started by Owlchemy Labs, now maintained by Agile Lens",
+      "SDK/NDK/manifest settings done for you: SDK 32, NDK 25.1.8937393, JDK 17",
+      "Passthrough enabled via OpenXR project settings for mixed reality out of the box",
+      "Packages straight to Samsung Galaxy XR",
+    ],
+    links: [],
+    github: "https://github.com/agilelens/UE5_AndroidXR",
+  },
+  {
+    slug: "mandelbulb-xr",
+    name: "mandelbulb-xr",
+    tagline: "A living, ever-mutating Mandelbulb fractal — one GLSL core, running everywhere from Shadertoy to a Vision Pro streamed over CloudXR.",
+    category: "visionOS & Spatial",
+    stars: 1,
+    language: "GLSL",
+    story:
+      "Most animated Mandelbulbs ping-pong their 'power' parameter on a single sine wave, so the shape visibly reverses and repeats. This one wanders quasi-periodically across two incommensurate sines instead, so it morphs organically and never obviously loops. One canonical GLSL core drives four variants — paste-and-go Shadertoy, a WebGL2 build that runs in any browser or WebXR headset, a LÖVR build you can walk around on Quest standalone, and an OpenXR/D3D11 port (a line-for-line HLSL translation of the same core) for SteamVR, WMR, or CloudXR streaming straight to Apple Vision Pro.",
+    highlights: [
+      "Power parameter wanders across two incommensurate sines — never obviously repeats",
+      "One canonical GLSL core, four variants: Shadertoy, WebGL2/WebXR, LÖVR, OpenXR/D3D11",
+      "D3D11 variant is a line-for-line HLSL port of the same shared core",
+      "CloudXR streaming variant reaches Apple Vision Pro from a PC render",
+      "Live in the browser, zero install — drag to orbit",
+    ],
+    links: [{ label: "Try it live", url: "https://ibrews.github.io/mandelbulb-xr/" }],
+    github: "https://github.com/ibrews/mandelbulb-xr",
+  },
+  {
+    slug: "claude-session-recovery",
+    name: "Claude Code Session Recovery",
+    tagline: "Rebuilds Claude Desktop's session index after a crash — your conversations were never actually gone.",
+    category: "AI & Agents",
+    stars: 0,
+    language: "Python",
+    story:
+      "Claude Code stores every session as a JSONL file on disk, but Claude Desktop keeps a separate index of what to show in its sidebar — and that index is exactly the thing that corrupts after a BSOD, hard shutdown, or disk error, making sessions vanish from the UI while the underlying data sits untouched. This tool just rebuilds the index: list every session on disk with a ready-to-run `claude --resume` command, dry-run a restore to see what's actually missing, then restore it for real. Pure Python stdlib, no dependencies, works the same on Windows, macOS, and Linux.",
+    highlights: [
+      "Fixes the actual bug: Desktop's session INDEX corrupts, not the session data itself",
+      "`list` — every on-disk session with a ready-to-run claude --resume command",
+      "`restore --dry-run` — see exactly what's missing before touching anything",
+      "`export` — plain-text transcripts for full-text search or archival",
+      "Python 3.8+, stdlib only, zero external dependencies",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/claude-session-recovery",
+  },
+  {
+    slug: "claude-usage-audit",
+    name: "usage-audit",
+    tagline: "Mines your past Claude Code sessions for what you should actually automate next — evidence, not guesses.",
+    category: "AI & Agents",
+    stars: 1,
+    language: "HTML",
+    story:
+      "Instead of guessing which workflows deserve a skill or a script, this reflects on the sessions already run: repeated manual work, recurring friction, anything with a stable enough shape to script. It doesn't implement anything — it hands back a ranked, evidence-backed list and you decide what's worth building. The one hard constraint baked into the design: mining a month of transcripts is a job for a cheap model, not a frontier one, so four narrow-scope subagents on Haiku/Sonnet-tier models do the raw digging, and only the final clustering-and-ranking pass touches the main session's model.",
+    highlights: [
+      "Reflects on past sessions instead of guessing what to automate",
+      "Hands back a ranked, evidence-backed list — doesn't implement anything itself",
+      "Four narrow-scope Haiku/Sonnet subagents do the digging; frontier model only ranks",
+      "Install via git clone into ~/.claude/skills/usage-audit, or copy SKILL.md directly",
+      "Scriptable to run monthly as a standing self-audit",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/claude-usage-audit",
+  },
 ];
 
 // ── Lab (upcoming products) ─────────────────────────────────────────────────
@@ -624,6 +779,46 @@ export const products: Product[] = [
     links: [],
     video: "PLynIuxA9r8",
     accent: "blue",
+  },
+  {
+    slug: "constellation",
+    name: "Constellation",
+    status: "Private — building toward bring-your-own-vault",
+    tagline: "Your second brain as a navigable 3D star map. Walk through your own notes on Apple Vision Pro.",
+    pitch:
+      "Your knowledge base is just files on disk until you can walk through it. Constellation turns any folder of markdown notes — an Obsidian vault, a personal wiki, a second brain — into a 3D star map on Apple Vision Pro: pinch a star to read the note, trace the wiki-links between ideas as literal beams of light, and step into an immersive space to stand inside the whole graph. It's private today, built and tuned against Alex's own knowledge base — the goal is generalizing it into something anyone with a vault of notes can point at their own.",
+    sections: [
+      {
+        heading: "Your notes, as a place",
+        body: "Every note is a node floating in space; every [[wiki-link]] is an edge of light between ideas. A node's size grows with how many other notes link to it, clusters are colored by top-level folder, and recently-touched notes glow — so the shape of the graph itself tells you what's been alive lately, not just what exists.",
+      },
+      {
+        heading: "Stand inside the graph",
+        body: "Step into an immersive space and the constellation surrounds you: stars twinkle, ambient stardust drifts between ideas, and the selected note grows a breathing halo plus a floating glass title card that always turns to face you. On visionOS 27, it casts real light into the room — a soft ambient Room Glow from the graph's heart and a selection light tinted to the chosen note's cluster color, both spilling onto your actual walls via RealityKit's new SurroundingsLight.",
+      },
+      {
+        heading: "It's alive, not a snapshot",
+        body: "This is a live force-directed graph, like a d3 playground you stand inside: pinch-grab any star and drag it, and it pins to your hand while the rest of the graph reheats and flows around it (a Physics toggle switches to a cheaper static drag). Layout sliders — Spacing, Gravity, Spread — plus a Reheat button rearrange the whole constellation in real time, and folder filters re-flow the layout live instead of just hiding stars.",
+      },
+      {
+        heading: "Read where you look",
+        body: "Titles appear where you look — Focus mode shows the star at the center of your view, Nearby shows everything within a tunable view cone — as pooled glass chips driven by head pose, since apps can't read true eye gaze. Looking at any star previews its cluster with a folder-tinted highlight, and the selected card's Read button expands the full note body right there in space.",
+      },
+      {
+        heading: "Privacy first",
+        body: "The bundled demo graph is a sanitized, structural-only export — titles, paths, folders, tags, and link edges. No private note bodies, no financial data. The whole point is standing inside your own thinking; what that thinking actually says stays yours.",
+      },
+    ],
+    bullets: [
+      "Force-directed 3D graph of your markdown notes — wiki-links become edges of light",
+      "visionOS 27: RealityKit SurroundingsLight casts a real Room Glow + selection light onto your walls",
+      "Live physics — pinch-grab and drag any star, the whole graph reheats around your hand",
+      "Focus/Nearby label modes driven by head pose, since apps can't read true eye gaze",
+      "Layout sliders (Spacing/Gravity/Spread) + folder filters that re-flow live, not just hide",
+      "Ships with a sanitized, structural-only demo graph — no private note bodies",
+    ],
+    links: [],
+    accent: "purple",
   },
 ];
 

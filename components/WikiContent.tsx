@@ -15,9 +15,21 @@ async function fetchWikiHome(githubUrl: string): Promise<string | null> {
   }
 }
 
+// Wiki markdown links to other wiki pages as bare relative paths (e.g. "Getting-Started"),
+// which resolve against the *site page's* URL, not the GitHub wiki, and 404. Rewrite
+// anything that isn't already absolute or an in-page anchor to the real wiki URL.
+function resolveWikiHref(href: string | undefined, wikiBase: string): string | undefined {
+  if (!href) return href;
+  if (/^([a-z]+:)?\/\//i.test(href) || href.startsWith("#") || href.startsWith("mailto:")) {
+    return href;
+  }
+  return `${wikiBase}${href.replace(/^\.?\//, "")}`;
+}
+
 export default async function WikiContent({ githubUrl }: { githubUrl: string }) {
   const content = await fetchWikiHome(githubUrl);
   if (!content) return null;
+  const wikiBase = `${githubUrl.replace(/\/$/, "")}/wiki/`;
 
   return (
     <div className="glass mt-12 rounded-3xl p-8 md:p-10">
@@ -66,7 +78,7 @@ export default async function WikiContent({ githubUrl }: { githubUrl: string }) 
             pre: ({ children }) => <pre className="overflow-x-auto">{children}</pre>,
             a: ({ href, children }) => (
               <a
-                href={href}
+                href={resolveWikiHref(href, wikiBase)}
                 className="text-teal underline decoration-teal/40 hover:decoration-teal"
                 target="_blank"
                 rel="noopener noreferrer"
