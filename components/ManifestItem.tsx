@@ -1,13 +1,16 @@
 // A single row of the sample delegation manifest — collapsible, tier-coded.
 // Reuses the site's 4-color accent system (teal/sky/amber/grape) as stand-ins
-// for the original doc's fleet/gemini/sonnet/opus routing tiers.
-export type Tier = "fleet" | "gemini" | "sonnet" | "opus";
+// for the original doc's fleet/gemini/sonnet/opus routing tiers, plus a 5th
+// (Tailwind default rose, no new @theme token needed) for projects that also
+// route a distinct fast-content tier through Fable.
+export type Tier = "fleet" | "gemini" | "sonnet" | "opus" | "fable";
 
 const TIER: Record<Tier, { dot: string; text: string; bg: string; border: string; label: string }> = {
   fleet: { dot: "bg-teal", text: "text-teal", bg: "bg-teal/10", border: "border-teal/30", label: "Fleet" },
   gemini: { dot: "bg-sky", text: "text-sky", bg: "bg-sky/10", border: "border-sky/30", label: "Gemini" },
   sonnet: { dot: "bg-amber", text: "text-amber", bg: "bg-amber/10", border: "border-amber/30", label: "Sonnet" },
   opus: { dot: "bg-grape", text: "text-grape", bg: "bg-grape/10", border: "border-grape/30", label: "Opus" },
+  fable: { dot: "bg-rose-400", text: "text-rose-400", bg: "bg-rose-400/10", border: "border-rose-400/30", label: "Fable" },
 };
 
 export default function ManifestItem({
