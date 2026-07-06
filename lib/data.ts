@@ -399,6 +399,11 @@ export const repos: Repo[] = [
     ],
     links: [],
     github: "https://github.com/ibrews/TankCommanderVR",
+    devlog: {
+      url: "/repos/TankCommanderVR/devlog",
+      teaser:
+        "The bug that took 70% of the game's geometry down with it, the missing line that silently disabled every physical cockpit control, and the real overnight task-routing manifest from a July 2026 playtesting pass.",
+    },
   },
   {
     slug: "NeonSerpent",
