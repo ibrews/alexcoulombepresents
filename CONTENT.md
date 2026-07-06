@@ -841,7 +841,7 @@
 - `[data.products.missioncontrol.sections.0.heading]` ▸ A CRT radar for real players
 - `[data.products.missioncontrol.sections.0.body]` ▸ Green-on-black, scanlines, a vignette — the aesthetic is a joke, the data isn't: live positions, field-of-view cones, team colors, and blast lines for every connected player, plus a position-density heatmap that reveals movement patterns after the fact.
 - `[data.products.missioncontrol.sections.1.heading]` ▸ Finds every app automatically
-- `[data.products.missioncontrol.sections.1.body]` ▸ Bonjour discovery means a game device just has to come online — no manual IP entry, no pairing step. LaserTag, WhoAmI, RoomScanPro, Stage Manager, and a UE5 marker-based co-location tool all show up the same way.
+- `[data.products.missioncontrol.sections.1.body]` ▸ Bonjour discovery means a game device just has to come online — no manual IP entry, no pairing step. LaserTag, WhoAmI, RoomScanPro, a separate theatre-rehearsal tool, and a UE5 marker-based co-location tool all show up the same way.
 - `[data.products.missioncontrol.sections.2.heading]` ▸ A texture atlas that sharpens as you watch
 - `[data.products.missioncontrol.sections.2.body]` ▸ The 3D mesh viewer for live room scans does something genuinely uncommon: every incoming camera keyframe gets its depth rendered from the camera's own point of view first — which is what actually solves occlusion, so color doesn't bleed through walls — then splatted into a per-chunk UV atlas with a running weighted average per texel. The room gets more textured the longer anyone scans it, and the ceiling on detail is the atlas, not the mesh.
 
@@ -850,7 +850,7 @@
   - CRT-styled 2D display: positions, FOV cones, team colors, blast lines, live heatmap
   - 3D mesh viewer for room scans streamed live from RoomScanPro
   - Projective-texture atlas sharpens over time — solves occlusion, not capped by mesh density
-  - Supports every Agile Lens multiplayer app: LaserTag, WhoAmI, RoomScanPro, Stage Manager
+  - Supports every Agile Lens multiplayer app: LaserTag, WhoAmI, RoomScanPro, and a separate theatre-rehearsal tool
 - `[data.products.roomscanpro.name]` ▸ RoomScanPro
 - `[data.products.roomscanpro.tagline]` ▸ Collaborative room scanning and real-world measurement for Apple Vision Pro and iPhone.
 - `[data.products.roomscanpro.pitch]` ▸ Before XR, Alex trained as an architect — and a tool that scans a real room, measures it precisely, and hands back an exportable 3D model is the most direct descendant of that on this whole site. Multiple people scan the same room together over SharePlay, mesh data streams live between every device, and the result is measurable and exportable, not just a pretty capture.

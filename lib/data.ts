@@ -904,7 +904,7 @@ export const products: Product[] = [
       },
       {
         heading: "Finds every app automatically",
-        body: "Bonjour discovery means a game device just has to come online — no manual IP entry, no pairing step. LaserTag, WhoAmI, RoomScanPro, Stage Manager, and a UE5 marker-based co-location tool all show up the same way.",
+        body: "Bonjour discovery means a game device just has to come online — no manual IP entry, no pairing step. LaserTag, WhoAmI, RoomScanPro, a separate theatre-rehearsal tool, and a UE5 marker-based co-location tool all show up the same way.",
       },
       {
         heading: "A texture atlas that sharpens as you watch",
@@ -916,7 +916,7 @@ export const products: Product[] = [
       "CRT-styled 2D display: positions, FOV cones, team colors, blast lines, live heatmap",
       "3D mesh viewer for room scans streamed live from RoomScanPro",
       "Projective-texture atlas sharpens over time — solves occlusion, not capped by mesh density",
-      "Supports every Agile Lens multiplayer app: LaserTag, WhoAmI, RoomScanPro, Stage Manager",
+      "Supports every Agile Lens multiplayer app: LaserTag, WhoAmI, RoomScanPro, and a separate theatre-rehearsal tool",
     ],
     links: [],
     accent: "blue",
