@@ -56,9 +56,19 @@ export default function About() {
             Since co-founding Agile Lens with Joshua Dachs: photoreal VR holodecks driving nine
             figures in pre-construction real estate sales, a mixed-reality rehearsal tool for the
             Royal Shakespeare Company, and{" "}
-            <em className="text-snow not-italic">A Christmas Carol VR</em> performed live in headsets
-            every December since 2021. SIGGRAPH-published research on VR performances come from
-            hard-won lessons from real stages, not just theoretical ones.
+            <em className="text-snow not-italic">A Christmas Carol VR</em> — five holiday seasons
+            performed live in headsets, now retired as an annual show and living on as a recorded
+            experience finding its way to{" "}
+            <a
+              href="https://apps.apple.com/us/app/a-christmas-carol-vr-teaser/id6738833389"
+              className="text-snow underline decoration-teal/50 hover:decoration-teal"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Apple Vision Pro
+            </a>
+            . SIGGRAPH-published research on VR performances come from hard-won lessons from real
+            stages, not just theoretical ones.
           </p>
           <p>
             These days it&apos;s the interplay of game engines and AI agents: Unreal optimized for

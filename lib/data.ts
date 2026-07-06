@@ -820,6 +820,138 @@ export const products: Product[] = [
     links: [],
     accent: "purple",
   },
+  {
+    slug: "promptbook",
+    name: "Promptbook",
+    status: "Private — built for Agile Lens, exploring wider release",
+    tagline: "Spatial blocking and set previz for theatre on Apple Vision Pro — the stage manager's promptbook, reimagined in 3D.",
+    pitch:
+      "In 2013, Alex strapped on an Oculus DK1 to pioneer the world's first VR theatrical sightline test. Promptbook is the same instinct twelve years later: set a stage as a tabletop miniature on your desk, drop in actor marks and set pieces, define blocking beats, then scrub the timeline and watch the whole cast glide between positions. One tap promotes the miniature to a full-scale walk-in stage, so you can stand center-stage and check a sightline from any seat in the house — the exact question that started this whole career, now answerable in minutes.",
+    sections: [
+      {
+        heading: "From tabletop to full scale",
+        body: "Design blocking on a miniature stage, drag actor marks into position, and scrub a beat timeline to watch the whole cast glide between positions. One tap promotes the same scene to full scale in an immersive space — stand where the actors stand and check what any seat in the house actually sees.",
+      },
+      {
+        heading: "Record the walk",
+        body: "Cast yourself as a character and walk the blocking on the full-scale stage — your recorded path becomes the mark's path on playback, while the rest of the cast holds its beat positions around you.",
+      },
+      {
+        heading: "The script and the blocking, finally in one place",
+        body: "Import a script — plain text, PDF, or Final Draft .fdx — into a dedicated reader that stays in sync with the beat timeline: scrub the blocking and the reader scrolls to the linked line, tap a line and the playhead jumps to its beat. A real promptbook interleaves blocking with text; this is the first digital one that actually does.",
+      },
+      {
+        heading: "Bring your own set",
+        body: "Import a real set as a .usdz model and it becomes the stage, marks and all. Export the whole production as a printable promptbook PDF — a top-down ground plan per beat with a cast legend, the exact document a stage manager already knows how to read.",
+      },
+    ],
+    bullets: [
+      "Tabletop miniature staging that promotes to a full-scale, walk-in stage with one tap",
+      "Record-the-walk: perform a character's path once, play it back against the rest of the cast",
+      "Script reader (text/PDF/Final Draft .fdx) stays synced to the blocking timeline both directions",
+      "Import a real set as a .usdz model; export a printable ground-plan PDF per beat",
+      "Built on visionOS 26 — SwiftUI, RealityKit, SwiftData",
+    ],
+    links: [],
+    accent: "amber",
+  },
+  {
+    slug: "agilelensmultiplayer",
+    name: "AgileLensMultiplayer",
+    status: "Private SDK — powers every Agile Lens Vision Pro multiplayer app",
+    tagline: "The shared SharePlay engine every Agile Lens Vision Pro multiplayer app runs on.",
+    pitch:
+      "SharePlay is powerful and genuinely hard to build on directly — session lifecycle, spatial alignment, peer tracking, and controller input all have to be solved before an app can even start being its own thing. This Swift package solves it once: three real shipped apps — a laser-tag game, a party game, and a collaborative room scanner — all run on the same foundation instead of each reinventing GroupSession plumbing from scratch.",
+    sections: [
+      {
+        heading: "One session manager, every app",
+        body: "MultiplayerSession<Activity> is an @Observable wrapper around GroupSession that handles activation, joining, SystemCoordinator setup on visionOS, and participant tracking, with type-safe send/receive messaging on top — the boilerplate every SharePlay app needs, written once.",
+      },
+      {
+        heading: "Peers, tracked",
+        body: "PeerStateTracker keeps every remote participant's transform, name, color, and platform current; HeadPoseBroadcaster syncs head position across the session — the shared-space equivalent of knowing where everyone actually is.",
+      },
+      {
+        heading: "PSVR2 support, out of the box",
+        body: "SpatialControllerManager gives full 6DoF PSVR2 Sense controller tracking on visionOS — edge-triggered button callbacks, continuous thumbstick polling — so a controller-driven app doesn't have to build that layer either.",
+      },
+      {
+        heading: "Proven three times over",
+        body: "LaserTag (real-time projectile physics, hand-gesture fire and shield), WhoAmI (spatial name cards floating over players' heads, speech-recognition guessing), and RoomScanPro (collaborative live room scanning) all run on this same package — three very different apps, one shared foundation.",
+      },
+    ],
+    bullets: [
+      "MultiplayerSession<Activity>: one @Observable wrapper around GroupSession for every app",
+      "Type-safe messaging, participant tracking, and connection-state management out of the box",
+      "PeerStateTracker + HeadPoseBroadcaster keep every remote player's position current",
+      "Full 6DoF PSVR2 Sense controller support on visionOS",
+      "Already proven across three shipped apps: LaserTag, WhoAmI, RoomScanPro",
+    ],
+    links: [],
+    accent: "teal",
+  },
+  {
+    slug: "missioncontrol",
+    name: "Mission Control",
+    status: "Private — Agile Lens' internal SharePlay diagnostics tool",
+    tagline: "A live radar for SharePlay sessions — watch every player, in every app, without joining the call.",
+    pitch:
+      "Debugging a multiplayer spatial app usually means joining the FaceTime call yourself and hoping you can see what's wrong. Mission Control skips that: a macOS dashboard that finds every Agile Lens multiplayer app on the network over Bonjour and renders a live tactical radar — positions, teams, scores, blasts, shields — in real time, no headset or call required.",
+    sections: [
+      {
+        heading: "A CRT radar for real players",
+        body: "Green-on-black, scanlines, a vignette — the aesthetic is a joke, the data isn't: live positions, field-of-view cones, team colors, and blast lines for every connected player, plus a position-density heatmap that reveals movement patterns after the fact.",
+      },
+      {
+        heading: "Finds every app automatically",
+        body: "Bonjour discovery means a game device just has to come online — no manual IP entry, no pairing step. LaserTag, WhoAmI, RoomScanPro, Stage Manager, and a UE5 marker-based co-location tool all show up the same way.",
+      },
+      {
+        heading: "A texture atlas that sharpens as you watch",
+        body: "The 3D mesh viewer for live room scans does something genuinely uncommon: every incoming camera keyframe gets its depth rendered from the camera's own point of view first — which is what actually solves occlusion, so color doesn't bleed through walls — then splatted into a per-chunk UV atlas with a running weighted average per texel. The room gets more textured the longer anyone scans it, and the ceiling on detail is the atlas, not the mesh.",
+      },
+    ],
+    bullets: [
+      "Live tactical radar over Bonjour — no FaceTime call needed to watch a session",
+      "CRT-styled 2D display: positions, FOV cones, team colors, blast lines, live heatmap",
+      "3D mesh viewer for room scans streamed live from RoomScanPro",
+      "Projective-texture atlas sharpens over time — solves occlusion, not capped by mesh density",
+      "Supports every Agile Lens multiplayer app: LaserTag, WhoAmI, RoomScanPro, Stage Manager",
+    ],
+    links: [],
+    accent: "blue",
+  },
+  {
+    slug: "roomscanpro",
+    name: "RoomScanPro",
+    status: "Private — Agile Lens internal, exploring wider release",
+    tagline: "Collaborative room scanning and real-world measurement for Apple Vision Pro and iPhone.",
+    pitch:
+      "Before XR, Alex trained as an architect — and a tool that scans a real room, measures it precisely, and hands back an exportable 3D model is the most direct descendant of that on this whole site. Multiple people scan the same room together over SharePlay, mesh data streams live between every device, and the result is measurable and exportable, not just a pretty capture.",
+    sections: [
+      {
+        heading: "Scan together, not alone",
+        body: "Vision Pro and iPhone users join the same scanning session over FaceTime SharePlay; mesh data streams live between every device in binary-packed chunks, so the room fills in from everyone's vantage point at once instead of one person walking the whole space.",
+      },
+      {
+        heading: "A measuring tape that means it",
+        body: "A deliberate middle-finger pinch places measurement points — chosen specifically to avoid the accidental-placement problem a plain tap has — with 0.5cm/0.5in precision and a proper yellow-and-black tape visualization, tick marks included.",
+      },
+      {
+        heading: "Export that actually works",
+        body: "USDZ export uses a hand-rolled, 64-byte-aligned ZIP packer built specifically to route around a broken Apple API path (MDLAsset.canExportFileExtension) on visionOS — the kind of fix that only shows up once you actually try to ship the feature.",
+      },
+    ],
+    bullets: [
+      "Multi-device collaborative scanning over SharePlay — mesh streams live between everyone",
+      "Deliberate middle-finger-pinch measurement, 0.5cm/0.5in precision, imperial or metric",
+      "USDZ export via a custom ZIP packer that routes around a broken visionOS API path",
+      "True-north compass minimap; cross-device spatial alignment keeps everyone in one coordinate space",
+      "Streams live into Mission Control for real-time remote diagnostics",
+    ],
+    links: [],
+    accent: "purple",
+  },
 ];
 
 // ── About: timeline ─────────────────────────────────────────────────────────
@@ -830,7 +962,7 @@ export const timeline: { year: string; title: string; detail: string }[] = [
   { year: "2014", title: "Agile Lens founded", detail: "An immersive design studio born from architecture and theatre. Clients would come to include the Four Seasons, Royal Shakespeare Company, NEOM, Samsung, Intel, and Royal Caribbean." },
   { year: "2016", title: "Early UE4 VR for real buildings", detail: "Yale Schwarzman Center in UE4 VR; The Shed at Hudson Yards equipment clearance; the Statue of Liberty Museum. Real decisions, made in headsets." },
   { year: "2019", title: "Live performance goes immersive", detail: "Ghosted — an award-winning volumetric AR piece on Magic Leap. 'Loveseat' at the Venice Biennale: the first live VR show viewable globally." },
-  { year: "2021", title: "A Christmas Carol VR", detail: "Two live actors, 45 minutes, avatar switching, facial capture — free on Quest, every year since. Raindance Immersive 2025 Official Selection." },
+  { year: "2021", title: "A Christmas Carol VR", detail: "Two live actors, 45 minutes, avatar switching, facial capture — five holiday seasons on Quest, capped by a Raindance Immersive 2025 Official Selection, then retired as an annual show. The recorded replay is now finding its way to Apple Vision Pro." },
   { year: "2024", title: "Royal Shakespeare Company R&D", detail: "A mixed-reality rehearsal application with the RSC. Theatre and XR, finally in the same room." },
   { year: "2025", title: "SIGGRAPH", detail: "'Seeing Yourself on Stage: Multi-Avatar Performance and the Evolution of Self-Monitoring in VR' — published research from a decade of live VR performance." },
   { year: "2026", title: "HarvardXR closing keynote", detail: "'10 Lessons from 10 Years of Running an XR Enterprise Studio' — delivered in Spatial Deck, a presentation framework built (with AI) for the occasion, then open-sourced." },
