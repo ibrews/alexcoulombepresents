@@ -200,7 +200,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
     <>
       {/* Transparent cutout, bottom-right. His left shoulder aligns to the page
           edge; the full figure shows at natural aspect — no crop, no mask. */}
-      <div className="absolute bottom-0 right-0 hidden w-[34%] lg:block">
+      <div className="absolute bottom-0 right-0 hidden w-[min(34%,24.5rem)] lg:block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
