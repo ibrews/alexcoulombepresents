@@ -3,7 +3,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
 import InterestForm from "@/components/InterestForm";
-import InquireButton from "@/components/InquireButton";
+import InquireButtonGroup from "@/components/InquireButtonGroup";
 import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
 import { courses, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
@@ -307,20 +307,22 @@ export default function Training() {
               You&apos;re learning the production path, not the tutorial path.
             </p>
           </div>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <InquireButton
-              label="Book a class →"
+          <div className="mt-10">
+            <InquireButtonGroup
               list="unreal"
-              context="Class booking"
               withMessage
-              successMessage="Alex will be in touch to get you booked."
-            />
-            <InquireButton
-              label="Team / studio training"
-              list="unreal"
-              context="Team / studio training"
-              withMessage
-              successMessage="Alex will be in touch about team training."
+              options={[
+                {
+                  label: "Book a class →",
+                  context: "Class booking",
+                  successMessage: "Alex will be in touch to get you booked.",
+                },
+                {
+                  label: "Team / studio training",
+                  context: "Team / studio training",
+                  successMessage: "Alex will be in touch about team training.",
+                },
+              ]}
             />
           </div>
         </div>

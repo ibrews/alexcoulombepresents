@@ -71,6 +71,9 @@ export default function WaitlistForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-left">
+      {context && (
+        <p className="font-mono text-xs uppercase tracking-widest text-teal">Re: {context}</p>
+      )}
       {/* Honeypot — invisible to humans, bots fill it in */}
       <input
         type="text"
