@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 
 async function fetchLatestVideo() {
@@ -23,10 +24,17 @@ export default async function LatestVideo() {
   return (
     <section className="mx-auto max-w-6xl px-5 pb-24">
       <Reveal>
-        <p className="font-mono text-xs uppercase tracking-widest text-teal">YouTube</p>
-        <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-          Latest from the channel
-        </h2>
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">YouTube</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
+              Latest from the channel
+            </h2>
+          </div>
+          <Link href="/videos" className="hidden font-mono text-sm text-teal hover:underline md:block">
+            all videos →
+          </Link>
+        </div>
       </Reveal>
       <Reveal>
         <div

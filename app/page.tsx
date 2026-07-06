@@ -104,7 +104,7 @@ export default function Home() {
             Three passions, <span className="grad-text">one through-line</span>
           </h2>
           <p className="mt-3 max-w-2xl text-mist">
-            Every project: how do we make digital space feel visceral and alive?
+            How can I make digital space feel visceral and alive?
           </p>
         </Reveal>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -173,10 +173,17 @@ export default function Home() {
       <section className="border-t border-line">
         <div className="mx-auto max-w-6xl px-5 py-24">
           <Reveal>
-            <p className="font-mono text-xs uppercase tracking-widest text-grape">The Lab</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-              Here&apos;s <span className="grad-text">what&apos;s bubbling:</span>
-            </h2>
+            <div className="flex items-end justify-between">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-widest text-grape">The Lab</p>
+                <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
+                  Here&apos;s <span className="grad-text">what&apos;s bubbling:</span>
+                </h2>
+              </div>
+              <Link href="/lab" className="hidden font-mono text-sm text-teal hover:underline md:block">
+                all lab projects →
+              </Link>
+            </div>
           </Reveal>
           <div className="mt-10 grid gap-5 md:grid-cols-2">
             {products.map((p, i) => (
