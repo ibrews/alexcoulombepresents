@@ -31,6 +31,11 @@ export default function SwingCityDevlogPage() {
           multiplayer mode over a Cloudflare Worker. This is the story of how it got built, and the
           bugs that had to be found before it felt right.
         </p>
+        <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+          One July 2026 session ran <strong className="text-snow">13 rounds</strong> of real-hardware
+          VR playtesting back to back — ship a batch, play it on the actual headset, get bug reports,
+          ship the next batch. Two of those bugs took a lot more than one round each.
+        </p>
       </Reveal>
 
       {/* ── Origins ───────────────────────────────────────────────── */}
@@ -124,6 +129,46 @@ export default function SwingCityDevlogPage() {
           </p>
 
           <div className="mt-6 flex flex-col gap-3">
+            <DevlogNote title="The right stick that got re-specified 10 times" tag="VR input">
+              <p>
+                On this specific headset, the right controller&apos;s <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">axes[2]/[3]</code>{" "}
+                came in swapped relative to nominal X/Y, and both sign-flipped from the WebXR spec.
+                That alone would&apos;ve been a one-line fix — except each attempted fix got confirmed
+                wrong on real hardware, then re-patched, then re-confirmed wrong again, across{" "}
+                <strong className="text-snow">10 separate rounds</strong> of playtesting. By round 8 the
+                compensating flips had piled up enough that the variable names no longer meant what
+                they said. The breakthrough was throwing out the spec entirely: Alex confirmed
+                first-person look was correct on hardware, and that one anchor —{" "}
+                <em>smooth output is physically X, therefore the variable driving it IS physical
+                X</em> — let the rest get derived mechanically instead of reasoned from names. Round 9
+                shipped the fix; Alex called it dead-on and said &ldquo;LOCK THAT.&rdquo; The lesson is
+                now a code comment: after enough patches, stop reasoning from names or spec — find one
+                confirmed-correct input→output pair and derive everything else from it.
+              </p>
+            </DevlogNote>
+
+            <DevlogNote title="The VR avatar that was invisible the entire time" tag="three.js">
+              <p>
+                Three separate fix attempts all flipped a <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">visible</code>{" "}
+                flag — wrong diagnosis every time, since the flag was <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">true</code>{" "}
+                the whole session. The real cause was a three.js axis-convention split most people never
+                hit: <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">Object3D.lookAt()</code>{" "}
+                orients cameras and lights toward <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">-Z</code>,
+                but every other <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">Object3D</code> — including a
+                plain <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">Group</code>, which is what the
+                camera rig actually was — orients <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">+Z</code>.
+                So <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">cameraRig.lookAt(player)</code>{" "}
+                faced the VR view 180° away from the avatar every single frame — it sat directly behind
+                the camera, fully visible, just never in view. Measuring the rig-forward · to-player dot
+                product confirmed it: <strong className="text-snow">-0.84</strong> before the fix,{" "}
+                <strong className="text-snow">1.000</strong> after. The fix swapped to a pure yaw-only
+                rotation instead of any <code className="rounded bg-ink/60 px-1.5 py-0.5 font-mono text-xs text-amber">lookAt</code>-driven
+                approach — and had to carefully preserve the existing 180° offset already baked into the
+                stick calibration above it, or fixing this bug would have silently re-broken the one
+                already locked in.
+              </p>
+            </DevlogNote>
+
             <DevlogNote title="The car that never actually tumbled" tag="physics">
               <p>
                 Knocking a car sent it flying — score ticked up, the sound played — but the car itself

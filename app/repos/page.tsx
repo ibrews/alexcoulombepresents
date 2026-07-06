@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/repos" },
 };
 
-const categories = ["Unreal Engine", "Godot × Vision Pro", "visionOS & Spatial", "AI & Agents", "Tools"] as const;
+const categories = ["Games", "Unreal Engine", "Godot × Vision Pro", "visionOS & Spatial", "AI & Agents", "Tools"] as const;
 
 export default function Repos() {
   return (

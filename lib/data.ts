@@ -5,7 +5,7 @@ export type Repo = {
   slug: string;
   name: string;
   tagline: string;
-  category: "Unreal Engine" | "Godot × Vision Pro" | "visionOS & Spatial" | "AI & Agents" | "Tools";
+  category: "Games" | "Unreal Engine" | "Godot × Vision Pro" | "visionOS & Spatial" | "AI & Agents" | "Tools";
   stars: number; // baked fallback — live count fetched client-side
   language: string;
   story: string;
@@ -81,17 +81,18 @@ export const repos: Repo[] = [
     slug: "godot-avp-cascade",
     name: "Cascade Countdown",
     tagline: "A hand-tracked physics arcade game for Apple Vision Pro, built on Godot. Live on TestFlight.",
-    category: "Godot × Vision Pro",
+    category: "Games",
     stars: 7,
     language: "GDScript",
     story:
-      "Emissive cubes cascade through spinning bumpers and a prism splitter onto tilted catch plates in your immersive space. Reach in and pinch to grab and throw. Every collision is a synthesized chime pitch-snapped to the key, so the chaos harmonizes into a tune. The first publicly-documented Godot RigidBody3D physics scene rendering in immersive mode on real Apple Vision Pro at a locked 90 FPS, with working hand-tracking pickup — built on Apple's official upstream visionOS contribution to Godot.",
+      "Emissive cubes cascade through spinning bumpers and a prism splitter onto tilted catch plates in your immersive space. Reach in and pinch to grab and throw. Every collision is a synthesized chime pitch-snapped to the key, so the chaos harmonizes into a tune. Built on Apple's official upstream visionOS contribution to Godot — a device smoke test on real Vision Pro hardware measured a locked 90 FPS across 23 measurement windows, with continuous physics racking up hundreds of collisions per run. Getting there took 8 TestFlight builds: a rejected privacy manifest with unsubstituted template variables, a near plane nudged down to Apple's 0.1 minimum, and a grab bug that looked like a left/right-hand asymmetry but was really several stacked issues plus noisy hand-tracking input — collapsed into a single THUMB-only grab-by-point with sticky release. The project also produced a reusable build-switcher script that flips a Godot visionOS project between device and simulator builds from one command, later adopted by other visionOS projects on the fleet.",
     highlights: [
-      "Locked 90 FPS immersive-mode physics on real AVP hardware",
-      "Pinch-to-grab-and-throw with full hand tracking",
+      "Locked 90 FPS immersive-mode physics on real AVP hardware, measured across 23 test windows",
+      "Pinch-to-grab-and-throw, collapsed from a buggy left/right asymmetry into one THUMB-only grab-by-point",
       "Procedural soundtrack — collisions synthesize chimes in key",
+      "8 TestFlight builds — including one rejection fixed by patching an unsubstituted privacy-manifest template",
+      "Reusable device/simulator build-switcher script, later adopted by other visionOS projects",
       "Beginner-friendly ELI5 wiki walking through how it was all built",
-      "Free public beta on TestFlight",
     ],
     links: [{ label: "TestFlight beta", url: "https://testflight.apple.com/join/bw1aeExJ" }],
     github: "https://github.com/ibrews/godot-avp-cascade",
@@ -335,17 +336,18 @@ export const repos: Repo[] = [
     slug: "swing-city",
     name: "Swing City",
     tagline: "A rain-soaked neon city you can swing across, Spider-Man style — now with multiplayer joust rules.",
-    category: "Tools",
+    category: "Games",
     stars: 0,
     language: "JavaScript",
     story:
-      "A low-poly Blade Runner grid, procedurally generated from a single seed — streets, traffic-light-obeying cars, rain, neon towers — built first as a Blender/Python generator, then ported line-for-line into a self-contained Three.js browser game. Web-swing between skyscrapers, knock cars flying, climb buildings, chain combos, and dodge a zombie wave or two. The multiplayer mode drops other players into the same city over a Cloudflare Worker + Durable Object relay: everyone's a different color, everyone can see everyone else's webs, and landing on someone's head sends them flying off the map.",
+      "A low-poly Blade Runner grid, procedurally generated from a single seed — streets, traffic-light-obeying cars, rain, neon towers — built first as a Blender/Python generator, then ported line-for-line into a self-contained Three.js browser game. Web-swing between skyscrapers, knock cars flying, climb buildings, chain combos, and dodge a zombie wave or two. One July 2026 session ran 13 rounds of real-hardware VR playtesting back to back — ship a batch, play it on the headset, get bug reports, ship the next batch. The hardest of those bugs was a right-stick calibration that got re-specified 10 times before a hardware-confirmed fix finally stuck (\"LOCK THAT\"), and a separate VR avatar-invisible bug that root-caused to a one-line three.js gotcha: Object3D.lookAt() orients +Z for everything except cameras, so the follow-rig was facing 180° away from the player every frame. Multiplayer runs on a from-scratch Cloudflare Worker + Durable Object relay: zero server-side physics, an \"attacker computes, server relays, victim applies\" message convention reused across every player-vs-player mechanic, and the WebSocket Hibernation API so a room full of idle sockets never pins memory.",
     highlights: [
       "Procedural city — same seed, same layout, in both Blender and the browser",
       "Full physics: web-swinging, wall-crawling, car knockback with momentum-scaled combos",
-      "Gamepad, touchscreen, and WebXR input all map onto the same controls",
       "Opt-in multiplayer — joust rules, random color per player, colored webs, knock players (and cars) around, land on a head to explode them",
-      "No build step — one HTML file, Three.js from a CDN",
+      "13 rounds of real-hardware VR playtesting in one session — the right-stick calibration alone took 10 of them to lock",
+      "VR avatar-invisible bug root-caused to a one-line three.js axis-convention gotcha (Object3D.lookAt())",
+      "Multiplayer relay built from scratch on Cloudflare Workers + Durable Objects, later extracted into a reusable pattern doc",
     ],
     links: [
       { label: "Play — single player", url: "https://ibrews.github.io/swing-city/" },
@@ -358,6 +360,44 @@ export const repos: Repo[] = [
       teaser:
         "From a Blender script to a browser game with real physics, WebXR, and multiplayer — plus the bugs that got found along the way.",
     },
+  },
+  {
+    slug: "crystal-caper",
+    name: "Crystal Caper",
+    tagline: "A pixel-art platformer where 100% of the art is AI-generated. Playable in your browser.",
+    category: "Games",
+    stars: 0,
+    language: "Swift",
+    story:
+      "A complete platformer built from a single prompt — \"a full game with generated assets\" — with every sprite, animation, and tile generated on demand through the PixelLab MCP, none of it hand-drawn or licensed. Pip the fox runs, jumps, and stomps mushrooms across endless procedurally-generated levels cycling through forest, snow, and desert biomes, with a crowned boss, King Grumpcap, capping every 5th level. The whole build chain ran with no human in the loop for the core loop: PixelLab generated the character, enemy, and tileset art from roughly 7 of a 20-generation trial budget, SpriteKit assembled it into a physics-driven platformer with camera follow and parallax, an in-headless autopilot self-test caught a real level bug before a human ever touched a controller, and the same procedural level generator got ported line-for-line to a web build so the HTML5/Canvas version plays identically to the iOS original. Even the boss is a deliberately hand-coded placeholder — kept that way on purpose to conserve the PixelLab generation budget for the assets that mattered more.",
+    highlights: [
+      "100% AI-generated art and animation via the PixelLab MCP — character, enemy, and tileset, none hand-drawn",
+      "Procedurally-generated endless levels across 3 biomes, ported line-for-line from Swift to a matching web build",
+      "Autopilot self-test plays the game headlessly and caught a real level bug pre-launch",
+      "A crowned, armored boss — King Grumpcap — gates every 5th level with a 3-hit telegraph/charge/recover pattern",
+      "Shared online leaderboard on a Cloudflare Worker + KV, verified end-to-end before ever touching a live account",
+    ],
+    links: [{ label: "Play in browser", url: "https://ibrews.github.io/crystal-caper/" }],
+    github: "https://github.com/ibrews/crystal-caper",
+  },
+  {
+    slug: "TankCommanderVR",
+    name: "Tank Commander",
+    tagline: "A VR tank game for Meta Quest 3 with a physically-operated cockpit. Made for Ani.",
+    category: "Games",
+    stars: 0,
+    language: "GDScript",
+    story:
+      "Sit inside a one-man turret and physically operate it: flip the battery master, hold the starter until the engine catches, grab twin tillers to drive the tracks, work the turret joystick, cycle the breech lever to reload, arm the rocket console behind its safety cover. Every texture, sound, and voice line is procedurally generated — nothing imported — and every piece of geometry, cockpit included, is built at runtime in pure GDScript rather than loaded from a scene file. The physical cockpit controls were fully built and unit-tested from day one, and never actually worked in the headset for most of the project's life: the hand-proximity code read from a Godot group that, per a full git history search, no control had ever actually joined. Root-caused and fixed in the same session as an even bigger discovery — roughly 70% of the game's geometry had inverted face normals from the very first commit, because the custom mesh-building helper wound triangles counter-clockwise, the OpenGL convention, when Godot's front faces are clockwise. Alex caught it live in the headset before any tool did: \"I conservatively estimate about 70% of the normals are inverted. You need to trust me on this — I have depth perception.\" He was right, proven with a one-triangle test scene, not documentation. The team's own automated mesh-audit tool shared the same wrong assumption and had been validating broken geometry the whole time.",
+    highlights: [
+      "Physically-operated cockpit — real grab/poke levers, tillers, and a covered rocket switch, not button mapping",
+      "100% procedural — textures, sounds, and 200+ voice lines generated, zero imported art assets",
+      "A controls system that was fully built, unit-tested, and silently never wired to the input rig for most of development",
+      "~70% of the game's geometry had inverted normals from commit one — caught in headset, confirmed with a custom test scene",
+      "10 battlefields, 5 vehicles, on-foot mode, and LAN co-op with fully procedural Rec-Room-style avatars",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/TankCommanderVR",
   },
 ];
 
