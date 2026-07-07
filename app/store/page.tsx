@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import InquireButton from "@/components/InquireButton";
-import { storeItems } from "@/lib/store";
+import BuyButton from "@/components/BuyButton";
+import { storeItems, formatPrice } from "@/lib/store";
+import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
@@ -87,6 +89,32 @@ export default function Store() {
                   withMessage
                   successMessage={`Alex will be in touch about ${item.name}.`}
                 />
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+
+      {/* Instant-download pipelines — license key + R2 delivery on checkout */}
+      <Reveal>
+        <h2 className="mt-16 text-2xl font-bold">Pipelines — instant delivery</h2>
+        <p className="mt-2 max-w-2xl text-sm text-mist">
+          Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link
+          all work at checkout.
+        </p>
+      </Reveal>
+      <div className="mt-6 grid gap-5 md:grid-cols-2">
+        {digitalProducts.map((p, i) => (
+          <Reveal key={p.sku} delay={Math.min(i * 70, 280)}>
+            <div className="glass flex h-full flex-col rounded-2xl p-7">
+              <span className="self-start rounded-full border border-teal/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-teal">
+                Pipeline
+              </span>
+              <h3 className="mt-4 font-bold leading-snug">{p.name}</h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{p.blurb}</p>
+              <p className="mt-3 text-sm text-snow">{formatPrice(p.priceCents)}</p>
+              <div className="mt-5">
+                <BuyButton sku={p.sku} label="Buy →" itemName={p.name} live={DIGITAL_LIVE} />
               </div>
             </div>
           </Reveal>

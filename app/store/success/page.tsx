@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { storeItems } from "@/lib/store";
+import { findDigitalProduct } from "@/lib/commerce/products";
 import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = { title: "Thank you!" };
@@ -8,10 +9,11 @@ export const metadata: Metadata = { title: "Thank you!" };
 export default async function Success({
   searchParams,
 }: {
-  searchParams: Promise<{ item?: string }>;
+  searchParams: Promise<{ item?: string; sku?: string }>;
 }) {
-  const { item: slug } = await searchParams;
+  const { item: slug, sku } = await searchParams;
   const item = storeItems.find((i) => i.slug === slug);
+  const digital = sku ? findDigitalProduct(sku) : undefined;
 
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center px-5 text-center">
@@ -20,7 +22,20 @@ export default async function Success({
         You just funded <span className="grad-text">more weird experiments.</span>
       </h1>
       <p className="mt-5 max-w-md text-mist">
-        {item ? (
+        {digital ? (
+          <>
+            <span className="text-snow">{digital.name}</span> is yours. Check your email for the
+            license key and a sign-in link to{" "}
+            <Link className="text-teal hover:underline" href="/account">
+              your account
+            </Link>{" "}
+            — the download button is there. Nothing in the inbox after a few minutes? Email{" "}
+            <a className="text-teal hover:underline" href="mailto:info@alexcoulombepresents.com">
+              info@alexcoulombepresents.com
+            </a>
+            .
+          </>
+        ) : item ? (
           <>
             <span className="text-snow">{item.name}</span> is yours. {renderBreaks(item.delivery)} If anything
             doesn&apos;t arrive within the hour, email{" "}

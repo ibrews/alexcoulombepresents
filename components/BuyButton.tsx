@@ -6,18 +6,22 @@ import InquireButton from "@/components/InquireButton";
 
 export default function BuyButton({
   slug,
+  sku,
   label,
   itemName,
+  live = STORE_LIVE,
 }: {
-  slug: string;
+  slug?: string;
+  sku?: string;
   label: string;
   itemName: string;
+  live?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Pre-launch: show an inline form instead of a mailto link.
-  if (!STORE_LIVE) {
+  if (!live) {
     return (
       <InquireButton
         label={label}
@@ -36,7 +40,7 @@ export default function BuyButton({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify(sku ? { sku } : { slug }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");
