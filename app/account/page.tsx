@@ -1,0 +1,79 @@
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { customerFromSession } from "@/lib/commerce/tokens";
+import { entitlementsForCustomer } from "@/lib/commerce/entitlements";
+import { findDigitalProduct } from "@/lib/commerce/products";
+import LoginForm from "./LoginForm";
+
+export const metadata: Metadata = { title: "My account" };
+
+export default async function Account() {
+  const sessionToken = (await cookies()).get("acp_session")?.value;
+  const customerId = await customerFromSession(sessionToken);
+
+  if (!customerId) {
+    return (
+      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-5 pt-32 text-center">
+        <p className="font-mono text-sm text-teal">/account</p>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight">Sign in to your account</h1>
+        <p className="mt-4 text-sm text-mist">
+          Enter the email you purchased with — we&apos;ll send a sign-in link.
+        </p>
+        <LoginForm />
+      </div>
+    );
+  }
+
+  const entitlements = await entitlementsForCustomer(customerId);
+
+  return (
+    <div className="mx-auto max-w-3xl px-5 pb-24 pt-32">
+      <p className="font-mono text-sm text-teal">/account</p>
+      <h1 className="mt-3 text-4xl font-bold tracking-tight">Your purchases</h1>
+
+      {entitlements.length === 0 && (
+        <p className="mt-8 text-mist">Nothing here yet. Purchases appear within a minute of checkout.</p>
+      )}
+
+      <div className="mt-10 grid gap-5">
+        {entitlements.map((e) => {
+          const product = findDigitalProduct(e.sku);
+          return (
+            <div key={e.id} className="glass rounded-2xl p-7">
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="font-bold">{product?.name ?? e.sku}</h2>
+                <span
+                  className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-wider ${
+                    e.status === "active" ? "border-teal/60 text-teal" : "border-line text-mist"
+                  }`}
+                >
+                  {e.status}
+                </span>
+              </div>
+              {e.status === "active" && (
+                <a
+                  href={`/api/download?sku=${e.sku}`}
+                  className="mt-4 inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+                >
+                  Download →
+                </a>
+              )}
+              {e.key_text && (
+                <div className="mt-4">
+                  <p className="text-xs text-mist">License key:</p>
+                  <code className="mt-1 block break-all rounded-lg border border-line bg-black/20 p-3 text-xs">
+                    {e.key_text}
+                  </code>
+                </div>
+              )}
+              <p className="mt-3 text-xs text-mist">
+                v{e.major_version}
+                {e.updates_until ? ` · updates until ${new Date(e.updates_until).toLocaleDateString()}` : ""}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

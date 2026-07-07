@@ -1,0 +1,126 @@
+// ── Commerce core — entitlement fulfillment + refund revoke ────────────────
+
+import { sql, ensureCommerceSchema } from "./schema";
+import { issueLicenseKey } from "./license";
+import { findDigitalProduct } from "./products";
+
+export async function findOrCreateCustomer(email: string, name?: string | null): Promise<number> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    INSERT INTO customers (brand, email, name)
+    VALUES ('acp', ${email}, ${name ?? null})
+    ON CONFLICT (brand, email) DO UPDATE SET name = COALESCE(EXCLUDED.name, customers.name)
+    RETURNING id
+  `) as { id: number }[];
+  return rows[0].id;
+}
+
+// Idempotent: returns the existing order if this Stripe event was already
+// processed (dedupe key = stripe_event_id), otherwise fulfills fresh.
+export async function fulfillDigitalPurchase(input: {
+  stripeEventId: string;
+  stripeSessionId: string;
+  stripePaymentIntentId?: string | null;
+  sku: string;
+  email: string;
+  name?: string | null;
+  amountCents: number;
+}): Promise<{ alreadyProcessed: boolean; licenseKey?: string; customerId?: number }> {
+  await ensureCommerceSchema();
+  const db = sql();
+
+  const existing = (await db`
+    SELECT id FROM orders WHERE stripe_event_id = ${input.stripeEventId}
+  `) as { id: number }[];
+  if (existing.length > 0) return { alreadyProcessed: true };
+
+  const product = findDigitalProduct(input.sku);
+  if (!product) throw new Error(`Unknown digital SKU: ${input.sku}`);
+
+  const customerId = await findOrCreateCustomer(input.email, input.name);
+
+  const orderRows = (await db`
+    INSERT INTO orders (brand, customer_id, sku, stripe_session_id, stripe_payment_intent_id, stripe_event_id, amount_cents, status)
+    VALUES ('acp', ${customerId}, ${input.sku}, ${input.stripeSessionId}, ${input.stripePaymentIntentId ?? null}, ${input.stripeEventId}, ${input.amountCents}, 'paid')
+    ON CONFLICT (stripe_session_id) DO NOTHING
+    RETURNING id
+  `) as { id: number }[];
+  // If the session was already recorded under a different event id (e.g. a
+  // dashboard resend), treat as already processed rather than double-issuing.
+  if (orderRows.length === 0) return { alreadyProcessed: true };
+  const orderId = orderRows[0].id;
+
+  const updatesUntil = new Date(Date.now() + product.updatesWindowDays * 24 * 60 * 60 * 1000);
+
+  const entRows = (await db`
+    INSERT INTO entitlements (customer_id, sku, tier, status, source_order_id, major_version, updates_until)
+    VALUES (${customerId}, ${product.sku}, ${product.tier}, 'active', ${orderId}, ${product.majorVersion}, ${updatesUntil.toISOString()})
+    RETURNING id
+  `) as { id: number }[];
+  const entitlementId = entRows[0].id;
+
+  const licenseKey = issueLicenseKey({
+    sku: product.sku,
+    tier: product.tier,
+    seats: 1,
+    licensee_email: input.email,
+    major_version: product.majorVersion,
+    updates_until: updatesUntil.toISOString(),
+    issued_at: new Date().toISOString(),
+  });
+
+  await db`
+    INSERT INTO license_keys (entitlement_id, key_text)
+    VALUES (${entitlementId}, ${licenseKey})
+  `;
+
+  return { alreadyProcessed: false, licenseKey, customerId };
+}
+
+// Revokes every entitlement tied to a Stripe checkout session (refund path).
+// Download tokens are presigned on-demand, so revocation alone kills future
+// downloads; already-downloaded offline copies are out of scope per the
+// business plan's stated posture.
+export async function revokeEntitlementsForPaymentIntent(paymentIntentId: string): Promise<number> {
+  await ensureCommerceSchema();
+  const db = sql();
+  const orderRows = (await db`SELECT id FROM orders WHERE stripe_payment_intent_id = ${paymentIntentId}`) as { id: number }[];
+  if (orderRows.length === 0) return 0;
+  const orderId = orderRows[0].id;
+
+  const entRows = (await db`
+    UPDATE entitlements SET status = 'revoked', revoked_at = now()
+    WHERE source_order_id = ${orderId} AND status = 'active'
+    RETURNING id
+  `) as { id: number }[];
+
+  for (const { id } of entRows) {
+    await db`UPDATE license_keys SET revoked = true WHERE entitlement_id = ${id}`;
+  }
+  await db`UPDATE orders SET status = 'refunded' WHERE id = ${orderId}`;
+  return entRows.length;
+}
+
+export type EntitlementRow = {
+  id: number;
+  sku: string;
+  tier: string;
+  status: string;
+  major_version: number;
+  updates_until: string | null;
+  created_at: string;
+  key_text: string | null;
+};
+
+export async function entitlementsForCustomer(customerId: number): Promise<EntitlementRow[]> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT e.id, e.sku, e.tier, e.status, e.major_version, e.updates_until, e.created_at,
+           lk.key_text
+    FROM entitlements e
+    LEFT JOIN license_keys lk ON lk.entitlement_id = e.id AND lk.revoked = false
+    WHERE e.customer_id = ${customerId}
+    ORDER BY e.created_at DESC
+  `) as EntitlementRow[];
+  return rows;
+}
