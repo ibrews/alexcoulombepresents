@@ -25,6 +25,8 @@ with no configuration.
 | `/lab/unreal-visionos` | The Unreal × visionOS engine-improvement punch list |
 | `/links` | Agile Lens, socials, podcast — and alexcoulombe.com, lovingly preserved in 2013 amber |
 | `/store` | Direct sales (courses, skills, templates) — Stripe Checkout, no marketplace cut. Ships in preview mode (mailto fallback) until `NEXT_PUBLIC_STORE_LIVE=1` |
+| `/newsletter` | Archive of every newsletter issue (markdown files in `content/newsletters/`) + subscribe form |
+| `/support` | "Support the Lab" donations — Stripe Checkout with preset/custom amounts and an optional comment/request field |
 
 ## Quickstart
 

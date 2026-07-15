@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { fulfillDigitalPurchase, revokeEntitlementsForPaymentIntent } from "@/lib/commerce/entitlements";
-import { sendFulfillmentEmail } from "@/lib/commerce/email";
+import { sendDonationNotification, sendFulfillmentEmail } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
 
 // Stripe webhook — fulfillment happens here.
@@ -46,7 +46,23 @@ export async function POST(req: NextRequest) {
     const email = session.customer_details?.email as string | undefined;
     const name = session.customer_details?.name as string | undefined;
 
-    if (kind === "digital" && sku && email) {
+    if (kind === "donation") {
+      const comment = (session.custom_fields as Array<{ key: string; text?: { value?: string } }> | undefined)?.find(
+        (f) => f.key === "comment"
+      )?.text?.value;
+      try {
+        await sendDonationNotification({
+          amountCents: session.amount_total ?? 0,
+          email,
+          name,
+          comment,
+        });
+      } catch (err) {
+        // Log only — a donation must never bounce as failed just because the
+        // notification email hiccuped; the money and comment are in Stripe.
+        console.error("[donation] notification failed", err);
+      }
+    } else if (kind === "digital" && sku && email) {
       try {
         const result = await fulfillDigitalPurchase({
           stripeEventId: event.id,

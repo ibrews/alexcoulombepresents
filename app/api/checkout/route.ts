@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let payload: { slug?: string; sku?: string };
+  let payload: { slug?: string; sku?: string; donationCents?: number };
   try {
     payload = await req.json();
   } catch {
@@ -37,7 +37,33 @@ export async function POST(req: NextRequest) {
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
   let body: URLSearchParams;
 
-  if (payload.sku) {
+  if (payload.donationCents !== undefined) {
+    // ── "Support the Lab" donations (app/support) — no fulfillment, just thanks.
+    // Donations work even while the store flags are off; there's nothing to deliver.
+    const cents = Math.floor(payload.donationCents);
+    if (!Number.isFinite(cents) || cents < 100 || cents > 1_000_000) {
+      return NextResponse.json({ error: "Donation must be between $1 and $10,000." }, { status: 400 });
+    }
+    body = new URLSearchParams({
+      mode: "payment",
+      success_url: `${site}/support?thanks=1`,
+      cancel_url: `${site}/support`,
+      submit_type: "donate",
+      "line_items[0][quantity]": "1",
+      "line_items[0][price_data][currency]": "usd",
+      "line_items[0][price_data][unit_amount]": String(cents),
+      "line_items[0][price_data][product_data][name]": "Support the Lab",
+      "line_items[0][price_data][product_data][description]":
+        "A donation to keep the experiments coming. Thank you!",
+      "metadata[kind]": "donation",
+      "custom_fields[0][key]": "comment",
+      "custom_fields[0][label][type]": "custom",
+      "custom_fields[0][label][custom]": "Comment or request (optional)",
+      "custom_fields[0][type]": "text",
+      "custom_fields[0][optional]": "true",
+      "automatic_tax[enabled]": "false",
+    });
+  } else if (payload.sku) {
     if (!DIGITAL_LIVE) {
       return NextResponse.json({ error: "This item isn't on sale yet." }, { status: 503 });
     }

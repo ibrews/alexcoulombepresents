@@ -1,0 +1,56 @@
+// ── Newsletter archive ───────────────────────────────────────────────────────
+//
+// Every issue sent to the list is archived here for the website. One markdown
+// file per issue in content/newsletters/, named YYYY-MM-DD-slug.md, with a
+// simple header block:
+//
+//   title: Live Unreal classes are back
+//   date: 2026-07-16
+//   subject: the exact email subject line
+//   ---
+//   body in markdown…
+//
+// Workflow: write the issue here FIRST, send it via Resend (scripts/
+// broadcast.mjs or a Resend Broadcast) using the same body, and it's archived
+// on /newsletter automatically at the next deploy. No separate CMS.
+
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
+
+export type NewsletterIssue = {
+  slug: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  subject: string;
+  body: string; // markdown
+};
+
+const DIR = path.join(process.cwd(), "content", "newsletters");
+
+export function getNewsletterIssues(): NewsletterIssue[] {
+  let files: string[] = [];
+  try {
+    files = readdirSync(DIR).filter((f) => f.endsWith(".md"));
+  } catch {
+    return [];
+  }
+  return files
+    .map((file) => {
+      const raw = readFileSync(path.join(DIR, file), "utf8");
+      const [header, ...rest] = raw.split(/^---$/m);
+      const get = (key: string) =>
+        header.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1].trim() ?? "";
+      return {
+        slug: file.replace(/\.md$/, ""),
+        title: get("title"),
+        date: get("date"),
+        subject: get("subject") || get("title"),
+        body: rest.join("---").trim(),
+      };
+    })
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function getNewsletterIssue(slug: string): NewsletterIssue | undefined {
+  return getNewsletterIssues().find((i) => i.slug === slug);
+}

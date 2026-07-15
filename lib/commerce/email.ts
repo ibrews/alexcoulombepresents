@@ -57,3 +57,26 @@ export async function sendMagicLinkEmail(input: { email: string; magicLinkUrl: s
     throw new Error("Failed to send magic-link email");
   }
 }
+
+export async function sendDonationNotification(input: {
+  amountCents: number;
+  email?: string;
+  name?: string;
+  comment?: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const dollars = (input.amountCents / 100).toFixed(2);
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    to: "info@alexcoulombepresents.com",
+    subject: `Lab donation: $${dollars} from ${input.name ?? input.email ?? "someone"}`,
+    text: [
+      `Amount: $${dollars}`,
+      `From: ${input.name ?? "—"} <${input.email ?? "—"}>`,
+      "",
+      "Comment / request:",
+      input.comment?.trim() || "(none)",
+    ].join("\n"),
+  });
+  if (error) throw new Error(`donation notification failed: ${error.message}`);
+}
