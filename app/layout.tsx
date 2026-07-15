@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import AnnouncementBanner from "@/components/AnnouncementBanner";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
 import Konami from "@/components/Konami";
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen antialiased">
         <JsonLd data={siteGraph} />
         <EasterEgg />
+        <AnnouncementBanner />
         <Nav />
         <CommandPalette />
         <Konami />

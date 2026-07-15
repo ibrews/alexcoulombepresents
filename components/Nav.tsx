@@ -32,7 +32,8 @@ export default function Nav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
+      style={{ top: "var(--banner-h, 0px)" }}
+      className={`fixed inset-x-0 z-40 transition-all duration-300 ${
         scrolled ? "border-b border-line bg-ink/80 backdrop-blur-xl" : "bg-transparent"
       }`}
     >

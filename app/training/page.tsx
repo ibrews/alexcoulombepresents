@@ -39,6 +39,30 @@ export default function Training() {
         </p>
       </Reveal>
 
+      <Reveal delay={80}>
+        <div id="cohort" className="glow-card mt-10 max-w-2xl rounded-2xl border border-teal/40 p-6">
+          <p className="font-mono text-xs tracking-widest text-teal">
+            NEXT COHORT · STARTS WEDNESDAY, AUGUST 5
+          </p>
+          <h2 className="mt-2 text-2xl font-bold tracking-tight">
+            Unreal Foundations — Zero to Environment
+          </h2>
+          <p className="mt-3 leading-relaxed text-mist">
+            Four live Wednesday classes, each taught twice so the whole world can attend (10a–12p
+            and 12:30–2:30p ET), plus Thursday office hours. Week 1: the editor &amp; ecosystem.
+            Week 2: world building with Megascans &amp; Nanite. Week 3: Lumen &amp; lighting. Week 4:
+            cameras &amp; Movie Render Queue — you leave with a portfolio-ready render. Recordings
+            and project files included.
+          </p>
+          <a
+            href="/store"
+            className="mt-5 inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
+          >
+            Reserve a seat — $249 early-bird through Jul 29
+          </a>
+        </div>
+      </Reveal>
+
       {/* Format strip */}
       <Reveal>
         <div className="mt-12 grid gap-5 md:grid-cols-3">

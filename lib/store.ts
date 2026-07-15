@@ -39,16 +39,29 @@ export const storeItems: StoreItem[] = [
     slug: "ue-class-single",
     name: "Unreal Engine class — single session",
     kind: "course",
-    priceCents: 14900, // TODO(alex): real price
+    priceCents: 9900,
+    priceNote: "Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     blurb: "One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.",
     delivery: "A booking link arrives by email after checkout; sessions run live over video with screen share.",
     fulfillment: "booking",
   },
   {
+    slug: "unreal-foundations-cohort",
+    name: "Unreal Foundations — August cohort",
+    kind: "course-bundle",
+    priceCents: 24900,
+    priceNote:
+      "Early-bird through July 29 — $299 after. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    blurb:
+      "Zero to Environment in four live Wednesday classes starting Aug 5: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Every class runs twice (10a & 12:30p ET) plus Thursday office hours, and recordings are included.",
+    delivery: "Zoom links, recordings, and project files for all four weeks arrive by email after checkout.",
+    fulfillment: "email-manual",
+  },
+  {
     slug: "ue-curriculum-bundle",
     name: "Unreal Engine curriculum bundle",
     kind: "course-bundle",
-    priceCents: 99900, // TODO(alex): real price
+    priceCents: 89900,
     blurb: "The full track: all eleven classes, scheduled at your pace, with homework review between sessions.",
     delivery: "Booking access to all 11 sessions + class materials and project files.",
     fulfillment: "booking",
