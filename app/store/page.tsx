@@ -106,7 +106,16 @@ export default function Store() {
                 </div>
               )}
               <div className="mt-5">
-                {item.priceCents !== null ? (
+                {item.externalUrl ? (
+                  <a
+                    href={item.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block rounded-full border border-grape/60 px-5 py-2.5 text-sm font-semibold text-snow transition-colors hover:border-grape hover:bg-grape/10"
+                  >
+                    Get it on Capafy →
+                  </a>
+                ) : item.priceCents !== null ? (
                   <BuyButton slug={item.slug} label="Buy →" itemName={item.name} />
                 ) : (
                   <InquireButton

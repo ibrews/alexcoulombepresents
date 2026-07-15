@@ -93,7 +93,10 @@ export async function POST(req: NextRequest) {
       );
     }
     const item = storeItems.find((i) => i.slug === payload.slug);
-    if (!item || item.priceCents === null) {
+    // Only sell what we can actually deliver: a real price AND no external
+    // storefront handling fulfillment. This backstops the UI — a crafted POST
+    // for an inquiry-only or Capafy-fulfilled slug must never take money.
+    if (!item || item.priceCents === null || item.externalUrl) {
       return NextResponse.json({ error: "Unknown or non-purchasable item" }, { status: 404 });
     }
     body = new URLSearchParams({

@@ -282,15 +282,16 @@
 - `[store.4]` ▸ Gumroad →
 - `[store.5]` ▸ Capafy →
 - `[store.6]` ▸ You get:
-- `[store.7]` ▸ Pipelines — instant delivery
-- `[store.8]` ▸ Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link all work at checkout.
-- `[store.9]` ▸ Pipeline
-- `[store.10]` ▸ Not sure where to start?
-- `[store.11]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
-- `[store.12]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
-- `[store.13]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — email info@alexcoulombepresents.com or use the contact form .
-- `[store.14]` ▸ Buy →
-- `[store.15]` ▸ Inquire →
+- `[store.7]` ▸ Get it on Capafy →
+- `[store.8]` ▸ Pipelines — instant delivery
+- `[store.9]` ▸ Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link all work at checkout.
+- `[store.10]` ▸ Pipeline
+- `[store.11]` ▸ Not sure where to start?
+- `[store.12]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
+- `[store.13]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
+- `[store.14]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — email info@alexcoulombepresents.com or use the contact form .
+- `[store.15]` ▸ Buy →
+- `[store.16]` ▸ Inquire →
 
 ---
 
@@ -1061,22 +1062,24 @@
 - `[store.storeItems.class-voucher.delivery]` ▸ A unique voucher code by email, instantly. Enter it at checkout for any single class and it comes out to $0 — no expiration, transferable, zero back-and-forth.
 - `[store.storeItems.ue-class-single.name]` ▸ Unreal Engine class — single session
 - `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.
-- `[store.storeItems.ue-class-single.delivery]` ▸ A booking link arrives by email after checkout; sessions run live over video with screen share.
+- `[store.storeItems.ue-class-single.delivery]` ▸ An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.
 - `[store.storeItems.unreal-foundations-cohort.name]` ▸ Unreal Foundations — August cohort
 - `[store.storeItems.unreal-foundations-cohort.blurb]` ▸ Zero to Environment in four live Wednesday classes starting Aug 5: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Every class runs twice (10a & 12:30p ET) plus Thursday office hours, and recordings are included.
-- `[store.storeItems.unreal-foundations-cohort.delivery]` ▸ Zoom links, recordings, and project files for all four weeks arrive by email after checkout.
+- `[store.storeItems.unreal-foundations-cohort.delivery]` ▸ You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class on Aug 5 (recordings after each).
 - `[store.storeItems.ue-curriculum-bundle.name]` ▸ Unreal Engine curriculum bundle
 - `[store.storeItems.ue-curriculum-bundle.blurb]` ▸ The full track: all eleven classes, scheduled at your pace, with homework review between sessions.
-- `[store.storeItems.ue-curriculum-bundle.delivery]` ▸ Booking access to all 11 sessions + class materials and project files.
+- `[store.storeItems.ue-curriculum-bundle.delivery]` ▸ An order confirmation lands right away; Alex then reaches out to schedule all 11 sessions at your pace and share class materials + project files.
 - `[store.storeItems.team-training.name]` ▸ Team / studio training
 - `[store.storeItems.team-training.blurb]` ▸ Custom curriculum for your studio — your project, your pipeline, your sharp edges.
 - `[store.storeItems.team-training.delivery]` ▸ Scoping call first; training delivered live, on-site or remote.
 - `[store.storeItems.skill-ue5-testflight.name]` ▸ ue5-testflight (Claude Code skill)
-- `[store.storeItems.skill-ue5-testflight.blurb]` ▸ The autonomous UE5 → TestFlight pipeline as an installable skill. Also on Capafy — buying here is the same product, zero marketplace cut.
-- `[store.storeItems.skill-ue5-testflight.delivery]` ▸ Download link + install instructions delivered on the success page and by email.
+- `[store.storeItems.skill-ue5-testflight.externalUrl]` ▸ https://capafy.ai/product/ue5-testflight
+- `[store.storeItems.skill-ue5-testflight.blurb]` ▸ The autonomous UE5 → TestFlight pipeline as an installable skill.
+- `[store.storeItems.skill-ue5-testflight.delivery]` ▸ Delivered instantly on Capafy — install straight into Claude Code after purchase.
 - `[store.storeItems.skill-ios-testflight.name]` ▸ ios-testflight (Claude Code skill)
+- `[store.storeItems.skill-ios-testflight.externalUrl]` ▸ https://capafy.ai/product/ios-testflight
 - `[store.storeItems.skill-ios-testflight.blurb]` ▸ Archive + upload iOS/visionOS/macOS Xcode projects to TestFlight via CLI, with every signing gotcha documented.
-- `[store.storeItems.skill-ios-testflight.delivery]` ▸ Download link + install instructions delivered on the success page and by email.
+- `[store.storeItems.skill-ios-testflight.delivery]` ▸ Delivered instantly on Capafy — install straight into Claude Code after purchase.
 - `[store.storeItems.pinchwork-template.name]` ▸ Pinchwork — OpenXR hand-tracking template
 - `[store.storeItems.pinchwork-template.blurb]` ▸ The universal OpenXR hand-tracking template for Unreal. Join the early-access list — launch pricing announced with the release.
 - `[store.storeItems.pinchwork-template.delivery]` ▸ Early access via GitHub invite when it ships.

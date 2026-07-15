@@ -28,6 +28,10 @@ export type StoreItem = {
   priceCents: number | null; // null = inquiry-only (no checkout button)
   priceNote?: string;
   compareAt?: string[]; // crossed-off reference prices, e.g. "Intro class $99"
+  // Fulfilled by an external storefront (e.g. Capafy), NOT direct Stripe
+  // checkout here. Set this for anything we can't reliably auto-deliver
+  // ourselves yet — the card links out instead of taking money we can't honor.
+  externalUrl?: string;
   blurb: string;
   delivery: string; // what the buyer receives, in plain words
   fulfillment: "email-manual" | "github-invite" | "download-link" | "booking";
@@ -58,7 +62,7 @@ export const storeItems: StoreItem[] = [
     priceNote:
       "Intro tracks $99 · advanced/specialized tracks $149 · private 1-on-1 $199. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     blurb: "One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.",
-    delivery: "A booking link arrives by email after checkout; sessions run live over video with screen share.",
+    delivery: "An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
     fulfillment: "booking",
   },
   {
@@ -70,7 +74,7 @@ export const storeItems: StoreItem[] = [
       "Early-bird through July 29 — $299 after. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     blurb:
       "Zero to Environment in four live Wednesday classes starting Aug 5: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Every class runs twice (10a & 12:30p ET) plus Thursday office hours, and recordings are included.",
-    delivery: "Zoom links, recordings, and project files for all four weeks arrive by email after checkout.",
+    delivery: "You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class on Aug 5 (recordings after each).",
     fulfillment: "email-manual",
   },
   {
@@ -79,7 +83,7 @@ export const storeItems: StoreItem[] = [
     kind: "course-bundle",
     priceCents: 89900,
     blurb: "The full track: all eleven classes, scheduled at your pace, with homework review between sessions.",
-    delivery: "Booking access to all 11 sessions + class materials and project files.",
+    delivery: "An order confirmation lands right away; Alex then reaches out to schedule all 11 sessions at your pace and share class materials + project files.",
     fulfillment: "booking",
   },
   {
@@ -96,18 +100,20 @@ export const storeItems: StoreItem[] = [
     slug: "skill-ue5-testflight",
     name: "ue5-testflight (Claude Code skill)",
     kind: "skill",
-    priceCents: 2900, // TODO(alex): match Capafy price
-    blurb: "The autonomous UE5 → TestFlight pipeline as an installable skill. Also on Capafy — buying here is the same product, zero marketplace cut.",
-    delivery: "Download link + install instructions delivered on the success page and by email.",
+    priceCents: 2900,
+    externalUrl: "https://capafy.ai/product/ue5-testflight",
+    blurb: "The autonomous UE5 → TestFlight pipeline as an installable skill.",
+    delivery: "Delivered instantly on Capafy — install straight into Claude Code after purchase.",
     fulfillment: "download-link",
   },
   {
     slug: "skill-ios-testflight",
     name: "ios-testflight (Claude Code skill)",
     kind: "skill",
-    priceCents: 2900, // TODO(alex): match Capafy price
+    priceCents: 2900,
+    externalUrl: "https://capafy.ai/product/ios-testflight",
     blurb: "Archive + upload iOS/visionOS/macOS Xcode projects to TestFlight via CLI, with every signing gotcha documented.",
-    delivery: "Download link + install instructions delivered on the success page and by email.",
+    delivery: "Delivered instantly on Capafy — install straight into Claude Code after purchase.",
     fulfillment: "download-link",
   },
   {
