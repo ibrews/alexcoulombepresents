@@ -2,18 +2,19 @@
 //
 // A voucher purchase (lib/store.ts slug "class-voucher") is fulfilled by
 // minting a UNIQUE one-time Stripe promotion code under the standing coupon
-// `class-voucher-199` ($199 off, duration=once — ≥ the price of any
-// open-enrollment class ($99 intro / $149 advanced), so those check out at
-// $0). The premium private 1:1 ($400) sets allowPromoCodes:false, so a
-// voucher can't be applied there at all. The code goes to the buyer in the
-// confirmation email; redemption is fully self-serve at checkout.
+// `class-voucher-250` ($250 off, duration=once — ≥ the price of any
+// open-enrollment class ($99 intro / $200 advanced), so those check out at
+// $0; Stripe caps the discount at the line total). The premium private 1:1
+// ($400) sets allowPromoCodes:false, so a voucher can't be applied there at
+// all. The code goes to the buyer in the confirmation email; redemption is
+// fully self-serve at checkout.
 //
 // The coupon itself was created once in live mode (2026-07-15):
-//   POST /v1/coupons id=class-voucher-199 amount_off=19900 duration=once
+//   POST /v1/coupons id=class-voucher-250 amount_off=25000 duration=once
 
 import crypto from "node:crypto";
 
-const COUPON_ID = "class-voucher-199";
+const COUPON_ID = "class-voucher-250";
 
 export async function createVoucherCode(input: {
   buyerEmail: string;

@@ -53,7 +53,7 @@ export const storeItems: StoreItem[] = [
     name: "Any-class voucher — founding batch",
     kind: "course",
     priceCents: 5000,
-    compareAt: ["Intro session $99", "Advanced session $149"],
+    compareAt: ["Intro session $99", "Advanced session $200"],
     priceNote:
       "Founding batch of 60 — when they're gone, they're gone. Good for any open-enrollment class (private 1:1s excluded). Newsletter subscribers get a promo code for extra off at checkout.",
     blurb:
@@ -64,12 +64,23 @@ export const storeItems: StoreItem[] = [
   },
   {
     slug: "ue-class-single",
-    name: "Unreal Engine class — single session",
+    name: "Unreal Engine class — intro session",
     kind: "course",
     priceCents: 9900,
     priceNote:
-      "Intro tracks $99 · advanced/specialized tracks $149. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
-    blurb: "One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal. Open enrollment, small group.",
+      "A core/foundational track. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    blurb: "One live two-hour session on a foundational Unreal track — the essentials, in a small open-enrollment group.",
+    delivery: "An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
+    fulfillment: "booking",
+  },
+  {
+    slug: "ue-class-advanced",
+    name: "Unreal Engine class — advanced session",
+    kind: "course",
+    priceCents: 20000,
+    priceNote:
+      "A specialized/advanced track. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    blurb: "One live two-hour session on an advanced or specialized track — Lumen/Nanite deep dives, virtual production, AI for Unreal, Vision Pro, or MetaHumans. Open enrollment, small group.",
     delivery: "An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
     fulfillment: "booking",
   },

@@ -1049,18 +1049,21 @@
 ## Store catalog  ·  `lib/store.ts`
 <sub>Prices are placeholders until the store goes live; edit names, blurbs, and delivery text here.</sub>
 
-### storeItems  (10 entries — add or remove whole entries)
+### storeItems  (11 entries — add or remove whole entries)
 
 - `[store.storeItems.class-voucher.name]` ▸ Any-class voucher — founding batch
 
   **list: compareAt** (2 items)
   - Intro session $99
-  - Advanced session $149
+  - Advanced session $200
 - `[store.storeItems.class-voucher.blurb]` ▸ One voucher = one seat in any open-enrollment class, intro or advanced, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.
 - `[store.storeItems.class-voucher.delivery]` ▸ A unique voucher code by email, instantly. Enter it at checkout for any open-enrollment class and it comes out to $0 — no expiration, transferable, zero back-and-forth.
-- `[store.storeItems.ue-class-single.name]` ▸ Unreal Engine class — single session
-- `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal. Open enrollment, small group.
+- `[store.storeItems.ue-class-single.name]` ▸ Unreal Engine class — intro session
+- `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session on a foundational Unreal track — the essentials, in a small open-enrollment group.
 - `[store.storeItems.ue-class-single.delivery]` ▸ An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.
+- `[store.storeItems.ue-class-advanced.name]` ▸ Unreal Engine class — advanced session
+- `[store.storeItems.ue-class-advanced.blurb]` ▸ One live two-hour session on an advanced or specialized track — Lumen/Nanite deep dives, virtual production, AI for Unreal, Vision Pro, or MetaHumans. Open enrollment, small group.
+- `[store.storeItems.ue-class-advanced.delivery]` ▸ An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.
 - `[store.storeItems.private-1on1.name]` ▸ Private 1:1 session
 - `[store.storeItems.private-1on1.blurb]` ▸ Two focused hours one-on-one, entirely on your agenda: your project, your pipeline, the exact thing you're stuck on. Live over video with screen share.
 - `[store.storeItems.private-1on1.delivery]` ▸ An order confirmation lands right away; reply with your availability and Alex books your session, usually same day.
