@@ -47,7 +47,7 @@ export const storeItems: StoreItem[] = [
     blurb:
       "One voucher = one seat in any single live class, at any level, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.",
     delivery:
-      "A personal voucher code by email. Reply with the class you want and you're booked — no expiration, transferable.",
+      "A unique voucher code by email, instantly. Enter it at checkout for any single class and it comes out to $0 — no expiration, transferable, zero back-and-forth.",
     fulfillment: "email-manual",
   },
   {

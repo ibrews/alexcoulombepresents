@@ -136,3 +136,37 @@ export async function sendOrderEmails(input: {
   });
   if (owner.error) console.error("owner fulfillment alert failed:", owner.error.message);
 }
+
+export async function sendVoucherEmail(input: {
+  email: string;
+  name?: string;
+  code: string;
+  amountCents: number;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const first = input.name?.split(" ")[0];
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    to: input.email,
+    replyTo: "info@alexcoulombepresents.com",
+    subject: `Your class voucher: ${input.code}`,
+    text: [
+      `${first ? `Hey ${first}` : "Hey"} — thanks! Here's your voucher:`,
+      "",
+      `    ${input.code}`,
+      "",
+      "How to use it: pick any class at",
+      "https://www.alexcoulombepresents.com/training (or /store), hit Buy, and",
+      "enter the code at checkout — any single class, any level, comes out to",
+      "$0. One use, never expires, and it's transferable: gift the code to",
+      "anyone by just sending it to them.",
+      "",
+      "Questions or want help picking a class? Just reply — it goes straight",
+      "to Alex.",
+      "",
+      "— Alex Coulombe Presents",
+      "https://www.alexcoulombepresents.com",
+    ].join("\n"),
+  });
+  if (error) throw new Error(`voucher email failed: ${error.message}`);
+}

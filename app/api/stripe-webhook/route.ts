@@ -3,6 +3,8 @@ import crypto from "node:crypto";
 import { fulfillDigitalPurchase, revokeEntitlementsForPaymentIntent } from "@/lib/commerce/entitlements";
 import { sendDonationNotification, sendFulfillmentEmail, sendOrderEmails } from "@/lib/commerce/email";
 import { storeItems } from "@/lib/store";
+import { createVoucherCode } from "@/lib/commerce/vouchers";
+import { sendVoucherEmail } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
 
 // Stripe webhook — fulfillment happens here.
@@ -84,6 +86,17 @@ export async function POST(req: NextRequest) {
         console.error("[fulfill] digital purchase failed", err);
         // Return 500 so Stripe retries — fulfillment must not silently drop.
         return NextResponse.json({ error: "Fulfillment failed" }, { status: 500 });
+      }
+    } else if (slug === "class-voucher" && email) {
+      // ── Voucher: mint a unique one-time promo code and deliver it. Fully
+      // self-serve — no manual fulfillment step. Failure → 500 so Stripe retries.
+      try {
+        const code = await createVoucherCode({ buyerEmail: email, stripeSessionId: session.id });
+        await sendVoucherEmail({ email, name, code, amountCents: session.amount_total ?? 0 });
+        console.log(`[fulfill] voucher ${code} → ${email}`);
+      } catch (err) {
+        console.error("[fulfill] voucher failed", err);
+        return NextResponse.json({ error: "Voucher fulfillment failed" }, { status: 500 });
       }
     } else if (slug && email) {
       // ── Manual-fulfillment catalog (lib/store.ts): confirm to the buyer,

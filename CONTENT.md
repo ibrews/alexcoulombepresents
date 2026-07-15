@@ -1058,7 +1058,7 @@
   - Advanced session $149
   - Private 1-on-1 $199
 - `[store.storeItems.class-voucher.blurb]` ▸ One voucher = one seat in any single live class, at any level, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.
-- `[store.storeItems.class-voucher.delivery]` ▸ A personal voucher code by email. Reply with the class you want and you're booked — no expiration, transferable.
+- `[store.storeItems.class-voucher.delivery]` ▸ A unique voucher code by email, instantly. Enter it at checkout for any single class and it comes out to $0 — no expiration, transferable, zero back-and-forth.
 - `[store.storeItems.ue-class-single.name]` ▸ Unreal Engine class — single session
 - `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.
 - `[store.storeItems.ue-class-single.delivery]` ▸ A booking link arrives by email after checkout; sessions run live over video with screen share.
