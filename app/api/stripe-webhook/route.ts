@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { fulfillDigitalPurchase, revokeEntitlementsForPaymentIntent } from "@/lib/commerce/entitlements";
-import { sendDonationNotification, sendFulfillmentEmail } from "@/lib/commerce/email";
+import { sendDonationNotification, sendFulfillmentEmail, sendOrderEmails } from "@/lib/commerce/email";
+import { storeItems } from "@/lib/store";
 import { issueMagicLink } from "@/lib/commerce/tokens";
 
 // Stripe webhook — fulfillment happens here.
@@ -84,20 +85,25 @@ export async function POST(req: NextRequest) {
         // Return 500 so Stripe retries — fulfillment must not silently drop.
         return NextResponse.json({ error: "Fulfillment failed" }, { status: 500 });
       }
-    } else {
-      // ── Manual-fulfillment catalog (lib/store.ts) — bones, unchanged ──
-      switch (fulfillment) {
-        case "download-link":
-          console.log(`[fulfill] download-link → ${email} for ${slug}`);
-          break;
-        case "github-invite":
-          console.log(`[fulfill] github-invite → ${email} for ${slug}`);
-          break;
-        case "booking":
-          console.log(`[fulfill] booking → ${email} for ${slug}`);
-          break;
-        default:
-          console.log(`[fulfill] manual → ${email} for ${slug}`);
+    } else if (slug && email) {
+      // ── Manual-fulfillment catalog (lib/store.ts): confirm to the buyer,
+      // alert Alex to fulfill. Failure → 500 so Stripe retries the event.
+      const item = storeItems.find((i) => i.slug === slug);
+      try {
+        await sendOrderEmails({
+          email,
+          name,
+          slug,
+          itemName: item?.name ?? slug,
+          itemDelivery:
+            item?.delivery ?? "Alex will follow up by email within a day to complete your order.",
+          amountCents: session.amount_total ?? 0,
+          sessionId: session.id,
+        });
+        console.log(`[fulfill] ${fulfillment ?? "manual"} confirmation sent → ${email} for ${slug}`);
+      } catch (err) {
+        console.error("[fulfill] order emails failed", err);
+        return NextResponse.json({ error: "Order email failed" }, { status: 500 });
       }
     }
   }
