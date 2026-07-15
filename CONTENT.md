@@ -291,7 +291,6 @@
 - `[store.13]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
 - `[store.14]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — email info@alexcoulombepresents.com or use the contact form .
 - `[store.15]` ▸ Buy →
-- `[store.16]` ▸ Inquire →
 
 ---
 
@@ -1083,7 +1082,9 @@
 - `[store.storeItems.pinchwork-template.name]` ▸ Pinchwork — OpenXR hand-tracking template
 - `[store.storeItems.pinchwork-template.blurb]` ▸ The universal OpenXR hand-tracking template for Unreal. Join the early-access list — launch pricing announced with the release.
 - `[store.storeItems.pinchwork-template.delivery]` ▸ Early access via GitHub invite when it ships.
-- `[store.storeItems.unrealitykit-early.name]` ▸ UnRealityKit Bridge — early collaborator access
-- `[store.storeItems.unrealitykit-early.blurb]` ▸ UE simulation + RealityKit rendering for visionOS. Private per Epic's UE source policy — access is an invite, not a checkout.
-- `[store.storeItems.unrealitykit-early.delivery]` ▸ GitHub collaborator invite after Epic-account verification.
+- `[store.storeItems.unrealitykit-early.name]` ▸ UnRealityKit Bridge — coming soon
+- `[store.storeItems.unrealitykit-early.blurb]` ▸ UE simulation + RealityKit rendering for visionOS. Still in the lab — not a product yet. Subscribe and you'll be the first to know the moment it's available.
+- `[store.storeItems.unrealitykit-early.delivery]` ▸ No purchase — just drop your email and you'll get the launch announcement before anyone else.
+- `[store.storeItems.unrealitykit-early.ctaLabel]` ▸ Notify me at launch →
+- `[store.storeItems.unrealitykit-early.list]` ▸ unrealitykit-bridge
 

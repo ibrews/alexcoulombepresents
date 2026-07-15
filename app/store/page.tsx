@@ -119,11 +119,15 @@ export default function Store() {
                   <BuyButton slug={item.slug} label="Buy →" itemName={item.name} />
                 ) : (
                   <InquireButton
-                    label="Inquire →"
-                    list="store"
+                    label={item.ctaLabel ?? "Inquire →"}
+                    list={item.list ?? "store"}
                     context={item.name}
-                    withMessage
-                    successMessage={`Alex will be in touch about ${item.name}.`}
+                    withMessage={!item.ctaLabel}
+                    successMessage={
+                      item.ctaLabel
+                        ? "You're on the list — you'll hear the moment it launches."
+                        : `Alex will be in touch about ${item.name}.`
+                    }
                   />
                 )}
               </div>

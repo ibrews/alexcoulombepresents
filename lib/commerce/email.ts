@@ -52,7 +52,7 @@ export async function sendFulfillmentEmail(input: {
       `Questions? Reply to this email or write info@alexcoulombepresents.com.`,
     ].join("\n");
   const { error } = await resend.emails.send({
-    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
     subject: `Your ${product?.name ?? input.sku} license + download`,
     text: __body,
@@ -75,7 +75,7 @@ export async function sendMagicLinkEmail(input: { email: string; magicLinkUrl: s
       "If you didn't request this, you can ignore this email.",
     ].join("\n");
   const { error } = await resend.emails.send({
-    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
     subject: "Your Alex Coulombe Presents account link",
     text: __body,
@@ -103,7 +103,7 @@ export async function sendDonationNotification(input: {
       input.comment?.trim() || "(none)",
     ].join("\n");
   const { error } = await resend.emails.send({
-    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: "info@alexcoulombepresents.com",
     subject: `Lab donation: $${dollars} from ${input.name ?? input.email ?? "someone"}`,
     text: __body,
@@ -144,7 +144,7 @@ export async function sendOrderEmails(input: {
       "https://www.alexcoulombepresents.com",
     ].join("\n");
   const buyer = await resend.emails.send({
-    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
     replyTo: "info@alexcoulombepresents.com",
     subject: `Order confirmed: ${input.itemName}`,
@@ -163,7 +163,7 @@ export async function sendOrderEmails(input: {
       "(voucher code / booking link / scheduling) by replying to them.",
     ].join("\n");
   const owner = await resend.emails.send({
-    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: "info@alexcoulombepresents.com",
     subject: `FULFILL: ${input.itemName} — $${dollars} from ${input.name ?? input.email}`,
     text: __ownerBody,
@@ -198,7 +198,7 @@ export async function sendVoucherEmail(input: {
       "https://www.alexcoulombepresents.com",
     ].join("\n");
   const { error } = await resend.emails.send({
-    from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
     replyTo: "info@alexcoulombepresents.com",
     subject: `Your class voucher: ${input.code}`,

@@ -32,6 +32,10 @@ export type StoreItem = {
   // checkout here. Set this for anything we can't reliably auto-deliver
   // ourselves yet — the card links out instead of taking money we can't honor.
   externalUrl?: string;
+  // For inquiry-only items (priceCents null): override the default "Inquire →"
+  // button label and the signup list the email lands on.
+  ctaLabel?: string;
+  list?: string;
   blurb: string;
   delivery: string; // what the buyer receives, in plain words
   fulfillment: "email-manual" | "github-invite" | "download-link" | "booking";
@@ -128,13 +132,15 @@ export const storeItems: StoreItem[] = [
   },
   {
     slug: "unrealitykit-early",
-    name: "UnRealityKit Bridge — early collaborator access",
+    name: "UnRealityKit Bridge — coming soon",
     kind: "repo-access",
     priceCents: null,
-    priceNote: "Epic-linked accounts only",
-    blurb: "UE simulation + RealityKit rendering for visionOS. Private per Epic's UE source policy — access is an invite, not a checkout.",
-    delivery: "GitHub collaborator invite after Epic-account verification.",
+    priceNote: "not released yet",
+    blurb: "UE simulation + RealityKit rendering for visionOS. Still in the lab — not a product yet. Subscribe and you'll be the first to know the moment it's available.",
+    delivery: "No purchase — just drop your email and you'll get the launch announcement before anyone else.",
     fulfillment: "github-invite",
+    ctaLabel: "Notify me at launch →",
+    list: "unrealitykit-bridge",
   },
 ];
 
