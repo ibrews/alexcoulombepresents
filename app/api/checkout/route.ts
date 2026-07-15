@@ -111,7 +111,8 @@ export async function POST(req: NextRequest) {
       "metadata[slug]": item.slug,
       "metadata[fulfillment]": item.fulfillment,
       "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup
-      allow_promotion_codes: "true", // promo codes created in the Stripe Dashboard (e.g. newsletter code)
+      // Promo codes (vouchers, NEWSLETTER20) — off for premium items (private 1:1).
+      allow_promotion_codes: String(item.allowPromoCodes !== false),
     });
   }
 

@@ -1049,19 +1049,21 @@
 ## Store catalog  ·  `lib/store.ts`
 <sub>Prices are placeholders until the store goes live; edit names, blurbs, and delivery text here.</sub>
 
-### storeItems  (9 entries — add or remove whole entries)
+### storeItems  (10 entries — add or remove whole entries)
 
 - `[store.storeItems.class-voucher.name]` ▸ Any-class voucher — founding batch
 
-  **list: compareAt** (3 items)
+  **list: compareAt** (2 items)
   - Intro session $99
   - Advanced session $149
-  - Private 1-on-1 $199
-- `[store.storeItems.class-voucher.blurb]` ▸ One voucher = one seat in any single live class, at any level, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.
-- `[store.storeItems.class-voucher.delivery]` ▸ A unique voucher code by email, instantly. Enter it at checkout for any single class and it comes out to $0 — no expiration, transferable, zero back-and-forth.
+- `[store.storeItems.class-voucher.blurb]` ▸ One voucher = one seat in any open-enrollment class, intro or advanced, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.
+- `[store.storeItems.class-voucher.delivery]` ▸ A unique voucher code by email, instantly. Enter it at checkout for any open-enrollment class and it comes out to $0 — no expiration, transferable, zero back-and-forth.
 - `[store.storeItems.ue-class-single.name]` ▸ Unreal Engine class — single session
-- `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.
+- `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal. Open enrollment, small group.
 - `[store.storeItems.ue-class-single.delivery]` ▸ An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.
+- `[store.storeItems.private-1on1.name]` ▸ Private 1:1 session
+- `[store.storeItems.private-1on1.blurb]` ▸ Two focused hours one-on-one, entirely on your agenda: your project, your pipeline, the exact thing you're stuck on. Live over video with screen share.
+- `[store.storeItems.private-1on1.delivery]` ▸ An order confirmation lands right away; reply with your availability and Alex books your session, usually same day.
 - `[store.storeItems.unreal-foundations-cohort.name]` ▸ Unreal Foundations — August cohort
 - `[store.storeItems.unreal-foundations-cohort.blurb]` ▸ Zero to Environment in four live Wednesday classes starting Aug 5: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Every class runs twice (10a & 12:30p ET) plus Thursday office hours, and recordings are included.
 - `[store.storeItems.unreal-foundations-cohort.delivery]` ▸ You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class on Aug 5 (recordings after each).

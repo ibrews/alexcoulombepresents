@@ -36,6 +36,10 @@ export type StoreItem = {
   // button label and the signup list the email lands on.
   ctaLabel?: string;
   list?: string;
+  // Whether Stripe Checkout accepts promo codes (vouchers, NEWSLETTER20) for
+  // this item. Defaults to true; set false on premium items (e.g. the private
+  // 1:1) that shouldn't be discountable and aren't voucher-eligible.
+  allowPromoCodes?: boolean;
   blurb: string;
   delivery: string; // what the buyer receives, in plain words
   fulfillment: "email-manual" | "github-invite" | "download-link" | "booking";
@@ -49,13 +53,13 @@ export const storeItems: StoreItem[] = [
     name: "Any-class voucher — founding batch",
     kind: "course",
     priceCents: 5000,
-    compareAt: ["Intro session $99", "Advanced session $149", "Private 1-on-1 $199"],
+    compareAt: ["Intro session $99", "Advanced session $149"],
     priceNote:
-      "Founding batch of 60 — when they're gone, they're gone. Newsletter subscribers get a promo code for extra off at checkout.",
+      "Founding batch of 60 — when they're gone, they're gone. Good for any open-enrollment class (private 1:1s excluded). Newsletter subscribers get a promo code for extra off at checkout.",
     blurb:
-      "One voucher = one seat in any single live class, at any level, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.",
+      "One voucher = one seat in any open-enrollment class, intro or advanced, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.",
     delivery:
-      "A unique voucher code by email, instantly. Enter it at checkout for any single class and it comes out to $0 — no expiration, transferable, zero back-and-forth.",
+      "A unique voucher code by email, instantly. Enter it at checkout for any open-enrollment class and it comes out to $0 — no expiration, transferable, zero back-and-forth.",
     fulfillment: "email-manual",
   },
   {
@@ -64,10 +68,23 @@ export const storeItems: StoreItem[] = [
     kind: "course",
     priceCents: 9900,
     priceNote:
-      "Intro tracks $99 · advanced/specialized tracks $149 · private 1-on-1 $199. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
-    blurb: "One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.",
+      "Intro tracks $99 · advanced/specialized tracks $149. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    blurb: "One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal. Open enrollment, small group.",
     delivery: "An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
     fulfillment: "booking",
+  },
+  {
+    slug: "private-1on1",
+    name: "Private 1:1 session",
+    kind: "course",
+    priceCents: 40000,
+    priceNote:
+      "Two hours, just you and Alex — no group. Vouchers and promo codes don't apply to private sessions.",
+    blurb:
+      "Two focused hours one-on-one, entirely on your agenda: your project, your pipeline, the exact thing you're stuck on. Live over video with screen share.",
+    delivery: "An order confirmation lands right away; reply with your availability and Alex books your session, usually same day.",
+    fulfillment: "booking",
+    allowPromoCodes: false,
   },
   {
     slug: "unreal-foundations-cohort",

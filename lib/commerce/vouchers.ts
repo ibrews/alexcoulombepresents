@@ -2,10 +2,11 @@
 //
 // A voucher purchase (lib/store.ts slug "class-voucher") is fulfilled by
 // minting a UNIQUE one-time Stripe promotion code under the standing coupon
-// `class-voucher-199` ($199 off, duration=once — ≥ the price of any single
-// class, so any class checks out at $0; applied to a bundle it's just $199
-// off). The code goes to the buyer in the confirmation email; redemption is
-// fully self-serve at checkout with zero human involvement.
+// `class-voucher-199` ($199 off, duration=once — ≥ the price of any
+// open-enrollment class ($99 intro / $149 advanced), so those check out at
+// $0). The premium private 1:1 ($400) sets allowPromoCodes:false, so a
+// voucher can't be applied there at all. The code goes to the buyer in the
+// confirmation email; redemption is fully self-serve at checkout.
 //
 // The coupon itself was created once in live mode (2026-07-15):
 //   POST /v1/coupons id=class-voucher-199 amount_off=19900 duration=once

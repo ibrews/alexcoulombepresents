@@ -96,7 +96,7 @@ export default function Store() {
                     {formatPrice(item.priceCents)}
                     {item.compareAt && (
                       <span className="ml-2 font-mono text-xs font-normal text-amber">
-                        any class, any level
+                        any group class
                       </span>
                     )}
                   </p>
