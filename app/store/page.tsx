@@ -81,14 +81,42 @@ export default function Store() {
               <p className="mt-3 text-xs leading-relaxed text-mist">
                 <span className="text-snow">You get:</span> {renderBreaks(item.delivery)}
               </p>
+              {item.priceCents !== null && (
+                <div className="mt-4">
+                  {item.compareAt && (
+                    <p className="font-mono text-xs text-mist">
+                      {item.compareAt.map((c) => (
+                        <span key={c} className="mr-3 line-through decoration-amber/70">
+                          {c}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                  <p className="mt-1 text-lg font-bold text-snow">
+                    {formatPrice(item.priceCents)}
+                    {item.compareAt && (
+                      <span className="ml-2 font-mono text-xs font-normal text-amber">
+                        any class, any level
+                      </span>
+                    )}
+                  </p>
+                  {item.priceNote && (
+                    <p className="mt-1 text-xs leading-relaxed text-mist">{item.priceNote}</p>
+                  )}
+                </div>
+              )}
               <div className="mt-5">
-                <InquireButton
-                  label="Inquire →"
-                  list="store"
-                  context={item.name}
-                  withMessage
-                  successMessage={`Alex will be in touch about ${item.name}.`}
-                />
+                {item.priceCents !== null ? (
+                  <BuyButton slug={item.slug} label="Buy →" itemName={item.name} />
+                ) : (
+                  <InquireButton
+                    label="Inquire →"
+                    list="store"
+                    context={item.name}
+                    withMessage
+                    successMessage={`Alex will be in touch about ${item.name}.`}
+                  />
+                )}
               </div>
             </div>
           </Reveal>

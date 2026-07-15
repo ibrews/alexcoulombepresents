@@ -27,6 +27,7 @@ export type StoreItem = {
   kind: "course" | "course-bundle" | "skill" | "template" | "repo-access";
   priceCents: number | null; // null = inquiry-only (no checkout button)
   priceNote?: string;
+  compareAt?: string[]; // crossed-off reference prices, e.g. "Intro class $99"
   blurb: string;
   delivery: string; // what the buyer receives, in plain words
   fulfillment: "email-manual" | "github-invite" | "download-link" | "booking";
@@ -36,11 +37,26 @@ export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
 
 export const storeItems: StoreItem[] = [
   {
+    slug: "class-voucher",
+    name: "Any-class voucher — founding batch",
+    kind: "course",
+    priceCents: 5000,
+    compareAt: ["Intro session $99", "Advanced session $149", "Private 1-on-1 $199"],
+    priceNote:
+      "Founding batch of 60 — when they're gone, they're gone. Newsletter subscribers get a promo code for extra off at checkout.",
+    blurb:
+      "One voucher = one seat in any single live class, at any level, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.",
+    delivery:
+      "A personal voucher code by email. Reply with the class you want and you're booked — no expiration, transferable.",
+    fulfillment: "email-manual",
+  },
+  {
     slug: "ue-class-single",
     name: "Unreal Engine class — single session",
     kind: "course",
     priceCents: 9900,
-    priceNote: "Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    priceNote:
+      "Intro tracks $99 · advanced/specialized tracks $149 · private 1-on-1 $199. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     blurb: "One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.",
     delivery: "A booking link arrives by email after checkout; sessions run live over video with screen share.",
     fulfillment: "booking",

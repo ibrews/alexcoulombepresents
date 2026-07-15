@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
       "metadata[sku]": product.sku,
       "metadata[kind]": "digital",
       "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup (see business plan §2.8)
+      allow_promotion_codes: "true", // promo codes created in the Stripe Dashboard (e.g. newsletter code)
     });
   } else {
     if (!STORE_LIVE) {
@@ -81,6 +82,7 @@ export async function POST(req: NextRequest) {
       "metadata[slug]": item.slug,
       "metadata[fulfillment]": item.fulfillment,
       "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup
+      allow_promotion_codes: "true", // promo codes created in the Stripe Dashboard (e.g. newsletter code)
     });
   }
 

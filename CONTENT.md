@@ -289,8 +289,8 @@
 - `[store.11]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
 - `[store.12]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
 - `[store.13]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — email info@alexcoulombepresents.com or use the contact form .
-- `[store.14]` ▸ Inquire →
-- `[store.15]` ▸ Buy →
+- `[store.14]` ▸ Buy →
+- `[store.15]` ▸ Inquire →
 
 ---
 
@@ -1049,8 +1049,16 @@
 ## Store catalog  ·  `lib/store.ts`
 <sub>Prices are placeholders until the store goes live; edit names, blurbs, and delivery text here.</sub>
 
-### storeItems  (8 entries — add or remove whole entries)
+### storeItems  (9 entries — add or remove whole entries)
 
+- `[store.storeItems.class-voucher.name]` ▸ Any-class voucher — founding batch
+
+  **list: compareAt** (3 items)
+  - Intro session $99
+  - Advanced session $149
+  - Private 1-on-1 $199
+- `[store.storeItems.class-voucher.blurb]` ▸ One voucher = one seat in any single live class, at any level, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.
+- `[store.storeItems.class-voucher.delivery]` ▸ A personal voucher code by email. Reply with the class you want and you're booked — no expiration, transferable.
 - `[store.storeItems.ue-class-single.name]` ▸ Unreal Engine class — single session
 - `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session from the curriculum — pick any track, from Intro to AI for Unreal.
 - `[store.storeItems.ue-class-single.delivery]` ▸ A booking link arrives by email after checkout; sessions run live over video with screen share.
