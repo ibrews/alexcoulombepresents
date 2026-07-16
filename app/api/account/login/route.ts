@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensureCommerceSchema, sql } from "@/lib/commerce/schema";
 import { issueMagicLink } from "@/lib/commerce/tokens";
 import { sendMagicLinkEmail } from "@/lib/commerce/email";
+import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 
 // Requests a fresh magic link for an existing customer. Always responds
 // with the same generic message regardless of whether the email exists —
@@ -15,6 +16,14 @@ export async function POST(req: NextRequest) {
   }
   if (!email || typeof email !== "string") {
     return NextResponse.json({ error: "Email is required" }, { status: 400 });
+  }
+
+  // Throttle per-IP AND per-target-email — the email key stops a scripted
+  // loop from flooding a stranger's inbox with sign-in links.
+  const perIp = rateLimitAllows(`login:ip:${clientIp(req)}`, 5, 300);
+  const perEmail = rateLimitAllows(`login:email:${email.toLowerCase()}`, 3, 600);
+  if (!(await perIp) || !(await perEmail)) {
+    return NextResponse.json({ error: RATE_LIMITED_MESSAGE }, { status: 429 });
   }
 
   await ensureCommerceSchema();

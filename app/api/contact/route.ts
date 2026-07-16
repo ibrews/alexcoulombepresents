@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  if (!(await rateLimitAllows(`contact:${clientIp(req)}`, 5, 60))) {
+    return NextResponse.json({ error: RATE_LIMITED_MESSAGE }, { status: 429 });
+  }
   const resend = new Resend(process.env.RESEND_API_KEY);
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "Bad request." }, { status: 400 });

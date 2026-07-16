@@ -54,6 +54,13 @@ export async function redeemMagicLink(token: string): Promise<string | null> {
   return sessionToken;
 }
 
+// Logout: kill the session row so a stolen/stale cookie can't be replayed.
+export async function destroySession(sessionToken: string | undefined): Promise<void> {
+  if (!sessionToken) return;
+  await ensureCommerceSchema();
+  await sql()`DELETE FROM sessions WHERE token_hash = ${hash(sessionToken)}`;
+}
+
 export async function customerFromSession(sessionToken: string | undefined): Promise<number | null> {
   if (!sessionToken) return null;
   await ensureCommerceSchema();

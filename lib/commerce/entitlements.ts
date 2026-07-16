@@ -77,6 +77,42 @@ export async function fulfillDigitalPurchase(input: {
   return { alreadyProcessed: false, licenseKey, customerId };
 }
 
+// Idempotency for NON-digital fulfillment (vouchers, manual-catalog orders),
+// mirroring the dedupe keys used by fulfillDigitalPurchase. Two halves so the
+// webhook can order things safely: check BEFORE doing work, record only AFTER
+// the work succeeded. A retry after a mid-flight failure therefore re-runs
+// the (idempotent) work instead of skipping it forever.
+export async function checkoutSessionProcessed(
+  stripeEventId: string,
+  stripeSessionId: string
+): Promise<boolean> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT id FROM orders
+    WHERE stripe_event_id = ${stripeEventId} OR stripe_session_id = ${stripeSessionId}
+    LIMIT 1
+  `) as { id: number }[];
+  return rows.length > 0;
+}
+
+export async function recordCheckoutSession(input: {
+  stripeEventId: string;
+  stripeSessionId: string;
+  stripePaymentIntentId?: string | null;
+  sku: string;
+  email: string;
+  name?: string | null;
+  amountCents: number;
+}): Promise<void> {
+  await ensureCommerceSchema();
+  const customerId = await findOrCreateCustomer(input.email, input.name);
+  await sql()`
+    INSERT INTO orders (brand, customer_id, sku, stripe_session_id, stripe_payment_intent_id, stripe_event_id, amount_cents, status)
+    VALUES ('acp', ${customerId}, ${input.sku}, ${input.stripeSessionId}, ${input.stripePaymentIntentId ?? null}, ${input.stripeEventId}, ${input.amountCents}, 'paid')
+    ON CONFLICT (stripe_session_id) DO NOTHING
+  `;
+}
+
 // Revokes every entitlement tied to a Stripe checkout session (refund path).
 // Download tokens are presigned on-demand, so revocation alone kills future
 // downloads; already-downloaded offline copies are out of scope per the

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { fulfillDigitalPurchase, revokeEntitlementsForPaymentIntent } from "@/lib/commerce/entitlements";
+import {
+  checkoutSessionProcessed,
+  recordCheckoutSession,
+  fulfillDigitalPurchase,
+  revokeEntitlementsForPaymentIntent,
+} from "@/lib/commerce/entitlements";
 import { sendDonationNotification, sendFulfillmentEmail, sendOrderEmails } from "@/lib/commerce/email";
 import { storeItems } from "@/lib/store";
 import { createVoucherCode } from "@/lib/commerce/vouchers";
@@ -88,11 +93,28 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Fulfillment failed" }, { status: 500 });
       }
     } else if (slug === "class-voucher" && email) {
-      // ── Voucher: mint a unique one-time promo code and deliver it. Fully
-      // self-serve — no manual fulfillment step. Failure → 500 so Stripe retries.
+      // ── Voucher: mint a one-time promo code and deliver it. Fully
+      // self-serve — no manual fulfillment step. Idempotent against webhook
+      // retries and dashboard resends: skip if already recorded; the code is
+      // derived from the session id (re-creating it is a tolerated no-op);
+      // the order is recorded LAST, after delivery succeeded, so a mid-flight
+      // failure → 500 → retry re-runs delivery with the SAME code instead of
+      // minting a second $250 voucher or dropping the email.
       try {
+        if (await checkoutSessionProcessed(event.id, session.id)) {
+          return NextResponse.json({ received: true, deduped: true });
+        }
         const code = await createVoucherCode({ buyerEmail: email, stripeSessionId: session.id });
         await sendVoucherEmail({ email, name, code, amountCents: session.amount_total ?? 0 });
+        await recordCheckoutSession({
+          stripeEventId: event.id,
+          stripeSessionId: session.id,
+          stripePaymentIntentId: session.payment_intent ?? null,
+          sku: slug,
+          email,
+          name,
+          amountCents: session.amount_total ?? 0,
+        });
         console.log(`[fulfill] voucher ${code} → ${email}`);
       } catch (err) {
         console.error("[fulfill] voucher failed", err);
@@ -100,9 +122,13 @@ export async function POST(req: NextRequest) {
       }
     } else if (slug && email) {
       // ── Manual-fulfillment catalog (lib/store.ts): confirm to the buyer,
-      // alert Alex to fulfill. Failure → 500 so Stripe retries the event.
+      // alert Alex to fulfill. Same idempotency shape as vouchers: check
+      // first, record after the emails actually sent.
       const item = storeItems.find((i) => i.slug === slug);
       try {
+        if (await checkoutSessionProcessed(event.id, session.id)) {
+          return NextResponse.json({ received: true, deduped: true });
+        }
         await sendOrderEmails({
           email,
           name,
@@ -112,6 +138,15 @@ export async function POST(req: NextRequest) {
             item?.delivery ?? "Alex will follow up by email within a day to complete your order.",
           amountCents: session.amount_total ?? 0,
           sessionId: session.id,
+        });
+        await recordCheckoutSession({
+          stripeEventId: event.id,
+          stripeSessionId: session.id,
+          stripePaymentIntentId: session.payment_intent ?? null,
+          sku: slug,
+          email,
+          name,
+          amountCents: session.amount_total ?? 0,
         });
         console.log(`[fulfill] ${fulfillment ?? "manual"} confirmation sent → ${email} for ${slug}`);
       } catch (err) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { storeItems, STORE_LIVE } from "@/lib/store";
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
+import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 
 // Creates a Stripe Checkout Session for a catalog item.
 // Talks to the Stripe REST API directly (form-encoded) — no SDK dependency.
@@ -19,6 +20,9 @@ import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 // { sku } (automated license+download catalog, lib/commerce/products.ts).
 
 export async function POST(req: NextRequest) {
+  if (!(await rateLimitAllows(`checkout:${clientIp(req)}`, 10, 60))) {
+    return NextResponse.json({ error: RATE_LIMITED_MESSAGE }, { status: 429 });
+  }
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) {
     return NextResponse.json(

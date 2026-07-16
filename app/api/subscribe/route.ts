@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { LISTS, isListSlug, RESEND_AUDIENCE_BY_LIST } from "@/lib/lists";
 import { recordSignup } from "@/lib/db";
+import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    if (!(await rateLimitAllows(`subscribe:${clientIp(req)}`, 10, 60))) {
+      return NextResponse.json({ error: RATE_LIMITED_MESSAGE }, { status: 429 });
+    }
     const body = await req.json().catch(() => null);
     if (!body) return NextResponse.json({ error: "Bad request." }, { status: 400 });
 
