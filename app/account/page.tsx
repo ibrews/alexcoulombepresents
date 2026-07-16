@@ -28,8 +28,20 @@ export default async function Account() {
 
   return (
     <div className="mx-auto max-w-3xl px-5 pb-24 pt-32">
-      <p className="font-mono text-sm text-teal">/account</p>
-      <h1 className="mt-3 text-4xl font-bold tracking-tight">Your purchases</h1>
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="font-mono text-sm text-teal">/account</p>
+          <h1 className="mt-3 text-4xl font-bold tracking-tight">Your purchases</h1>
+        </div>
+        <form action="/api/account/logout" method="post">
+          <button
+            type="submit"
+            className="rounded-full border border-line px-4 py-2 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+          >
+            Sign out
+          </button>
+        </form>
+      </div>
 
       {entitlements.length === 0 && (
         <p className="mt-8 text-mist">Nothing here yet. Purchases appear within a minute of checkout.</p>

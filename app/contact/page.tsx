@@ -29,12 +29,26 @@ export default function Contact() {
             <div className="mt-8 space-y-5 text-sm leading-relaxed text-mist">
               <p>
                 <span className="text-snow">Training and workshops.</span> One session or a full
-                curriculum — live, on Zoom or on-site, using your own project.
+                curriculum — live, on Zoom or on-site, using your own project. Booking for a
+                company or studio?{" "}
+                <a href="/training#teams" className="text-teal hover:underline">
+                  Team training has its own fast lane
+                </a>
+                .
               </p>
               <p>
                 <span className="text-snow">Collaboration and consulting.</span> Engine-level
-                fixes, spatial computing pipelines, AI agent systems. Especially interested in
-                weird problems at the edge of what the documentation covers.
+                fixes, spatial computing pipelines, AI agent systems — delivered through{" "}
+                <a
+                  href="https://agilelens.com/portfolio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-teal hover:underline"
+                >
+                  Agile Lens
+                </a>{" "}
+                (browse a decade of client work there). Especially interested in weird problems at
+                the edge of what the documentation covers.
               </p>
               <p>
                 <span className="text-snow">Speaking and events.</span> SIGGRAPH, HarvardXR,

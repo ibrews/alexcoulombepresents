@@ -6,6 +6,7 @@ import PowerUpIntro from "@/components/hxr/PowerUpIntro";
 import { AgileLensOrbit, ToolJourneyBurst } from "@/components/hxr/SpriteAnimations";
 import CounterStat from "@/components/CounterStat";
 import AvatarCorner from "@/components/hxr/AvatarCorner";
+import CtaRow from "@/components/CtaRow";
 import { timeline } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -221,6 +222,11 @@ export default function About() {
           </div>
         </div>
       </Reveal>
+
+      <CtaRow
+        heading="So that's the road so far. Walk some of it together?"
+        sub="Learn from the person behind all of the above, hire the studio that shipped it, or just stay posted."
+      />
     </div>
   );
 }

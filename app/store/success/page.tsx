@@ -3,6 +3,7 @@ import Link from "next/link";
 import { storeItems } from "@/lib/store";
 import { findDigitalProduct } from "@/lib/commerce/products";
 import { renderBreaks } from "@/components/Lines";
+import WaitlistForm from "@/components/WaitlistForm";
 
 export const metadata: Metadata = { title: "Thank you!" };
 
@@ -55,12 +56,36 @@ export default async function Success({
           </>
         )}
       </p>
-      <Link
-        href="/"
-        className="mt-8 rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
-      >
-        Back to the site →
-      </Link>
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <Link
+          href="/"
+          className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+        >
+          Back to the site →
+        </Link>
+        <Link
+          href="/account"
+          className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
+        >
+          Your account →
+        </Link>
+      </div>
+
+      {/* A buyer is the warmest possible lead — offer the newsletter here. */}
+      <div className="mt-12 w-full max-w-md">
+        <p className="text-sm text-mist">
+          Want to hear when new classes, tools, and member perks drop?
+        </p>
+        <div className="mt-4">
+          <WaitlistForm
+            list="newsletter"
+            cta="Join the newsletter →"
+            successTitle="You're in."
+            successMessage="New classes and launches, straight to your inbox."
+            compact
+          />
+        </div>
+      </div>
     </div>
   );
 }

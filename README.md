@@ -13,7 +13,9 @@ with no configuration.
 |---|---|
 | `/` | Hero with an interactive particle constellation, rotating-role typewriter, featured repos with live GitHub star counts |
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
-| `/training` | The Unreal Authorized Training Center: 11 course tracks (including the new AI for Unreal class), formats, booking |
+| `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
+| `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`), currently gated behind a "coming soon" banner with a founding waitlist; no price shown, nothing buyable until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` **and** a Stripe subscription path is added |
+| `/account` | Magic-link sign-in, purchases/downloads, and sign-out (linked from footer + store success page) |
 | `/repos` | Curated open-source catalog by category — each repo gets its own beautifully formatted page linking to its living GitHub wiki |
 | `/repos/[slug]` | Per-repo deep dive: story, highlights, clone command, live stars |
 | `/skills` | AI skills for Claude Code — live on Capafy (ue5-testflight, ios-testflight), in the pipeline (godot-visionos, spatial-deck-maker, app-store-aso, metahuman-godot-pipeline), and free open source |
@@ -24,7 +26,7 @@ with no configuration.
 | `/lab/pinchwork` | Pinchwork — universal OpenXR hand tracking template |
 | `/lab/unreal-visionos` | The Unreal × visionOS engine-improvement punch list |
 | `/links` | Agile Lens, socials, podcast — and alexcoulombe.com, lovingly preserved in 2013 amber |
-| `/store` | Direct sales (courses, skills, templates) — Stripe Checkout, no marketplace cut. Ships in preview mode (mailto fallback) until `NEXT_PUBLIC_STORE_LIVE=1` |
+| `/store` | Direct sales (courses, skills, templates) — Stripe Checkout, no marketplace cut. Rule of thumb: anything ready-to-deliver has a price + instant checkout; anything in-progress collects an email instead. Ships in preview mode (inquiry fallback) until `NEXT_PUBLIC_STORE_LIVE=1` |
 | `/newsletter` | Archive of every newsletter issue (markdown files in `content/newsletters/`) + subscribe form |
 | `/support` | "Support the Lab" donations — Stripe Checkout with preset/custom amounts and an optional comment/request field |
 

@@ -575,6 +575,9 @@ export type Product = {
   accent: string; // tailwind-friendly hue token
   video?: string; // primary / featured YouTube id
   videos?: { id: string; title: string }[]; // additional updates, newest first
+  // Internal Agile Lens tooling with no public release planned — shown for
+  // transparency but WITHOUT a waitlist CTA (nothing to wait for).
+  internal?: boolean;
 };
 
 export const products: Product[] = [
@@ -863,6 +866,7 @@ export const products: Product[] = [
   {
     slug: "agilelensmultiplayer",
     name: "AgileLensMultiplayer",
+    internal: true,
     status: "Private SDK — powers every Agile Lens Vision Pro multiplayer app",
     tagline: "The shared SharePlay engine every Agile Lens Vision Pro multiplayer app runs on.",
     pitch:
@@ -898,6 +902,7 @@ export const products: Product[] = [
   {
     slug: "missioncontrol",
     name: "Mission Control",
+    internal: true,
     status: "Private — Agile Lens' internal SharePlay diagnostics tool",
     tagline: "A live radar for SharePlay sessions — watch every player, in every app, without joining the call.",
     pitch:
@@ -986,19 +991,148 @@ export const roles: string[] = [
 
 // ── Training ────────────────────────────────────────────────────────────────
 
-export const courses: { name: string; blurb: string; isNew?: boolean }[] = [
-  { name: "AI for Unreal Engine", blurb: "MCP servers, AI build agents, and LLM-assisted workflows inside the editor. The new frontier.", isNew: true },
-  { name: "Intro to Unreal", blurb: "The editor, the content browser, and the mental model that makes everything else click." },
-  { name: "Blueprints & C++", blurb: "Visual scripting done right, when to drop to C++, and how the two layers talk." },
-  { name: "Sequencer", blurb: "Cinematics, cutscenes, and choreographed sequences — Unreal as a film tool." },
-  { name: "Multiplayer", blurb: "Replication, network prediction, and the architecture decisions you can't undo later." },
-  { name: "VR & AR (incl. Apple Vision Pro)", blurb: "From Quest to Vision Pro — comfort, performance budgets, and platform realities." },
-  { name: "ArchViz", blurb: "Photoreal architectural visualization — the discipline Agile Lens built nine-figure sales on." },
-  { name: "Pixel Streaming", blurb: "Unreal in the browser: GPU servers, signalling, and shipping interactive experiences as URLs." },
-  { name: "MetaHumans", blurb: "Creation, animation, mocap pipelines, and real-time digital humans that hold up close." },
-  { name: "Virtual Production", blurb: "Live events, LED volumes, and broadcast — where game engines meet showtime." },
-  { name: "Final Output", blurb: "Packaging, optimization, and delivery for every target — the last mile most courses skip." },
-  { name: "Unity to Unreal", blurb: "For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors." },
+// tier maps each track to its open-enrollment price in the store:
+// "intro" → the $99 intro session SKU, "advanced" → the $200 advanced SKU.
+export type CourseTier = "intro" | "advanced";
+export const courses: { name: string; blurb: string; tier: CourseTier; isNew?: boolean }[] = [
+  { name: "AI for Unreal Engine", blurb: "MCP servers, AI build agents, and LLM-assisted workflows inside the editor. The new frontier.", tier: "advanced", isNew: true },
+  { name: "Intro to Unreal", blurb: "The editor, the content browser, and the mental model that makes everything else click.", tier: "intro" },
+  { name: "Blueprints & C++", blurb: "Visual scripting done right, when to drop to C++, and how the two layers talk.", tier: "intro" },
+  { name: "Sequencer", blurb: "Cinematics, cutscenes, and choreographed sequences — Unreal as a film tool.", tier: "intro" },
+  { name: "Multiplayer", blurb: "Replication, network prediction, and the architecture decisions you can't undo later.", tier: "advanced" },
+  { name: "VR & AR (incl. Apple Vision Pro)", blurb: "From Quest to Vision Pro — comfort, performance budgets, and platform realities.", tier: "advanced" },
+  { name: "ArchViz", blurb: "Photoreal architectural visualization — the discipline Agile Lens built nine-figure sales on.", tier: "advanced" },
+  { name: "Pixel Streaming", blurb: "Unreal in the browser: GPU servers, signalling, and shipping interactive experiences as URLs.", tier: "advanced" },
+  { name: "MetaHumans", blurb: "Creation, animation, mocap pipelines, and real-time digital humans that hold up close.", tier: "advanced" },
+  { name: "Virtual Production", blurb: "Live events, LED volumes, and broadcast — where game engines meet showtime.", tier: "advanced" },
+  { name: "Final Output", blurb: "Packaging, optimization, and delivery for every target — the last mile most courses skip.", tier: "intro" },
+  { name: "Unity to Unreal", blurb: "For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors.", tier: "intro" },
+];
+
+// ── Ready-to-teach catalog ───────────────────────────────────────────────────
+// Every class below has been taught live — most of them many times over — as
+// 2-hour instructor-led sessions, primarily on behalf of Epic Games to their
+// key partner studios and enterprise teams, plus direct client curricula.
+// This is the menu team-training bundles are assembled from.
+
+export const taughtCatalog: { category: string; classes: string[] }[] = [
+  {
+    category: "Fundamentals",
+    classes: [
+      "Introduction to Unreal Engine 5",
+      "Quickstart: Your First Project in Unreal",
+      "Unreal Gameplay Framework",
+      "Transitioning from Unity to Unreal Engine",
+      "Transitioning from Legacy Production to Unreal",
+      "Source Control & Collaboration",
+    ],
+  },
+  {
+    category: "Materials",
+    classes: [
+      "Materials — Introduction",
+      "Materials — Masking & Material Functions",
+      "Materials — Translucent, Displacement & VFX",
+      "Materials — Layered, Subsurface & MPCs",
+      "Materials for Architecture — Intermediate Techniques",
+    ],
+  },
+  {
+    category: "Lighting",
+    classes: [
+      "Lighting — Introduction",
+      "Lighting — Cinematic Fundamentals",
+      "Lighting — Atmospheric Lighting",
+      "Lighting — Ray Tracing & Path Tracer",
+      "Lumen & Nanite Deep Dive",
+    ],
+  },
+  {
+    category: "Data & Ingestion",
+    classes: [
+      "FBX Data Ingestion",
+      "Datasmith Ingestion",
+      "Data Ingestion for Broadcast & Legacy Pipelines",
+      "AEC Collaborative Reviews",
+    ],
+  },
+  {
+    category: "Blueprint & Code",
+    classes: [
+      "Blueprint — Introduction",
+      "Blueprint — Tool Creation",
+      "Blueprint by Example for AEC",
+      "Quickstart: Blueprint for Virtual Production",
+      "Python Integration & Editor Automation",
+      "Behavior Trees & State Machines",
+      "Pawn Customization",
+    ],
+  },
+  {
+    category: "Cinematics & Sequencer",
+    classes: [
+      "Sequencer — Introduction",
+      "Quickstart: Sequencer Shot Creation for Virtual Production",
+      "Sequencer — Live Link, vCam & Shot Editing",
+      "Post Process & Rendering",
+      "Final Output — Rendering Tools & Techniques (Movie Render Queue)",
+    ],
+  },
+  {
+    category: "Animation & MetaHumans",
+    classes: [
+      "Animation — Introduction",
+      "Animation — Alembic Importing & Live Link",
+      "Animation — Animation Blueprints & Take Recorder",
+      "Sequencer — Performance Capture with Take Recorder",
+      "MetaHumans for Architecture",
+      "MetaHuman — Head Stylization Workflows",
+    ],
+  },
+  {
+    category: "XR — VR, AR & Vision Pro",
+    classes: [
+      "Introduction to Virtual Reality",
+      "VR for Standalone Devices (Quest & friends)",
+      "VR for Desktop Devices",
+      "VR — Advanced Techniques & Optimization (OpenXR, hand tracking, passthrough)",
+      "Introduction to Augmented Reality",
+      "Introduction to OpenXR",
+      "Apple Vision Pro — Unreal Quickstart",
+      "Mac to Unreal — Packaging for macOS, iOS, Android & visionOS",
+    ],
+  },
+  {
+    category: "Virtual Production & Broadcast",
+    classes: [
+      "Remote Control & Pixel Streaming",
+      "OSC Protocol Implementation",
+      "Introduction to Variant Manager",
+      "Working with Displays & nDisplay",
+    ],
+  },
+  {
+    category: "UI, Games & Optimization",
+    classes: [
+      "Creating User Interfaces with UMG & Blueprints",
+      "UMG & Blueprint for Architecture",
+      "Introduction to Procedural Content Generation (PCG)",
+      "Game Packaging & Publishing",
+      "Optimization — Tools & Techniques",
+      "Optimization for Linear Content — Profiling & Geometry",
+      "Optimization for Linear Content — Lighting & Effects",
+      "Optimization for Linear Content — Niagara & Foliage",
+    ],
+  },
+  {
+    category: "AI Workflows",
+    classes: [
+      "AI for Unreal Engine — MCP Servers & Build Agents",
+      "Claude Code in Production",
+      "Running a Local Model Fleet",
+      "Prompting & Context Pipelines for Production",
+    ],
+  },
 ];
 
 // ── AI Training Topics ───────────────────────────────────────────────────────

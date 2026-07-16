@@ -124,7 +124,9 @@ export const storeItems: StoreItem[] = [
     kind: "course-bundle",
     priceCents: null,
     priceNote: "scoped per team",
-    blurb: "Custom curriculum for your studio — your project, your pipeline, your sharp edges.",
+    list: "team-training",
+    blurb:
+      "Custom curriculum bundled from 50+ ready-to-teach classes — your project, your pipeline, your sharp edges. Pricing varies with team size and scope.",
     delivery: "Scoping call first; training delivered live, on-site or remote.",
     fulfillment: "email-manual",
   },

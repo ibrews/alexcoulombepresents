@@ -7,6 +7,7 @@ import WaitlistForm from "@/components/WaitlistForm";
 import LiteVideo from "@/components/LiteVideo";
 import VideoUpdates from "@/components/VideoUpdates";
 import { products } from "@/lib/data";
+import { isListSlug } from "@/lib/lists";
 import { renderBreaks, plainText } from "@/components/Lines";
 
 export function generateStaticParams() {
@@ -97,19 +98,45 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <Reveal>
         <div className="glass mt-8 rounded-3xl p-8 text-center md:p-10">
-          <h2 className="text-xl font-bold">Want in early?</h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-mist">
-            {product.name} is in active development. Early-access spots, pilot projects, and
-            collaborations are all on the table.
-          </p>
-          <div className="mx-auto mt-6 max-w-md">
-            <WaitlistForm
-              list={product.slug}
-              cta="Join the waitlist →"
-              successTitle="You're on the list."
-              successMessage={`We'll email you the moment ${product.name} opens up.`}
-            />
-          </div>
+          {product.internal ? (
+            <>
+              <h2 className="text-xl font-bold">This one&apos;s internal.</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+                {product.name} is Agile Lens tooling with no public release planned — it&apos;s here
+                because it powers the client work. Curious what it powers?{" "}
+                <a
+                  href="https://agilelens.com/portfolio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-teal hover:underline"
+                >
+                  Browse the Agile Lens portfolio
+                </a>{" "}
+                or{" "}
+                <Link href="/contact" className="text-teal hover:underline">
+                  get in touch
+                </Link>{" "}
+                about custom work.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-xl font-bold">Want in early?</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+                {product.name} is in active development. Early-access spots, pilot projects, and
+                collaborations are all on the table.
+              </p>
+              <div className="mx-auto mt-6 max-w-md">
+                <WaitlistForm
+                  list={isListSlug(product.slug) ? product.slug : "lab"}
+                  context={isListSlug(product.slug) ? undefined : product.name}
+                  cta="Join the waitlist →"
+                  successTitle="You're on the list."
+                  successMessage={`We'll email you the moment ${product.name} opens up.`}
+                />
+              </div>
+            </>
+          )}
           {product.links.length > 0 && (
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               {product.links.map((l) => (

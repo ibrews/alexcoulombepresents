@@ -36,8 +36,9 @@ export default function Lab() {
               The private repos are <span className="grad-text">getting restless.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
-              Five products in active development, all pointed at the same future: spatial computing
-              where the engines, the assets, and the AI agents finally cooperate. Hardware-verified,
+              {products.filter((p) => !p.internal).length} products in active development (plus a
+              peek at the internal tooling), all pointed at the same future: spatial computing where
+              the engines, the assets, and the AI agents finally cooperate. Hardware-verified,
               demo-ready, and approaching the launch pad.
             </p>
           </Reveal>

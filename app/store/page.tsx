@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import InquireButton from "@/components/InquireButton";
@@ -41,9 +42,36 @@ export default function Store() {
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
           Training, AI skills, and spatial computing templates — all made by Alex, for people who
-          want to move fast and build real things. Drop a line and we&apos;ll figure out the right
-          format together.
+          want to move fast and build real things. Anything with a price checks out instantly
+          through Stripe; anything still cooking takes your email and pings you at launch.
         </p>
+      </Reveal>
+
+      {/* Company / team training — front and center */}
+      <Reveal>
+        <div className="glow-card mt-10 rounded-3xl border border-amber/40 p-7 md:p-9">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div className="max-w-2xl">
+              <p className="font-mono text-xs uppercase tracking-widest text-amber">
+                Buying for a company or studio?
+              </p>
+              <h2 className="mt-2 text-xl font-bold tracking-tight md:text-2xl">
+                Bundled curricula, scoped to your team.
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-mist">
+                Custom multi-week programs assembled from 50+ ready-to-teach classes — the same
+                training delivered to Epic&apos;s key partners. Pricing varies with team size and
+                scope; quotes usually land within a day.
+              </p>
+            </div>
+            <Link
+              href="/training#teams"
+              className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+            >
+              Get a team quote →
+            </Link>
+          </div>
+        </div>
       </Reveal>
 
       {/* External storefronts */}
@@ -162,6 +190,33 @@ export default function Store() {
         ))}
       </div>
 
+      {/* Membership — coming soon */}
+      <Reveal>
+        <div className="glass mt-14 rounded-3xl border border-teal/30 p-8 md:p-10">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div className="max-w-2xl">
+              <p className="inline-block rounded-full border border-amber/50 bg-amber/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber">
+                Coming soon
+              </p>
+              <h2 className="mt-3 text-xl font-bold tracking-tight md:text-2xl">
+                The membership: every recording, member pricing, early access.
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-mist">
+                One subscription for the whole class-recording library, standing discounts on
+                everything here, first seats on Lab launches, and monthly office hours with Alex.
+                Founding waitlist is open — members hear the price first and get the founding rate.
+              </p>
+            </div>
+            <Link
+              href="/members"
+              className="rounded-full border border-teal/60 px-6 py-3 font-semibold text-snow transition-colors hover:bg-teal/10"
+            >
+              Join the founding waitlist →
+            </Link>
+          </div>
+        </div>
+      </Reveal>
+
       <Reveal>
         <div className="glass mt-14 rounded-3xl p-8 md:p-10">
           <h2 className="text-xl font-bold">Not sure where to start?</h2>
@@ -184,8 +239,17 @@ export default function Store() {
               .
             </p>
             <p>
-              <span className="text-snow">Custom work.</span> Pilot projects,
-              collaborations, and studio pipelines — email{" "}
+              <span className="text-snow">Custom work.</span> Pilot projects, collaborations, and
+              studio pipelines — that&apos;s{" "}
+              <a
+                className="text-teal hover:underline"
+                href="https://agilelens.com/portfolio"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Agile Lens
+              </a>{" "}
+              territory (browse the portfolio). Email{" "}
               <a className="text-teal hover:underline" href="mailto:info@alexcoulombepresents.com">
                 info@alexcoulombepresents.com
               </a>{" "}

@@ -2,9 +2,19 @@
 
 import { useState } from "react";
 
-export default function InterestForm({ track }: { track: "unreal" | "ai" }) {
+export default function InterestForm({
+  track,
+  withMessage = false,
+  messagePlaceholder = "What would you like to learn? (optional)",
+}: {
+  track: "unreal" | "ai";
+  /** Ask the old Google-Form question — goes into the signup's message field. */
+  withMessage?: boolean;
+  messagePlaceholder?: string;
+}) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [human, setHuman] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -20,7 +30,7 @@ export default function InterestForm({ track }: { track: "unreal" | "ai" }) {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, track, honeypot, human }),
+        body: JSON.stringify({ email, name, message: message || undefined, track, honeypot, human }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -83,6 +93,16 @@ export default function InterestForm({ track }: { track: "unreal" | "ai" }) {
           required
         />
       </div>
+
+      {withMessage && (
+        <textarea
+          className={`${field} min-h-[88px] resize-y`}
+          placeholder={messagePlaceholder}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          aria-label={messagePlaceholder}
+        />
+      )}
 
       <label className="flex cursor-pointer items-center gap-3 select-none">
         <input

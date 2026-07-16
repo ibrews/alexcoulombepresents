@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import RepoCard from "@/components/RepoCard";
+import CtaRow from "@/components/CtaRow";
 import { repos } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -59,6 +60,11 @@ export default function Repos() {
           — including the forks, the experiments, and the hyper-targeted repos to solve absurdly specific problems.
         </p>
       </Reveal>
+
+      <CtaRow
+        heading="Like how these are built?"
+        sub="Every one of these repos came out of real production work — the classes teach the same techniques, gotchas included."
+      />
     </div>
   );
 }

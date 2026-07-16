@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Ethereal from "@/components/Ethereal";
+import NewsletterSection from "@/components/NewsletterSection";
 import FaceField from "@/components/FaceField";
 import Typewriter from "@/components/Typewriter";
 import Reveal from "@/components/Reveal";
@@ -7,6 +9,13 @@ import RepoCard from "@/components/RepoCard";
 import LatestVideo from "@/components/LatestVideo";
 import { repos, products, roles } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
+
+export const metadata: Metadata = {
+  title: "Alex Coulombe Presents · Unreal Engine Instructor & XR Developer",
+  description:
+    "Unreal Engine, Godot, Apple Vision Pro, and AI-agent workflows — live training from an Epic Games Authorized Instructor, open-source tools, and a decade of immersive design.",
+  alternates: { canonical: "/" },
+};
 
 const venues = [
   "SIGGRAPH", "HarvardXR", "Unreal Fest", "Venice Biennale", "AWE", "FMX",
@@ -35,9 +44,18 @@ export default function Home() {
             Building worlds you can <span className="grad-text">step inside.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist md:text-xl">
-            Architect turned XR-chitect. 10+ yrs of running Agile Lens, 16+ yrs of immersive design
-            across the built environment, live theatre, and emerging technology. Unreal Engine Gold
-            Authorized Instructor. Now teaching machines to build alongside us.
+            Architect turned XR-chitect. 10+ yrs of running{" "}
+            <a
+              href="https://agilelens.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-snow underline decoration-teal/50 hover:decoration-teal"
+            >
+              Agile Lens
+            </a>
+            , 16+ yrs of immersive design across the built environment, live theatre, and emerging
+            technology. Unreal Engine Gold Authorized Instructor. Now teaching machines to build
+            alongside us.
           </p>
           <p className="mt-5 text-lg md:text-xl">
             Currently: <Typewriter words={roles} />
@@ -144,13 +162,53 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Team / studio training band ───────────────────────── */}
+      <section className="border-y border-line bg-panel/40">
+        <div className="mx-auto max-w-6xl px-5 py-14">
+          <Reveal>
+            <div className="flex flex-wrap items-center justify-between gap-6">
+              <div className="max-w-2xl">
+                <p className="font-mono text-xs uppercase tracking-widest text-amber">
+                  Training for companies & studios
+                </p>
+                <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
+                  Bring your whole team. <span className="grad-text">We&apos;ll build the curriculum.</span>
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-mist">
+                  Custom curricula bundled from 50+ ready-to-teach classes — the same live training
+                  delivered to Epic Games&apos; key partners, broadcast teams, and AAA studios.
+                  Remote or on-site, cloud workstations available, pricing scoped to your team.
+                </p>
+              </div>
+              <Link
+                href="/training#teams"
+                className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+              >
+                Get a team quote →
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ── Featured repos ────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-5 pb-24">
         <Reveal>
           <div className="flex items-end justify-between">
             <div>
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Fresh from the repo</h2>
-              <p className="mt-3 text-mist">Real tools built for Agile Lens, now available to you.</p>
+              <p className="mt-3 text-mist">
+                Real tools built for{" "}
+                <a
+                  href="https://agilelens.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-snow underline decoration-teal/50 hover:decoration-teal"
+                >
+                  Agile Lens
+                </a>
+                , now available to you.
+              </p>
             </div>
             <Link href="/repos" className="hidden font-mono text-sm text-teal hover:underline md:block">
               all repos →
@@ -202,6 +260,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Newsletter ────────────────────────────────────────── */}
+      <NewsletterSection />
     </>
   );
 }

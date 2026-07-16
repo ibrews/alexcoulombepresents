@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
+import CtaRow from "@/components/CtaRow";
 import { featuredVideo, videos, playlists } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 
@@ -126,6 +127,11 @@ export default function Videos() {
           <p className="mt-3 font-mono text-xs text-mist">600+ videos and counting. The algorithm fears him.</p>
         </div>
       </Reveal>
+
+      <CtaRow
+        heading="The videos are the free tier."
+        sub="When you're ready for the live, on-your-project version of all this, the classes are the next step."
+      />
     </div>
   );
 }

@@ -244,7 +244,7 @@
 **On the page**
 
 - `[lab.1]` ▸ The private repos are getting restless.
-- `[lab.2]` ▸ Five products in active development, all pointed at the same future: spatial computing where the engines, the assets, and the AI agents finally cooperate. Hardware-verified, demo-ready, and approaching the launch pad.
+- `[lab.2]` ▸ (count is computed from non-internal products at render time) products in active development — plus a peek at the internal tooling — all pointed at the same future: spatial computing where the engines, the assets, and the AI agents finally cooperate. Hardware-verified, demo-ready, and approaching the launch pad.
 - `[lab.3]` ▸ full briefing →
 - `[lab.4]` ▸ Want early access to any of these?
 - `[lab.5]` ▸ Raise your hand →

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import LiteVideo from "@/components/LiteVideo";
 import InterestForm from "@/components/InterestForm";
-import InquireButtonGroup from "@/components/InquireButtonGroup";
+import InquireButton from "@/components/InquireButton";
 import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
-import { courses, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
+import CounterStat from "@/components/CounterStat";
+import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
 
@@ -31,7 +33,16 @@ export default function Training() {
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
           Alex is a top-rated <strong className="text-snow">Epic Games Authorized Instructor</strong>{" "}
           running <strong className="text-snow">Manhattan&apos;s first Unreal Authorized Training
-          Center</strong>, in association with Agile Lens. He has collaborated on the creation of 50+
+          Center</strong>, in association with{" "}
+          <a
+            href="https://agilelens.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-snow underline decoration-teal/50 hover:decoration-teal"
+          >
+            Agile Lens
+          </a>
+          . He has collaborated on the creation of 50+
           courses and taught 300+ sessions on behalf of Epic Games to their key partners. Our
           curriculums come from those lessons merged with nearly a decade of real client work from
           Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now
@@ -61,6 +72,59 @@ export default function Training() {
             Reserve a seat — $249 early-bird through Jul 29
           </a>
         </div>
+      </Reveal>
+
+      {/* Numbers that matter — same stat tiles the about page earns trust with */}
+      <div className="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {[
+          { n: "300+", label: "Unreal Engine courses taught" },
+          { n: "50+", label: "official Epic Games courses co-created" },
+          { n: "80+", label: "conference talks worldwide" },
+          { n: "1400+", label: "Unreal NYC meetup members" },
+        ].map((s, i) => (
+          <CounterStat key={s.label} n={s.n} label={s.label} delay={i * 80} />
+        ))}
+      </div>
+
+      {/* ── Company / team training — the headline offer ── */}
+      <Reveal delay={40}>
+        <section
+          id="teams"
+          className="glow-card mt-10 scroll-mt-28 rounded-3xl border border-amber/40 p-8 md:p-12"
+        >
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">
+            Company & studio training · bundled curricula
+          </p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
+            Represent a team? This is the fast lane.
+          </h2>
+          <p className="mt-4 max-w-3xl leading-relaxed text-mist">
+            Custom multi-week curricula assembled from the{" "}
+            <a href="#catalog" className="text-snow underline decoration-amber/50 hover:decoration-amber">
+              50+ ready-to-teach classes
+            </a>{" "}
+            below — the same live, hands-on training delivered on behalf of Epic Games to their key
+            partner studios, broadcast graphics teams, and enterprises. Live over Zoom or on-site,
+            cloud workstations available for every learner, Q&amp;A sessions woven between modules.
+            Pricing varies with team size, class count, and scheduling — tell us what your team
+            needs and you&apos;ll have a scoped quote fast.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <InquireButton
+              label="Request a team quote →"
+              list="team-training"
+              context="Company / team training quote"
+              withMessage
+              successMessage="Alex will follow up with a scoped quote — usually within a day."
+            />
+            <a
+              href="mailto:info@alexcoulombepresents.com?subject=Team%20training%20quote"
+              className="font-mono text-xs text-mist hover:text-snow"
+            >
+              or email info@alexcoulombepresents.com
+            </a>
+          </div>
+        </section>
       </Reveal>
 
       {/* Format strip */}
@@ -157,23 +221,91 @@ export default function Training() {
       <div className="mt-20">
         <Reveal>
           <h2 className="text-3xl font-bold tracking-tight">The curriculum</h2>
-          <p className="mt-3 text-mist">Twelve tracks. Take one, take them all, or tell us what your team needs.</p>
+          <p className="mt-3 text-mist">
+            Twelve tracks. Every one books as a live two-hour session in the{" "}
+            <Link href="/store" className="text-snow underline decoration-teal/50 hover:decoration-teal">
+              store
+            </Link>{" "}
+            — intro tracks are the $99 session, specialized tracks the $200 session. Take one, take
+            them all, or bundle them for your team above.
+          </p>
         </Reveal>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((c, i) => (
             <Reveal key={c.name} delay={Math.min(i * 50, 300)}>
-              <div className="glass relative h-full rounded-2xl p-6">
+              <div className="glass relative flex h-full flex-col rounded-2xl p-6">
                 {c.isNew && (
                   <span className="absolute -top-2.5 right-5 rounded-full bg-amber px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-ink">
                     New
                   </span>
                 )}
                 <h3 className="font-bold">{c.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-mist">{renderBreaks(c.blurb)}</p>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{renderBreaks(c.blurb)}</p>
+                <Link
+                  href="/store"
+                  className={`mt-4 self-start rounded-full border px-3 py-1 font-mono text-[11px] transition-colors ${
+                    c.tier === "intro"
+                      ? "border-teal/40 text-teal hover:border-teal"
+                      : "border-grape/40 text-grape hover:border-grape"
+                  }`}
+                >
+                  {c.tier === "intro" ? "Book intro session · $99 →" : "Book advanced session · $200 →"}
+                </Link>
               </div>
             </Reveal>
           ))}
         </div>
+      </div>
+
+      {/* Ready-to-teach catalog */}
+      <div id="catalog" className="mt-20 scroll-mt-28">
+        <Reveal>
+          <p className="font-mono text-xs uppercase tracking-widest text-teal">
+            The full teaching catalog
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">
+            50+ classes, <span className="grad-text">ready to run.</span>
+          </h2>
+          <p className="mt-3 max-w-3xl leading-relaxed text-mist">
+            Every class below has been taught live — most many times over — as two-hour,
+            instructor-led sessions on behalf of Epic Games to their key partner studios, broadcast
+            teams, and enterprises. Book any of them as an open-enrollment session, or point at a
+            column and say &quot;that one, for my whole team.&quot;
+          </p>
+        </Reveal>
+        <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
+          {taughtCatalog.map((group) => (
+            <div key={group.category} className="glass break-inside-avoid rounded-2xl p-6">
+              <h3 className="font-mono text-xs uppercase tracking-widest text-teal">
+                {group.category}
+              </h3>
+              <ul className="mt-3 space-y-2">
+                {group.classes.map((cls) => (
+                  <li key={cls} className="flex gap-2.5 text-sm leading-snug text-mist">
+                    <span className="mt-0.5 text-teal/70">✦</span>
+                    <span>{cls}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <Reveal>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <Link
+              href="/store"
+              className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+            >
+              Book a session in the store →
+            </Link>
+            <a
+              href="#teams"
+              className="rounded-full border border-amber/50 px-6 py-3 font-semibold text-amber transition-colors hover:border-amber"
+            >
+              Bundle these for your team →
+            </a>
+          </div>
+        </Reveal>
       </div>
 
       {/* Try before you book */}
@@ -290,7 +422,7 @@ export default function Training() {
                   Get notified the moment AI sessions open — and help shape what they cover.
                 </p>
                 <div className="mt-4">
-                  <InterestForm track="ai" />
+                  <InterestForm track="ai" withMessage />
                 </div>
               </div>
               <div className="rounded-2xl border border-teal/30 bg-teal/5 p-6">
@@ -300,7 +432,7 @@ export default function Training() {
                   today, hop on the Unreal list.
                 </p>
                 <div className="mt-4">
-                  <InterestForm track="unreal" />
+                  <InterestForm track="unreal" withMessage />
                 </div>
               </div>
             </div>
@@ -331,23 +463,19 @@ export default function Training() {
               You&apos;re learning the production path, not the tutorial path.
             </p>
           </div>
-          <div className="mt-10">
-            <InquireButtonGroup
-              list="unreal"
-              withMessage
-              options={[
-                {
-                  label: "Book a class →",
-                  context: "Class booking",
-                  successMessage: "Alex will be in touch to get you booked.",
-                },
-                {
-                  label: "Team / studio training",
-                  context: "Team / studio training",
-                  successMessage: "Alex will be in touch about team training.",
-                },
-              ]}
-            />
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <Link
+              href="/store"
+              className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
+            >
+              Book a class — instant checkout →
+            </Link>
+            <a
+              href="#teams"
+              className="rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-amber/60"
+            >
+              Team / studio training
+            </a>
           </div>
         </div>
       </Reveal>

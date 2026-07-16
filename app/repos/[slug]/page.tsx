@@ -7,6 +7,7 @@ import StarCount from "@/components/StarCount";
 import LiteVideo from "@/components/LiteVideo";
 import VideoUpdates from "@/components/VideoUpdates";
 import WikiContent from "@/components/WikiContent";
+import CtaRow from "@/components/CtaRow";
 import { repos } from "@/lib/data";
 import { renderBreaks, plainText } from "@/components/Lines";
 
@@ -140,6 +141,11 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
           </div>
         </Reveal>
       )}
+
+      <CtaRow
+        heading="Want this level of depth on your own project?"
+        sub="The classes teach the same production techniques these repos are built with — scar tissue included."
+      />
     </div>
   );
 }
