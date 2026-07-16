@@ -1,0 +1,94 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { cookies } from "next/headers";
+import Reveal from "@/components/Reveal";
+import Ethereal from "@/components/Ethereal";
+import WaitlistForm from "@/components/WaitlistForm";
+import { customerFromSession } from "@/lib/commerce/tokens";
+import { isMember, memberBenefits, MEMBERSHIP_LIVE } from "@/lib/commerce/membership";
+
+export const metadata: Metadata = {
+  title: "Members — Coming Soon",
+  description:
+    "The Alex Coulombe Presents membership: every class recording, member pricing, early Lab access, monthly office hours, and a vote on what gets taught next. Join the founding waitlist.",
+  alternates: { canonical: "/members" },
+};
+
+export default async function Members() {
+  // Membership rides the existing magic-link session — a signed-in member
+  // (comped or, later, subscribed) sees the member view the day it opens.
+  const sessionToken = (await cookies()).get("acp_session")?.value;
+  const customerId = await customerFromSession(sessionToken).catch(() => null);
+  const member = customerId ? await isMember(customerId).catch(() => false) : false;
+
+  return (
+    <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
+      <Ethereal variant="aurora" />
+      <Reveal>
+        <p className="font-mono text-sm text-teal">/members</p>
+        {!MEMBERSHIP_LIVE && (
+          <p className="mt-4 inline-block rounded-full border border-amber/50 bg-amber/10 px-4 py-1.5 font-mono text-xs uppercase tracking-widest text-amber">
+            Coming soon · founding waitlist open
+          </p>
+        )}
+        <h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
+          The members&apos; side <span className="grad-text">of the lab.</span>
+        </h1>
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
+          One membership, everything behind the curtain: the full class-recording library, standing
+          member pricing, first access to Lab launches, and a monthly hour where you get Alex&apos;s
+          full attention. Pricing lands with the launch — waitlist members hear first and get the
+          founding rate.
+        </p>
+      </Reveal>
+
+      <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {memberBenefits.map((b, i) => (
+          <Reveal key={b.title} delay={Math.min(i * 60, 240)}>
+            <div className="glass h-full rounded-2xl p-6">
+              <h2 className="font-bold">{b.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-mist">{b.detail}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+
+      {member ? (
+        <Reveal>
+          <div className="glow-card mt-14 rounded-3xl border border-teal/40 p-8 text-center md:p-10">
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">Membership active ✓</p>
+            <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
+            <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+              The recording library and member perks unlock here as the program rolls out. Your
+              purchases and downloads live in{" "}
+              <Link href="/account" className="text-teal hover:underline">
+                your account
+              </Link>
+              .
+            </p>
+          </div>
+        </Reveal>
+      ) : (
+        <Reveal>
+          <div className="glass mt-14 rounded-3xl p-8 text-center md:p-12">
+            <h2 className="text-2xl font-bold tracking-tight">Founding members hear it first.</h2>
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-mist">
+              No card, no commitment — just first crack at the founding price when doors open, and a
+              real say in what the membership includes.
+            </p>
+            <div className="mx-auto mt-6 max-w-md">
+              <WaitlistForm
+                list="members"
+                withName
+                withMessage
+                cta="Join the founding waitlist →"
+                successTitle="You're on the founding list."
+                successMessage="You'll get the founding rate and the first invite when membership opens."
+              />
+            </div>
+          </div>
+        </Reveal>
+      )}
+    </div>
+  );
+}

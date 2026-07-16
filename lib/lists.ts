@@ -11,6 +11,9 @@ export const LISTS = {
   lab: "The Lab — early access",
   skills: "Custom AI skill",
   store: "Store interest",
+  newsletter: "General newsletter",
+  members: "Members — founding waitlist",
+  "team-training": "Team / studio training",
 } as const;
 
 export type ListSlug = keyof typeof LISTS;
