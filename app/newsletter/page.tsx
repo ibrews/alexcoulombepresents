@@ -89,8 +89,9 @@ export default function Newsletter() {
               Agile Lens
             </a>{" "}
             — the NYC studio Alex runs, where the team has shipped immersive work for the Royal
-            Shakespeare Company, Four Seasons, NEOM, Samsung, and Royal Caribbean. If your project
-            needs a team rather than a class, that&apos;s the door — reach the studio at{" "}
+            Shakespeare Company, Four Seasons, NEOM, Samsung, and Royal Caribbean. This list is for
+            classes and Lab launches; Agile Lens runs its own monthly newsletter for meetups,
+            shows, demos, and beta tests — subscribe to that one separately at{" "}
             <a
               href="https://agilelens.com/contact"
               target="_blank"
