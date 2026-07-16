@@ -6,6 +6,7 @@ import FaceField from "@/components/FaceField";
 import Typewriter from "@/components/Typewriter";
 import Reveal from "@/components/Reveal";
 import RepoCard from "@/components/RepoCard";
+import AppearancesSection from "@/components/AppearancesSection";
 import LatestVideo from "@/components/LatestVideo";
 import { repos, products, roles } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
@@ -114,6 +115,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <AppearancesSection />
 
       {/* ── Three pillars ─────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-5 py-24">

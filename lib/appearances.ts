@@ -1,0 +1,57 @@
+// ── Public appearances — talks, judging, mentoring ─────────────────────────
+//
+// Feeds the homepage "What's next" section (#appearances) and the site-wide
+// announcement banner (lib/announcements.ts links here). Keep entries even
+// after they pass — they become the historical "featured in" record. Order:
+// soonest-first; the homepage section doesn't re-sort.
+
+export type Appearance = {
+  slug: string;
+  role: string; // "Speaker", "Judge + Mentor", "Panelist"...
+  title: string;
+  org: string;
+  date: string; // human-readable range, e.g. "Jul 18–19, 2026"
+  location: string;
+  url: string;
+  image?: string; // path under /public
+};
+
+export const appearances: Appearance[] = [
+  {
+    slug: "worlds-in-action-hack-la",
+    role: "Judge + Mentor",
+    title: "Worlds in Action Hack [02-LA]",
+    org: "Sensai, with World Labs, PICO, and SIGGRAPH 2026",
+    date: "Jul 18–19, 2026",
+    location: "MG Studio, Los Angeles",
+    url: "https://sensaihack.com/worldsinaction-2-la/",
+    image: "/worlds-in-action-hack.jpg",
+  },
+  {
+    slug: "siggraph-2026-stage-presence",
+    role: "Speaker",
+    title: "Stage Presence: Design and Testing of a Virtual Rehearsal Room Toolset",
+    org: "SIGGRAPH 2026",
+    date: "Sun Jul 19, 4:25–4:45pm PT",
+    location: "Room 403 B, Los Angeles",
+    url: "https://s2026.conference-schedule.org/presenter/?uid=645453",
+  },
+  {
+    slug: "siggraph-2026-gaussian-splats",
+    role: "Instructor",
+    title: "Powered by Gaussian Splats: From World Models to 3D Interactive Worlds",
+    org: "SIGGRAPH 2026 — Hands-on Course",
+    date: "Mon Jul 20, 3:30–5:00pm PT",
+    location: "Concourse Hall, Los Angeles",
+    url: "https://s2026.conference-schedule.org/presenter/?uid=645453",
+  },
+  {
+    slug: "siggraph-2026-virtual-theatre",
+    role: "Panelist",
+    title: "Virtual Theatre: Producing Live Theatre on Virtual Stages",
+    org: "SIGGRAPH 2026",
+    date: "Wed Jul 22, 1:00–1:45pm PT",
+    location: "Concourse Hall, Los Angeles",
+    url: "https://s2026.conference-schedule.org/presenter/?uid=645453",
+  },
+];

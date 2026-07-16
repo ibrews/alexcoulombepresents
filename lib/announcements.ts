@@ -19,11 +19,11 @@ export type Announcement = {
 
 export const announcements: Announcement[] = [
   {
-    id: "siggraph-2026",
-    text: "Find me at SIGGRAPH 2026 — three sessions, July 19–22",
-    href: "https://s2026.conference-schedule.org/presenter/?uid=645453",
-    cta: "See the talks",
-    start: "2026-07-14",
+    id: "la-week-2026",
+    text: "In LA this week — judging Worlds in Action Hack (Jul 18–19) + 3 SIGGRAPH talks (Jul 19–22)",
+    href: "/#appearances",
+    cta: "See where",
+    start: "2026-07-16",
     end: "2026-07-22",
   },
   {

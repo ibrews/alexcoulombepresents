@@ -13,11 +13,16 @@
 ## Home  ·  `/`
 <sub>app/page.tsx</sub>
 
+**Browser tab / SEO**
+
+- `[home.meta.title]` ▸ Alex Coulombe Presents · Unreal Engine Instructor & XR Developer
+- `[home.meta.description]` ▸ Unreal Engine, Godot, Apple Vision Pro, and AI-agent workflows — live training from an Epic Games Authorized Instructor, open-source tools, and a decade of immersive design.
+
 **On the page**
 
 - `[home.1]` ▸ ~/alex-coulombe $ whodis?
 - `[home.2]` ▸ Building worlds you can step inside.
-- `[home.3]` ▸ Architect turned XR-chitect. 10+ yrs of running Agile Lens, 16+ yrs of immersive design across the built environment, live theatre, and emerging technology. Unreal Engine Gold Authorized Instructor. Now teaching machines to build alongside us.
+- `[home.3]` ▸ Architect turned XR-chitect. 10+ yrs of running Agile Lens , 16+ yrs of immersive design across the built environment, live theatre, and emerging technology. Unreal Engine Gold Authorized Instructor. Now teaching machines to build alongside us.
 - `[home.4]` ▸ Currently:
 - `[home.5]` ▸ See what's cooking →
 - `[home.6]` ▸ Open source
@@ -36,12 +41,16 @@
 - `[home.19]` ▸ 03 / STAGES
 - `[home.20]` ▸ Theatre is the original VR
 - `[home.21]` ▸ Live actors performing in headsets since 2018. Worked on Venice Biennale's first global live VR show, an annual Christmas Carol in VR, mixed reality theatre with an actor surrounded by digital assets, and published SIGGRAPH papers on all of it.
-- `[home.22]` ▸ Fresh from the repo
-- `[home.23]` ▸ Real tools built for Agile Lens, now available to you.
-- `[home.24]` ▸ all repos →
-- `[home.25]` ▸ The Lab
-- `[home.26]` ▸ Here's what's bubbling:
-- `[home.27]` ▸ all lab projects →
+- `[home.22]` ▸ Training for companies & studios
+- `[home.23]` ▸ Bring your whole team. We'll build the curriculum.
+- `[home.24]` ▸ Custom curricula bundled from 50+ ready-to-teach classes — the same live training delivered to Epic Games' key partners, broadcast teams, and AAA studios. Remote or on-site, cloud workstations available, pricing scoped to your team.
+- `[home.25]` ▸ Get a team quote →
+- `[home.26]` ▸ Fresh from the repo
+- `[home.27]` ▸ Real tools built for Agile Lens , now available to you.
+- `[home.28]` ▸ all repos →
+- `[home.29]` ▸ The Lab
+- `[home.30]` ▸ Here's what's bubbling:
+- `[home.31]` ▸ all lab projects →
 
 **List: venues**  (21 items — add or remove lines freely)
 
@@ -114,48 +123,61 @@
 **On the page**
 
 - `[training.1]` ▸ Learn Unreal from someone who ships with it every day.
-- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens. He has collaborated on the creation of 50+ courses and taught 300+ sessions on behalf of Epic Games to their key partners. Our curriculums come from those lessons merged with nearly a decade of real client work from Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
+- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens . He has collaborated on the creation of 50+ courses and taught 300+ sessions on behalf of Epic Games to their key partners. Our curriculums come from those lessons merged with nearly a decade of real client work from Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
 - `[training.3]` ▸ NEXT COHORT · STARTS WEDNESDAY, AUGUST 5
 - `[training.4]` ▸ Unreal Foundations — Zero to Environment
 - `[training.5]` ▸ Four live Wednesday classes, each taught twice so the whole world can attend (10a–12p and 12:30–2:30p ET), plus Thursday office hours. Week 1: the editor & ecosystem. Week 2: world building with Megascans & Nanite. Week 3: Lumen & lighting. Week 4: cameras & Movie Render Queue — you leave with a portfolio-ready render. Recordings and project files included.
-- `[training.6]` ▸ Reserve a seat — $249 early-bird through Jul 29
-- `[training.7]` ▸ FORMAT
-- `[training.8]` ▸ Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team training for entire studios.
-- `[training.9]` ▸ SCHEDULE
-- `[training.10]` ▸ Intro classes typically start on the first Monday of the month at 1pm ET, with additional sessions throughout the week.
-- `[training.11]` ▸ CREDENTIALS
-- `[training.12]` ▸ Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
-- `[training.13]` ▸ Certified by Epic Games
-- `[training.14]` ▸ Authorized, and re-authorized every year.
-- `[training.15]` ▸ The curriculum
-- `[training.16]` ▸ Twelve tracks. Take one, take them all, or tell us what your team needs.
-- `[training.17]` ▸ New
-- `[training.18]` ▸ Try the teaching first
-- `[training.19]` ▸ All
-- `[training.20]` ▸ talks on YouTube →
-- `[training.21]` ▸ From the Epic Games archives
-- `[training.22]` ▸ Courses built for Epic Games.
-- `[training.23]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
-- `[training.24]` ▸ AI training · its own track
-- `[training.25]` ▸ Learn AI workflows, Unreal optional.
-- `[training.26]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
-- `[training.27]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
-- `[training.28]` ▸ Watch the full talk →
-- `[training.29]` ▸ Learn AI
-- `[training.30]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
-- `[training.31]` ▸ Learn Unreal
-- `[training.32]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
-- `[training.33]` ▸ Why learn here and not from an on-demand video course?
-- `[training.34]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
-- `[training.35]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
-- `[training.36]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
-- `[training.37]` ▸ Unreal NYC
-- `[training.38]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
-- `[training.39]` ▸ agilelens.com/unrealnyc ↗
-- `[training.40]` ▸ Epic community page ↗
-- `[training.41]` ▸ Free stuff first
-- `[training.42]` ▸ The YouTube channel ("I Wish I Learned This Sooner") and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
-- `[training.43]` ▸ Podcast on all platforms ↗
+- `[training.6]` ▸ Reserve a seat — early-bird pricing through Jul 29 →
+- `[training.7]` ▸ Company & studio training · bundled curricula
+- `[training.8]` ▸ Represent a team? This is the fast lane.
+- `[training.9]` ▸ Custom multi-week curricula assembled from the 50+ ready-to-teach classes below — the same live, hands-on training delivered on behalf of Epic Games to their key partner studios, broadcast graphics teams, and enterprises. Live over Zoom or on-site, cloud workstations available for every learner, Q&A sessions woven between modules. Pricing varies with team size, class count, and scheduling — tell us what your team needs and you'll have a scoped quote fast.
+- `[training.10]` ▸ or email info@alexcoulombepresents.com
+- `[training.11]` ▸ FORMAT
+- `[training.12]` ▸ Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team training for entire studios.
+- `[training.13]` ▸ SCHEDULE
+- `[training.14]` ▸ Intro classes typically start on the first Monday of the month at 1pm ET, with additional sessions throughout the week.
+- `[training.15]` ▸ CREDENTIALS
+- `[training.16]` ▸ Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
+- `[training.17]` ▸ Certified by Epic Games
+- `[training.18]` ▸ Authorized, and re-authorized every year.
+- `[training.19]` ▸ The curriculum
+- `[training.20]` ▸ Twelve tracks. Every one books as a live two-hour session — intro tracks and specialized deep-dives, priced separately. Take one, take them all, or bundle them for your team above. Pricing shows at checkout in the store .
+- `[training.21]` ▸ New
+- `[training.22]` ▸ The full teaching catalog
+- `[training.23]` ▸ 50+ classes, ready to run.
+- `[training.24]` ▸ Every class below has been taught live — most many times over — as two-hour, instructor-led sessions on behalf of Epic Games to their key partner studios, broadcast teams, and enterprises. Book any of them as an open-enrollment session, or point at a column and say "that one, for my whole team."
+- `[training.25]` ▸ Book a session in the store →
+- `[training.26]` ▸ Bundle these for your team →
+- `[training.27]` ▸ Try the teaching first
+- `[training.28]` ▸ All
+- `[training.29]` ▸ talks on YouTube →
+- `[training.30]` ▸ From the Epic Games archives
+- `[training.31]` ▸ Courses built for Epic Games.
+- `[training.32]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
+- `[training.33]` ▸ AI training · its own track
+- `[training.34]` ▸ Learn AI workflows, Unreal optional.
+- `[training.35]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
+- `[training.36]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
+- `[training.37]` ▸ Watch the full talk →
+- `[training.38]` ▸ Learn AI
+- `[training.39]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
+- `[training.40]` ▸ Learn Unreal
+- `[training.41]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
+- `[training.42]` ▸ Why learn here and not from an on-demand video course?
+- `[training.43]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
+- `[training.44]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
+- `[training.45]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
+- `[training.46]` ▸ Book a class — instant checkout →
+- `[training.47]` ▸ Team / studio training
+- `[training.48]` ▸ Unreal NYC
+- `[training.49]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
+- `[training.50]` ▸ agilelens.com/unrealnyc ↗
+- `[training.51]` ▸ Epic community page ↗
+- `[training.52]` ▸ Free stuff first
+- `[training.53]` ▸ The YouTube channel ("I Wish I Learned This Sooner") and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
+- `[training.54]` ▸ Podcast on all platforms ↗
+- `[training.55]` ▸ Request a team quote →
+- `[training.56]` ▸ Alex will follow up with a scoped quote — usually within a day.
 
 ---
 
@@ -244,7 +266,7 @@
 **On the page**
 
 - `[lab.1]` ▸ The private repos are getting restless.
-- `[lab.2]` ▸ (count is computed from non-internal products at render time) products in active development — plus a peek at the internal tooling — all pointed at the same future: spatial computing where the engines, the assets, and the AI agents finally cooperate. Hardware-verified, demo-ready, and approaching the launch pad.
+- `[lab.2]` ▸ products in active development (plus a peek at the internal tooling), all pointed at the same future: spatial computing where the engines, the assets, and the AI agents finally cooperate. Hardware-verified, demo-ready, and approaching the launch pad.
 - `[lab.3]` ▸ full briefing →
 - `[lab.4]` ▸ Want early access to any of these?
 - `[lab.5]` ▸ Raise your hand →
@@ -259,10 +281,12 @@
 
 - `[lab-slug.1]` ▸ ← the lab
 - `[lab-slug.2]` ▸ At a glance
-- `[lab-slug.3]` ▸ Want in early?
-- `[lab-slug.4]` ▸ is in active development. Early-access spots, pilot projects, and collaborations are all on the table.
-- `[lab-slug.5]` ▸ Also in the lab
-- `[lab-slug.6]` ▸ Join the waitlist →
+- `[lab-slug.3]` ▸ This one's internal.
+- `[lab-slug.4]` ▸ is Agile Lens tooling with no public release planned — it's here because it powers the client work. Curious what it powers? Browse the Agile Lens portfolio or get in touch about custom work.
+- `[lab-slug.5]` ▸ Want in early?
+- `[lab-slug.6]` ▸ is in active development. Early-access spots, pilot projects, and collaborations are all on the table.
+- `[lab-slug.7]` ▸ Also in the lab
+- `[lab-slug.8]` ▸ Join the waitlist →
 
 ---
 
@@ -277,20 +301,28 @@
 **On the page**
 
 - `[store.1]` ▸ Let's work together. Get in touch to start.
-- `[store.2]` ▸ Training, AI skills, and spatial computing templates — all made by Alex, for people who want to move fast and build real things. Drop a line and we'll figure out the right format together.
-- `[store.3]` ▸ Also available at:
-- `[store.4]` ▸ Gumroad →
-- `[store.5]` ▸ Capafy →
-- `[store.6]` ▸ You get:
-- `[store.7]` ▸ Get it on Capafy →
-- `[store.8]` ▸ Pipelines — instant delivery
-- `[store.9]` ▸ Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link all work at checkout.
-- `[store.10]` ▸ Pipeline
-- `[store.11]` ▸ Not sure where to start?
-- `[store.12]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
-- `[store.13]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
-- `[store.14]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — email info@alexcoulombepresents.com or use the contact form .
-- `[store.15]` ▸ Buy →
+- `[store.2]` ▸ Training, AI skills, and spatial computing templates — all made by Alex, for people who want to move fast and build real things. Anything with a price checks out instantly through Stripe; anything still cooking takes your email and pings you at launch.
+- `[store.3]` ▸ Buying for a company or studio?
+- `[store.4]` ▸ Bundled curricula, scoped to your team.
+- `[store.5]` ▸ Custom multi-week programs assembled from 50+ ready-to-teach classes — the same training delivered to Epic's key partners. Pricing varies with team size and scope; quotes usually land within a day.
+- `[store.6]` ▸ Get a team quote →
+- `[store.7]` ▸ Also available at:
+- `[store.8]` ▸ Gumroad →
+- `[store.9]` ▸ Capafy →
+- `[store.10]` ▸ You get:
+- `[store.11]` ▸ Get it on Capafy →
+- `[store.12]` ▸ Pipelines — instant delivery
+- `[store.13]` ▸ Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link all work at checkout.
+- `[store.14]` ▸ Pipeline
+- `[store.15]` ▸ Coming soon
+- `[store.16]` ▸ The membership: every recording, member pricing, early access.
+- `[store.17]` ▸ One subscription for the whole class-recording library, standing discounts on everything here, first seats on Lab launches, and monthly office hours with Alex. Founding waitlist is open — members hear the price first and get the founding rate.
+- `[store.18]` ▸ Join the founding waitlist →
+- `[store.19]` ▸ Not sure where to start?
+- `[store.20]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
+- `[store.21]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
+- `[store.22]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — that's Agile Lens territory (browse the portfolio). Email info@alexcoulombepresents.com or use the contact form .
+- `[store.23]` ▸ Buy →
 
 ---
 
@@ -306,6 +338,10 @@
 - `[store-success.1]` ▸ payment received ✓
 - `[store-success.2]` ▸ You just funded more weird experiments.
 - `[store-success.3]` ▸ Back to the site →
+- `[store-success.4]` ▸ Your account →
+- `[store-success.5]` ▸ Want to hear when new classes, tools, and member perks drop?
+- `[store-success.6]` ▸ Join the newsletter →
+- `[store-success.7]` ▸ New classes and launches, straight to your inbox.
 
 ---
 
@@ -368,28 +404,40 @@
 
 - `[data.courses.0.name]` ▸ AI for Unreal Engine
 - `[data.courses.0.blurb]` ▸ MCP servers, AI build agents, and LLM-assisted workflows inside the editor. The new frontier.
+- `[data.courses.0.tier]` ▸ advanced
 - `[data.courses.1.name]` ▸ Intro to Unreal
 - `[data.courses.1.blurb]` ▸ The editor, the content browser, and the mental model that makes everything else click.
+- `[data.courses.1.tier]` ▸ intro
 - `[data.courses.2.name]` ▸ Blueprints & C++
 - `[data.courses.2.blurb]` ▸ Visual scripting done right, when to drop to C++, and how the two layers talk.
+- `[data.courses.2.tier]` ▸ intro
 - `[data.courses.3.name]` ▸ Sequencer
 - `[data.courses.3.blurb]` ▸ Cinematics, cutscenes, and choreographed sequences — Unreal as a film tool.
+- `[data.courses.3.tier]` ▸ intro
 - `[data.courses.4.name]` ▸ Multiplayer
 - `[data.courses.4.blurb]` ▸ Replication, network prediction, and the architecture decisions you can't undo later.
+- `[data.courses.4.tier]` ▸ advanced
 - `[data.courses.5.name]` ▸ VR & AR (incl. Apple Vision Pro)
 - `[data.courses.5.blurb]` ▸ From Quest to Vision Pro — comfort, performance budgets, and platform realities.
+- `[data.courses.5.tier]` ▸ advanced
 - `[data.courses.6.name]` ▸ ArchViz
 - `[data.courses.6.blurb]` ▸ Photoreal architectural visualization — the discipline Agile Lens built nine-figure sales on.
+- `[data.courses.6.tier]` ▸ advanced
 - `[data.courses.7.name]` ▸ Pixel Streaming
 - `[data.courses.7.blurb]` ▸ Unreal in the browser: GPU servers, signalling, and shipping interactive experiences as URLs.
+- `[data.courses.7.tier]` ▸ advanced
 - `[data.courses.8.name]` ▸ MetaHumans
 - `[data.courses.8.blurb]` ▸ Creation, animation, mocap pipelines, and real-time digital humans that hold up close.
+- `[data.courses.8.tier]` ▸ advanced
 - `[data.courses.9.name]` ▸ Virtual Production
 - `[data.courses.9.blurb]` ▸ Live events, LED volumes, and broadcast — where game engines meet showtime.
+- `[data.courses.9.tier]` ▸ advanced
 - `[data.courses.10.name]` ▸ Final Output
 - `[data.courses.10.blurb]` ▸ Packaging, optimization, and delivery for every target — the last mile most courses skip.
+- `[data.courses.10.tier]` ▸ intro
 - `[data.courses.11.name]` ▸ Unity to Unreal
 - `[data.courses.11.blurb]` ▸ For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors.
+- `[data.courses.11.tier]` ▸ intro
 
 ### repos  (27 entries — add or remove whole entries)
 
@@ -416,11 +464,13 @@
 - `[data.repos.claude-fleet.tagline]` ▸ Coordinate a fleet of computers running Claude Code through git-based messaging.
 - `[data.repos.claude-fleet.story]` ▸ What happens when one AI session isn't enough? Claude Fleet coordinates multiple machines — macOS, Windows, Linux — each running Claude Code, communicating asynchronously through git, with phone access to every session for human-in-the-loop control. Includes Fleet Commander, an interactive browser game that teaches the system by playing it.
 
-  **list: highlights** (4 items — add or remove lines freely)
+  **list: highlights** (5 items — add or remove lines freely)
   - Git-based inbox/trigger messaging between machines — no central server
   - Tailscale mesh networking across the whole fleet
   - Telegram notifications wired to every session
   - Fleet Commander: learn the architecture as a browser game
+  - Fleet Hive: a LiteLLM gateway + parallel orchestrator for every model you have a key for
+- `[data.repos.claude-fleet.devlog.teaser]` ▸ How Fleet Hive got built — a gateway and a cross-model judge panel, built by dogfooding the fleet itself, including a live catch of one research model fabricating another's config syntax.
 - `[data.repos.godot-avp-cascade.name]` ▸ Cascade Countdown
 - `[data.repos.godot-avp-cascade.tagline]` ▸ A hand-tracked physics arcade game for Apple Vision Pro, built on Godot. Live on TestFlight.
 - `[data.repos.godot-avp-cascade.story]` ▸ Emissive cubes cascade through spinning bumpers and a prism splitter onto tilted catch plates in your immersive space. Reach in and pinch to grab and throw. Every collision is a synthesized chime pitch-snapped to the key, so the chaos harmonizes into a tune. Built on Apple's official upstream visionOS contribution to Godot — a device smoke test on real Vision Pro hardware measured a locked 90 FPS across 23 measurement windows, with continuous physics racking up hundreds of collisions per run. Getting there took 8 TestFlight builds: a rejected privacy manifest with unsubstituted template variables, a near plane nudged down to Apple's 0.1 minimum, and a grab bug that looked like a left/right-hand asymmetry but was really several stacked issues plus noisy hand-tracking input — collapsed into a single THUMB-only grab-by-point with sticky release. The project also produced a reusable build-switcher script that flips a Godot visionOS project between device and simulator builds from one command, later adopted by other visionOS projects on the fleet.
@@ -1074,7 +1124,8 @@
 - `[store.storeItems.ue-curriculum-bundle.blurb]` ▸ The full track: all eleven classes, scheduled at your pace, with homework review between sessions.
 - `[store.storeItems.ue-curriculum-bundle.delivery]` ▸ An order confirmation lands right away; Alex then reaches out to schedule all 11 sessions at your pace and share class materials + project files.
 - `[store.storeItems.team-training.name]` ▸ Team / studio training
-- `[store.storeItems.team-training.blurb]` ▸ Custom curriculum for your studio — your project, your pipeline, your sharp edges.
+- `[store.storeItems.team-training.list]` ▸ team-training
+- `[store.storeItems.team-training.blurb]` ▸ Custom curriculum bundled from 50+ ready-to-teach classes — your project, your pipeline, your sharp edges. Pricing varies with team size and scope.
 - `[store.storeItems.team-training.delivery]` ▸ Scoping call first; training delivered live, on-site or remote.
 - `[store.storeItems.skill-ue5-testflight.name]` ▸ ue5-testflight (Claude Code skill)
 - `[store.storeItems.skill-ue5-testflight.externalUrl]` ▸ https://capafy.ai/product/ue5-testflight
