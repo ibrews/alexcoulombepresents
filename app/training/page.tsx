@@ -69,7 +69,7 @@ export default function Training() {
             href="/store"
             className="mt-5 inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
           >
-            Reserve a seat — $249 early-bird through Jul 29
+            Reserve a seat — early-bird pricing through Jul 29 →
           </a>
         </div>
       </Reveal>
@@ -222,12 +222,13 @@ export default function Training() {
         <Reveal>
           <h2 className="text-3xl font-bold tracking-tight">The curriculum</h2>
           <p className="mt-3 text-mist">
-            Twelve tracks. Every one books as a live two-hour session in the{" "}
+            Twelve tracks. Every one books as a live two-hour session — intro tracks and specialized
+            deep-dives, priced separately. Take one, take them all, or bundle them for your team
+            above. Pricing shows at checkout in the{" "}
             <Link href="/store" className="text-snow underline decoration-teal/50 hover:decoration-teal">
               store
-            </Link>{" "}
-            — intro tracks are the $99 session, specialized tracks the $200 session. Take one, take
-            them all, or bundle them for your team above.
+            </Link>
+            .
           </p>
         </Reveal>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -249,7 +250,7 @@ export default function Training() {
                       : "border-grape/40 text-grape hover:border-grape"
                   }`}
                 >
-                  {c.tier === "intro" ? "Book intro session · $99 →" : "Book advanced session · $200 →"}
+                  {c.tier === "intro" ? "Book intro session →" : "Book advanced session →"}
                 </Link>
               </div>
             </Reveal>
