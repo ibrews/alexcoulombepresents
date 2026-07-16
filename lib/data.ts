@@ -73,10 +73,16 @@ export const repos: Repo[] = [
       "Tailscale mesh networking across the whole fleet",
       "Telegram notifications wired to every session",
       "Fleet Commander: learn the architecture as a browser game",
+      "Fleet Hive: a LiteLLM gateway + parallel orchestrator for every model you have a key for",
     ],
     links: [],
     github: "https://github.com/ibrews/claude-fleet",
     wiki: "https://github.com/ibrews/claude-fleet/wiki",
+    devlog: {
+      url: "/repos/claude-fleet/devlog",
+      teaser:
+        "How Fleet Hive got built — a gateway and a cross-model judge panel, built by dogfooding the fleet itself, including a live catch of one research model fabricating another's config syntax.",
+    },
   },
   {
     slug: "godot-avp-cascade",
