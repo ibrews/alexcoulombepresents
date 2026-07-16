@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
-import InterestForm from "@/components/InterestForm";
+import WaitlistForm from "@/components/WaitlistForm";
 import { getNewsletterIssues } from "@/lib/newsletters";
 
 export const metadata: Metadata = {
@@ -31,7 +31,13 @@ export default function Newsletter() {
 
       <Reveal delay={80}>
         <div className="mt-8 max-w-md">
-          <InterestForm track="unreal" />
+          <WaitlistForm
+            list="newsletter"
+            withName
+            cta="Subscribe →"
+            successTitle="You're in."
+            successMessage="You'll hear the moment there's something worth sharing."
+          />
         </div>
       </Reveal>
 

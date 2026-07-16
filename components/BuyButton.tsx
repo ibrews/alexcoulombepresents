@@ -20,16 +20,16 @@ export default function BuyButton({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-launch: show an inline inquiry form, never a "Buy" label — nothing is
-  // actually purchasable yet, so the button must not promise a checkout.
+  // Pre-launch: show an inline "notify me" form, never a "Buy" label —
+  // nothing is actually purchasable yet, so the button must not promise a
+  // checkout or imply a personal reply is coming.
   if (!live) {
     return (
       <InquireButton
-        label="Inquire →"
+        label="Notify me at launch →"
         list="store"
         context={itemName}
-        withMessage
-        successMessage={`Alex will be in touch about ${itemName}.`}
+        successMessage={`You're on the list — you'll hear the moment ${itemName} ships.`}
       />
     );
   }

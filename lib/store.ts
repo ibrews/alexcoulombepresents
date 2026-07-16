@@ -7,8 +7,11 @@
 // cheaper). No platform commission, ever. For true zero-fee purchases every
 // item also exposes an "invoice me" path (ACH/Zelle/check via email).
 //
-// PRICING — every price below is a PLACEHOLDER until STORE_LIVE flips on.
-// TODO(alex): set real prices, then set NEXT_PUBLIC_STORE_LIVE=1 in Vercel.
+// PRICING — STORE_LIVE is ON in production: Stripe charges real cards at the
+// prices below right now. The August cohort's early-bird cutoff and start
+// date are enforced automatically (see earlyBird/saleWindow + effectivePrice-
+// Cents/isPurchasable below) so an expired or already-started listing can't
+// silently keep taking money — no manual edit needed when those dates pass.
 //
 // ⚠️ CHANNEL / EULA GUARDRAILS (check before flipping an item live):
 // - Fab listings: Epic's distribution license is NON-exclusive — selling your
@@ -43,9 +46,22 @@ export type StoreItem = {
   blurb: string;
   delivery: string; // what the buyer receives, in plain words
   fulfillment: "email-manual" | "github-invite" | "download-link" | "booking";
+  // Price steps up automatically once `untilISO` passes — no manual edit
+  // needed on the cutoff day. `regularPriceCents` becomes the new priceCents.
+  earlyBird?: { untilISO: string; regularPriceCents: number };
+  // Item stops being purchasable once `closesAtISO` passes (e.g. a cohort
+  // that has already started). Checkout blocks it server-side regardless of
+  // whether the marketing page has re-rendered yet.
+  saleWindow?: { closesAtISO: string; closedNote: string; closedList: string };
 };
 
 export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
+
+// The base price for open-enrollment sessions — single source of truth so
+// the voucher's crossed-out comparison prices can never drift from the
+// actual per-session prices below.
+const INTRO_SESSION_CENTS = 9900;
+const ADVANCED_SESSION_CENTS = 20000;
 
 export const storeItems: StoreItem[] = [
   {
@@ -53,7 +69,10 @@ export const storeItems: StoreItem[] = [
     name: "Any-class voucher — founding batch",
     kind: "course",
     priceCents: 5000,
-    compareAt: ["Intro session $99", "Advanced session $200"],
+    compareAt: [
+      `Intro session ${formatPrice(INTRO_SESSION_CENTS)}`,
+      `Advanced session ${formatPrice(ADVANCED_SESSION_CENTS)}`,
+    ],
     priceNote:
       "Founding batch of 60 — when they're gone, they're gone. Good for any open-enrollment class (private 1:1s excluded). Newsletter subscribers get a promo code for extra off at checkout.",
     blurb:
@@ -66,7 +85,7 @@ export const storeItems: StoreItem[] = [
     slug: "ue-class-single",
     name: "Unreal Engine class — intro session",
     kind: "course",
-    priceCents: 9900,
+    priceCents: INTRO_SESSION_CENTS,
     priceNote:
       "A core/foundational track. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     blurb: "One live two-hour session on a foundational Unreal track — the essentials, in a small open-enrollment group.",
@@ -77,7 +96,7 @@ export const storeItems: StoreItem[] = [
     slug: "ue-class-advanced",
     name: "Unreal Engine class — advanced session",
     kind: "course",
-    priceCents: 20000,
+    priceCents: ADVANCED_SESSION_CENTS,
     priceNote:
       "A specialized/advanced track. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     blurb: "One live two-hour session on an advanced or specialized track — Lumen/Nanite deep dives, virtual production, AI for Unreal, Vision Pro, or MetaHumans. Open enrollment, small group.",
@@ -108,6 +127,12 @@ export const storeItems: StoreItem[] = [
       "Zero to Environment in four live Wednesday classes starting Aug 5: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Every class runs twice (10a & 12:30p ET) plus Thursday office hours, and recordings are included.",
     delivery: "You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class on Aug 5 (recordings after each).",
     fulfillment: "email-manual",
+    earlyBird: { untilISO: "2026-07-30T04:00:00Z", regularPriceCents: 29900 }, // Jul 29 EOD ET
+    saleWindow: {
+      closesAtISO: "2026-08-05T14:00:00Z", // first session, 10am ET
+      closedNote: "This cohort has already started — join the list for the next one.",
+      closedList: "unreal",
+    },
   },
   {
     slug: "ue-curriculum-bundle",
@@ -180,4 +205,26 @@ export const storeItems: StoreItem[] = [
 export function formatPrice(cents: number | null, note?: string): string {
   if (cents === null) return note ?? "inquire";
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
+}
+
+// The REAL price right now — steps to earlyBird.regularPriceCents once its
+// cutoff passes. Both the store page and the checkout API call this instead
+// of reading item.priceCents directly, so a stale early-bird price can never
+// actually be charged past its own cutoff.
+export function effectivePriceCents(item: StoreItem, now: Date = new Date()): number | null {
+  if (item.priceCents === null) return null;
+  if (item.earlyBird && now >= new Date(item.earlyBird.untilISO)) {
+    return item.earlyBird.regularPriceCents;
+  }
+  return item.priceCents;
+}
+
+// False once saleWindow.closesAtISO has passed — the one real-world case
+// today is a cohort whose first class already happened. Checked server-side
+// in /api/checkout so a purchase can't complete even if the marketing page
+// hasn't re-rendered since the cutoff.
+export function isPurchasable(item: StoreItem, now: Date = new Date()): boolean {
+  if (item.priceCents === null || item.externalUrl) return false;
+  if (item.saleWindow && now >= new Date(item.saleWindow.closesAtISO)) return false;
+  return true;
 }

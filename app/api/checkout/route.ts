@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { storeItems, STORE_LIVE } from "@/lib/store";
+import { storeItems, STORE_LIVE, effectivePriceCents, isPurchasable } from "@/lib/store";
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 
@@ -97,19 +97,22 @@ export async function POST(req: NextRequest) {
       );
     }
     const item = storeItems.find((i) => i.slug === payload.slug);
-    // Only sell what we can actually deliver: a real price AND no external
-    // storefront handling fulfillment. This backstops the UI — a crafted POST
-    // for an inquiry-only or Capafy-fulfilled slug must never take money.
-    if (!item || item.priceCents === null || item.externalUrl) {
+    // Only sell what we can actually deliver: a real price, no external
+    // storefront handling fulfillment, and (for time-boxed items like the
+    // cohort) still inside its sale window. This backstops the UI — a
+    // crafted POST for an inquiry-only, Capafy-fulfilled, or already-closed
+    // slug must never take money.
+    if (!item || !isPurchasable(item)) {
       return NextResponse.json({ error: "Unknown or non-purchasable item" }, { status: 404 });
     }
+    const priceCents = effectivePriceCents(item)!;
     body = new URLSearchParams({
       mode: "payment",
       success_url: `${site}/store/success?item=${item.slug}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site}/store`,
       "line_items[0][quantity]": "1",
       "line_items[0][price_data][currency]": "usd",
-      "line_items[0][price_data][unit_amount]": String(item.priceCents),
+      "line_items[0][price_data][unit_amount]": String(priceCents),
       "line_items[0][price_data][product_data][name]": item.name,
       "line_items[0][price_data][product_data][description]": item.blurb.slice(0, 500),
       "metadata[slug]": item.slug,
