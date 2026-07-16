@@ -28,16 +28,11 @@ export const digitalProducts: DigitalProduct[] = [
     updatesWindowDays: 365,
     r2Prefix: "mh-godot-pipeline/1.0.0/mh-godot-pipeline-1.0.0.zip",
   },
-  {
-    sku: "unrealitykit-bridge",
-    name: "UnRealityKit Bridge (Full)",
-    tier: "indie",
-    priceCents: 14900, // TODO(alex): set real launch price
-    blurb: "UE simulation + RealityKit rendering for visionOS — the full bridge toolkit.",
-    majorVersion: 1,
-    updatesWindowDays: 365,
-    r2Prefix: "unrealitykit-bridge/1.0.0/unrealitykit-bridge-1.0.0.zip",
-  },
+  // UnRealityKit Bridge intentionally NOT listed here yet — per Alex
+  // (2026-07-16) it isn't a product yet. lib/store.ts's "coming soon" /
+  // notify-me entry is the only listing until this one is un-commented for a
+  // real launch. Don't re-add without removing that entry first (see the
+  // stale-duplicate-listing note there) — the two must never both be live.
 ];
 
 export function findDigitalProduct(sku: string): DigitalProduct | undefined {

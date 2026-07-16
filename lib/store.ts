@@ -161,6 +161,9 @@ export const storeItems: StoreItem[] = [
     fulfillment: "github-invite",
   },
   {
+    // NOTE: lib/commerce/products.ts deliberately has NO entry for this yet
+    // (it isn't a real product). If it ever ships as an instant-download SKU
+    // there, remove this notify-only entry in the same commit.
     slug: "unrealitykit-early",
     name: "UnRealityKit Bridge — coming soon",
     kind: "repo-access",

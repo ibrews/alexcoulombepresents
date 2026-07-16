@@ -20,11 +20,12 @@ export default function BuyButton({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-launch: show an inline form instead of a mailto link.
+  // Pre-launch: show an inline inquiry form, never a "Buy" label — nothing is
+  // actually purchasable yet, so the button must not promise a checkout.
   if (!live) {
     return (
       <InquireButton
-        label={label}
+        label="Inquire →"
         list="store"
         context={itemName}
         withMessage
