@@ -968,6 +968,41 @@ export const products: Product[] = [
     links: [],
     accent: "purple",
   },
+  {
+    slug: "colocation",
+    name: "Co-Location Engine",
+    status: "Private — Agile Lens internal, in active development",
+    tagline: "Fiducial-marker-based co-location for Unreal Engine VR — real and virtual players sharing one room, without a shared coordinate system to begin with.",
+    pitch:
+      "Multiplayer XR in a physical space has a chicken-and-egg problem: every headset needs to agree on where the room actually is, and nothing hands that to you for free. This system solves it with printed ArUco/AprilTag/QR markers of known position — a camera-relative detection becomes a rigid-body solve that snaps a VR pawn's tracking origin onto real-world map space, then keeps it there as people walk around.",
+    sections: [
+      {
+        heading: "One rigid solve, not a position-then-yaw hack",
+        body: "Position and rotation are solved jointly — a weighted planar rigid-body fit (Kabsch/Umeyama) across every visible marker at once, not a separate 2-marker yaw formula bolted onto an averaged position. More markers in view means a tighter, self-correcting solve instead of diminishing returns from just picking two.",
+      },
+      {
+        heading: "Corrections you can't feel",
+        body: "A locked-in position doesn't get nudged on every noisy frame. Drift correction is velocity-gated — standing still means never moving the player, walking gets an imperceptible pull toward true, and being grossly wrong (inches, sustained across multiple readings) triggers a full snap instead of a slow, visible slide. The goal is co-location that fades into the background.",
+      },
+      {
+        heading: "Three independent detector families",
+        body: "ArUco, AprilTag, and QR all feed the same localizer, each carrying its own reserved ID range so a printed marker map can mix families without collision. A digital-twin overlay renders the exact expected marker pattern at its known position, so misalignment is visible and diagnosable in headset — no guesswork.",
+      },
+      {
+        heading: "Tested without ever putting a headset on",
+        body: "A three-tier headless harness validates the whole pipeline before it ever touches hardware: pure-math unit tests against synthetic marker geometry, a real render-target camera detecting a live 3D scene, and a fully scripted OpenXR device driving the packaged app end-to-end. The last one already closes the loop on co-location accuracy to sub-centimeter — headless, in CI, no one wearing anything.",
+      },
+    ],
+    bullets: [
+      "Joint N-marker rigid-body solve — yaw and position from every visible marker at once, not sequential 2-marker hacks",
+      "Velocity-gated drift correction: still = untouched, walking = imperceptible, grossly wrong = clean snap",
+      "ArUco + AprilTag + QR detection unified behind one localizer, namespaced marker IDs",
+      "In-headset digital-twin overlay for instant visual alignment checks",
+      "Three-tier headless test harness — unit, synthetic-camera, and full scripted-OpenXR-device — no physical headset required",
+    ],
+    links: [],
+    accent: "amber",
+  },
 ];
 
 // ── About: timeline ─────────────────────────────────────────────────────────
