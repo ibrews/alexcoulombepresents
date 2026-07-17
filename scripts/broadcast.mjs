@@ -9,17 +9,25 @@
  * --list      required. One of the slugs in lib/lists.ts (forage, ai, unreal, …).
  * --subject   required. Email subject line.
  * --body      required. Path to a file with the email body (HTML or plain text).
+ * --reason    optional. Override the "why you're receiving this" line —
+ *             defaults to lib/lists.ts's LIST_REASON for --list.
+ * --broad     optional. Adds a line noting future sends will be more
+ *             tailored to the specific list someone's on. Use this for a
+ *             send going to the consolidated "newsletter" list that mixes
+ *             everyone together (its own content should say so too).
  * --dry-run   optional. Print the recipient count + addresses, send nothing.
  *
  * Reads DATABASE_URL, RESEND_API_KEY, and AUTH_SECRET from the environment
  * or .env.local. Each recipient gets their own individual email (no shared
- * To/CC), and every email automatically gets a one-click unsubscribe link
- * (footer + List-Unsubscribe header) — don't add your own, one is appended.
+ * To/CC), and every email automatically gets a footer explaining why they're
+ * on the list plus a one-click unsubscribe link (+ List-Unsubscribe header)
+ * — don't add your own reason/unsubscribe text, both are appended.
  */
 import { readFileSync } from "node:fs";
 import crypto from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { Resend } from "resend";
+import { LIST_REASON, isListSlug } from "../lib/lists.ts";
 
 // Mirrors lib/unsubscribe.ts's HMAC scheme exactly (kept inline since this is
 // a plain .mjs script, not run through the Next.js/TS pipeline). A stale link
@@ -54,10 +62,16 @@ async function main() {
   const list = arg("list");
   const subject = arg("subject");
   const bodyPath = arg("body");
+  const reason = arg("reason") ?? (isListSlug(list) ? LIST_REASON[list] : undefined);
+  const broad = process.argv.includes("--broad");
   const dryRun = process.argv.includes("--dry-run");
 
   if (!list || !subject || !bodyPath) {
-    console.error("Usage: node scripts/broadcast.mjs --list <slug> --subject <text> --body <file> [--dry-run]");
+    console.error("Usage: node scripts/broadcast.mjs --list <slug> --subject <text> --body <file> [--reason <text>] [--broad] [--dry-run]");
+    process.exit(1);
+  }
+  if (!reason) {
+    console.error(`No reason text for list "${list}" — add it to LIST_REASON in lib/lists.ts or pass --reason "..."`);
     process.exit(1);
   }
   if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
@@ -87,6 +101,10 @@ async function main() {
   const from = "Alex Coulombe Presents <noreply@alexcoulombepresents.com>";
   let sent = 0;
 
+  const tailoringNote = broad
+    ? " Future newsletters will be more tailored to the specific list you signed up for."
+    : "";
+
   // Resend batch endpoint accepts up to 100 messages per call. Every message
   // gets its OWN unsubscribe link (the token is per-email) plus a
   // List-Unsubscribe header so Gmail/Outlook show a native one-click button
@@ -95,9 +113,11 @@ async function main() {
     const chunk = emails.slice(i, i + 100);
     const batch = chunk.map((to) => {
       const unsubUrl = unsubscribeUrl(to, site);
+      const footerText = `You're receiving this newsletter because ${reason}.${tailoringNote} To unsubscribe from this list, click here: ${unsubUrl}`;
+      const footerHtml = `You&rsquo;re receiving this newsletter because ${reason}.${tailoringNote} <a href="${unsubUrl}" style="color:#888">To unsubscribe from this list, click here.</a>`;
       const body = isHtml
-        ? `${raw}\n<hr style="margin-top:32px;border:none;border-top:1px solid #333"><p style="color:#888;font-size:12px;font-family:monospace"><a href="${unsubUrl}" style="color:#888">Unsubscribe</a></p>`
-        : `${raw}\n\n---\nUnsubscribe: ${unsubUrl}`;
+        ? `${raw}\n<hr style="margin-top:32px;border:none;border-top:1px solid #333"><p style="color:#888;font-size:12px;font-family:monospace">${footerHtml}</p>`
+        : `${raw}\n\n---\n${footerText}`;
       return {
         from,
         to,

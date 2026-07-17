@@ -14,7 +14,28 @@ export const LISTS = {
   newsletter: "General newsletter",
   members: "Members — founding waitlist",
   "team-training": "Team / studio training",
+  "legacy-interest": "Old training interest form (imported)",
 } as const;
+
+// Human-readable "why you're receiving this" line per list, used as the
+// default footer reason in scripts/broadcast.mjs. Keep these honest and
+// specific — this is the sentence a recipient reads to decide you're not
+// spamming them.
+export const LIST_REASON: Record<ListSlug, string> = {
+  ai: "you expressed interest in AI training and workflows",
+  unreal: "you expressed interest in Unreal Engine training",
+  forage: "you joined the waitlist for Forage",
+  "unrealitykit-bridge": "you asked to be notified about UnRealityKit Bridge",
+  pinchwork: "you joined the early-access list for Pinchwork",
+  "unreal-visionos": "you signed up for Unreal × visionOS updates",
+  lab: "you asked for early access to Lab projects",
+  skills: "you inquired about a custom AI skill",
+  store: "you inquired about something in the store",
+  newsletter: "you expressed interest in Unreal Engine and related training opportunities",
+  members: "you joined the founding waitlist for membership",
+  "team-training": "you inquired about team or studio training",
+  "legacy-interest": "you filled out an earlier interest form about learning Unreal Engine",
+};
 
 export type ListSlug = keyof typeof LISTS;
 

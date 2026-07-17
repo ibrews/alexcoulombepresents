@@ -31,4 +31,18 @@ Some of you know I taught 300+ sessions for Epic Games' partners. I'm bringing t
 
 Month 2 candidates: Blueprints & interactivity, VR / Vision Pro, MetaHumans, archviz, AI-assisted Unreal workflows. **Reply with the one you'd actually pay for** — the most-requested topic becomes the September cohort.
 
+## What's cooking in the Lab
+
+A few things in active development, hardware-verified and getting closer to a real release:
+
+- **Forage** — an AI-first scout for the Fab/Marketplace packs you already own. You describe what you need ("castle with horses running around the gates"), it finds the 2–3 best-fit packs in your own library and installs the hero assets.
+- **UnRealityKit Bridge** — UE simulation driving RealityKit rendering, for genuinely native Vision Pro apps built on Unreal logic.
+- **Pinchwork** — a universal OpenXR hand-tracking template for Unreal, so you stop rebuilding the same hand-interaction rig per project.
+
+None of these are for sale yet — [the Lab](https://www.alexcoulombepresents.com/lab) has early-access signup for each.
+
+## The studio behind all of it
+
+This site and the classes are the public side of [Agile Lens](https://agilelens.com), the NYC studio I co-founded — ten years of immersive work for the Royal Shakespeare Company, Four Seasons, NEOM, Samsung, and Royal Caribbean, among others. If your team needs XR, spatial computing, or AI-agent pipelines built (not just taught), that's the door: [agilelens.com/contact](https://agilelens.com/contact). Agile Lens also runs its own newsletter — meetup nights, shows, demos, betas — separate from this one.
+
 — Alex
