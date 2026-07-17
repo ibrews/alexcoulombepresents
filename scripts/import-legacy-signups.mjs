@@ -79,7 +79,7 @@ async function main() {
     console.error("Usage: node scripts/import-legacy-signups.mjs <responses.csv> [--dry-run]");
     process.exit(1);
   }
-  if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
+  if (!dryRun && !process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
 
   const raw = readFileSync(csvPath, "utf8");
   const rows = parseCsv(raw);
