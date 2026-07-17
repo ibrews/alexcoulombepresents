@@ -16,6 +16,7 @@ export type Repo = {
   wiki?: string;
   video?: string; // primary / featured YouTube id
   videos?: { id: string; title: string }[]; // additional updates, newest first
+  nativeVideo?: { src: string; poster: string }; // self-hosted mp4 fallback when there's no YouTube upload
   devlog?: { url: string; teaser: string }; // link to a dedicated devlog subpage
 };
 
@@ -403,8 +404,12 @@ export const repos: Repo[] = [
       "~70% of the game's geometry had inverted normals from commit one — caught in headset, confirmed with a custom test scene",
       "10 battlefields, 5 vehicles, on-foot mode, and LAN co-op with fully procedural Rec-Room-style avatars",
     ],
-    links: [],
+    links: [{ label: "Get it on App Lab", url: "https://www.meta.com/s/6mSdrdXX6" }],
     github: "https://github.com/ibrews/TankCommanderVR",
+    nativeVideo: {
+      src: "https://github.com/ibrews/TankCommanderVR/releases/download/v0.6.28/tank_commander_vr_trailer.mp4",
+      poster: "https://github.com/ibrews/TankCommanderVR/releases/download/v0.6.28/trailer_cover_2560x1440.png",
+    },
     devlog: {
       url: "/repos/TankCommanderVR/devlog",
       teaser:

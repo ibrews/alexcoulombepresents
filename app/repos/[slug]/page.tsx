@@ -5,6 +5,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import StarCount from "@/components/StarCount";
 import LiteVideo from "@/components/LiteVideo";
+import NativeVideo from "@/components/NativeVideo";
 import VideoUpdates from "@/components/VideoUpdates";
 import WikiContent from "@/components/WikiContent";
 import CtaRow from "@/components/CtaRow";
@@ -91,6 +92,14 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
             {repo.videos && repo.videos.length > 0 && (
               <VideoUpdates videos={repo.videos} />
             )}
+          </div>
+        </Reveal>
+      )}
+
+      {!repo.video && repo.nativeVideo && (
+        <Reveal>
+          <div className="mt-12">
+            <NativeVideo src={repo.nativeVideo.src} poster={repo.nativeVideo.poster} title={repo.name} />
           </div>
         </Reveal>
       )}
