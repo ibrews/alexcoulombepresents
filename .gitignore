@@ -18,3 +18,4 @@ next-env.d.ts
 # typescript
 *.tsbuildinfo
 .env.local
+.newsletter-preview-*.html

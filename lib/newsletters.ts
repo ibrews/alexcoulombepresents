@@ -22,9 +22,10 @@
 // already hosted elsewhere) works too, unchanged.
 //
 // Preview exactly what an issue will look like AS AN EMAIL (images and all)
-// before sending anything:
-//   /api/admin/newsletter-preview?key=ADMIN_KEY&slug=<the .md filename minus .md>
-// (omit &slug for the latest issue). See app/api/admin/newsletter-preview/route.ts.
+// before sending anything — no credentials, nothing deployed:
+//   node scripts/preview-newsletter.mjs [slug]
+// (omit slug for the latest issue). Opens a local HTML file in your default
+// browser. See scripts/preview-newsletter.mjs.
 
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
