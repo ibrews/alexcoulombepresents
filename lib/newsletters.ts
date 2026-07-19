@@ -13,6 +13,18 @@
 // Workflow: write the issue here FIRST, send it via Resend (scripts/
 // broadcast.mjs or a Resend Broadcast) using the same body, and it's archived
 // on /newsletter automatically at the next deploy. No separate CMS.
+//
+// Images: drop the file in public/newsletter/ and reference it as
+// ![caption](/newsletter/filename.jpg) — works on the site immediately (no
+// deploy needed in dev) and lib/newsletterEmail.ts auto-absolutizes the path
+// to a real https:// URL when the issue is actually emailed, so the same
+// markdown works in both places. A full https:// image URL (e.g. one
+// already hosted elsewhere) works too, unchanged.
+//
+// Preview exactly what an issue will look like AS AN EMAIL (images and all)
+// before sending anything:
+//   /api/admin/newsletter-preview?key=ADMIN_KEY&slug=<the .md filename minus .md>
+// (omit &slug for the latest issue). See app/api/admin/newsletter-preview/route.ts.
 
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";

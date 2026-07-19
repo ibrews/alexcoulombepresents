@@ -8,7 +8,13 @@
  *
  * --list      required. One of the slugs in lib/lists.ts (forage, ai, unreal, …).
  * --subject   required. Email subject line.
- * --body      required. Path to a file with the email body (HTML or plain text).
+ * --body      required. Path to a file with the email body. A .md file is
+ *             converted through lib/newsletterEmail.ts (images, headings,
+ *             links, bullets all render properly — this is the SAME
+ *             converter the preview route uses, so what you preview is what
+ *             gets sent) and sent as HTML with the raw markdown as the
+ *             plain-text fallback. A .html file is sent as-is. Anything else
+ *             is sent as plain text, verbatim.
  * --reason    optional. Override the "why you're receiving this" line —
  *             defaults to lib/lists.ts's LIST_REASON for --list.
  * --broad     optional. Adds a line noting future sends will be more
@@ -28,6 +34,7 @@ import crypto from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { Resend } from "resend";
 import { LIST_REASON, isListSlug } from "../lib/lists.ts";
+import { markdownToEmailHtml } from "../lib/newsletterEmail.ts";
 
 // Mirrors lib/unsubscribe.ts's HMAC scheme exactly (kept inline since this is
 // a plain .mjs script, not run through the Next.js/TS pipeline). A stale link
@@ -80,7 +87,12 @@ async function main() {
 
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
   const raw = readFileSync(bodyPath, "utf8");
-  const isHtml = bodyPath.endsWith(".html") || /<[a-z][\s\S]*>/i.test(raw);
+  const isMarkdown = bodyPath.endsWith(".md");
+  const isHtml = isMarkdown || bodyPath.endsWith(".html") || /<[a-z][\s\S]*>/i.test(raw);
+  // .md source → real content HTML (images, headings, links) via the same
+  // renderer the preview route uses. Plain-text fallback is the raw markdown
+  // itself — not pretty, but every line is still readable as text.
+  const contentHtml = isMarkdown ? markdownToEmailHtml(raw, site) : raw;
 
   const sql = neon(process.env.DATABASE_URL);
   const rows = await sql`SELECT email FROM signups WHERE list = ${list} ORDER BY created_at`;
@@ -115,14 +127,13 @@ async function main() {
       const unsubUrl = unsubscribeUrl(to, site);
       const footerText = `You're receiving this newsletter because ${reason}.${tailoringNote} To unsubscribe from this list, click here: ${unsubUrl}`;
       const footerHtml = `You&rsquo;re receiving this newsletter because ${reason}.${tailoringNote} <a href="${unsubUrl}" style="color:#888">To unsubscribe from this list, click here.</a>`;
-      const body = isHtml
-        ? `${raw}\n<hr style="margin-top:32px;border:none;border-top:1px solid #333"><p style="color:#888;font-size:12px;font-family:monospace">${footerHtml}</p>`
-        : `${raw}\n\n---\n${footerText}`;
+      const htmlBody = `${contentHtml}\n<hr style="margin-top:32px;border:none;border-top:1px solid #333"><p style="color:#888;font-size:12px;font-family:monospace">${footerHtml}</p>`;
+      const textBody = `${raw}\n\n---\n${footerText}`;
       return {
         from,
         to,
         subject,
-        ...(isHtml ? { html: body } : { text: body }),
+        ...(isHtml ? { html: htmlBody, text: textBody } : { text: textBody }),
         headers: {
           "List-Unsubscribe": `<${unsubUrl}>`,
           "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",

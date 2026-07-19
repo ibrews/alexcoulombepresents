@@ -1,26 +1,31 @@
 import React from "react";
 
 // Minimal markdown renderer for newsletter issues — headings, bold, links,
-// bullet lists, and horizontal rules. Deliberately tiny (no dependency) and
-// matched to what the newsletter issues actually use; extend as issues need.
+// images, bullet lists, and horizontal rules. Deliberately tiny (no
+// dependency) and matched to what the newsletter issues actually use; extend
+// as issues need. Keep in sync with lib/newsletterEmail.ts (the email-HTML
+// version of this same renderer) if you add a block/inline type here.
 
 function renderInline(text: string, keyBase: string): React.ReactNode[] {
   const out: React.ReactNode[] = [];
-  // Split on links and bold, preserving order.
-  const re = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
+  // Images first — they share [](  ) syntax with links, just !-prefixed.
+  const re = /!\[([^\]]*)\]\(([^)]+)\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
   let last = 0;
   let m: RegExpExecArray | null;
   let i = 0;
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) out.push(text.slice(last, m.index));
-    if (m[1]) {
+    if (m[2] !== undefined) {
+      // eslint-disable-next-line @next/next/no-img-element
+      out.push(<img key={`${keyBase}-${i++}`} src={m[2]} alt={m[1]} className="my-4 block max-w-full rounded-lg" />);
+    } else if (m[4] !== undefined) {
       out.push(
-        <a key={`${keyBase}-${i++}`} href={m[2]} className="text-teal underline underline-offset-2 hover:text-snow">
-          {m[1]}
+        <a key={`${keyBase}-${i++}`} href={m[4]} className="text-teal underline underline-offset-2 hover:text-snow">
+          {m[3]}
         </a>
       );
     } else {
-      out.push(<strong key={`${keyBase}-${i++}`} className="text-snow">{m[3]}</strong>);
+      out.push(<strong key={`${keyBase}-${i++}`} className="text-snow">{m[5]}</strong>);
     }
     last = m.index + m[0].length;
   }
