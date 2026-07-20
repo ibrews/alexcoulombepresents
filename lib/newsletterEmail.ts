@@ -6,12 +6,16 @@
 // email" — scripts/broadcast.mjs (real sends) and the preview route both
 // call it, so what you preview is byte-for-byte what gets mailed.
 //
-// Supported markdown: headings (##), bold (**), links ([t](u)), images
-// (![alt](u)), bullet lists (- item), horizontal rules (---), paragraphs.
-// A block that's 2+ image references and NOTHING else (any whitespace
-// between them, including newlines) renders as a side-by-side row —
-// ![a](u1) ![b](u2) — an even-width HTML table (table, not flex/grid: the
-// one layout that survives Outlook). Deliberately the same small surface as
+// Supported markdown: headings (##), bold (**), italic (*t*), links
+// ([t](u)), images (![alt](u)), bullet lists (- item), horizontal rules
+// (---), paragraphs. A block that's 2+ image references and NOTHING else
+// (any whitespace between them, including newlines) renders as a
+// side-by-side row — ![a](u1) ![b](u2) — an even-width HTML table (table,
+// not flex/grid: the one layout that survives Outlook). A block that's
+// ONLY italic text — *like this* — renders as a small, centered, muted
+// caption instead of a regular paragraph; put one right after an image or
+// row to caption it: "![a](u1) ![b](u2)" then a blank line then
+// "*caption text*". Deliberately the same small surface as
 // SimpleMarkdown.tsx — keep them in sync if you add a block type to one.
 
 const FONT_STACK =
@@ -32,7 +36,8 @@ function escapeHtml(s: string): string {
 function renderInline(text: string, siteUrl: string): string {
   // Images first (own token so they don't get swallowed by the link regex —
   // markdown images share [](  ) syntax with links, just prefixed with !).
-  const re = /!\[([^\]]*)\]\(([^)]+)\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
+  // Bold before italic so **x** matches as bold, not *(*x*)*.
+  const re = /!\[([^\]]*)\]\(([^)]+)\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
   let out = "";
   let last = 0;
   let m: RegExpExecArray | null;
@@ -44,13 +49,22 @@ function renderInline(text: string, siteUrl: string): string {
     } else if (m[4] !== undefined) {
       const href = absolutize(m[4], siteUrl);
       out += `<a href="${href}" style="color:${TEAL};text-decoration:underline">${escapeHtml(m[3])}</a>`;
-    } else {
+    } else if (m[5] !== undefined) {
       out += `<strong style="color:${INK}">${escapeHtml(m[5])}</strong>`;
+    } else {
+      out += `<em>${escapeHtml(m[6])}</em>`;
     }
     last = m.index + m[0].length;
   }
   out += escapeHtml(text.slice(last));
   return out;
+}
+
+// A block that's ONLY *italic text* (nothing before/after the asterisks) —
+// used as a photo caption. Returns the inner text, or null.
+function captionText(block: string): string | null {
+  const m = block.match(/^\*([^*]+)\*$/);
+  return m ? m[1] : null;
 }
 
 // A block of 2+ image refs and nothing else → side-by-side row. Returns the
@@ -85,6 +99,10 @@ export function markdownToEmailHtml(markdown: string, siteUrl: string): string {
       // A paragraph that's ONLY an image — render at full block width, not
       // wrapped in a <p>, so it doesn't inherit paragraph line-height.
       html.push(renderInline(b, siteUrl));
+    } else if (captionText(b) !== null) {
+      html.push(
+        `<p style="font-size:13px;line-height:1.5;color:${MIST};text-align:center;font-style:italic;margin:0 0 20px">${renderInline(captionText(b)!, siteUrl)}</p>`
+      );
     } else if (images) {
       const width = `${(100 / images.length).toFixed(4)}%`;
       const cells = images

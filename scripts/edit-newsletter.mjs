@@ -149,7 +149,7 @@ const PAGE = /* html */ `<!doctype html>
     <input type="text" id="date" />
     <label>Subject (the email subject line)</label>
     <input type="text" id="subject" />
-    <label>Body (markdown — ## heading, **bold**, [link](url), ![alt](url), - bullets)</label>
+    <label>Body (markdown — ## heading, **bold**, *italic*, [link](url), ![alt](url), - bullets. A line of *just italic text* right after an image/row becomes a centered caption)</label>
     <textarea id="body" spellcheck="true"></textarea>
     <div class="dropzone" id="dropzone">Drop image(s) here, or click to choose — large photos are auto-resized. Drop/select TWO at once for a side-by-side row.</div>
     <div class="hint">Images save into public/newsletter/ and preview here immediately. Before the real send, they need to be committed &amp; pushed so the live site actually has them too.</div>

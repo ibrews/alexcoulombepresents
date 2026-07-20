@@ -1,7 +1,7 @@
 import React from "react";
 
-// Minimal markdown renderer for newsletter issues — headings, bold, links,
-// images, bullet lists, and horizontal rules. Deliberately tiny (no
+// Minimal markdown renderer for newsletter issues — headings, bold, italic,
+// links, images, bullet lists, and horizontal rules. Deliberately tiny (no
 // dependency) and matched to what the newsletter issues actually use; extend
 // as issues need. Keep in sync with lib/newsletterEmail.ts (the email-HTML
 // version of this same renderer) if you add a block/inline type here.
@@ -9,7 +9,8 @@ import React from "react";
 function renderInline(text: string, keyBase: string): React.ReactNode[] {
   const out: React.ReactNode[] = [];
   // Images first — they share [](  ) syntax with links, just !-prefixed.
-  const re = /!\[([^\]]*)\]\(([^)]+)\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
+  // Bold before italic so **x** matches as bold, not *(*x*)*.
+  const re = /!\[([^\]]*)\]\(([^)]+)\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
   let last = 0;
   let m: RegExpExecArray | null;
   let i = 0;
@@ -24,13 +25,22 @@ function renderInline(text: string, keyBase: string): React.ReactNode[] {
           {m[3]}
         </a>
       );
-    } else {
+    } else if (m[5] !== undefined) {
       out.push(<strong key={`${keyBase}-${i++}`} className="text-snow">{m[5]}</strong>);
+    } else {
+      out.push(<em key={`${keyBase}-${i++}`}>{m[6]}</em>);
     }
     last = m.index + m[0].length;
   }
   if (last < text.length) out.push(text.slice(last));
   return out;
+}
+
+// A block that's ONLY *italic text* — used as a photo caption. Put it right
+// after an image (or a side-by-side row) to caption it.
+function captionText(block: string): string | null {
+  const m = block.match(/^\*([^*]+)\*$/);
+  return m ? m[1] : null;
 }
 
 // A block of 2+ image refs and nothing else → side-by-side row (mirrors
@@ -59,6 +69,14 @@ export default function SimpleMarkdown({ markdown }: { markdown: string }) {
             <h2 key={bi} className="pt-2 text-xl font-bold text-snow">
               {renderInline(b.slice(3), `h-${bi}`)}
             </h2>
+          );
+        }
+        const caption = captionText(b);
+        if (caption !== null) {
+          return (
+            <p key={bi} className="-mt-3 text-center text-sm italic text-mist/80">
+              {renderInline(caption, `c-${bi}`)}
+            </p>
           );
         }
         const row = imageRow(b);
