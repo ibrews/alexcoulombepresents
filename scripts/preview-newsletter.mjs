@@ -8,14 +8,15 @@
  *   node scripts/preview-newsletter.mjs                                  # latest issue
  *   node scripts/preview-newsletter.mjs 2026-07-16-siggraph-and-august-cohort
  *
- * Images referenced as /newsletter/foo.jpg resolve against
- * NEXT_PUBLIC_SITE_URL (or the real production domain if unset) — exactly
- * what a recipient's inbox will load, so this only shows real images once
- * they're actually deployed. Run `npm run dev` and pass
- * NEXT_PUBLIC_SITE_URL=http://localhost:3000 first if you want to preview
- * an image you haven't deployed yet.
+ * Images referenced as /newsletter/foo.jpg are inlined straight from
+ * public/newsletter/ on disk (as data: URIs) if the file's there — so a
+ * just-uploaded image previews correctly immediately, with no deploy
+ * needed. The REAL send (scripts/broadcast.mjs) always uses the actual
+ * https://alexcoulombepresents.com URL, which only works once you've
+ * committed & pushed the image file — this preview is just showing you
+ * what the picture will look like ahead of that.
  */
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,6 +41,21 @@ function loadIssue(slug) {
   return { slug: file.replace(/\.md$/, ""), title: get("title"), body: rest.join("---").trim() };
 }
 
+const IMAGE_DIR = path.join(ROOT, "public", "newsletter");
+const CONTENT_TYPES = { ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".gif": "image/gif", ".webp": "image/webp", ".svg": "image/svg+xml" };
+
+// Swap <img src="https://.../newsletter/foo.jpg"> for a data: URI when
+// foo.jpg exists locally — so preview never depends on deploy status.
+function inlineLocalImages(html) {
+  return html.replace(/src="[^"]*\/newsletter\/([^"?]+)"/g, (match, filename) => {
+    const filePath = path.join(IMAGE_DIR, decodeURIComponent(filename));
+    if (!filePath.startsWith(IMAGE_DIR) || !existsSync(filePath)) return match;
+    const type = CONTENT_TYPES[path.extname(filePath).toLowerCase()] ?? "application/octet-stream";
+    const data = readFileSync(filePath).toString("base64");
+    return `src="data:${type};base64,${data}"`;
+  });
+}
+
 const issue = loadIssue(process.argv[2]);
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
 
@@ -48,7 +64,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresent
 // to see exactly where it sits and how it reads.
 const footerHtml = `You&rsquo;re receiving this newsletter because ${LIST_REASON.newsletter}. Future newsletters will be more tailored to the specific list you signed up for. <a href="#" style="color:#888">To unsubscribe from this list, click here.</a>`;
 
-const html = renderNewsletterEmail({ bodyMarkdown: issue.body, footerHtml, siteUrl });
+const html = inlineLocalImages(renderNewsletterEmail({ bodyMarkdown: issue.body, footerHtml, siteUrl }));
 const outPath = path.join(ROOT, `.newsletter-preview-${issue.slug}.html`);
 writeFileSync(outPath, html);
 console.log(`Preview written: ${outPath}`);

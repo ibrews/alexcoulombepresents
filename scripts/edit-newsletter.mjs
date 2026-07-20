@@ -68,8 +68,21 @@ function saveIssue({ title, date, subject, body }) {
 
 function renderPreview(body) {
   const footerHtml = `You&rsquo;re receiving this newsletter because ${LIST_REASON.newsletter}. Future newsletters will be more tailored to the specific list you signed up for. <a href="#" style="color:#888">To unsubscribe from this list, click here.</a>`;
-  return renderNewsletterEmail({ bodyMarkdown: body, footerHtml });
+  // siteUrl points at THIS server (not the live site) so an image you just
+  // uploaded shows up immediately — no deploy needed to preview it. The
+  // real send (scripts/broadcast.mjs) always uses the real site URL, since
+  // that's what recipients' inboxes actually need to fetch.
+  return renderNewsletterEmail({ bodyMarkdown: body, footerHtml, siteUrl: `http://localhost:${PORT}` });
 }
+
+const IMAGE_CONTENT_TYPES = {
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".gif": "image/gif",
+  ".webp": "image/webp",
+  ".svg": "image/svg+xml",
+};
 
 function safeFilename(name) {
   const ext = path.extname(name).toLowerCase() || ".jpg";
@@ -137,7 +150,7 @@ const PAGE = /* html */ `<!doctype html>
     <label>Body (markdown — ## heading, **bold**, [link](url), ![alt](url), - bullets)</label>
     <textarea id="body" spellcheck="true"></textarea>
     <div class="dropzone" id="dropzone">Drop an image here, or click to choose a file — inserts at the end of the body</div>
-    <div class="hint">Images save into public/newsletter/ and get a real, permanent site URL automatically.</div>
+    <div class="hint">Images save into public/newsletter/ and preview here immediately. Before the real send, they need to be committed &amp; pushed so the live site actually has them too.</div>
     <input type="file" id="fileInput" accept="image/*" style="display:none" />
   </div>
   <div class="preview"><iframe id="preview"></iframe></div>
@@ -209,6 +222,19 @@ const server = createServer(async (req, res) => {
     if (req.method === "GET" && req.url === "/") {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       res.end(PAGE);
+    } else if (req.method === "GET" && req.url.startsWith("/newsletter/")) {
+      // Serves whatever's actually on disk in public/newsletter/ — so an
+      // uploaded-but-not-yet-deployed image renders correctly in preview.
+      const filename = decodeURIComponent(req.url.slice("/newsletter/".length));
+      const filePath = path.join(IMAGE_DIR, filename);
+      if (!filePath.startsWith(IMAGE_DIR) || !existsSync(filePath)) {
+        res.writeHead(404);
+        res.end("Not found");
+        return;
+      }
+      const type = IMAGE_CONTENT_TYPES[path.extname(filePath).toLowerCase()] ?? "application/octet-stream";
+      res.writeHead(200, { "Content-Type": type });
+      res.end(readFileSync(filePath));
     } else if (req.method === "POST" && req.url === "/render") {
       const body = (await readBody(req)).toString("utf8");
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
