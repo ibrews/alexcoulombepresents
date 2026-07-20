@@ -131,6 +131,8 @@ const PAGE = /* html */ `<!doctype html>
   .dropzone { margin-top: 8px; border: 1.5px dashed #2a2a36; border-radius: 8px; padding: 16px; text-align: center; font-size: 12px; color: #7a7a85; cursor: pointer; }
   .dropzone.drag { border-color: #14b8a6; color: #14b8a6; }
   .hint { font-size: 11px; color: #5a5a65; margin-top: 6px; }
+  .error-banner { display: none; margin-top: 10px; padding: 10px 12px; background: #3a1a1a; border: 1px solid #7a2a2a; border-radius: 6px; color: #ff8080; font-size: 12px; line-height: 1.5; }
+  .error-banner.show { display: block; }
 </style>
 </head>
 <body>
@@ -149,9 +151,10 @@ const PAGE = /* html */ `<!doctype html>
     <input type="text" id="subject" />
     <label>Body (markdown — ## heading, **bold**, [link](url), ![alt](url), - bullets)</label>
     <textarea id="body" spellcheck="true"></textarea>
-    <div class="dropzone" id="dropzone">Drop an image here, or click to choose a file — inserts at the end of the body</div>
+    <div class="dropzone" id="dropzone">Drop image(s) here, or click to choose — large photos are auto-resized. Drop/select TWO at once for a side-by-side row.</div>
     <div class="hint">Images save into public/newsletter/ and preview here immediately. Before the real send, they need to be committed &amp; pushed so the live site actually has them too.</div>
-    <input type="file" id="fileInput" accept="image/*" style="display:none" />
+    <input type="file" id="fileInput" accept="image/*" multiple style="display:none" />
+    <div class="error-banner" id="errorBanner"></div>
   </div>
   <div class="preview"><iframe id="preview"></iframe></div>
 </main>
@@ -163,55 +166,132 @@ const PAGE = /* html */ `<!doctype html>
   $('subject').value = issue.subject;
   $('body').value = issue.body;
 
+  function showError(msg) {
+    const b = $('errorBanner');
+    b.textContent = msg;
+    b.classList.add('show');
+  }
+  function clearError() { $('errorBanner').classList.remove('show'); }
+
   let renderTimer;
   async function renderNow() {
-    const res = await fetch('/render', { method: 'POST', headers: {'Content-Type':'text/plain'}, body: $('body').value });
-    const html = await res.text();
-    $('preview').srcdoc = html;
+    try {
+      const res = await fetch('/render', { method: 'POST', headers: {'Content-Type':'text/plain'}, body: $('body').value });
+      if (!res.ok) throw new Error('Preview render failed (HTTP ' + res.status + ')');
+      $('preview').srcdoc = await res.text();
+    } catch (err) {
+      showError('Preview failed: ' + err.message);
+    }
   }
   function scheduleRender() { clearTimeout(renderTimer); renderTimer = setTimeout(renderNow, 350); }
   $('body').addEventListener('input', scheduleRender);
   renderNow();
 
   $('save').addEventListener('click', async () => {
+    clearError();
     $('status').textContent = 'Saving…';
-    const res = await fetch('/save', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ title: $('title').value, date: $('date').value, subject: $('subject').value, body: $('body').value }),
-    });
-    $('status').textContent = res.ok ? 'Saved ✓ — ' + new Date().toLocaleTimeString() : 'Save failed';
+    try {
+      const res = await fetch('/save', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title: $('title').value, date: $('date').value, subject: $('subject').value, body: $('body').value }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'HTTP ' + res.status);
+      }
+      $('status').textContent = 'Saved ✓ — ' + new Date().toLocaleTimeString();
+    } catch (err) {
+      $('status').textContent = '';
+      showError('Save failed: ' + err.message);
+    }
     setTimeout(() => $('status').textContent = '', 4000);
   });
 
-  async function uploadFile(file) {
-    $('status').textContent = 'Uploading ' + file.name + '…';
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const res = await fetch('/upload', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ filename: file.name, dataUrl: reader.result }),
-      });
-      const { path: imgPath } = await res.json();
+  // Long edge capped at 1600px (plenty for a 600px-wide email — this is
+  // 2.6x that for retina) and re-encoded as JPEG at 0.85 quality. A typical
+  // 20-40MB phone photo becomes a few hundred KB, which is what actually
+  // fixes "uploads that don't seem to do anything" — the old code built a
+  // many-MB base64 JSON string on the main thread with zero feedback while
+  // it worked, which looks identical to broken. SVGs and GIFs pass through
+  // unresized (vector / animation would break under a canvas re-encode).
+  const MAX_DIM = 1600;
+  function resizeImage(file) {
+    return new Promise((resolve, reject) => {
+      if (/\\.(svg|gif)$/i.test(file.name)) return resolve(file);
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const { naturalWidth: w, naturalHeight: h } = img;
+        if (w <= MAX_DIM && h <= MAX_DIM && file.size < 1_500_000) return resolve(file);
+        const scale = Math.min(1, MAX_DIM / Math.max(w, h));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          (blob) => blob ? resolve(new File([blob], file.name.replace(/\\.[a-z0-9]+$/i, '.jpg'), { type: 'image/jpeg' })) : reject(new Error('Could not re-encode image')),
+          'image/jpeg', 0.85
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(file.name + ' — this browser cannot decode that image format (common with HEIC photos on non-Safari browsers). Try exporting it as JPEG or PNG first.')); };
+      img.src = url;
+    });
+  }
+
+  function readAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error('Could not read ' + file.name));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function uploadOne(file) {
+    const resized = await resizeImage(file);
+    const dataUrl = await readAsDataUrl(resized);
+    const res = await fetch('/upload', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ filename: resized.name, dataUrl }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+    return { path: data.path, alt: file.name.replace(/\\.[a-z0-9]+$/i, '') };
+  }
+
+  // Two or more files dropped/selected TOGETHER become one combined line —
+  // that's what renders as a side-by-side row (see lib/newsletterEmail.ts).
+  async function uploadFiles(fileList) {
+    const files = Array.from(fileList);
+    if (files.length === 0) return;
+    clearError();
+    $('status').textContent = 'Uploading ' + files.length + ' image' + (files.length > 1 ? 's' : '') + '…';
+    try {
+      const results = await Promise.all(files.map(uploadOne));
+      const line = results.map((r) => '![' + r.alt + '](' + r.path + ')').join(' ');
       const ta = $('body');
-      const insert = (ta.value.trim() ? '\\n\\n' : '') + '![' + file.name.replace(/\\.[a-z0-9]+$/i, '') + '](' + imgPath + ')\\n';
-      ta.value = ta.value + insert;
-      $('status').textContent = 'Inserted ' + imgPath;
+      ta.value = ta.value + (ta.value.trim() ? '\\n\\n' : '') + line + '\\n';
+      $('status').textContent = 'Inserted ' + results.length + ' image' + (results.length > 1 ? 's' : '');
       scheduleRender();
-      setTimeout(() => $('status').textContent = '', 4000);
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      $('status').textContent = '';
+      showError('Upload failed: ' + err.message);
+    }
+    setTimeout(() => $('status').textContent = '', 4000);
   }
 
   const dz = $('dropzone');
   dz.addEventListener('click', () => $('fileInput').click());
-  $('fileInput').addEventListener('change', (e) => { if (e.target.files[0]) uploadFile(e.target.files[0]); });
+  $('fileInput').addEventListener('change', (e) => uploadFiles(e.target.files));
   dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('drag'); });
   dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
   dz.addEventListener('drop', (e) => {
     e.preventDefault(); dz.classList.remove('drag');
-    if (e.dataTransfer.files[0]) uploadFile(e.dataTransfer.files[0]);
+    uploadFiles(e.dataTransfer.files);
   });
 </script>
 </body>
@@ -249,6 +329,12 @@ const server = createServer(async (req, res) => {
       const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
       if (!match) throw new Error("Bad image data");
       const buf = Buffer.from(match[2], "base64");
+      // Backstop for the client-side resize (svg/gif skip it deliberately,
+      // and it could fail open in a browser edge case) — a clear error
+      // beats a silent multi-MB write nobody asked for.
+      if (buf.length > 10_000_000) {
+        throw new Error(`${filename} is ${(buf.length / 1_000_000).toFixed(1)}MB even after resize — too large to use in an email`);
+      }
       const saved = safeFilename(filename);
       writeFileSync(path.join(IMAGE_DIR, saved), buf);
       res.writeHead(200, { "Content-Type": "application/json" });

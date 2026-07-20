@@ -33,6 +33,19 @@ function renderInline(text: string, keyBase: string): React.ReactNode[] {
   return out;
 }
 
+// A block of 2+ image refs and nothing else → side-by-side row (mirrors
+// lib/newsletterEmail.ts's imageRow, kept here since this file has no
+// import path to that one — a JSX component vs. a plain string renderer).
+function imageRow(block: string): { alt: string; url: string }[] | null {
+  const re = /!\[([^\]]*)\]\(([^)]+)\)/g;
+  const pairs: { alt: string; url: string }[] = [];
+  const stripped = block.replace(re, (_, alt, url) => {
+    pairs.push({ alt, url });
+    return "";
+  });
+  return pairs.length >= 2 && stripped.trim() === "" ? pairs : null;
+}
+
 export default function SimpleMarkdown({ markdown }: { markdown: string }) {
   const blocks = markdown.split(/\n\s*\n/);
   return (
@@ -46,6 +59,17 @@ export default function SimpleMarkdown({ markdown }: { markdown: string }) {
             <h2 key={bi} className="pt-2 text-xl font-bold text-snow">
               {renderInline(b.slice(3), `h-${bi}`)}
             </h2>
+          );
+        }
+        const row = imageRow(b);
+        if (row) {
+          return (
+            <div key={bi} className="grid gap-4 my-4" style={{ gridTemplateColumns: `repeat(${row.length}, 1fr)` }}>
+              {row.map((img, i) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={i} src={img.url} alt={img.alt} className="block w-full rounded-lg" />
+              ))}
+            </div>
           );
         }
         if (b.split("\n").every((l) => l.trim().startsWith("- "))) {

@@ -8,8 +8,11 @@
 //
 // Supported markdown: headings (##), bold (**), links ([t](u)), images
 // (![alt](u)), bullet lists (- item), horizontal rules (---), paragraphs.
-// Deliberately the same small surface as SimpleMarkdown.tsx — keep them in
-// sync if you add a block type to one.
+// A block that's 2+ image references and NOTHING else (any whitespace
+// between them, including newlines) renders as a side-by-side row —
+// ![a](u1) ![b](u2) — an even-width HTML table (table, not flex/grid: the
+// one layout that survives Outlook). Deliberately the same small surface as
+// SimpleMarkdown.tsx — keep them in sync if you add a block type to one.
 
 const FONT_STACK =
   "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
@@ -50,6 +53,20 @@ function renderInline(text: string, siteUrl: string): string {
   return out;
 }
 
+// A block of 2+ image refs and nothing else → side-by-side row. Returns the
+// [alt, url] pairs, or null if the block isn't purely images (alt text can
+// itself contain spaces, so this can't just whitespace-split the block —
+// it extracts every ![]() match, then checks nothing but whitespace is left).
+function imageRow(block: string): [string, string][] | null {
+  const re = /!\[([^\]]*)\]\(([^)]+)\)/g;
+  const pairs: [string, string][] = [];
+  const stripped = block.replace(re, (_, alt, url) => {
+    pairs.push([alt, url]);
+    return "";
+  });
+  return pairs.length >= 2 && stripped.trim() === "" ? pairs : null;
+}
+
 /** The email body only — no <html>/<head>, so callers can append a footer. */
 export function markdownToEmailHtml(markdown: string, siteUrl: string): string {
   const blocks = markdown.split(/\n\s*\n/);
@@ -57,6 +74,7 @@ export function markdownToEmailHtml(markdown: string, siteUrl: string): string {
   for (const block of blocks) {
     const b = block.trim();
     if (!b) continue;
+    const images = imageRow(b);
     if (b === "---") {
       html.push(`<hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0" />`);
     } else if (b.startsWith("## ")) {
@@ -67,6 +85,18 @@ export function markdownToEmailHtml(markdown: string, siteUrl: string): string {
       // A paragraph that's ONLY an image — render at full block width, not
       // wrapped in a <p>, so it doesn't inherit paragraph line-height.
       html.push(renderInline(b, siteUrl));
+    } else if (images) {
+      const width = `${(100 / images.length).toFixed(4)}%`;
+      const cells = images
+        .map(([alt, url], i) => {
+          const src = absolutize(url, siteUrl);
+          const pad = images.length === 1 ? "" : i === 0 ? "padding-right:8px" : i === images.length - 1 ? "padding-left:8px" : "padding-left:8px;padding-right:8px";
+          return `<td width="${width}" style="${pad}"><img src="${src}" alt="${escapeHtml(alt)}" style="width:100%;height:auto;border-radius:8px;display:block" /></td>`;
+        })
+        .join("");
+      html.push(
+        `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0"><tr>${cells}</tr></table>`
+      );
     } else if (b.split("\n").every((l) => l.trim().startsWith("- "))) {
       const items = b
         .split("\n")
