@@ -17,12 +17,12 @@
   <rect x="200" y="106" width="160" height="32" rx="16" fill="url(#g)"/>
   <text x="280" y="128" text-anchor="middle" font-family="'Space Grotesk','Arial',sans-serif" font-size="16" font-weight="700" fill="#07070f" letter-spacing="6">PRESENTS</text>
   <!-- left spark -->
-  <g transform="translate(170,122)">
+  <g transform="translate(170,122) rotate(45)">
     <path d="M0 -11 L3.2 -3.2 L11 0 L3.2 3.2 L0 11 L-3.2 3.2 L-11 0 L-3.2 -3.2 Z" fill="#2dd4bf"/>
     <path d="M0 -16 v4 M0 12 v4 M-16 0 h4 M12 0 h4" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round"/>
   </g>
   <!-- right spark -->
-  <g transform="translate(390,122)">
+  <g transform="translate(390,122) rotate(45)">
     <path d="M0 -11 L3.2 -3.2 L11 0 L3.2 3.2 L0 11 L-3.2 3.2 L-11 0 L-3.2 -3.2 Z" fill="#fbbf24"/>
     <path d="M0 -16 v4 M0 12 v4 M-16 0 h4 M12 0 h4" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
   </g>
