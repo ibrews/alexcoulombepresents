@@ -14,6 +14,7 @@ export const LISTS = {
   newsletter: "General newsletter",
   members: "Members — founding waitlist",
   "team-training": "Team / studio training",
+  "receipt-reconciler": "Receipt Reconciler",
   "legacy-interest": "Old training interest form (imported)",
 } as const;
 
@@ -34,6 +35,7 @@ export const LIST_REASON: Record<ListSlug, string> = {
   newsletter: "you expressed interest in Unreal Engine and related training opportunities",
   members: "you joined the founding waitlist for membership",
   "team-training": "you inquired about team or studio training",
+  "receipt-reconciler": "you asked to be notified when Receipt Reconciler goes on sale",
   "legacy-interest": "you filled out an earlier interest form about learning Unreal Engine",
 };
 

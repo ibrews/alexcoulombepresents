@@ -18,10 +18,14 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { renderNewsletterEmail } from "../lib/newsletterEmail.ts";
 import { LIST_REASON } from "../lib/lists.ts";
 
-const DIR = path.join(process.cwd(), "content", "newsletters");
+// Resolved from this file's own location, NOT process.cwd() — works no
+// matter what directory you run it from.
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const DIR = path.join(ROOT, "content", "newsletters");
 
 function loadIssue(slug) {
   const files = readdirSync(DIR).filter((f) => f.endsWith(".md"));
@@ -45,7 +49,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresent
 const footerHtml = `You&rsquo;re receiving this newsletter because ${LIST_REASON.newsletter}. Future newsletters will be more tailored to the specific list you signed up for. <a href="#" style="color:#888">To unsubscribe from this list, click here.</a>`;
 
 const html = renderNewsletterEmail({ bodyMarkdown: issue.body, footerHtml, siteUrl });
-const outPath = path.join(process.cwd(), `.newsletter-preview-${issue.slug}.html`);
+const outPath = path.join(ROOT, `.newsletter-preview-${issue.slug}.html`);
 writeFileSync(outPath, html);
 console.log(`Preview written: ${outPath}`);
 

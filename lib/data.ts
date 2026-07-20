@@ -703,7 +703,7 @@ export const products: Product[] = [
       },
       {
         heading: "Know what bridges before you build",
-        body: "The BridgeabilityAnalyzer classifies every material and Blueprint in your UE project before you invest in a full bridge build: native-mirror (direct MaterialX path), needs-seam (custom translation required), or hard-wall (manual intervention). Run it against your project and get a coverage score and per-material report so you know exactly what you're walking into — and can prioritize the right assets for your production.",
+        body: "The BridgeabilityAnalyzer classifies every material and Blueprint in your UE project before you invest in a full bridge build: native-mirror (direct MaterialX path), needs-seam (custom translation required), or hard-wall (manual intervention). Run it against your project and get a coverage score and per-material report so you know exactly what you're walking into — and can prioritize the right assets for your production. It isn't tuned to one demo scene: pointed at three unrelated Unreal projects across UE 5.6.1 and 5.8, it scored them 79.3% to 95.4% native-mirror without a single project-specific tweak.",
       },
       {
         heading: "What's already real",
@@ -721,7 +721,7 @@ export const products: Product[] = [
     bullets: [
       "UE simulation + RealityKit rendering — best of both worlds for MR",
       "Live Link Previewer: stream your live UE editor to device, no packaged build required",
-      "BridgeabilityAnalyzer: classify every material before you invest in a full bridge build",
+      "BridgeabilityAnalyzer: classify every material before you invest — 79–95% native-mirror on three outside projects, UE 5.6.1 and 5.8",
       "Verified on device: room mirror, live Lumen GI, materials, spatial audio, Chaos physics input",
       "Mixed / Immersive / Volume presentation modes from one simulation",
       "UE material graph → MaterialX ShaderGraph translation pipeline",
