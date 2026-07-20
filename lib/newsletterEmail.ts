@@ -15,7 +15,10 @@
 // ONLY italic text — *like this* — renders as a small, centered, muted
 // caption instead of a regular paragraph; put one right after an image or
 // row to caption it: "![a](u1) ![b](u2)" then a blank line then
-// "*caption text*". Deliberately the same small surface as
+// "*caption text*". A single line break WITHIN a block (one Enter in the
+// editor's textarea — Shift+Enter does the same thing there, it's a plain
+// <textarea>) renders as a visible line break; a BLANK line (Enter twice)
+// starts a whole new block instead. Deliberately the same small surface as
 // SimpleMarkdown.tsx — keep them in sync if you add a block type to one.
 
 const FONT_STACK =
@@ -30,7 +33,17 @@ function absolutize(url: string, siteUrl: string): string {
 }
 
 function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  // A single newline inside a block (Enter/Shift+Enter in the editor — a
+  // plain <textarea> makes no distinction between the two) becomes a real
+  // line break, not collapsed whitespace like raw HTML normally does. A
+  // BLANK line still starts a whole new block (paragraph, or breaks a
+  // caption's asterisks) — that split happens earlier, on the raw markdown,
+  // before this function ever sees the text.
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\n/g, "<br>");
 }
 
 function renderInline(text: string, siteUrl: string): string {

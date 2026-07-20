@@ -6,6 +6,21 @@ import React from "react";
 // as issues need. Keep in sync with lib/newsletterEmail.ts (the email-HTML
 // version of this same renderer) if you add a block/inline type here.
 
+// Plain HTML collapses a raw "\n" to nothing visible — split on it and
+// interleave real <br /> elements so a single line break WITHIN a block (one
+// Enter in the editor's textarea; Shift+Enter does the same thing there,
+// it's a plain <textarea>) actually shows. A BLANK line (Enter twice) starts
+// a whole new block instead — handled earlier, before text ever reaches here.
+function withLineBreaks(text: string, keyBase: string): React.ReactNode[] {
+  const lines = text.split("\n");
+  const out: React.ReactNode[] = [];
+  lines.forEach((line, i) => {
+    if (i > 0) out.push(<br key={`${keyBase}-br-${i}`} />);
+    if (line) out.push(line);
+  });
+  return out;
+}
+
 function renderInline(text: string, keyBase: string): React.ReactNode[] {
   const out: React.ReactNode[] = [];
   // Images first — they share [](  ) syntax with links, just !-prefixed.
@@ -15,7 +30,7 @@ function renderInline(text: string, keyBase: string): React.ReactNode[] {
   let m: RegExpExecArray | null;
   let i = 0;
   while ((m = re.exec(text)) !== null) {
-    if (m.index > last) out.push(text.slice(last, m.index));
+    if (m.index > last) out.push(...withLineBreaks(text.slice(last, m.index), `${keyBase}-t${i}`));
     if (m[2] !== undefined) {
       // eslint-disable-next-line @next/next/no-img-element
       out.push(<img key={`${keyBase}-${i++}`} src={m[2]} alt={m[1]} className="my-4 block max-w-full rounded-lg" />);
@@ -26,13 +41,17 @@ function renderInline(text: string, keyBase: string): React.ReactNode[] {
         </a>
       );
     } else if (m[5] !== undefined) {
-      out.push(<strong key={`${keyBase}-${i++}`} className="text-snow">{m[5]}</strong>);
+      out.push(
+        <strong key={`${keyBase}-${i++}`} className="text-snow">
+          {withLineBreaks(m[5], `${keyBase}-b${i}`)}
+        </strong>
+      );
     } else {
-      out.push(<em key={`${keyBase}-${i++}`}>{m[6]}</em>);
+      out.push(<em key={`${keyBase}-${i++}`}>{withLineBreaks(m[6], `${keyBase}-i${i}`)}</em>);
     }
     last = m.index + m[0].length;
   }
-  if (last < text.length) out.push(text.slice(last));
+  if (last < text.length) out.push(...withLineBreaks(text.slice(last), `${keyBase}-tail`));
   return out;
 }
 
