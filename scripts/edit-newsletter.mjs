@@ -18,10 +18,15 @@ import { createServer } from "node:http";
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { renderNewsletterEmail } from "../lib/newsletterEmail.ts";
 import { LIST_REASON } from "../lib/lists.ts";
 
-const ROOT = process.cwd();
+// Resolved from this file's own location, NOT process.cwd() — so the script
+// works no matter what directory you run it from (e.g. `node
+// /Users/alex/GH/alexcoulombepresents/scripts/edit-newsletter.mjs` from
+// your home folder still finds the right project files).
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const NEWSLETTER_DIR = path.join(ROOT, "content", "newsletters");
 const IMAGE_DIR = path.join(ROOT, "public", "newsletter");
 const PORT = 4848;
