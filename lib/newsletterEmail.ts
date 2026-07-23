@@ -148,13 +148,20 @@ export function renderNewsletterEmail(opts: {
   bodyMarkdown: string;
   footerHtml: string; // the reason + unsubscribe line, already built by the caller
   siteUrl?: string;
+  /** Inbox preview text — the gray line after the subject. Hidden in the body. */
+  preheader?: string;
 }): string {
   const siteUrl = opts.siteUrl ?? "https://alexcoulombepresents.com";
   const body = markdownToEmailHtml(opts.bodyMarkdown, siteUrl);
+  // Zero-width padding stops inbox previews from bleeding past the
+  // preheader into the first real line of the email.
+  const preheader = opts.preheader
+    ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${escapeHtml(opts.preheader)}${"&nbsp;&zwnj;".repeat(40)}</div>\n  `
+    : "";
   return `<!doctype html>
 <html>
 <body style="margin:0;padding:0;background:#f4f4f5;font-family:${FONT_STACK}">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 16px">
+  ${preheader}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 16px">
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden">
         <tr><td style="padding:32px 32px 8px">

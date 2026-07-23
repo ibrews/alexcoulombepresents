@@ -59,6 +59,8 @@ export function composeEmail(opts: {
   siteUrl?: string;
   /** Public archive URL — adds a "View this issue in your browser" link. */
   webUrl?: string;
+  /** Inbox preview text (the gray line after the subject). */
+  preheader?: string;
 }): ComposedEmail {
   const site = opts.siteUrl ?? DEFAULT_SITE;
   const tailoring = opts.broad
@@ -72,7 +74,12 @@ export function composeEmail(opts: {
   const footerHtml = `${webLinkHtml}You&rsquo;re receiving this newsletter because ${opts.reason}.${tailoring} <a href="${unsubUrl}" style="color:#888">To unsubscribe from this list, click here.</a>`;
   const footerText = `${webLinkText}You're receiving this newsletter because ${opts.reason}.${tailoring} To unsubscribe from this list, click here: ${unsubUrl}`;
 
-  let html = renderNewsletterEmail({ bodyMarkdown: opts.bodyMarkdown, footerHtml, siteUrl: site });
+  let html = renderNewsletterEmail({
+    bodyMarkdown: opts.bodyMarkdown,
+    footerHtml,
+    siteUrl: site,
+    preheader: opts.preheader,
+  });
   if (opts.tracking !== false) {
     html = wrapLinks(html, site, opts.campaign, opts.to);
     html = html.replace(
@@ -194,7 +201,11 @@ export async function sendCampaign(opts: {
   siteUrl?: string;
   /** Public archive URL for the "view in browser" footer link. */
   webUrl?: string;
+  /** Inbox preview text (the gray line after the subject). */
+  preheader?: string;
   testTo?: string[];
+  /** Test sends default to tracking OFF; set true to exercise the pixel/links. */
+  testTracking?: boolean;
   onProgress?: (sent: number, total: number) => void;
 }): Promise<SendResult> {
   const key = process.env.RESEND_API_KEY;
@@ -217,9 +228,10 @@ export async function sendCampaign(opts: {
         reason: opts.reason,
         broad: opts.broad,
         campaign: opts.campaign,
-        tracking: !isTest,
+        tracking: !isTest || opts.testTracking === true,
         siteUrl: opts.siteUrl,
         webUrl: opts.webUrl,
+        preheader: opts.preheader,
       });
       return { from, to: e.to, subject: e.subject, html: e.html, text: e.text, headers: e.headers };
     });

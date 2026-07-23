@@ -45,6 +45,33 @@ export async function GET(req: NextRequest) {
   const now = Date.now();
   const results: Record<string, unknown>[] = [];
 
+  // Test-send mode: ?test=<email>&slug=<issue> mails ONE address a [TEST]
+  // copy using production's keys — so the Studio can offer test sends even
+  // when the laptop has no local RESEND_API_KEY. Tracking stays ON, under
+  // an isolated "test-<slug>" campaign, so the whole pixel/click pipeline
+  // can be exercised end-to-end without touching real campaign stats.
+  const testTo = req.nextUrl.searchParams.get("test");
+  if (testTo) {
+    const slug = req.nextUrl.searchParams.get("slug");
+    const issue = slug ? getNewsletterIssues().find((i) => i.slug === slug) : getNewsletterIssues()[0];
+    if (!issue) return NextResponse.json({ error: "No such issue" }, { status: 404 });
+    if (!testTo.includes("@")) return NextResponse.json({ error: "Bad test address" }, { status: 400 });
+    const result = await sendCampaign({
+      campaign: `test-${issue.slug}`,
+      subject: issue.subject || issue.title,
+      bodyMarkdown: issue.body,
+      list: "newsletter",
+      reason: LIST_REASON.newsletter,
+      broad: true,
+      siteUrl: site,
+      webUrl: `${site}/newsletter/${issue.slug}`,
+      preheader: issue.preheader || undefined,
+      testTo: [testTo],
+      testTracking: true,
+    });
+    return NextResponse.json({ test: testTo, slug: issue.slug, ...result });
+  }
+
   for (const issue of getNewsletterIssues()) {
     if (!issue.sendAt || issue.sentAt) continue;
     const due = Date.parse(issue.sendAt);
@@ -78,6 +105,7 @@ export async function GET(req: NextRequest) {
         broad: issue.sendBroad === "1",
         siteUrl: site,
         webUrl: `${site}/newsletter/${issue.slug}`,
+        preheader: issue.preheader || undefined,
       });
       await completeCampaignSend(issue.slug, result);
       results.push({ campaign: issue.slug, sent: result.sent, recipients: result.recipients, errors: result.errors });
