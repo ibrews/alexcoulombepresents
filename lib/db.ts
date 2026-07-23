@@ -83,3 +83,61 @@ export async function getListCounts(): Promise<{ list: string; count: number }[]
   `;
   return rows as { list: string; count: number }[];
 }
+
+// ── Course votes — /vote's "what should Alex teach next?" poll ─────────────
+// One row per email; re-voting upserts (replaces the topic set, doesn't add).
+
+let _votesEnsured = false;
+
+async function ensureVotesTable() {
+  if (_votesEnsured) return;
+  await sql()`
+    CREATE TABLE IF NOT EXISTS course_votes (
+      id           BIGSERIAL PRIMARY KEY,
+      email        TEXT NOT NULL UNIQUE,
+      topics       TEXT[] NOT NULL,
+      subscribed   BOOLEAN NOT NULL DEFAULT false,
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  _votesEnsured = true;
+}
+
+export async function recordVote(input: {
+  email: string;
+  topics: string[];
+  subscribed: boolean;
+}) {
+  await ensureVotesTable();
+  const { email, topics, subscribed } = input;
+  await sql()`
+    INSERT INTO course_votes (email, topics, subscribed)
+    VALUES (${email}, ${topics}, ${subscribed})
+    ON CONFLICT (email) DO UPDATE
+      SET topics = EXCLUDED.topics,
+          subscribed = EXCLUDED.subscribed,
+          updated_at = now()
+  `;
+}
+
+// Aggregate counts per topic, for the public results bars. Never exposes
+// individual emails.
+export async function getVoteCounts(): Promise<{ topic: string; count: number }[]> {
+  await ensureVotesTable();
+  const rows = await sql()`
+    SELECT topic, COUNT(*)::int AS count
+    FROM course_votes, UNNEST(topics) AS topic
+    GROUP BY topic
+    ORDER BY count DESC
+  `;
+  return rows as { topic: string; count: number }[];
+}
+
+// Total number of people who have voted (distinct emails), for a "N votes so
+// far" line alongside the per-topic bars.
+export async function getVoteTotalVoters(): Promise<number> {
+  await ensureVotesTable();
+  const rows = await sql()`SELECT COUNT(*)::int AS count FROM course_votes`;
+  return (rows as { count: number }[])[0]?.count ?? 0;
+}
