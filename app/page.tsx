@@ -11,6 +11,13 @@ import LatestVideo from "@/components/LatestVideo";
 import { repos, products, roles } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 
+// Loads the three.js-based Gaussian Splat viewer only in the browser, only
+// once a /hero.splat (or .ksplat/.ply) asset exists — see SplatHero.tsx.
+// SplatHeroLoader is a client component so its internal ssr:false dynamic
+// import keeps three.js/gaussian-splats-3d entirely out of the server
+// bundle and the build.
+import SplatHero from "@/components/SplatHeroLoader";
+
 export const metadata: Metadata = {
   title: "Alex Coulombe Presents · Unreal Engine Instructor & XR Developer",
   description:
@@ -35,6 +42,7 @@ export default function Home() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="relative flex min-h-[92vh] items-center overflow-hidden">
         <FaceField />
+        <SplatHero />
         <div className="orb left-[10%] top-[20%] h-72 w-72 bg-teal" />
         <div className="orb right-[12%] top-[40%] h-80 w-80 bg-grape" style={{ animationDelay: "-6s" }} />
         <div className="orb bottom-[10%] left-[40%] h-64 w-64 bg-amber" style={{ animationDelay: "-11s" }} />

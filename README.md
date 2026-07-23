@@ -11,7 +11,7 @@ with no configuration.
 
 | Route | What it is |
 |---|---|
-| `/` | Hero with an interactive particle constellation, rotating-role typewriter, featured repos with live GitHub star counts |
+| `/` | Hero with an interactive particle constellation, rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
 | `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
 | `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`), currently gated behind a "coming soon" banner with a founding waitlist; no price shown, nothing buyable until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` **and** a Stripe subscription path is added |
