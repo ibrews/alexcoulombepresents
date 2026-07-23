@@ -8,6 +8,7 @@ import InquireButton from "@/components/InquireButton";
 import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
 import CounterStat from "@/components/CounterStat";
+import TestimonialWall from "@/components/TestimonialWall";
 import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
@@ -85,6 +86,8 @@ export default function Training() {
           <CounterStat key={s.label} n={s.n} label={s.label} delay={i * 80} />
         ))}
       </div>
+
+      <TestimonialWall />
 
       {/* ── Company / team training — the headline offer ── */}
       <Reveal delay={40}>
