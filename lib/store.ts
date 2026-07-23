@@ -53,6 +53,10 @@ export type StoreItem = {
   // that has already started). Checkout blocks it server-side regardless of
   // whether the marketing page has re-rendered yet.
   saleWindow?: { closesAtISO: string; closedNote: string; closedList: string };
+  // Hard seat cap for real scarcity (not just marketing copy). When set, the
+  // store page shows remaining seats and the checkout API refuses to sell
+  // past it (see lib/commerce/seats.ts + app/api/checkout/route.ts).
+  capacity?: number;
 };
 
 export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
@@ -75,6 +79,7 @@ export const storeItems: StoreItem[] = [
     ],
     priceNote:
       "Founding batch of 60 — when they're gone, they're gone. Good for any open-enrollment class (private 1:1s excluded). Newsletter subscribers get a promo code for extra off at checkout.",
+    capacity: 60,
     blurb:
       "One voucher = one seat in any open-enrollment class, intro or advanced, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.",
     delivery:
@@ -123,6 +128,7 @@ export const storeItems: StoreItem[] = [
     priceCents: 24900,
     priceNote:
       "Early-bird through July 29 — $299 after. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    capacity: 25,
     blurb:
       "Zero to Environment in four live Wednesday classes starting Aug 5: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Every class runs twice (10a & 12:30p ET) plus Thursday office hours, and recordings are included.",
     delivery: "You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class on Aug 5 (recordings after each).",

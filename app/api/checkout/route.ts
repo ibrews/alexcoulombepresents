@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { storeItems, STORE_LIVE, effectivePriceCents, isPurchasable } from "@/lib/store";
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
+import { getSeatsSold } from "@/lib/commerce/seats";
 
 // Creates a Stripe Checkout Session for a catalog item.
 // Talks to the Stripe REST API directly (form-encoded) — no SDK dependency.
@@ -104,6 +105,20 @@ export async function POST(req: NextRequest) {
     // slug must never take money.
     if (!item || !isPurchasable(item)) {
       return NextResponse.json({ error: "Unknown or non-purchasable item" }, { status: 404 });
+    }
+    // Hard capacity stop — checked server-side regardless of what the store
+    // page shows, so a crafted/late POST can never oversell a capped item.
+    if (item.capacity !== undefined) {
+      let sold = 0;
+      try {
+        sold = await getSeatsSold(item.slug);
+      } catch (err) {
+        console.error("[seats] capacity check failed", err);
+        return NextResponse.json({ error: "Checkout temporarily unavailable — try again." }, { status: 503 });
+      }
+      if (sold >= item.capacity) {
+        return NextResponse.json({ error: "Sold out" }, { status: 409 });
+      }
     }
     const priceCents = effectivePriceCents(item)!;
     body = new URLSearchParams({
