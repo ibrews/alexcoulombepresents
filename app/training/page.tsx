@@ -228,7 +228,10 @@ export default function Training() {
             <Link href="/store" className="text-snow underline decoration-teal/50 hover:decoration-teal">
               store
             </Link>
-            .
+            . Not sure what&apos;s next?{" "}
+            <Link href="/vote" className="text-snow underline decoration-teal/50 hover:decoration-teal">
+              Vote on the September cohort →
+            </Link>
           </p>
         </Reveal>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
