@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteSignup } from "@/lib/db";
 import { verifyUnsubscribeToken } from "@/lib/unsubscribe";
+import { recordEmailEvent } from "@/lib/tracking";
 
 // One click from an email footer, no login. `list` omitted = removed from
 // EVERY list (the safe default for "I don't want to hear from this sender
-// again"); pass a specific list slug to only leave that one.
+// again"); pass a specific list slug to only leave that one. `c` (optional)
+// is the campaign slug the link was mailed in — logged so each send's report
+// can show how many unsubscribes it caused.
 export async function GET(req: NextRequest) {
   const email = req.nextUrl.searchParams.get("email");
   const token = req.nextUrl.searchParams.get("token") ?? "";
   const list = req.nextUrl.searchParams.get("list") ?? undefined;
+  const campaign = req.nextUrl.searchParams.get("c");
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? req.nextUrl.origin;
 
   if (!email || !verifyUnsubscribeToken(email, token)) {
@@ -20,6 +24,11 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error("[unsubscribe] delete failed", err);
     return NextResponse.redirect(`${site}/unsubscribed?ok=0`);
+  }
+
+  if (campaign) {
+    // Best-effort attribution — the unsubscribe itself already succeeded.
+    recordEmailEvent({ campaign, email, type: "unsub" }).catch(() => {});
   }
 
   return NextResponse.redirect(`${site}/unsubscribed?ok=1&email=${encodeURIComponent(email)}`);
