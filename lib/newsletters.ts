@@ -36,6 +36,7 @@ export type NewsletterIssue = {
   date: string; // YYYY-MM-DD
   subject: string;
   body: string; // markdown
+  preheader: string; // inbox preview text (the gray line after the subject)
   // Scheduling / send-state frontmatter (written by Newsletter Studio; the
   // public archive pages ignore these — the cron sender reads them):
   sendAt: string; // ISO — when the production cron should send this issue
@@ -65,6 +66,7 @@ export function getNewsletterIssues(): NewsletterIssue[] {
         date: get("date"),
         subject: get("subject") || get("title"),
         body: rest.join("---").trim(),
+        preheader: get("preheader"),
         sendAt: get("sendAt"),
         sendLists: get("sendLists"),
         sendBroad: get("sendBroad"),

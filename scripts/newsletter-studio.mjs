@@ -80,6 +80,7 @@ function parseIssue(file) {
     title: get("title"),
     date: get("date"),
     subject: get("subject"),
+    preheader: get("preheader"),
     sentAt: get("sentAt"),
     sentList: get("sentList"),
     sentCount: get("sentCount"),
@@ -108,6 +109,7 @@ function loadIssue(slug) {
 // drop each other's lines.
 function writeIssue(slug, issue) {
   const meta = [`title: ${issue.title}`, `date: ${issue.date}`, `subject: ${issue.subject}`];
+  if (issue.preheader) meta.push(`preheader: ${issue.preheader}`);
   if (issue.sendAt) {
     meta.push(`sendAt: ${issue.sendAt}`, `sendLists: ${issue.sendLists}`, `sendBroad: ${issue.sendBroad || "0"}`);
   }
@@ -117,9 +119,9 @@ function writeIssue(slug, issue) {
   writeFileSync(path.join(NEWSLETTER_DIR, `${slug}.md`), `${meta.join("\n")}\n---\n${issue.body.trim()}\n`);
 }
 
-function saveIssue(slug, { title, date, subject, body }) {
+function saveIssue(slug, { title, date, subject, preheader, body }) {
   const existing = loadIssue(slug) ?? {};
-  writeIssue(slug, { ...existing, title, date, subject, body });
+  writeIssue(slug, { ...existing, title, date, subject, preheader: preheader ?? existing.preheader, body });
 }
 
 function markSent(slug, lists, count) {
@@ -433,8 +435,10 @@ function editorPage(slug) {
     <label>Title</label><input type="text" id="title" />
     <div style="display:grid;grid-template-columns:1fr 2fr;gap:10px">
       <div><label>Date</label><input type="text" id="date" /></div>
-      <div><label>Subject line</label><input type="text" id="subject" /></div>
+      <div><label>Subject line <span id="subjLen" style="text-transform:none;letter-spacing:0"></span></label><input type="text" id="subject" /></div>
     </div>
+    <label>Preview text (the gray line inboxes show after the subject — optional but valuable)</label>
+    <input type="text" id="preheader" placeholder="e.g. Three SIGGRAPH talks, live classes are back, and what's cooking in the Lab" />
     <label>Body</label>
     <div class="toolbar">
       <button data-md="h2">H2</button>
@@ -461,9 +465,16 @@ function editorPage(slug) {
 <script>
   const SLUG = ${JSON.stringify(slug)};
   const $ = (id) => document.getElementById(id);
-  const issue = ${JSON.stringify({ title: issue.title, date: issue.date, subject: issue.subject, body: issue.body })};
-  $('title').value = issue.title; $('date').value = issue.date; $('subject').value = issue.subject; $('body').value = issue.body;
+  const issue = ${JSON.stringify({ title: issue.title, date: issue.date, subject: issue.subject, preheader: issue.preheader ?? "", body: issue.body })};
+  $('title').value = issue.title; $('date').value = issue.date; $('subject').value = issue.subject; $('preheader').value = issue.preheader; $('body').value = issue.body;
   let dirty = false;
+  // Subject-length coach: ~50 chars is the mobile-safe zone.
+  function subjLen() {
+    const n = $('subject').value.length;
+    $('subjLen').textContent = n ? '· ' + n + (n > 60 ? ' chars — will truncate on mobile' : n > 50 ? ' chars — long for mobile' : ' chars ✓') : '';
+    $('subjLen').style.color = n > 60 ? '#ff8080' : n > 50 ? '#fbbf24' : '#5a5a65';
+  }
+  $('subject').addEventListener('input', subjLen); subjLen();
   window.addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
 
   function showError(msg) { const b = $('errorBanner'); b.textContent = msg; b.classList.add('show'); }
@@ -473,14 +484,14 @@ function editorPage(slug) {
   let renderTimer;
   async function renderNow() {
     try {
-      const res = await fetch('/render', { method: 'POST', headers: {'Content-Type':'text/plain'}, body: $('body').value });
+      const res = await fetch('/render', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ body: $('body').value, preheader: $('preheader').value }) });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       $('preview').srcdoc = await res.text();
     } catch (err) { showError('Preview failed: ' + err.message); }
   }
   function scheduleRender() { clearTimeout(renderTimer); renderTimer = setTimeout(renderNow, 350); }
   $('body').addEventListener('input', () => { dirty = true; scheduleRender(); });
-  ['title','date','subject'].forEach((id) => $(id).addEventListener('input', () => { dirty = true; }));
+  ['title','date','subject','preheader'].forEach((id) => $(id).addEventListener('input', () => { dirty = true; }));
   renderNow();
 
   async function save() {
@@ -489,7 +500,7 @@ function editorPage(slug) {
     try {
       const res = await fetch('/save/' + SLUG, {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ title: $('title').value, date: $('date').value, subject: $('subject').value, body: $('body').value }),
+        body: JSON.stringify({ title: $('title').value, date: $('date').value, subject: $('subject').value, preheader: $('preheader').value, body: $('body').value }),
       });
       if (!res.ok) { const d = await res.json().catch(() => ({})); throw new Error(d.error || 'HTTP ' + res.status); }
       dirty = false;
@@ -705,9 +716,34 @@ async function sendPage(slug, err, notice) {
   );
 }
 
-async function reportPage(slug) {
+async function reportPage(slug, celebrate) {
   const issue = loadIssue(slug);
   if (!issue) return null;
+  // A real send is a real moment — 421 people just heard from you.
+  const confetti = celebrate
+    ? `<div id="confetti" style="pointer-events:none;position:fixed;inset:0;overflow:hidden;z-index:50"></div>
+       <div class="card" style="border-color:#14b8a666;margin-bottom:16px;text-align:center">
+         <p style="margin:0;font-size:18px">🎉 <b>It's out.</b> ${esc(issue.sentCount)} inboxes are about to hear from you.</p>
+         <p class="hint" style="margin-top:6px">Opens and clicks will start trickling in below — this page refreshes itself.</p>
+       </div>
+       <script>
+         const box = document.getElementById('confetti');
+         const bits = ['✦','✧','🎉','⬡','●'];
+         const colors = ['#2dd4bf','#a78bfa','#fbbf24','#14b8a6','#ecedf6'];
+         for (let i = 0; i < 80; i++) {
+           const s = document.createElement('span');
+           s.textContent = bits[i % bits.length];
+           s.style.cssText = 'position:absolute;top:-30px;font-size:' + (10 + Math.floor(i % 5) * 4) + 'px;'
+             + 'left:' + ((i * 37) % 100) + 'vw;color:' + colors[i % colors.length] + ';'
+             + 'animation:fall ' + (2.5 + (i % 10) / 4) + 's linear ' + ((i % 20) / 10) + 's forwards';
+           box.appendChild(s);
+         }
+         const st = document.createElement('style');
+         st.textContent = '@keyframes fall { to { transform: translateY(110vh) rotate(' + 360 + 'deg); opacity: 0.2 } }';
+         document.head.appendChild(st);
+         setTimeout(() => box.remove(), 7000);
+       </script>`
+    : "";
   let statsHtml = `<p class="hint">DATABASE_URL isn't set — stats unavailable.</p>`;
   if (envStatus().db) {
     try {
@@ -732,10 +768,10 @@ async function reportPage(slug) {
     : "Not sent yet.";
   return layout(
     `Report: ${issue.title}`,
-    `<h1>${esc(issue.title)}</h1>
+    `${confetti}<h1>${esc(issue.title)}</h1>
      <p class="sub">${sentLine} · <a href="/edit/${esc(slug)}">view content</a> · auto-refreshes every 60s</p>
      <div class="card">${statsHtml}</div>
-     <script>setTimeout(() => location.reload(), 60000)</script>`
+     <script>setTimeout(() => location.href = location.pathname, 60000)</script>`
   );
 }
 
@@ -773,9 +809,9 @@ function readBody(req) {
   });
 }
 
-function renderPreview(body) {
+function renderPreview(body, preheader) {
   const footerHtml = `You&rsquo;re receiving this newsletter because ${LIST_REASON.newsletter}. Future newsletters will be more tailored to the specific list you signed up for. <a href="#" style="color:#888">To unsubscribe from this list, click here.</a>`;
-  return renderNewsletterEmail({ bodyMarkdown: body, footerHtml, siteUrl: `http://localhost:${PORT}` });
+  return renderNewsletterEmail({ bodyMarkdown: body, footerHtml, siteUrl: `http://localhost:${PORT}`, preheader });
 }
 
 // ── Server ──────────────────────────────────────────────────────────────────
@@ -804,7 +840,7 @@ const server = createServer(async (req, res) => {
       return page ? sendHtml(page) : sendHtml("Not found", 404);
     }
     if (req.method === "GET" && p.startsWith("/report/")) {
-      const page = await reportPage(decodeURIComponent(p.slice("/report/".length)));
+      const page = await reportPage(decodeURIComponent(p.slice("/report/".length)), url.searchParams.get("sent") === "1");
       return page ? sendHtml(page) : sendHtml("Not found", 404);
     }
     if (req.method === "GET" && p.startsWith("/newsletter/")) {
@@ -828,7 +864,15 @@ const server = createServer(async (req, res) => {
       return redirect(`/edit/${slug}`);
     }
     if (req.method === "POST" && p === "/render") {
-      return sendHtml(renderPreview((await readBody(req)).toString("utf8")));
+      const raw = (await readBody(req)).toString("utf8");
+      // JSON {body, preheader} from the current editor; plain text kept for
+      // backward compatibility with anything older.
+      try {
+        const d = JSON.parse(raw);
+        return sendHtml(renderPreview(d.body ?? "", d.preheader || undefined));
+      } catch {
+        return sendHtml(renderPreview(raw));
+      }
     }
     if (req.method === "POST" && p.startsWith("/save/")) {
       const slug = decodeURIComponent(p.slice("/save/".length));
@@ -851,6 +895,21 @@ const server = createServer(async (req, res) => {
       if (!issue) return sendJson({ error: "No such issue" }, 404);
       const { to } = JSON.parse((await readBody(req)).toString("utf8"));
       if (!to || !to.includes("@")) return sendJson({ error: "Enter a valid email address" }, 400);
+
+      // No local Resend key? Production can send the test instead — the
+      // cron route's ?test= mode uses prod's own keys. Requires the issue
+      // to be DEPLOYED (it reads the deployed markdown), so warn when the
+      // local draft differs from what's live.
+      if (!process.env.RESEND_API_KEY && process.env.CRON_SECRET) {
+        const res = await fetch(
+          `${SITE_URL}/api/cron/send-newsletter?test=${encodeURIComponent(to)}&slug=${encodeURIComponent(slug)}`,
+          { headers: { Authorization: `Bearer ${process.env.CRON_SECRET}` } }
+        );
+        const d = await res.json().catch(() => ({}));
+        if (!res.ok) return sendJson({ error: d.error ?? `production test-send failed (HTTP ${res.status})` }, 502);
+        return sendJson({ ok: true, sent: d.sent, viaProduction: true });
+      }
+
       const result = await sendCampaign({
         campaign: slug,
         subject: issue.subject || issue.title,
@@ -859,6 +918,7 @@ const server = createServer(async (req, res) => {
         reason: LIST_REASON.newsletter,
         broad: true,
         webUrl: `${SITE_URL}/newsletter/${slug}`,
+        preheader: issue.preheader || undefined,
         testTo: [to],
       });
       if (result.errors.length) return sendJson({ error: result.errors.join("; ") }, 502);
@@ -914,6 +974,7 @@ const server = createServer(async (req, res) => {
           reason,
           broad,
           webUrl: `${SITE_URL}/newsletter/${slug}`,
+          preheader: issue.preheader || undefined,
           onProgress: (sent, total) => console.log(`[studio]   ${sent}/${total}`),
         });
       } catch (err) {
@@ -928,7 +989,7 @@ const server = createServer(async (req, res) => {
       if (result.errors.length && result.sent === 0) {
         return fail("Send failed: " + result.errors.join("; "));
       }
-      return redirect(`/report/${slug}`);
+      return redirect(`/report/${slug}?sent=1`);
     }
     if (req.method === "POST" && p.startsWith("/unschedule/")) {
       const slug = decodeURIComponent(p.slice("/unschedule/".length));
