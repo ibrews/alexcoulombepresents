@@ -27,10 +27,18 @@ import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderNewsletterEmail } from "../lib/newsletterEmail.ts";
-import { LISTS, LIST_REASON } from "../lib/lists.ts";
-import { sendCampaign, listRecipients } from "../lib/sendNewsletter.ts";
+import { LISTS, LIST_REASON, isListSlug } from "../lib/lists.ts";
+import {
+  sendCampaign,
+  listRecipients,
+  claimCampaignSend,
+  completeCampaignSend,
+  getCampaignSends,
+} from "../lib/sendNewsletter.ts";
 import { campaignStats } from "../lib/tracking.ts";
 import { neon } from "@neondatabase/serverless";
+
+const SITE_URL = "https://alexcoulombepresents.com";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const NEWSLETTER_DIR = path.join(ROOT, "content", "newsletters");
@@ -42,17 +50,22 @@ mkdirSync(IMAGE_DIR, { recursive: true });
 loadEnvLocal();
 
 function loadEnvLocal() {
-  try {
-    const txt = readFileSync(path.join(ROOT, ".env.local"), "utf8");
-    for (const line of txt.split("\n")) {
-      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
-      if (m && !process.env[m[1]]) {
-        const v = m[2].replace(/^["']|["']$/g, "");
-        if (v) process.env[m[1]] = v;
+  // .env.studio FIRST — it's the studio's own secrets file, safe from the
+  // `vercel env pull` clobbering that keeps emptying .env.local. Values
+  // already set win, so .env.studio effectively overrides .env.local.
+  for (const file of [".env.studio", ".env.local"]) {
+    try {
+      const txt = readFileSync(path.join(ROOT, file), "utf8");
+      for (const line of txt.split("\n")) {
+        const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+        if (m && !process.env[m[1]]) {
+          const v = m[2].replace(/^["']|["']$/g, "");
+          if (v) process.env[m[1]] = v;
+        }
       }
+    } catch {
+      /* file absent — fine */
     }
-  } catch {
-    /* no .env.local — rely on real env */
   }
 }
 
@@ -70,6 +83,9 @@ function parseIssue(file) {
     sentAt: get("sentAt"),
     sentList: get("sentList"),
     sentCount: get("sentCount"),
+    sendAt: get("sendAt"),
+    sendLists: get("sendLists"),
+    sendBroad: get("sendBroad"),
     body: rest.join("---").trim(),
   };
 }
@@ -88,20 +104,82 @@ function loadIssue(slug) {
   return parseIssue(file);
 }
 
-function saveIssue(slug, { title, date, subject, body }) {
-  const existing = loadIssue(slug);
-  const sentLines = existing?.sentAt
-    ? `sentAt: ${existing.sentAt}\nsentList: ${existing.sentList}\nsentCount: ${existing.sentCount}\n`
-    : "";
-  const content = `title: ${title}\ndate: ${date}\nsubject: ${subject}\n${sentLines}---\n${body.trim()}\n`;
-  writeFileSync(path.join(NEWSLETTER_DIR, `${slug}.md`), content);
+// One writer for the frontmatter block so save/schedule/sent-stamping can't
+// drop each other's lines.
+function writeIssue(slug, issue) {
+  const meta = [`title: ${issue.title}`, `date: ${issue.date}`, `subject: ${issue.subject}`];
+  if (issue.sendAt) {
+    meta.push(`sendAt: ${issue.sendAt}`, `sendLists: ${issue.sendLists}`, `sendBroad: ${issue.sendBroad || "0"}`);
+  }
+  if (issue.sentAt) {
+    meta.push(`sentAt: ${issue.sentAt}`, `sentList: ${issue.sentList}`, `sentCount: ${issue.sentCount}`);
+  }
+  writeFileSync(path.join(NEWSLETTER_DIR, `${slug}.md`), `${meta.join("\n")}\n---\n${issue.body.trim()}\n`);
 }
 
-function markSent(slug, list, count) {
+function saveIssue(slug, { title, date, subject, body }) {
+  const existing = loadIssue(slug) ?? {};
+  writeIssue(slug, { ...existing, title, date, subject, body });
+}
+
+function markSent(slug, lists, count) {
   const issue = loadIssue(slug);
   if (!issue) return;
-  const content = `title: ${issue.title}\ndate: ${issue.date}\nsubject: ${issue.subject}\nsentAt: ${new Date().toISOString()}\nsentList: ${list}\nsentCount: ${count}\n---\n${issue.body}\n`;
-  writeFileSync(path.join(NEWSLETTER_DIR, `${slug}.md`), content);
+  writeIssue(slug, {
+    ...issue,
+    sendAt: "", // schedule is consumed once sent
+    sentAt: new Date().toISOString(),
+    sentList: Array.isArray(lists) ? lists.join(",") : lists,
+    sentCount: count,
+  });
+}
+
+function markScheduled(slug, { sendAt, sendLists, sendBroad }) {
+  const issue = loadIssue(slug);
+  if (!issue) return;
+  writeIssue(slug, { ...issue, sendAt, sendLists, sendBroad });
+}
+
+function clearSchedule(slug) {
+  const issue = loadIssue(slug);
+  if (!issue) return;
+  writeIssue(slug, { ...issue, sendAt: "" });
+}
+
+// Publish an issue (+ every /newsletter/ image it references) straight to
+// MAIN — production deploys from main, and the cron sender only sees what's
+// deployed, so scheduling without a main push would silently never fire.
+// Uses a temp worktree so it works no matter what branch (or how dirty) the
+// local checkout is, and never drags unrelated WIP along.
+function gitPublish(slug, message) {
+  const issue = loadIssue(slug);
+  const files = [`content/newsletters/${slug}.md`];
+  for (const m of issue.body.matchAll(/\/newsletter\/([\w][\w.\-]*)/g)) {
+    if (existsSync(path.join(IMAGE_DIR, m[1]))) files.push(`public/newsletter/${m[1]}`);
+  }
+  const wt = path.join("/tmp", `studio-publish-${Date.now()}`);
+  const run = (cmd, cwd) => execSync(cmd, { cwd: cwd ?? ROOT, stdio: "pipe" }).toString();
+  try {
+    run(`git fetch origin main`);
+    run(`git worktree add "${wt}" origin/main`);
+    for (const f of files) {
+      mkdirSync(path.dirname(path.join(wt, f)), { recursive: true });
+      writeFileSync(path.join(wt, f), readFileSync(path.join(ROOT, f)));
+    }
+    run(`git add -A`, wt);
+    try {
+      run(`git commit -m ${JSON.stringify(message)} -m "Via Newsletter Studio."`, wt);
+    } catch (err) {
+      const out = String(err.stdout ?? "") + String(err.stderr ?? "");
+      if (out.includes("nothing to commit")) return; // already on main — done
+      throw new Error(`git commit failed: ${out.slice(0, 400)}`);
+    }
+    run(`git push origin HEAD:main`, wt);
+  } finally {
+    try {
+      run(`git worktree remove --force "${wt}"`);
+    } catch { /* best-effort cleanup */ }
+  }
 }
 
 // ── Audience / env status ───────────────────────────────────────────────────
@@ -212,6 +290,18 @@ function layout(title, body, { active = "" } = {}) {
 // ── Pages ───────────────────────────────────────────────────────────────────
 
 async function dashboardPage() {
+  // Reconcile first: a schedule that fired in PRODUCTION completed in the DB
+  // (campaign_sends), not in the local frontmatter — stamp it now so the
+  // dashboard tells the truth without any manual step.
+  if (envStatus().db) {
+    try {
+      for (const row of await getCampaignSends()) {
+        if (!row.completed_at || !row.sent) continue;
+        const issue = loadIssue(row.campaign);
+        if (issue && !issue.sentAt) markSent(row.campaign, row.lists, row.sent);
+      }
+    } catch { /* reconcile is best-effort — dashboard still renders */ }
+  }
   const issues = listIssues();
   const audience = await audienceCounts();
 
@@ -227,10 +317,12 @@ async function dashboardPage() {
       }
       const status = i.sentAt
         ? `<span class="badge sent">SENT ${esc(i.sentAt.slice(0, 10))}</span>`
-        : `<span class="badge draft">DRAFT</span>`;
+        : i.sendAt
+          ? `<span class="badge draft" title="Sends ${esc(i.sendAt)}">SCHEDULED ${esc(i.sendAt.slice(0, 16).replace("T", " "))}</span>`
+          : `<span class="badge draft">DRAFT</span>`;
       const actions = i.sentAt
         ? `<a href="/report/${esc(i.slug)}">Report</a> · <a href="/edit/${esc(i.slug)}">View</a>`
-        : `<a href="/edit/${esc(i.slug)}">Edit</a> · <a href="/send/${esc(i.slug)}">Send…</a>`;
+        : `<a href="/edit/${esc(i.slug)}">Edit</a> · <a href="/send/${esc(i.slug)}">${i.sendAt ? "Scheduled…" : "Send…"}</a>`;
       return `<tr>
         <td><a href="/edit/${esc(i.slug)}" style="color:#ecedf6;font-weight:600">${esc(i.title || i.slug)}</a><div class="hint">${esc(i.slug)}</div></td>
         <td>${esc(i.date)}</td>
@@ -511,7 +603,7 @@ function editorPage(slug) {
 </body></html>`;
 }
 
-async function sendPage(slug, err) {
+async function sendPage(slug, err, notice) {
   const issue = loadIssue(slug);
   if (!issue) return null;
   if (issue.sentAt) {
@@ -519,59 +611,95 @@ async function sendPage(slug, err) {
   }
   const s = envStatus();
   const audience = await audienceCounts();
+  if (s.db && !audience) {
+    return layout(
+      `Send: ${issue.title}`,
+      `<h1>Send “${esc(issue.title)}”</h1>
+       <div class="error-banner show">Couldn't reach the audience database just now (transient network?). <a href="/send/${esc(slug)}">Retry →</a></div>`
+    );
+  }
   const counts = Object.fromEntries((audience?.lists ?? []).map((l) => [l.list, l.count]));
   const options = Object.entries(LISTS)
     .filter(([k]) => counts[k])
     .map(
       ([k, label]) => `<label style="display:flex;align-items:center;gap:10px;margin:8px 0;text-transform:none;letter-spacing:0;font-size:14px;color:#e5e5ea">
-        <input type="radio" name="list" value="${esc(k)}" ${k === "newsletter" ? "checked" : ""} onchange="updateCount()" data-count="${counts[k]}" data-reason="${esc(LIST_REASON[k] ?? "")}" />
-        ${esc(label)} <span class="hint">(${counts[k]} recipients)</span>
+        <input type="checkbox" name="list" value="${esc(k)}" ${k === "newsletter" ? "checked" : ""} onchange="updateCount()" data-reason="${esc(LIST_REASON[k] ?? "")}" />
+        ${esc(label)} <span class="hint">(${counts[k]} on this list)</span>
       </label>`
     )
     .join("");
 
+  const scheduledBanner = issue.sendAt
+    ? `<div class="card" style="border-color:#f59e0b66;margin-bottom:16px"><h2>Currently scheduled</h2>
+       <p style="margin:0 0 10px">Sends <b style="color:#fbbf24">${esc(issue.sendAt)}</b> to “${esc(issue.sendLists)}”.</p>
+       <form method="post" action="/unschedule/${esc(slug)}"><button class="secondary">Cancel this schedule</button></form>
+       <p class="hint" style="margin-top:8px">Cancelling pushes to main too — it must deploy before the send time to take effect.</p></div>`
+    : "";
+
   const blockers = [];
   if (!s.db) blockers.push("DATABASE_URL is missing — can't load recipients.");
-  if (!s.resend) blockers.push("RESEND_API_KEY is missing — can't send email.");
-  if (!s.auth) blockers.push("AUTH_SECRET is missing — can't build unsubscribe links.");
+  if (!s.resend) blockers.push("RESEND_API_KEY is missing — can't send email now. (Scheduling still works: the PRODUCTION key does the sending.)");
+  if (!s.auth) blockers.push("AUTH_SECRET is missing — can't build unsubscribe links locally. (Scheduled sends use production's.)");
+  const canSchedule = s.db; // schedule needs counts only; prod has the rest
+
+  // Default schedule suggestion: tomorrow 10:00 local.
+  const t = new Date(Date.now() + 24 * 3600 * 1000);
+  const defaultWhen = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}T10:00`;
 
   return layout(
     `Send: ${issue.title}`,
     `<h1>Send “${esc(issue.title)}”</h1>
      <p class="sub">Subject: <b style="color:#ecedf6">${esc(issue.subject || issue.title)}</b> · <a href="/edit/${esc(slug)}">back to editor</a></p>
      ${err ? `<div class="error-banner show" style="margin-bottom:16px">${esc(err)}</div>` : ""}
-     ${blockers.length ? `<div class="card" style="border-color:#7a2a2a"><h2>Not ready</h2><ul>${blockers.map((b) => `<li class="hint" style="color:#ff8080">${esc(b)}</li>`).join("")}</ul></div>` : `
-     <form method="post" action="/send/${esc(slug)}" class="card" onsubmit="return confirmSend(this)">
-       <h2>1 · Choose the audience</h2>
+     ${notice ? `<div class="card" style="border-color:#14b8a666;margin-bottom:16px"><p style="margin:0;color:#14b8a6">${esc(notice)}</p></div>` : ""}
+     ${scheduledBanner}
+     ${!s.db ? `<div class="card" style="border-color:#7a2a2a"><h2>Not ready</h2><p class="hint" style="color:#ff8080">${esc(blockers[0])}</p></div>` : `
+     <form method="post" class="card" id="sendForm">
+       <h2>1 · Choose the audience — several lists combine, duplicates collapse</h2>
        ${options}
+       <p class="hint">Combined unique recipients: <b id="countLabel" style="color:#fbbf24">…</b></p>
        <h2 style="margin-top:20px">2 · The footer every recipient sees</h2>
        <p class="hint" id="footerPreview" style="font-family:monospace"></p>
        <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:#e5e5ea;margin-top:8px">
          <input type="checkbox" name="broad" checked /> Include “Future newsletters will be more tailored to the specific list you signed up for.”
        </label>
        <h2 style="margin-top:20px">3 · Confirm</h2>
-       <p class="hint">Type the exact recipient count (<b id="countLabel" style="color:#fbbf24"></b>) to arm the send. This emails real people — there is no undo.</p>
-       <div style="display:flex;gap:10px;margin-top:8px">
+       <p class="hint">Type the exact combined count to arm either button. This emails real people — there is no undo.</p>
+       <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;align-items:center">
          <input type="text" name="confirmCount" placeholder="recipient count" autocomplete="off" />
-         <button type="submit" class="danger">Send to <span id="btnCount"></span> people</button>
+         ${s.resend && s.auth ? `<button type="submit" class="danger" formaction="/send/${esc(slug)}">Send now to <span id="btnCount">…</span></button>` : `<span class="hint">(“Send now” unavailable without local keys — use Schedule)</span>`}
+         ${canSchedule ? `<span class="hint" style="margin:0 4px">or</span>
+         <input type="datetime-local" name="when" value="${defaultWhen}" style="padding:8px 10px;background:#16161f;border:1px solid #2a2a36;border-radius:6px;color:#e5e5ea" />
+         <button type="submit" formaction="/schedule/${esc(slug)}">Schedule</button>` : ""}
        </div>
+       <p class="hint" style="margin-top:10px">Scheduling saves the time into the issue, pushes it (and its images) to main, and production sends it at the chosen time — your laptop can be closed. Runs on a 15-minute check, so times land within ~15 min.</p>
      </form>`}
      <script>
-       function updateCount() {
-         const r = document.querySelector('input[name=list]:checked');
-         if (!r) return;
-         document.getElementById('countLabel').textContent = r.dataset.count;
-         document.getElementById('btnCount').textContent = r.dataset.count;
-         document.getElementById('footerPreview').textContent = "You're receiving this newsletter because " + r.dataset.reason + ". … To unsubscribe from this list, click here.";
+       let currentCount = null;
+       async function updateCount() {
+         const picked = Array.from(document.querySelectorAll('input[name=list]:checked'));
+         const lists = picked.map((r) => r.value);
+         const lbl = document.getElementById('countLabel');
+         const btn = document.getElementById('btnCount');
+         if (!lists.length) { currentCount = null; lbl.textContent = '0 — pick a list'; if (btn) btn.textContent = '0'; return; }
+         lbl.textContent = '…';
+         try {
+           const res = await fetch('/count?lists=' + encodeURIComponent(lists.join(',')));
+           const d = await res.json();
+           currentCount = String(d.count);
+           lbl.textContent = currentCount;
+           if (btn) btn.textContent = currentCount + ' people';
+         } catch { lbl.textContent = 'count failed — retry'; currentCount = null; }
+         const reason = picked.length === 1 ? picked[0].dataset.reason : ${JSON.stringify(LIST_REASON.newsletter)};
+         document.getElementById('footerPreview').textContent = "You're receiving this newsletter because " + reason + ". … To unsubscribe from this list, click here.";
        }
-       function confirmSend(f) {
-         const r = document.querySelector('input[name=list]:checked');
-         if (f.confirmCount.value.trim() !== r.dataset.count) {
-           alert('Type the exact recipient count (' + r.dataset.count + ') to confirm.');
-           return false;
+       document.getElementById('sendForm')?.addEventListener('submit', (e) => {
+         const f = e.target;
+         if (currentCount === null || f.confirmCount.value.trim() !== currentCount) {
+           e.preventDefault();
+           alert('Type the exact combined recipient count (' + (currentCount ?? '?') + ') to confirm.');
          }
-         return true;
-       }
+       });
        updateCount();
      </script>`
   );
@@ -668,7 +796,11 @@ const server = createServer(async (req, res) => {
       return sendHtml(editorPage(slug));
     }
     if (req.method === "GET" && p.startsWith("/send/")) {
-      const page = await sendPage(decodeURIComponent(p.slice("/send/".length)), url.searchParams.get("err") || undefined);
+      const page = await sendPage(
+        decodeURIComponent(p.slice("/send/".length)),
+        url.searchParams.get("err") || undefined,
+        url.searchParams.get("notice") || undefined
+      );
       return page ? sendHtml(page) : sendHtml("Not found", 404);
     }
     if (req.method === "GET" && p.startsWith("/report/")) {
@@ -683,6 +815,11 @@ const server = createServer(async (req, res) => {
       return res.end(readFileSync(filePath));
     }
 
+    if (req.method === "GET" && p === "/count") {
+      const lists = (url.searchParams.get("lists") ?? "").split(",").map((s) => s.trim()).filter(isListSlug);
+      const emails = await listRecipients(lists);
+      return sendJson({ count: emails.length });
+    }
     if (req.method === "POST" && p === "/new") {
       const params = new URLSearchParams((await readBody(req)).toString("utf8"));
       const title = (params.get("title") ?? "").trim() || "New issue";
@@ -721,49 +858,88 @@ const server = createServer(async (req, res) => {
         list: "newsletter",
         reason: LIST_REASON.newsletter,
         broad: true,
+        webUrl: `${SITE_URL}/newsletter/${slug}`,
         testTo: [to],
       });
       if (result.errors.length) return sendJson({ error: result.errors.join("; ") }, 502);
       return sendJson({ ok: true, sent: result.sent });
     }
-    if (req.method === "POST" && p.startsWith("/send/")) {
-      const slug = decodeURIComponent(p.slice("/send/".length));
+    if (req.method === "POST" && (p.startsWith("/send/") || p.startsWith("/schedule/"))) {
+      const scheduling = p.startsWith("/schedule/");
+      const slug = decodeURIComponent(p.slice((scheduling ? "/schedule/" : "/send/").length));
       const issue = loadIssue(slug);
       if (!issue) return sendHtml("Not found", 404);
       if (issue.sentAt) return redirect(`/report/${slug}`);
       const params = new URLSearchParams((await readBody(req)).toString("utf8"));
-      const list = params.get("list");
+      const lists = params.getAll("list").filter(isListSlug);
       const broad = params.get("broad") !== null;
       const confirm = (params.get("confirmCount") ?? "").trim();
-      if (!list || !LIST_REASON[list]) return redirect(`/send/${slug}?err=${encodeURIComponent("Pick a list.")}`);
-      // Server-side re-verify: the typed count must match the count RIGHT NOW.
-      const recipients = await listRecipients(list);
+      const fail = (msg) => redirect(`/send/${slug}?err=${encodeURIComponent(msg)}`);
+      if (!lists.length) return fail("Pick at least one list.");
+      // Server-side re-verify: the typed count must match the union RIGHT NOW.
+      const recipients = await listRecipients(lists);
       if (confirm !== String(recipients.length)) {
-        return redirect(`/send/${slug}?err=${encodeURIComponent(`Confirmation mismatch: the list has ${recipients.length} recipients right now — type exactly that to send.`)}`);
+        return fail(`Confirmation mismatch: the selected lists combine to ${recipients.length} unique recipients right now — type exactly that.`);
       }
-      console.log(`[studio] SENDING "${slug}" to list "${list}" (${recipients.length} recipients)…`);
+      const reason = lists.length === 1 ? LIST_REASON[lists[0]] : LIST_REASON.newsletter;
+
+      if (scheduling) {
+        const when = params.get("when");
+        const at = when ? new Date(when) : null; // datetime-local → local time
+        if (!at || Number.isNaN(at.getTime())) return fail("Pick a valid date and time.");
+        if (at.getTime() < Date.now() + 10 * 60 * 1000) return fail("Schedule at least 10 minutes out — the cron checks every 15.");
+        markScheduled(slug, { sendAt: at.toISOString(), sendLists: lists.join(","), sendBroad: broad ? "1" : "0" });
+        try {
+          gitPublish(slug, `newsletter: schedule "${slug}" for ${at.toISOString()} → ${lists.join(",")}`);
+        } catch (err) {
+          clearSchedule(slug);
+          return fail(`Could not publish the schedule to main (nothing scheduled): ${err.message}`);
+        }
+        console.log(`[studio] scheduled "${slug}" for ${at.toISOString()} → ${lists.join(",")}`);
+        return redirect(`/send/${slug}?notice=${encodeURIComponent(`Scheduled for ${at.toLocaleString()} and pushed to main — production sends it (±15 min). Cancel any time before then.`)}`);
+      }
+
+      // Immediate send. Claim first — the same claim the cron takes — so a
+      // scheduled send and a manual send of the same issue can never race.
+      const claimed = await claimCampaignSend(slug, lists);
+      if (!claimed) return fail("This campaign already has a send claim (sent or in flight). Check the report.");
+      console.log(`[studio] SENDING "${slug}" to ${lists.join(",")} (${recipients.length} recipients)…`);
       let result;
       try {
         result = await sendCampaign({
           campaign: slug,
           subject: issue.subject || issue.title,
           bodyMarkdown: issue.body,
-          list,
-          reason: LIST_REASON[list],
+          list: lists,
+          reason,
           broad,
+          webUrl: `${SITE_URL}/newsletter/${slug}`,
           onProgress: (sent, total) => console.log(`[studio]   ${sent}/${total}`),
         });
       } catch (err) {
         console.error(`[studio] send failed before any email went out:`, err.message);
-        return redirect(`/send/${slug}?err=${encodeURIComponent("Send failed: " + err.message)}`);
+        await completeCampaignSend(slug, { sent: 0, recipients: 0, errors: [err.message] });
+        return fail("Send failed: " + err.message);
       }
-      appendFileSync(SEND_LOG, JSON.stringify({ slug, list, at: new Date().toISOString(), ...result }) + "\n");
-      if (result.sent > 0) markSent(slug, list, result.sent);
+      await completeCampaignSend(slug, result);
+      appendFileSync(SEND_LOG, JSON.stringify({ slug, lists, at: new Date().toISOString(), ...result }) + "\n");
+      if (result.sent > 0) markSent(slug, lists, result.sent);
       console.log(`[studio] done: ${result.sent}/${result.recipients} sent${result.errors.length ? `, errors: ${result.errors.join("; ")}` : ""}`);
       if (result.errors.length && result.sent === 0) {
-        return redirect(`/send/${slug}?err=${encodeURIComponent("Send failed: " + result.errors.join("; "))}`);
+        return fail("Send failed: " + result.errors.join("; "));
       }
       return redirect(`/report/${slug}`);
+    }
+    if (req.method === "POST" && p.startsWith("/unschedule/")) {
+      const slug = decodeURIComponent(p.slice("/unschedule/".length));
+      if (!loadIssue(slug)) return sendHtml("Not found", 404);
+      clearSchedule(slug);
+      try {
+        gitPublish(slug, `newsletter: cancel scheduled send of "${slug}"`);
+      } catch (err) {
+        return redirect(`/send/${slug}?err=${encodeURIComponent(`Cancelled locally but the push to main FAILED — the deployed schedule may still fire: ${err.message}`)}`);
+      }
+      return redirect(`/send/${slug}?notice=${encodeURIComponent("Schedule cancelled and pushed to main.")}`);
     }
 
     res.writeHead(404);

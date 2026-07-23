@@ -57,14 +57,20 @@ export function composeEmail(opts: {
   campaign: string;
   tracking?: boolean;
   siteUrl?: string;
+  /** Public archive URL — adds a "View this issue in your browser" link. */
+  webUrl?: string;
 }): ComposedEmail {
   const site = opts.siteUrl ?? DEFAULT_SITE;
   const tailoring = opts.broad
     ? " Future newsletters will be more tailored to the specific list you signed up for."
     : "";
   const unsubUrl = unsubscribeUrl(opts.to, site, opts.campaign);
-  const footerHtml = `You&rsquo;re receiving this newsletter because ${opts.reason}.${tailoring} <a href="${unsubUrl}" style="color:#888">To unsubscribe from this list, click here.</a>`;
-  const footerText = `You're receiving this newsletter because ${opts.reason}.${tailoring} To unsubscribe from this list, click here: ${unsubUrl}`;
+  const webLinkHtml = opts.webUrl
+    ? `<a href="${opts.webUrl}" style="color:#888">View this issue in your browser.</a> `
+    : "";
+  const webLinkText = opts.webUrl ? `View this issue in your browser: ${opts.webUrl}\n` : "";
+  const footerHtml = `${webLinkHtml}You&rsquo;re receiving this newsletter because ${opts.reason}.${tailoring} <a href="${unsubUrl}" style="color:#888">To unsubscribe from this list, click here.</a>`;
+  const footerText = `${webLinkText}You're receiving this newsletter because ${opts.reason}.${tailoring} To unsubscribe from this list, click here: ${unsubUrl}`;
 
   let html = renderNewsletterEmail({ bodyMarkdown: opts.bodyMarkdown, footerHtml, siteUrl: site });
   if (opts.tracking !== false) {
@@ -87,37 +93,107 @@ export function composeEmail(opts: {
   };
 }
 
-export async function listRecipients(list: string): Promise<string[]> {
+/**
+ * Deduped union of one or more lists — a person on several selected lists
+ * gets exactly one email. Accepts a single slug for convenience.
+ */
+export async function listRecipients(lists: string | string[]): Promise<string[]> {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not set");
+  const slugs = Array.isArray(lists) ? lists : [lists];
+  if (slugs.length === 0) return [];
   const sql = neon(url);
   // One retry after a short pause — a transient connect timeout must not
   // surface as a scary failure in the middle of a send flow.
+  const query = async () =>
+    (await sql`SELECT DISTINCT lower(email) AS email FROM signups WHERE list = ANY(${slugs}) ORDER BY email`) as { email: string }[];
   let rows: { email: string }[];
   try {
-    rows = (await sql`SELECT email FROM signups WHERE list = ${list} ORDER BY created_at`) as { email: string }[];
+    rows = await query();
   } catch {
     await new Promise((r) => setTimeout(r, 1500));
-    rows = (await sql`SELECT email FROM signups WHERE list = ${list} ORDER BY created_at`) as { email: string }[];
+    rows = await query();
   }
-  return [...new Set(rows.map((r) => r.email.toLowerCase()))];
+  return rows.map((r) => r.email);
 }
 
 export type SendResult = { sent: number; recipients: number; errors: string[] };
 
+// ── Scheduled-send claims ───────────────────────────────────────────────────
+// Same idempotency pattern as order fulfillment: a UNIQUE-keyed claim row is
+// taken BEFORE sending, so overlapping cron fires (or a cron retry) can never
+// double-send a campaign. completed_at records the outcome afterwards.
+
+async function ensureSendsTable() {
+  const sql = neon(process.env.DATABASE_URL!);
+  await sql`
+    CREATE TABLE IF NOT EXISTS campaign_sends (
+      campaign     TEXT PRIMARY KEY,
+      lists        TEXT NOT NULL,
+      claimed_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+      completed_at TIMESTAMPTZ,
+      sent         INTEGER,
+      recipients   INTEGER,
+      errors       TEXT
+    )
+  `;
+}
+
+/** True only for the FIRST caller — everyone else must not send. */
+export async function claimCampaignSend(campaign: string, lists: string[]): Promise<boolean> {
+  await ensureSendsTable();
+  const sql = neon(process.env.DATABASE_URL!);
+  const rows = (await sql`
+    INSERT INTO campaign_sends (campaign, lists)
+    VALUES (${campaign}, ${lists.join(",")})
+    ON CONFLICT (campaign) DO NOTHING
+    RETURNING campaign
+  `) as { campaign: string }[];
+  return rows.length > 0;
+}
+
+export async function completeCampaignSend(campaign: string, result: SendResult): Promise<void> {
+  const sql = neon(process.env.DATABASE_URL!);
+  await sql`
+    UPDATE campaign_sends
+    SET completed_at = now(), sent = ${result.sent}, recipients = ${result.recipients},
+        errors = ${result.errors.join("; ") || null}
+    WHERE campaign = ${campaign}
+  `;
+}
+
+export type CampaignSendRow = {
+  campaign: string;
+  lists: string;
+  claimed_at: string;
+  completed_at: string | null;
+  sent: number | null;
+  recipients: number | null;
+  errors: string | null;
+};
+
+export async function getCampaignSends(): Promise<CampaignSendRow[]> {
+  await ensureSendsTable();
+  const sql = neon(process.env.DATABASE_URL!);
+  return (await sql`SELECT * FROM campaign_sends ORDER BY claimed_at DESC`) as CampaignSendRow[];
+}
+
 /**
- * Send a campaign to a list — or, with testTo set, ONLY to those addresses
- * (subject gets a [TEST] prefix, no events recorded, tracking off).
- * The caller is responsible for having confirmed the send with a human.
+ * Send a campaign to one or more lists (deduped union) — or, with testTo
+ * set, ONLY to those addresses (subject gets a [TEST] prefix, no events
+ * recorded, tracking off). The caller is responsible for having confirmed
+ * the send with a human (or a human-approved schedule).
  */
 export async function sendCampaign(opts: {
   campaign: string;
   subject: string;
   bodyMarkdown: string;
-  list: string;
+  list: string | string[];
   reason: string;
   broad?: boolean;
   siteUrl?: string;
+  /** Public archive URL for the "view in browser" footer link. */
+  webUrl?: string;
   testTo?: string[];
   onProgress?: (sent: number, total: number) => void;
 }): Promise<SendResult> {
@@ -143,6 +219,7 @@ export async function sendCampaign(opts: {
         campaign: opts.campaign,
         tracking: !isTest,
         siteUrl: opts.siteUrl,
+        webUrl: opts.webUrl,
       });
       return { from, to: e.to, subject: e.subject, html: e.html, text: e.text, headers: e.headers };
     });

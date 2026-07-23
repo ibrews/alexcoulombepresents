@@ -36,6 +36,12 @@ export type NewsletterIssue = {
   date: string; // YYYY-MM-DD
   subject: string;
   body: string; // markdown
+  // Scheduling / send-state frontmatter (written by Newsletter Studio; the
+  // public archive pages ignore these — the cron sender reads them):
+  sendAt: string; // ISO — when the production cron should send this issue
+  sendLists: string; // comma-joined list slugs for the scheduled send
+  sendBroad: string; // "1" → include the "future newsletters more tailored" line
+  sentAt: string; // ISO — stamped after a completed send
 };
 
 const DIR = path.join(process.cwd(), "content", "newsletters");
@@ -59,6 +65,10 @@ export function getNewsletterIssues(): NewsletterIssue[] {
         date: get("date"),
         subject: get("subject") || get("title"),
         body: rest.join("---").trim(),
+        sendAt: get("sendAt"),
+        sendLists: get("sendLists"),
+        sendBroad: get("sendBroad"),
+        sentAt: get("sentAt"),
       };
     })
     .sort((a, b) => (a.date < b.date ? 1 : -1));
