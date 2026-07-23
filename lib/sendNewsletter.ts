@@ -211,7 +211,10 @@ export async function sendCampaign(opts: {
   const key = process.env.RESEND_API_KEY;
   if (!key) throw new Error("RESEND_API_KEY is not set");
   const resend = new Resend(key);
-  const from = "Alex Coulombe Presents <noreply@alexcoulombepresents.com>";
+  // info@ (not noreply@) on purpose: the issues end with "reply and tell
+  // me…" — replies must actually land somewhere Alex reads. Also better for
+  // deliverability and lets Gmail show a real sender profile photo.
+  const from = "Alex Coulombe Presents <info@alexcoulombepresents.com>";
 
   const isTest = !!opts.testTo?.length;
   const emails = isTest ? opts.testTo! : await listRecipients(opts.list);
