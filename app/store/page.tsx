@@ -7,6 +7,7 @@ import BuyButton from "@/components/BuyButton";
 import { storeItems, formatPrice, effectivePriceCents, isPurchasable } from "@/lib/store";
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { renderBreaks } from "@/components/Lines";
+import { getRemaining } from "@/lib/commerce/seats";
 
 export const metadata: Metadata = {
   title: "Work With Alex — Courses, Skills & Templates",
@@ -15,10 +16,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/store" },
 };
 
-// Re-render at most hourly so a time-boxed listing (the cohort's early-bird
-// cutoff, its sale-window close) reflects the real date without needing a
-// manual redeploy. The checkout API enforces both regardless of page staleness.
-export const revalidate = 3600;
+// Re-render at most every minute so seat counts (real scarcity, not just
+// marketing copy) and time-boxed listings (the cohort's early-bird cutoff,
+// its sale-window close) stay close to live without a manual redeploy. The
+// checkout API enforces both regardless of page staleness.
+export const revalidate = 60;
 
 const kindLabel: Record<string, string> = {
   course: "Course",
@@ -36,7 +38,24 @@ const kindStyle: Record<string, string> = {
   "repo-access": "border-line text-mist",
 };
 
-export default function Store() {
+export default async function Store() {
+  // Seats remaining per capacity-limited item, keyed by slug. Fetched once
+  // up front so the map below stays a simple sync render. Never let a DB
+  // hiccup (or a build/preview environment with no DATABASE_URL) take the
+  // whole store page down — fall back to "no seat data" and render normally.
+  let remainingBySlug = new Map<string, number | null>();
+  try {
+    remainingBySlug = new Map<string, number | null>(
+      await Promise.all(
+        storeItems
+          .filter((i) => i.capacity !== undefined)
+          .map(async (i) => [i.slug, await getRemaining(i)] as const)
+      )
+    );
+  } catch (err) {
+    console.error("[seats] failed to load remaining seats", err);
+  }
+
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
       <Ethereal variant="aurora" />
@@ -107,6 +126,8 @@ export default function Store() {
           const price = effectivePriceCents(item);
           const purchasable = isPurchasable(item);
           const closed = item.priceCents !== null && !item.externalUrl && !purchasable;
+          const remaining = remainingBySlug.get(item.slug) ?? null;
+          const soldOut = remaining !== null && remaining <= 0;
           return (
             <Reveal key={item.slug} delay={Math.min(i * 70, 280)}>
               <div className="glass flex h-full flex-col rounded-2xl p-7">
@@ -140,6 +161,13 @@ export default function Store() {
                     {item.priceNote && (
                       <p className="mt-1 text-xs leading-relaxed text-mist">{item.priceNote}</p>
                     )}
+                    {remaining !== null && (
+                      <p className={`mt-1 font-mono text-xs ${remaining <= 10 ? "text-amber" : "text-mist"}`}>
+                        {remaining > 0
+                          ? `${remaining} of ${item.capacity} seats left`
+                          : "Sold out"}
+                      </p>
+                    )}
                   </div>
                 )}
                 {closed && item.saleWindow && (
@@ -161,6 +189,13 @@ export default function Store() {
                       list={item.saleWindow!.closedList}
                       context={item.name}
                       successMessage="You'll hear the moment the next one's scheduled."
+                    />
+                  ) : soldOut ? (
+                    <InquireButton
+                      label="Sold out — join the waitlist →"
+                      list="store"
+                      context={item.name}
+                      successMessage={`You're on the list — you'll hear if a seat opens up for ${item.name}.`}
                     />
                   ) : item.priceCents !== null ? (
                     <BuyButton slug={item.slug} label="Buy →" itemName={item.name} />

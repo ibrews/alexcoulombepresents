@@ -11,6 +11,7 @@ import { storeItems } from "@/lib/store";
 import { createVoucherCode } from "@/lib/commerce/vouchers";
 import { sendVoucherEmail } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
+import { recordCatalogOrder, markCatalogOrdersRefunded } from "@/lib/commerce/seats";
 
 // Stripe webhook — fulfillment happens here.
 // Configure in Stripe Dashboard → Developers → Webhooks:
@@ -53,6 +54,23 @@ export async function POST(req: NextRequest) {
     const fulfillment = session.metadata?.fulfillment as string | undefined;
     const email = session.customer_details?.email as string | undefined;
     const name = session.customer_details?.name as string | undefined;
+
+    // ── Seat/order tracking (lib/commerce/seats.ts) — a real ledger backing
+    // seat-count scarcity + the admin roster, covering every checkout kind
+    // (catalog slug, voucher, donation, digital). Never let a DB hiccup here
+    // break the existing email fulfillment below.
+    try {
+      await recordCatalogOrder({
+        stripeSessionId: session.id,
+        paymentIntentId: session.payment_intent ?? null,
+        slug: slug ?? null,
+        email: email ?? null,
+        name: name ?? null,
+        amountCents: session.amount_total ?? null,
+      });
+    } catch (err) {
+      console.error("[seats] order record failed", err);
+    }
 
     if (kind === "donation") {
       const comment = (session.custom_fields as Array<{ key: string; text?: { value?: string } }> | undefined)?.find(
@@ -166,6 +184,14 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         console.error("[refund] revoke failed", err);
         return NextResponse.json({ error: "Revoke failed" }, { status: 500 });
+      }
+      // Free the seat back up. Best-effort — must never break the
+      // entitlement revoke above, which is the more consequential path.
+      try {
+        const freed = await markCatalogOrdersRefunded(paymentIntentId);
+        if (freed > 0) console.log(`[refund] freed ${freed} catalog seat(s) for payment_intent ${paymentIntentId}`);
+      } catch (err) {
+        console.error("[seats] refund mark failed", err);
       }
     }
   }
