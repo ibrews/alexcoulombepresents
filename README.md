@@ -132,12 +132,35 @@ Setup: provision Neon from the Vercel **Storage** tab (auto-injects `DATABASE_UR
 - **See counts / export a list (CSV):**
   `/api/admin/signups?key=$ADMIN_KEY` (all counts) ·
   `…&list=forage&format=csv` (download one list). Keep `ADMIN_KEY` private.
-- **Email an entire list** via Resend:
-  ```bash
-  cd /Users/alex/GH/alexcoulombepresents
-  node scripts/broadcast.mjs --list forage --subject "Forage is live!" --body announce.html --dry-run
-  # drop --dry-run to actually send
-  ```
+
+## Newsletter Studio
+
+The whole newsletter operation runs from one local app — MailChimp-class, but
+local-first (issues are git-versioned markdown, subscribers live in your own
+Neon DB, sends go through your own Resend account):
+
+```bash
+cd /Users/alex/GH/alexcoulombepresents
+npm run studio        # → http://localhost:4848
+```
+
+- **Dashboard** — every issue (draft/sent + open/click stats), audience counts per list
+- **Editor** — formatting toolbar, drag-drop images (auto-resized; two at once
+  = side-by-side row), live email preview, test-send to yourself
+- **Send flow** — pick a list, see the live recipient count, and type that
+  exact count to confirm; the count is re-verified server-side at send time
+- **Reports** — delivered / unique opens / unique clickers / top links /
+  unsubscribes per campaign, self-hosted via `/api/t/o` (signed open pixel)
+  and `/api/t/c` (signed click redirect) into an `email_events` table
+
+Requires `DATABASE_URL`, `RESEND_API_KEY`, and `AUTH_SECRET` in `.env.local`
+(matching production, or unsubscribe/tracking links won't verify on the live
+site) — the UI shows status chips for whichever are missing and degrades
+gracefully. Every email automatically gets the attribution footer ("You're
+receiving this because…") and a one-click unsubscribe link + List-Unsubscribe
+headers ([`lib/sendNewsletter.ts`](lib/sendNewsletter.ts) is the single send
+path). The CLI equivalent (same engine) is
+`node scripts/broadcast.mjs --list newsletter --subject "…" --body issue.md --dry-run`.
 
 ## The HarvardXR slides & ethereal backgrounds
 

@@ -1,58 +1,43 @@
 #!/usr/bin/env node
 /**
- * Email everyone on a signup list, via Resend.
+ * CLI campaign send — same engine as Newsletter Studio (lib/sendNewsletter.ts),
+ * for when a terminal is handier than the UI. Prefer `npm run studio` for the
+ * full flow (live counts, test sends, typed confirmation, reports).
  *
  * Usage:
- *   node scripts/broadcast.mjs --list forage --subject "Forage is live!" --body email.html
- *   node scripts/broadcast.mjs --list ai --subject "AI cohort 1" --body note.txt --dry-run
+ *   node scripts/broadcast.mjs --list newsletter --subject "…" --body issue.md [--broad] [--dry-run]
  *
- * --list      required. One of the slugs in lib/lists.ts (forage, ai, unreal, …).
+ * --list      required. One of the slugs in lib/lists.ts.
  * --subject   required. Email subject line.
- * --body      required. Path to a file with the email body. A .md file is
- *             converted through lib/newsletterEmail.ts (images, headings,
- *             links, bullets all render properly — this is the SAME
- *             converter the preview route uses, so what you preview is what
- *             gets sent) and sent as HTML with the raw markdown as the
- *             plain-text fallback. A .html file is sent as-is. Anything else
- *             is sent as plain text, verbatim.
- * --reason    optional. Override the "why you're receiving this" line —
- *             defaults to lib/lists.ts's LIST_REASON for --list.
- * --broad     optional. Adds a line noting future sends will be more
- *             tailored to the specific list someone's on. Use this for a
- *             send going to the consolidated "newsletter" list that mixes
- *             everyone together (its own content should say so too).
- * --dry-run   optional. Print the recipient count + addresses, send nothing.
+ * --body      required. Path to a markdown file (the same format as
+ *             content/newsletters/*.md bodies — headings, bold, italic,
+ *             links, images, captions, side-by-side rows all render).
+ * --campaign  optional. Tracking/attribution slug — defaults to the body
+ *             filename. Use the issue slug so opens/clicks/unsubs land on
+ *             the right report.
+ * --reason    optional. Overrides lib/lists.ts LIST_REASON for --list.
+ * --broad     optional. Adds the "future newsletters will be more tailored"
+ *             footer line — use for a send to the consolidated list.
+ * --dry-run   optional. Print recipient count + addresses, send nothing.
  *
- * Reads DATABASE_URL, RESEND_API_KEY, and AUTH_SECRET from the environment
- * or .env.local. Each recipient gets their own individual email (no shared
- * To/CC), and every email automatically gets a footer explaining why they're
- * on the list plus a one-click unsubscribe link (+ List-Unsubscribe header)
- * — don't add your own reason/unsubscribe text, both are appended.
+ * Every email gets the attribution footer, a one-click unsubscribe link
+ * (+ List-Unsubscribe headers), and open/click tracking — all from the
+ * shared core; don't add your own footer.
  */
 import { readFileSync } from "node:fs";
-import crypto from "node:crypto";
-import { neon } from "@neondatabase/serverless";
-import { Resend } from "resend";
+import path from "node:path";
 import { LIST_REASON, isListSlug } from "../lib/lists.ts";
-import { markdownToEmailHtml } from "../lib/newsletterEmail.ts";
-
-// Mirrors lib/unsubscribe.ts's HMAC scheme exactly (kept inline since this is
-// a plain .mjs script, not run through the Next.js/TS pipeline). A stale link
-// mailed months ago must still verify, so it's deterministic — nothing to
-// expire, nothing to look up.
-function unsubscribeUrl(email, site) {
-  const secret = process.env.AUTH_SECRET;
-  if (!secret) throw new Error("AUTH_SECRET is not set");
-  const token = crypto.createHmac("sha256", secret).update(email.toLowerCase().trim()).digest("hex");
-  return `${site}/api/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
-}
+import { sendCampaign, listRecipients } from "../lib/sendNewsletter.ts";
 
 function loadEnvLocal() {
   try {
     const txt = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
     for (const line of txt.split("\n")) {
       const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
-      if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
+      if (m && !process.env[m[1]]) {
+        const v = m[2].replace(/^["']|["']$/g, "");
+        if (v) process.env[m[1]] = v;
+      }
     }
   } catch {
     /* no .env.local — rely on real env */
@@ -74,31 +59,21 @@ async function main() {
   const dryRun = process.argv.includes("--dry-run");
 
   if (!list || !subject || !bodyPath) {
-    console.error("Usage: node scripts/broadcast.mjs --list <slug> --subject <text> --body <file> [--reason <text>] [--broad] [--dry-run]");
+    console.error(
+      "Usage: node scripts/broadcast.mjs --list <slug> --subject <text> --body <file.md> [--campaign <slug>] [--reason <text>] [--broad] [--dry-run]"
+    );
     process.exit(1);
   }
   if (!reason) {
     console.error(`No reason text for list "${list}" — add it to LIST_REASON in lib/lists.ts or pass --reason "..."`);
     process.exit(1);
   }
-  if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
-  if (!process.env.RESEND_API_KEY) throw new Error("RESEND_API_KEY is not set");
-  if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET is not set (needed for unsubscribe links)");
 
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
-  const raw = readFileSync(bodyPath, "utf8");
-  const isMarkdown = bodyPath.endsWith(".md");
-  const isHtml = isMarkdown || bodyPath.endsWith(".html") || /<[a-z][\s\S]*>/i.test(raw);
-  // .md source → real content HTML (images, headings, links) via the same
-  // renderer the preview route uses. Plain-text fallback is the raw markdown
-  // itself — not pretty, but every line is still readable as text.
-  const contentHtml = isMarkdown ? markdownToEmailHtml(raw, site) : raw;
+  const campaign = arg("campaign") ?? path.basename(bodyPath).replace(/\.[a-z]+$/i, "");
+  const bodyMarkdown = readFileSync(bodyPath, "utf8");
 
-  const sql = neon(process.env.DATABASE_URL);
-  const rows = await sql`SELECT email FROM signups WHERE list = ${list} ORDER BY created_at`;
-  const emails = [...new Set(rows.map((r) => r.email))];
-
-  console.log(`List "${list}": ${emails.length} recipient(s).`);
+  const emails = await listRecipients(list);
+  console.log(`List "${list}": ${emails.length} recipient(s). Campaign: "${campaign}"`);
   if (dryRun) {
     emails.forEach((e) => console.log("  " + e));
     console.log("\n[dry run] nothing sent.");
@@ -109,46 +84,20 @@ async function main() {
     return;
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const from = "Alex Coulombe Presents <noreply@alexcoulombepresents.com>";
-  let sent = 0;
-
-  const tailoringNote = broad
-    ? " Future newsletters will be more tailored to the specific list you signed up for."
-    : "";
-
-  // Resend batch endpoint accepts up to 100 messages per call. Every message
-  // gets its OWN unsubscribe link (the token is per-email) plus a
-  // List-Unsubscribe header so Gmail/Outlook show a native one-click button
-  // next to the sender — not just a footer link someone has to find.
-  for (let i = 0; i < emails.length; i += 100) {
-    const chunk = emails.slice(i, i + 100);
-    const batch = chunk.map((to) => {
-      const unsubUrl = unsubscribeUrl(to, site);
-      const footerText = `You're receiving this newsletter because ${reason}.${tailoringNote} To unsubscribe from this list, click here: ${unsubUrl}`;
-      const footerHtml = `You&rsquo;re receiving this newsletter because ${reason}.${tailoringNote} <a href="${unsubUrl}" style="color:#888">To unsubscribe from this list, click here.</a>`;
-      const htmlBody = `${contentHtml}\n<hr style="margin-top:32px;border:none;border-top:1px solid #333"><p style="color:#888;font-size:12px;font-family:monospace">${footerHtml}</p>`;
-      const textBody = `${raw}\n\n---\n${footerText}`;
-      return {
-        from,
-        to,
-        subject,
-        ...(isHtml ? { html: htmlBody, text: textBody } : { text: textBody }),
-        headers: {
-          "List-Unsubscribe": `<${unsubUrl}>`,
-          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-        },
-      };
-    });
-    const { error } = await resend.batch.send(batch);
-    if (error) {
-      console.error(`Batch ${i / 100 + 1} failed:`, error);
-    } else {
-      sent += chunk.length;
-      console.log(`  sent ${sent}/${emails.length}`);
-    }
+  const result = await sendCampaign({
+    campaign,
+    subject,
+    bodyMarkdown,
+    list,
+    reason,
+    broad,
+    onProgress: (sent, total) => console.log(`  sent ${sent}/${total}`),
+  });
+  console.log(`Done. ${result.sent}/${result.recipients} sent.`);
+  if (result.errors.length) {
+    console.error("Errors:", result.errors.join("; "));
+    process.exit(1);
   }
-  console.log(`Done. ${sent} email(s) sent for "${list}".`);
 }
 
 main().catch((e) => {
