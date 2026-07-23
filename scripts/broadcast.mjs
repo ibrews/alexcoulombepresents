@@ -30,17 +30,20 @@ import { LIST_REASON, isListSlug } from "../lib/lists.ts";
 import { sendCampaign, listRecipients } from "../lib/sendNewsletter.ts";
 
 function loadEnvLocal() {
-  try {
-    const txt = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
-    for (const line of txt.split("\n")) {
-      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
-      if (m && !process.env[m[1]]) {
-        const v = m[2].replace(/^["']|["']$/g, "");
-        if (v) process.env[m[1]] = v;
+  // .env.studio first — survives the `vercel env pull` that clobbers .env.local.
+  for (const file of ["../.env.studio", "../.env.local"]) {
+    try {
+      const txt = readFileSync(new URL(file, import.meta.url), "utf8");
+      for (const line of txt.split("\n")) {
+        const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+        if (m && !process.env[m[1]]) {
+          const v = m[2].replace(/^["']|["']$/g, "");
+          if (v) process.env[m[1]] = v;
+        }
       }
+    } catch {
+      /* file absent — fine */
     }
-  } catch {
-    /* no .env.local — rely on real env */
   }
 }
 

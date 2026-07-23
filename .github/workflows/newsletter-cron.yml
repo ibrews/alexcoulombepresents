@@ -1,0 +1,22 @@
+# Pings the scheduled-send worker every 15 minutes — Vercel's Hobby-plan
+# cron only fires daily (see vercel.json, kept as a backstop), so this is
+# what makes a "send at 10:30am" schedule actually land at 10:30am.
+#
+# One-time setup: repo → Settings → Secrets and variables → Actions →
+# add CRON_SECRET with the same value as the Vercel env var of that name.
+# Without the secret the ping just 401s harmlessly.
+name: newsletter-cron
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger scheduled newsletter sends
+        run: |
+          curl -fsS -m 60 \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://www.alexcoulombepresents.com/api/cron/send-newsletter"

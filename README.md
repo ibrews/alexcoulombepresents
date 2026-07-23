@@ -144,19 +144,37 @@ cd /Users/alex/GH/alexcoulombepresents
 npm run studio        # → http://localhost:4848
 ```
 
-- **Dashboard** — every issue (draft/sent + open/click stats), audience counts per list
+- **Dashboard** — every issue (draft/scheduled/sent + open/click stats),
+  audience counts per list; sends completed by the production cron reconcile
+  back into the local issue files automatically
 - **Editor** — formatting toolbar, drag-drop images (auto-resized; two at once
   = side-by-side row), live email preview, test-send to yourself
-- **Send flow** — pick a list, see the live recipient count, and type that
-  exact count to confirm; the count is re-verified server-side at send time
+- **Send flow** — pick one or MORE lists (a deduped union — nobody gets the
+  issue twice), see the live combined count, and type that exact count to
+  confirm; re-verified server-side at send time, and a UNIQUE send-claim row
+  (`campaign_sends`) makes double-sends impossible even across machines
+- **Scheduled sends** — pick a future time instead: the Studio writes the
+  schedule into the issue, pushes it (and its images) straight to `main`,
+  and PRODUCTION sends it at the chosen time via
+  [`/api/cron/send-newsletter`](app/api/cron/send-newsletter/route.ts) —
+  laptop closed is fine. Fired every 15 min by
+  [`.github/workflows/newsletter-cron.yml`](.github/workflows/newsletter-cron.yml)
+  (+ a daily Vercel cron backstop in `vercel.json`). One-time setup: set a
+  `CRON_SECRET` env var in Vercel AND the same value as a GitHub Actions
+  secret. Schedules >48h overdue are skipped, never silently mass-mailed.
 - **Reports** — delivered / unique opens / unique clickers / top links /
   unsubscribes per campaign, self-hosted via `/api/t/o` (signed open pixel)
   and `/api/t/c` (signed click redirect) into an `email_events` table
+- Every email also carries a "View this issue in your browser" link to its
+  archive page, and the archive has an RSS feed at `/newsletter/feed.xml`
 
-Requires `DATABASE_URL`, `RESEND_API_KEY`, and `AUTH_SECRET` in `.env.local`
-(matching production, or unsubscribe/tracking links won't verify on the live
-site) — the UI shows status chips for whichever are missing and degrades
-gracefully. Every email automatically gets the attribution footer ("You're
+Requires `DATABASE_URL`, `RESEND_API_KEY`, and `AUTH_SECRET` in
+**`.env.studio`** (preferred — `vercel env pull` keeps clobbering
+`.env.local`, and never touches this file; `.env.local` still works as a
+fallback). Values must match production, or unsubscribe/tracking links won't
+verify on the live site. The UI shows status chips for whichever are missing
+and degrades gracefully — notably, **scheduling works without local
+Resend/auth keys**, since production does that sending. Every email automatically gets the attribution footer ("You're
 receiving this because…") and a one-click unsubscribe link + List-Unsubscribe
 headers ([`lib/sendNewsletter.ts`](lib/sendNewsletter.ts) is the single send
 path). The CLI equivalent (same engine) is
