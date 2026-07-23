@@ -141,3 +141,75 @@ export async function getVoteTotalVoters(): Promise<number> {
   const rows = await sql()`SELECT COUNT(*)::int AS count FROM course_votes`;
   return (rows as { count: number }[])[0]?.count ?? 0;
 }
+
+// ── Testimonials ─────────────────────────────────────────────────────────
+
+let _testimonialsEnsured = false;
+
+async function ensureTestimonialsTable() {
+  if (_testimonialsEnsured) return;
+  await sql()`
+    CREATE TABLE IF NOT EXISTS testimonials (
+      id            BIGSERIAL PRIMARY KEY,
+      name          TEXT,
+      role_org      TEXT,
+      quote         TEXT NOT NULL,
+      email         TEXT,
+      class_context TEXT,
+      approved      BOOLEAN NOT NULL DEFAULT false,
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  _testimonialsEnsured = true;
+}
+
+export type TestimonialRow = {
+  id: number;
+  name: string | null;
+  role_org: string | null;
+  quote: string;
+  email: string | null;
+  class_context: string | null;
+  approved: boolean;
+  created_at: string;
+};
+
+export async function createTestimonial(input: {
+  name?: string | null;
+  roleOrg?: string | null;
+  quote: string;
+  email?: string | null;
+  classContext?: string | null;
+}): Promise<TestimonialRow> {
+  await ensureTestimonialsTable();
+  const rows = await sql()`
+    INSERT INTO testimonials (name, role_org, quote, email, class_context, approved)
+    VALUES (${input.name ?? null}, ${input.roleOrg ?? null}, ${input.quote}, ${input.email ?? null}, ${input.classContext ?? null}, false)
+    RETURNING *
+  `;
+  return (rows as TestimonialRow[])[0];
+}
+
+export async function getApprovedTestimonials(): Promise<TestimonialRow[]> {
+  await ensureTestimonialsTable();
+  const rows = await sql()`
+    SELECT * FROM testimonials WHERE approved = true ORDER BY created_at DESC
+  `;
+  return rows as TestimonialRow[];
+}
+
+export async function setTestimonialApproved(id: number, approved: boolean): Promise<number> {
+  await ensureTestimonialsTable();
+  const rows = await sql()`
+    UPDATE testimonials SET approved = ${approved} WHERE id = ${id} RETURNING id
+  `;
+  return (rows as unknown[]).length;
+}
+
+export async function deleteTestimonial(id: number): Promise<number> {
+  await ensureTestimonialsTable();
+  const rows = await sql()`
+    DELETE FROM testimonials WHERE id = ${id} RETURNING id
+  `;
+  return (rows as unknown[]).length;
+}
