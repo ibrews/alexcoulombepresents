@@ -737,6 +737,51 @@ export const products: Product[] = [
     accent: "purple",
   },
   {
+    slug: "unreal-renderman-bridge",
+    name: "UnRealityKit → RenderMan Bridge",
+    status: "Private R&D — Pixar & Epic licensing review pending",
+    tagline: "Unreal Engine as the scene. Pixar's RenderMan as the film-grade renderer — the bridge nobody else has built.",
+    pitch:
+      "UnRealityKit Bridge points Unreal Engine at Apple's real-time renderer. This is the same idea aimed the other direction: UE stays the authoring and simulation source — geometry, lighting, cameras, animation, hierarchy — while Pixar's RenderMan, the renderer behind decades of film and TV VFX, draws the final frame. The target UX mirrors UnRealityKit exactly — a \"Send to RenderMan\" button in the UE editor — but the payoff is offline, film-grade rendering: layered materials, per-light compositing control, a research-grade denoiser, and a look no real-time renderer is trying to match.",
+    sections: [
+      {
+        heading: "One click from the editor to a RenderMan frame",
+        body: "Tools ▸ RenderMan ▸ Send to RenderMan. The plugin exports the open scene, renders it out-of-process on a local or remote RenderMan host, and brings the frame back — settings panel for quality preset, sample count, AOVs, Cryptomatte, and denoise, no command line involved. It's built to feel like using UnRealityKit's own Live Link panel, just pointed at an offline renderer instead of a real-time one.",
+      },
+      {
+        heading: "What actually crosses the bridge",
+        body: "Geometry, instancing, cameras (with correct filmback, focal length, and depth of field), lights, animation, and scene hierarchy translate automatically — and that translation has been checked against the numbers, not just eyeballed: shadow placement and light intensity were independently verified pixel-for-pixel against Unreal's own Path Tracer rendering the identical scene. Materials get a faithful automatic starting point. Getting an honest read on how far that automatic pass reaches on real production content — not just a hand-built demo scene — has been a deliberate, ongoing measurement effort, not a one-time claim.",
+      },
+      {
+        heading: "The honest material story",
+        body: "RenderMan's real differentiator is elaborate, bespoke shading — the kind of layered look development that doesn't reduce to an automatic material conversion, no matter which interchange format carries it. So rather than overselling one-to-one material fidelity, the bridge is built to get the scene right and then get out of the way: for hero assets, look development happens natively in RenderMan and composites over the automatic translation as a non-destructive layer, so it survives every re-export. That's the tier that actually matters for anything you'd call a finished shot.",
+      },
+      {
+        heading: "Why reach for RenderMan when UE already has a Path Tracer",
+        body: "UE's own Path Tracer is genuinely good. RenderMan adds what it doesn't have: layered material composition, Light Path Expressions for per-light and per-bounce compositing control in AOVs, a research-grade ML denoiser, Cryptomatte, checkpoint/resume on long renders, stylized non-photorealistic looks, and a USD-native pipeline that film and episodic studios already run end to end. Those benefits come from the renderer itself — you get them regardless of how the shading arrived.",
+      },
+      {
+        heading: "From one frame to a finished sequence",
+        body: "Beyond stills, the bridge can step through a UE Sequencer timeline, export and render each frame across more than one machine at once, and assemble the result into a finished video — camera cuts included. It's built to fail loudly rather than quietly: a render pipeline that accidentally exports the same frame twice looks identical to a working one until someone watches the video, so the export path is checked for real motion before anything reaches the render queue.",
+      },
+      {
+        heading: "Status",
+        body: "This is private R&D under Pixar's free non-commercial RenderMan license, sibling to UnRealityKit Bridge and sharing its translation lineage. It stays private, and nothing ships publicly or commercially, until there's written clarity from Pixar on third-party bridge distribution — the same disciplined, no-end-run posture UnRealityKit Bridge already applies to its own Epic-side licensing questions.",
+      },
+    ],
+    bullets: [
+      "UE as the scene source, RenderMan as the film-grade renderer — same thesis as UnRealityKit, pointed at offline VFX-grade output",
+      "\"Send to RenderMan\" one-click editor plugin — async render, settings panel, no CLI",
+      "Scene transfer (geometry, cameras, lights, animation) checked pixel-for-pixel against UE's own Path Tracer",
+      "Honest material framing: automatic starting point + a non-destructive path for RenderMan's own bespoke shading on hero looks",
+      "Renderer-level wins independent of material fidelity — layered materials, Light Path Expressions, ML denoiser, Cryptomatte, checkpoint/resume, stylized looks",
+      "Render a UE Sequencer timeline to a finished video across more than one machine",
+      "Private R&D — Pixar licensing clarification pending before any wider access",
+    ],
+    links: [],
+    accent: "blue",
+  },
+  {
     slug: "pinchwork",
     name: "Pinchwork",
     status: "In development",
