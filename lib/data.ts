@@ -758,7 +758,7 @@ export const products: Product[] = [
       },
       {
         heading: "It survives real shots",
-        body: "The flagship test is a four-second animated sequence, not a spinning cube: five objects across metal, matte dielectric, glossy dielectric and textured surfaces, each animating differently; a sun keying warm to cool across the shot plus a colored rect-light kicker sweeping through it; and a two-camera cut. Ninety-six frames exported, rendered across three machines — a measured 2.72x speedup over a single host — and assembled into a film, next to a genuine Unreal-side reference render of the identical sequence for comparison. Two real bugs only surfaced because someone opened the rendered frames — the export was clean, the renderer exited zero, and half the shot was pointed at the sky.",
+        body: "The flagship test is a four-second animated sequence, not a spinning cube: five objects across metal, matte dielectric, glossy dielectric and textured surfaces, each animating differently; a sun keying warm to cool across the shot plus a colored rect-light kicker sweeping through it; and a two-camera cut. Ninety-six frames exported, rendered across three machines and assembled into a film, next to a genuine Unreal-side reference render of the identical sequence for comparison. Two real bugs only surfaced because someone opened the rendered frames — the export was clean, the renderer exited zero, and half the shot was pointed at the sky.",
       },
       {
         heading: "AOVs and Cryptomatte, through the button",
