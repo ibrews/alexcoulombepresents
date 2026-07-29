@@ -758,11 +758,15 @@ export const products: Product[] = [
       },
       {
         heading: "It survives real shots",
-        body: "The flagship test is a four-second animated sequence, not a spinning cube: five objects across metal, matte dielectric, glossy dielectric and textured surfaces, each animating differently; a sun keying warm to cool across the shot plus a colored rect-light kicker sweeping through it; and a two-camera cut. Ninety-six frames exported, rendered across three machines, and assembled into a film. Two real bugs only surfaced because someone opened the rendered frames — the export was clean, the renderer exited zero, and half the shot was pointed at the sky.",
+        body: "The flagship test is a four-second animated sequence, not a spinning cube: five objects across metal, matte dielectric, glossy dielectric and textured surfaces, each animating differently; a sun keying warm to cool across the shot plus a colored rect-light kicker sweeping through it; and a two-camera cut. Ninety-six frames exported, rendered across three machines — a measured 2.72x speedup over a single host — and assembled into a film, next to a genuine Unreal-side reference render of the identical sequence for comparison. Two real bugs only surfaced because someone opened the rendered frames — the export was clean, the renderer exited zero, and half the shot was pointed at the sky.",
+      },
+      {
+        heading: "AOVs and Cryptomatte, through the button",
+        body: "The settings panel now has a quality-preset dropdown, resolution X/Y fields, and checkboxes for denoise and Cryptomatte, alongside per-light diffuse/specular AOVs driven by the renderer's own compositing grammar. Getting the real texture-UV AOV right took catching a subtle bug: RenderMan's bare geometric u/v is not the artist's authored UV, and shipping the wrong one would have looked plausible in every render while being quietly incorrect. Sequence-level AOV collection across the multi-machine farm landed this week too, alongside a real actor-coverage measurement on a second outside project — 22,708 actors, 90.55% translated.",
       },
       {
         heading: "Where it goes next",
-        body: "A two-way live connection is the destination: keep authoring in Unreal and watch RenderMan's progressive render update as you drag actors and lights — the same architecture as the UnRealityKit Live Link previewer, and the reason the render host is out-of-process by design. Also queued: AOVs and Cryptomatte through the button, a multi-machine render farm, and the harder inverse — RenderMan looks coming back as Unreal materials.",
+        body: "A two-way live connection is the destination: keep authoring in Unreal and watch RenderMan's progressive render update as you drag actors and lights — the same architecture as the UnRealityKit Live Link previewer, and the reason the render host is out-of-process by design. Also on the roadmap: Substrate's newer slab-based materials as a translation target, and the harder inverse — RenderMan looks coming back as Unreal materials.",
       },
     ],
     bullets: [
@@ -772,6 +776,8 @@ export const products: Product[] = [
       "Material translator measured on outside projects — 0.177 → 0.930 coverage",
       "Hero looks authored natively in RenderMan compose over the export as USD sublayers",
       "Full animated sequence proven end to end: 96 frames, multi-material, multi-light, two-camera cut",
+      "Multi-machine render farm — 2.72x measured speedup across 3 machines",
+      "AOVs and Cryptomatte wired through the settings panel, including sequence-level farm collection",
     ],
     links: [],
     accent: "amber",
