@@ -14,8 +14,9 @@ with no configuration.
 | `/` | Hero with an interactive particle constellation, rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
 | `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
-| `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`), currently gated behind a "coming soon" banner with a founding waitlist; no price shown, nothing buyable until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` **and** a Stripe subscription path is added |
-| `/account` | Magic-link sign-in, purchases/downloads, and sign-out (linked from footer + store success page) |
+| `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + a Stripe price in `STRIPE_MEMBERSHIP_PRICE_ID` |
+| `/members/recordings` | Members-only class-recording library (gated on the `membership` entitlement; entries in `lib/recordings.ts` — interim link list until the HLS player lands) |
+| `/account` | Magic-link sign-in, purchases/downloads, membership card (class credits, recording library, Stripe Customer Portal), and sign-out (linked from footer + store success page) |
 | `/repos` | Curated open-source catalog by category — each repo gets its own beautifully formatted page linking to its living GitHub wiki |
 | `/repos/[slug]` | Per-repo deep dive: story, highlights, clone command, live stars |
 | `/skills` | AI skills for Claude Code — live on Capafy (ue5-testflight, ios-testflight), in the pipeline (godot-visionos, spatial-deck-maker, app-store-aso, metahuman-godot-pipeline), and free open source |
@@ -113,6 +114,24 @@ and flip `NEXT_PUBLIC_STORE_LIVE=1`. Until then the store runs in honest preview
 buttons open a pre-filled email. **Before listing anything also sold elsewhere, check the channel
 terms** (Fab is non-exclusive for your own products; confirm Capafy's creator agreement; never
 sell Epic-owned content off-Fab) — guardrail notes are in `lib/store.ts`.
+
+### Membership billing
+
+The membership subscription lifecycle is fully wired
+([`lib/commerce/membershipBilling.ts`](lib/commerce/membershipBilling.ts) — decision logic,
+dependency-injected and unit-tested; [`lib/commerce/membership.ts`](lib/commerce/membership.ts) —
+persistence): `invoice.paid` grants/extends the `membership` entitlement and mints 2
+`booking_credit` entitlements per billing cycle; `customer.subscription.updated/deleted` revokes
+on cancellation; refunds revoke that cycle's entitlements through the existing `charge.refunded`
+branch. Everything is idempotent against webhook retries and dashboard resends. Members manage
+billing themselves via the Stripe Customer Portal
+([`app/api/account/portal/route.ts`](app/api/account/portal/route.ts), linked from `/account`),
+and class-credit redemption is an admin honor system for now
+(`GET/POST /api/admin/credits?key=ADMIN_KEY` — [`app/api/admin/credits/route.ts`](app/api/admin/credits/route.ts)).
+Launch requires two human steps: create the recurring price in Stripe and set
+`STRIPE_MEMBERSHIP_PRICE_ID`, then flip `NEXT_PUBLIC_MEMBERSHIP_LIVE=1`. Webhook-branch tests run
+with `npm test` (Node's built-in runner, Stripe fixture payloads —
+[`tests/membership-webhook.test.ts`](tests/membership-webhook.test.ts)).
 
 ## Signup lists & broadcasts
 

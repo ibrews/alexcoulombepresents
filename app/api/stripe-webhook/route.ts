@@ -5,6 +5,9 @@ import {
   recordCheckoutSession,
   fulfillDigitalPurchase,
   revokeEntitlementsForPaymentIntent,
+  findOrCreateCustomer,
+  setStripeCustomerId,
+  customerIdForStripeCustomer,
 } from "@/lib/commerce/entitlements";
 import { sendDonationNotification, sendFulfillmentEmail, sendOrderEmails } from "@/lib/commerce/email";
 import { storeItems } from "@/lib/store";
@@ -12,12 +15,44 @@ import { createVoucherCode } from "@/lib/commerce/vouchers";
 import { sendVoucherEmail } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
 import { recordCatalogOrder, markCatalogOrdersRefunded } from "@/lib/commerce/seats";
+import { handleMembershipEvent, type MembershipBillingDeps } from "@/lib/commerce/membershipBilling";
+import {
+  grantOrExtendMembership,
+  mintBookingCredits,
+  revokeMembership,
+  linkMembershipCycleToOrder,
+  fetchStripeCustomer,
+} from "@/lib/commerce/membership";
 
 // Stripe webhook — fulfillment happens here.
 // Configure in Stripe Dashboard → Developers → Webhooks:
 //   endpoint: https://alexcoulombepresents.com/api/stripe-webhook
-//   events:   checkout.session.completed, charge.refunded
+//   events:   checkout.session.completed, charge.refunded,
+//             customer.subscription.created, customer.subscription.updated,
+//             customer.subscription.deleted, invoice.paid
 // Then set STRIPE_WEBHOOK_SECRET (whsec_...) in the environment.
+// Membership subscriptions additionally need STRIPE_MEMBERSHIP_PRICE_ID
+// (price_... of the membership subscription price) — until it's set, the
+// subscription/invoice branches ignore every event.
+
+// Live wiring for the membership branches (logic + tests live in
+// lib/commerce/membershipBilling.ts). Assembled per-request so env reads
+// stay lazy.
+function membershipDeps(): MembershipBillingDeps {
+  return {
+    membershipPriceId: process.env.STRIPE_MEMBERSHIP_PRICE_ID,
+    findOrCreateCustomer,
+    setStripeCustomerId,
+    customerIdForStripeCustomer,
+    fetchStripeCustomer,
+    grantOrExtendMembership,
+    mintBookingCredits,
+    revokeMembership,
+    checkoutSessionProcessed,
+    recordCheckoutSession,
+    linkMembershipCycleToOrder,
+  };
+}
 
 function verifyStripeSignature(payload: string, header: string | null, secret: string): boolean {
   if (!header) return false;
@@ -171,6 +206,31 @@ export async function POST(req: NextRequest) {
         console.error("[fulfill] order emails failed", err);
         return NextResponse.json({ error: "Order email failed" }, { status: 500 });
       }
+    }
+  }
+
+  if (
+    event.type === "invoice.paid" ||
+    event.type === "customer.subscription.created" ||
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.deleted"
+  ) {
+    // ── Membership subscription lifecycle: grant/extend the `membership`
+    // entitlement + mint the cycle's booking credits on invoice.paid; revoke
+    // on cancellation. Refunds ride the charge.refunded branch below.
+    try {
+      const result = await handleMembershipEvent(event, membershipDeps());
+      if (result.handled) {
+        console.log(`[membership] ${event.type} → ${result.action}`);
+        if (result.deduped) return NextResponse.json({ received: true, deduped: true });
+      } else {
+        console.log(`[membership] ${event.type} ignored — ${result.reason}`);
+      }
+    } catch (err) {
+      console.error("[membership] webhook failed", err);
+      // 500 so Stripe retries — a grant must not silently drop (every step in
+      // handleMembershipEvent is idempotent, so the retry converges).
+      return NextResponse.json({ error: "Membership fulfillment failed" }, { status: 500 });
     }
   }
 
