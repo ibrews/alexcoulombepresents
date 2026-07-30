@@ -35,6 +35,74 @@ import { useEffect, useRef, useState } from "react";
 
 const ASSET_CANDIDATES = ["/hero.splat", "/hero.ksplat", "/hero.ply"];
 
+/*
+ * Point the camera at whatever actually got loaded.
+ *
+ * Captures don't share a coordinate convention: a phone scan typically lands
+ * its content several units down +Z (wherever the capture started), not
+ * around the origin. A fixed initialCameraPosition/LookAt therefore aims at
+ * empty space for most assets — the splat renders, but off-frame and tiny.
+ * So we measure the scene we were actually given and fit to it, which keeps
+ * "drop any file in public/ and it just works" true for the next capture too.
+ *
+ * Uses medians and a percentile radius rather than a raw bounding box:
+ * splat scenes almost always carry a haze of stray low-opacity splats far
+ * outside the subject, and min/max would frame those instead of the subject.
+ */
+function frameSceneToCamera(viewer: any, THREE: any) {
+  const mesh = viewer?.getSplatMesh?.();
+  const count = mesh?.getSplatCount?.() ?? 0;
+  if (!count || typeof mesh.getSplatCenter !== "function") return;
+
+  const v = new THREE.Vector3();
+  const step = Math.max(1, Math.floor(count / 20000)); // sample, don't scan 380k
+  const xs: number[] = [];
+  const ys: number[] = [];
+  const zs: number[] = [];
+  for (let i = 0; i < count; i += step) {
+    mesh.getSplatCenter(i, v, true);
+    if (!Number.isFinite(v.x) || !Number.isFinite(v.y) || !Number.isFinite(v.z)) continue;
+    xs.push(v.x);
+    ys.push(v.y);
+    zs.push(v.z);
+  }
+  if (xs.length < 8) return;
+
+  const median = (arr: number[]) => {
+    const s = [...arr].sort((a, b) => a - b);
+    return s[Math.floor(s.length / 2)];
+  };
+  const center = new THREE.Vector3(median(xs), median(ys), median(zs));
+
+  // Radius that contains ~90% of the subject, ignoring the outlier haze.
+  const dists = xs
+    .map((_, i) => Math.hypot(xs[i] - center.x, ys[i] - center.y, zs[i] - center.z))
+    .sort((a, b) => a - b);
+  const radius = dists[Math.floor(dists.length * 0.9)] || 1;
+
+  const camera = viewer.camera;
+  const fov = ((camera?.fov ?? 65) * Math.PI) / 180;
+  // Pull back far enough for the radius to fit the *vertical* fov, then a
+  // little extra so the subject breathes inside a small hero panel.
+  const distance = (radius / Math.tan(fov / 2)) * 1.5;
+
+  // Approach slightly above and off-axis — a straight-on view of a scan
+  // reads flat, and a raked angle shows it's genuinely volumetric.
+  const dir = new THREE.Vector3(0.45, -0.28, -1).normalize();
+  camera.position.copy(center).addScaledVector(dir, -distance);
+  camera.near = Math.max(0.01, distance * 0.01);
+  camera.far = distance * 12;
+  camera.lookAt(center);
+  camera.updateProjectionMatrix();
+
+  if (viewer.controls) {
+    viewer.controls.target.copy(center);
+    viewer.controls.minDistance = distance * 0.4;
+    viewer.controls.maxDistance = distance * 2.5;
+    viewer.controls.update();
+  }
+}
+
 export default function SplatHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [assetUrl, setAssetUrl] = useState<string | null>(null);
@@ -80,6 +148,11 @@ export default function SplatHero() {
 
     if (typeof window.requestIdleCallback === "function") {
       idleHandle = window.requestIdleCallback(activate, { timeout: 4000 });
+      // requestIdleCallback never fires while the tab is hidden, so a visitor
+      // who opens the site in a background tab would land on an inert hero the
+      // moment they switch to it. Belt-and-braces timeout so activation still
+      // happens shortly after the tab becomes visible.
+      timeoutHandle = setTimeout(activate, 4500);
     } else {
       timeoutHandle = setTimeout(activate, 1500);
     }
@@ -170,10 +243,14 @@ export default function SplatHero() {
       try {
         await viewer.addSplatScene(assetUrl, { showLoadingUI: false, progressiveLoad: true });
         if (disposed) return;
+        frameSceneToCamera(viewer, THREE);
         viewer.start();
         setReady(true);
-      } catch {
-        // Bad or incompatible asset — fail silently, photo stays visible.
+      } catch (err) {
+        // Bad or incompatible asset — the photo stays visible either way, but
+        // log it: a silent failure here is otherwise indistinguishable from
+        // "no asset present", which makes a bad export very hard to diagnose.
+        console.warn("[SplatHero] splat failed to load:", err);
       }
     })();
 
