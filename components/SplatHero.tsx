@@ -56,10 +56,11 @@ const ASSET_URL = "/hero.splat";
 type FormKey = "splat" | HeroShapeKey;
 const FORM_ORDER: FormKey[] = ["splat", ...HERO_SHAPE_ORDER];
 
-// Timer cadence: randomized within this band each cycle so auto-advance
-// feels organic rather than metronomic. Task spec: "~7-9s per form".
-const CYCLE_MIN_MS = 7000;
-const CYCLE_MAX_MS = 9000;
+// Timer cadence. Alex: "I don't want a single splat to linger for too long
+// — swap every 10 seconds." Held at a flat 10s rather than a random band so
+// the rhythm is predictable: nothing on the homepage sits still long enough
+// to read as a static image.
+const CYCLE_MS = 10000;
 
 // Morph rate — ported directly from the easteregg reference's main loop:
 // morphT approaches 1 at this rate (per second), and the per-frame lerp
@@ -231,9 +232,19 @@ export default function SplatHero() {
           "  gl_FragColor = vec4(vColor, a);",
           "}",
         ].join("\n"),
+        // Normal (not additive) blending, WITH depth test/write: a single
+        // THREE.Points draw call has no per-point depth sort, so additive
+        // blending (verified against a headless rasterizer during
+        // development) makes any moderately dense form — the globe's
+        // spherical shell, the skyline's towers — accumulate front-and-back
+        // overlap into a blown-out white blob, losing the palette entirely.
+        // Depth test/write gives correct per-pixel occlusion (nearer points
+        // win) regardless of draw order, which is what makes the globe read
+        // as a sphere instead of a glowing disc.
         transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        depthTest: true,
+        depthWrite: true,
+        blending: THREE.NormalBlending,
       });
 
       const points = new THREE.Points(geometry, material);
@@ -304,11 +315,10 @@ export default function SplatHero() {
         morphT = 0;
       };
       const scheduleNext = () => {
-        const delay = CYCLE_MIN_MS + Math.random() * (CYCLE_MAX_MS - CYCLE_MIN_MS);
         timeoutHandle = setTimeout(() => {
           advance();
           scheduleNext();
-        }, delay);
+        }, CYCLE_MS);
       };
       advanceRef.current = () => {
         if (timeoutHandle) clearTimeout(timeoutHandle);
