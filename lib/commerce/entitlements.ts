@@ -15,6 +15,48 @@ export async function findOrCreateCustomer(email: string, name?: string | null):
   return rows[0].id;
 }
 
+export type CustomerRow = {
+  id: number;
+  email: string;
+  name: string | null;
+  stripe_customer_id: string | null;
+};
+
+export async function getCustomer(customerId: number): Promise<CustomerRow | null> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT id, email, name, stripe_customer_id FROM customers WHERE id = ${customerId}
+  `) as CustomerRow[];
+  return rows[0] ?? null;
+}
+
+export async function customerByEmail(email: string): Promise<CustomerRow | null> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT id, email, name, stripe_customer_id FROM customers
+    WHERE brand = 'acp' AND email = ${email}
+  `) as CustomerRow[];
+  return rows[0] ?? null;
+}
+
+// Stores the Stripe customer id the first time a subscription event tells us
+// about it — the key /account needs to open the Stripe Customer Portal.
+export async function setStripeCustomerId(customerId: number, stripeCustomerId: string): Promise<void> {
+  await ensureCommerceSchema();
+  await sql()`
+    UPDATE customers SET stripe_customer_id = ${stripeCustomerId}
+    WHERE id = ${customerId} AND stripe_customer_id IS DISTINCT FROM ${stripeCustomerId}
+  `;
+}
+
+export async function customerIdForStripeCustomer(stripeCustomerId: string): Promise<number | null> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT id FROM customers WHERE stripe_customer_id = ${stripeCustomerId} AND brand = 'acp'
+  `) as { id: number }[];
+  return rows[0]?.id ?? null;
+}
+
 // Idempotent: returns the existing order if this Stripe event was already
 // processed (dedupe key = stripe_event_id), otherwise fulfills fresh.
 export async function fulfillDigitalPurchase(input: {

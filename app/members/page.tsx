@@ -59,13 +59,18 @@ export default async function Members() {
             <p className="font-mono text-xs uppercase tracking-widest text-teal">Membership active ✓</p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
             <p className="mx-auto mt-3 max-w-md text-sm text-mist">
-              The recording library and member perks unlock here as the program rolls out. Your
-              purchases and downloads live in{" "}
+              Your class credits and billing live in{" "}
               <Link href="/account" className="text-teal hover:underline">
                 your account
               </Link>
-              .
+              ; more member perks unlock as the program rolls out.
             </p>
+            <Link
+              href="/members/recordings"
+              className="mt-5 inline-block rounded-full bg-snow px-6 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+            >
+              Browse the recording library →
+            </Link>
           </div>
         </Reveal>
       ) : (

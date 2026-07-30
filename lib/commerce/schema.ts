@@ -53,12 +53,12 @@ export async function ensureCommerceSchema() {
       customer_id    BIGINT NOT NULL REFERENCES customers(id),
       sku            TEXT NOT NULL,
       tier           TEXT NOT NULL DEFAULT 'indie',
-      status         TEXT NOT NULL DEFAULT 'active', -- active | revoked
+      status         TEXT NOT NULL DEFAULT 'active', -- active | revoked | redeemed (booking credits)
       source_order_id BIGINT REFERENCES orders(id),
       major_version  INTEGER NOT NULL DEFAULT 1,
       updates_until  TIMESTAMPTZ,
       created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-      revoked_at     TIMESTAMPTZ
+      revoked_at     TIMESTAMPTZ -- also stamps consumed-at for redeemed credits
     )
   `;
 
