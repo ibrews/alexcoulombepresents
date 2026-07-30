@@ -199,8 +199,14 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
   return (
     <>
       {/* Transparent cutout, bottom-right. His left shoulder aligns to the page
-          edge; the full figure shows at natural aspect — no crop, no mask. */}
-      <div className="absolute bottom-0 right-0 hidden w-[min(34%,24.5rem)] lg:block">
+          edge; the full figure shows at natural aspect — no crop, no mask.
+          pointer-events-none: this wrapper's own (rectangular, so including
+          the cutout's transparent margins) hit-box would otherwise swallow
+          clicks meant for SplatHero's full-bleed backdrop underneath — this
+          div has no click handler of its own, and the particle field below
+          reads pointer position from window-level listeners, not from this
+          element, so disabling hit-testing here has no effect on it. */}
+      <div className="pointer-events-none absolute bottom-0 right-0 hidden w-[min(34%,24.5rem)] lg:block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
@@ -209,7 +215,15 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
           className="pointer-events-none block h-auto w-full select-none"
         />
       </div>
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
+      {/* pointer-events-none for the same reason as the cutout above: this
+          canvas spans the whole hero, and its own interactivity comes from
+          window-level pointermove/pointerleave listeners (see onMove/onLeave
+          below), not from events targeted at the canvas element itself. */}
+      <canvas
+        ref={canvasRef}
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden="true"
+      />
     </>
   );
 }

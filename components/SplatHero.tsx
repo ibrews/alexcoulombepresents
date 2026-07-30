@@ -1,130 +1,113 @@
 /*
- * SplatHero — an optional, orbitable Gaussian Splat viewer for the homepage
- * hero. It overlays the same bottom-right footprint FaceField uses for the
- * photo cutout, so when it's active it visually replaces the photo; when
- * it's inactive (the common case, until you add an asset) it renders
- * nothing and the photo shows through untouched.
+ * SplatHero — a full-bleed, morphing point-cloud backdrop for the homepage
+ * hero. It renders BEHIND the headline text and behind FaceField's portrait
+ * cutout (see the z-stacking note in app/page.tsx and the pointer-events
+ * note in components/FaceField.tsx) — it's a decorative backdrop, never a
+ * layer that has to be dodged.
+ *
+ * ARCHITECTURE
+ * ------------
+ * This does NOT use @mkkellogg/gaussian-splats-3d (the earlier version of
+ * this component did). True Gaussian-splat rendering can't morph its
+ * internal buffers cleanly — so instead we hand-parse the raw .splat file
+ * ourselves (lib/parseSplat.ts) into a plain position/color point cloud and
+ * render it as a THREE.Points cloud. That point cloud can morph: on a click
+ * or a timer, it dissolves from the splat capture into one of a few
+ * procedural shapes (lib/heroShapes.ts — a wave, a globe, a skyline) and
+ * back, lerping every point's position AND color in lockstep because every
+ * form is resampled to the exact same point count.
+ *
+ * This trades away multi-format support (the old viewer also accepted
+ * .ksplat/.ply) for morphability — only the antimatter15 .splat format is
+ * understood here. See lib/parseSplat.ts for the format layout.
  *
  * HOW TO ACTIVATE
  * ----------------
- * Drop ONE splat asset into `public/` — no code change needed:
- *   public/hero.splat   (antimatter15 .splat format — preferred, fastest load)
- *   public/hero.ksplat  (Mark Kellogg's compressed format — also fast)
- *   public/hero.ply     (standard Gaussian Splatting .ply — slower to parse)
- *
- * This component probes for those files at runtime (HEAD request, in that
- * order) and quietly does nothing if none exist. Redeploy after adding the
- * file and the viewer activates automatically on desktop.
+ * Drop `public/hero.splat` in place — no code change needed. This component
+ * probes for it at runtime (HEAD request) and quietly does nothing if it's
+ * absent.
  *
  * CAPTURING A SPLAT
  * ------------------
  *   - Scaniverse (iOS, free)  → Export → "Gaussian Splat" → save as hero.splat
- *   - Luma AI (iOS / web)     → Export → .ply, or a converted .ksplat
- *   - Polycam (iOS)           → "Gaussian Splat" capture mode → .ply / .splat
+ *   - Luma AI (iOS / web)     → Export → .ply, then convert to .splat
+ *   - Polycam (iOS)           → "Gaussian Splat" capture mode → .ply, convert
  *
  * SIZE BUDGET
  * ------------
  * Keep the exported file under 15MB (ideally 3-8MB) — it downloads on every
- * desktop visit once dropped in. Crop tightly to the subject in the capture
- * app and reduce the splat/point count on export if it comes in oversized.
+ * desktop visit once dropped in.
  */
 
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  HERO_POINT_COUNT,
+  HERO_SHAPE_ORDER,
+  generateHeroShape,
+  type FormData,
+  type HeroShapeKey,
+} from "@/lib/heroShapes";
+import { HERO_APPROACH_DIR, parseSplatBuffer } from "@/lib/parseSplat";
 
-const ASSET_CANDIDATES = ["/hero.splat", "/hero.ksplat", "/hero.ply"];
+const ASSET_URL = "/hero.splat";
 
-/*
- * Point the camera at whatever actually got loaded.
- *
- * Captures don't share a coordinate convention: a phone scan typically lands
- * its content several units down +Z (wherever the capture started), not
- * around the origin. A fixed initialCameraPosition/LookAt therefore aims at
- * empty space for most assets — the splat renders, but off-frame and tiny.
- * So we measure the scene we were actually given and fit to it, which keeps
- * "drop any file in public/ and it just works" true for the next capture too.
- *
- * Uses medians and a percentile radius rather than a raw bounding box:
- * splat scenes almost always carry a haze of stray low-opacity splats far
- * outside the subject, and min/max would frame those instead of the subject.
- */
-function frameSceneToCamera(viewer: any, THREE: any) {
-  const mesh = viewer?.getSplatMesh?.();
-  const count = mesh?.getSplatCount?.() ?? 0;
-  if (!count || typeof mesh.getSplatCenter !== "function") return;
+type FormKey = "splat" | HeroShapeKey;
+const FORM_ORDER: FormKey[] = ["splat", ...HERO_SHAPE_ORDER];
 
-  const v = new THREE.Vector3();
-  const step = Math.max(1, Math.floor(count / 20000)); // sample, don't scan 380k
-  const xs: number[] = [];
-  const ys: number[] = [];
-  const zs: number[] = [];
-  for (let i = 0; i < count; i += step) {
-    mesh.getSplatCenter(i, v, true);
-    if (!Number.isFinite(v.x) || !Number.isFinite(v.y) || !Number.isFinite(v.z)) continue;
-    xs.push(v.x);
-    ys.push(v.y);
-    zs.push(v.z);
-  }
-  if (xs.length < 8) return;
+// Timer cadence: randomized within this band each cycle so auto-advance
+// feels organic rather than metronomic. Task spec: "~7-9s per form".
+const CYCLE_MIN_MS = 7000;
+const CYCLE_MAX_MS = 9000;
 
-  const median = (arr: number[]) => {
-    const s = [...arr].sort((a, b) => a - b);
-    return s[Math.floor(s.length / 2)];
-  };
-  const center = new THREE.Vector3(median(xs), median(ys), median(zs));
+// Morph rate — ported directly from the easteregg reference's main loop:
+// morphT approaches 1 at this rate (per second), and the per-frame lerp
+// factor eases in as morphT climbs so the settle feels like it's arriving
+// rather than linearly sliding.
+const MORPH_RATE = 0.55;
 
-  // Radius that contains ~90% of the subject, ignoring the outlier haze.
-  const dists = xs
-    .map((_, i) => Math.hypot(xs[i] - center.x, ys[i] - center.y, zs[i] - center.z))
-    .sort((a, b) => a - b);
-  const radius = dists[Math.floor(dists.length * 0.9)] || 1;
+// Point size in CSS pixels at the camera's framing distance (see
+// frameCamera below) — small and splat-like, not a chunky sprite.
+const BASE_POINT_PX = 2.4;
 
-  const camera = viewer.camera;
-  const fov = ((camera?.fov ?? 65) * Math.PI) / 180;
-  // Pull back far enough for the radius to fit the *vertical* fov, then a
-  // little extra so the subject breathes inside a small hero panel.
-  const distance = (radius / Math.tan(fov / 2)) * 1.5;
+// How generously the camera pulls back from the cloud's measured radius.
+// >1 gives every form breathing room even though shapes aren't an exact
+// match for the splat's measured bounding sphere.
+const FRAMING_PADDING = 1.7;
 
-  // Approach slightly above and off-axis — a straight-on view of a scan
-  // reads flat, and a raked angle shows it's genuinely volumetric.
-  const dir = new THREE.Vector3(0.45, -0.28, -1).normalize();
-  camera.position.copy(center).addScaledVector(dir, -distance);
-  camera.near = Math.max(0.01, distance * 0.01);
-  camera.far = distance * 12;
-  camera.lookAt(center);
-  camera.updateProjectionMatrix();
-
-  if (viewer.controls) {
-    viewer.controls.target.copy(center);
-    viewer.controls.minDistance = distance * 0.4;
-    viewer.controls.maxDistance = distance * 2.5;
-    viewer.controls.update();
-  }
-}
+// Backdrop opacity once settled — low enough that the h1/portrait stay
+// crisp, high enough that the morph is still worth watching. Tune here.
+const BACKDROP_OPACITY = 0.5;
 
 export default function SplatHero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [assetUrl, setAssetUrl] = useState<string | null>(null);
+  const [hasAsset, setHasAsset] = useState(false);
   const [active, setActive] = useState(false);
   const [ready, setReady] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const advanceRef = useRef<(() => void) | null>(null);
 
-  // Probe for an asset once, on mount. No asset anywhere → stays null forever
-  // and the component never renders anything beyond `null`.
+  // Track prefers-reduced-motion live (not just at mount) — cheap, and
+  // means a mid-session OS setting change is respected without a reload.
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const onChange = () => setReducedMotion(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // Probe for the asset once, on mount. No asset → stays false forever and
+  // the component never renders anything beyond `null`.
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      for (const url of ASSET_CANDIDATES) {
-        try {
-          const res = await fetch(url, { method: "HEAD", cache: "no-store" });
-          if (cancelled) return;
-          if (res.ok) {
-            setAssetUrl(url);
-            return;
-          }
-        } catch {
-          // Network hiccup / dev-server quirk — try the next candidate.
-        }
+      try {
+        const res = await fetch(ASSET_URL, { method: "HEAD", cache: "no-store" });
+        if (!cancelled && res.ok) setHasAsset(true);
+      } catch {
+        // Network hiccup / dev-server quirk — stays inactive.
       }
     })();
     return () => {
@@ -132,15 +115,16 @@ export default function SplatHero() {
     };
   }, []);
 
-  // Desktop + fine-pointer + motion-ok only, and only once the browser is
-  // idle — this is a decorative extra, never something worth delaying paint
-  // or competing with real interaction for.
+  // Desktop + fine-pointer only, and only once the browser is idle — this
+  // is a decorative extra, never something worth delaying paint or
+  // competing with real interaction for. Reduced motion does NOT skip
+  // activation here: it still mounts, just statically (see the effect
+  // below) rather than not rendering at all.
   useEffect(() => {
-    if (!assetUrl) return;
+    if (!hasAsset) return;
 
     const isDesktop = window.matchMedia("(pointer: fine) and (min-width: 1024px)").matches;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!isDesktop || reducedMotion) return;
+    if (!isDesktop) return;
 
     let idleHandle: number | undefined;
     let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
@@ -163,140 +147,238 @@ export default function SplatHero() {
       }
       if (timeoutHandle) clearTimeout(timeoutHandle);
     };
-  }, [assetUrl]);
+  }, [hasAsset]);
 
-  // Mount the three.js / gaussian-splats-3d viewer once activated.
+  // Mount the three.js point cloud once activated.
   useEffect(() => {
-    if (!active || !assetUrl) return;
+    if (!active) return;
     const container = containerRef.current;
     if (!container) return;
 
     let disposed = false;
-    let viewer: any;
-    let renderer: any;
+    let renderer: import("three").WebGLRenderer | undefined;
+    let geometry: import("three").BufferGeometry | undefined;
+    let material: import("three").ShaderMaterial | undefined;
+    let raf = 0;
+    let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
     let resizeObserver: ResizeObserver | undefined;
 
     (async () => {
-      const [GaussianSplats3D, THREE] = await Promise.all([
-        import("@mkkellogg/gaussian-splats-3d"),
-        import("three"),
-      ]);
+      // three.js is dynamically imported (kept out of the server bundle and
+      // out of the initial client bundle — this whole effect only ever runs
+      // once activated, on desktop, after idle).
+      const [THREE, res] = await Promise.all([import("three"), fetch(ASSET_URL)]);
       if (disposed || !container) return;
+      if (!res.ok) {
+        console.warn("[SplatHero] asset fetch failed:", res.status);
+        return;
+      }
+      const buffer = await res.arrayBuffer();
+      if (disposed) return;
+
+      const parsed = parseSplatBuffer(buffer);
+      if (disposed || !parsed) {
+        console.warn("[SplatHero] failed to parse .splat asset (bad file, or too few splats survived the alpha filter)");
+        return;
+      }
 
       const width = container.clientWidth || 1;
       const height = container.clientHeight || 1;
 
-      // We build our own renderer (rather than letting the viewer create
-      // its default one) for two reasons: (1) `alpha: true` is required for
-      // a real transparent background — the viewer's internal renderer
-      // doesn't request an alpha context, so its "transparent" clear color
-      // would render as opaque black; (2) the library's dispose() assumes
-      // an internally-created renderer's root element was appended to
-      // `document.body` and unconditionally calls
-      // `document.body.removeChild(rootElement)` — which throws when the
-      // root element actually lives inside our own React tree. Supplying
-      // an external renderer skips both of those internal code paths.
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, precision: "highp" });
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setClearColor(0x000000, 0);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      renderer.setPixelRatio(pixelRatio);
       renderer.setSize(width, height);
       renderer.domElement.style.width = "100%";
       renderer.domElement.style.height = "100%";
       renderer.domElement.style.display = "block";
       container.appendChild(renderer.domElement);
 
-      viewer = new GaussianSplats3D.Viewer({
-        rootElement: container,
-        renderer,
-        selfDrivenMode: true,
-        useBuiltInControls: true,
-        cameraUp: [0, -1, -0.6],
-        initialCameraPosition: [-1, -4, 6],
-        initialCameraLookAt: [0, 0, 0],
-        sharedMemoryForWorkers: false,
-        logLevel: GaussianSplats3D.LogLevel?.None,
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
+
+      const group = new THREE.Group();
+      scene.add(group);
+
+      geometry = new THREE.BufferGeometry();
+      const positionAttr = new THREE.BufferAttribute(parsed.pos.slice(), 3).setUsage(THREE.DynamicDrawUsage);
+      const colorAttr = new THREE.BufferAttribute(parsed.col.slice(), 3).setUsage(THREE.DynamicDrawUsage);
+      geometry.setAttribute("position", positionAttr);
+      geometry.setAttribute("color", colorAttr);
+
+      material = new THREE.ShaderMaterial({
+        uniforms: { uSize: { value: 1 } },
+        vertexShader: [
+          "attribute vec3 color;",
+          "varying vec3 vColor;",
+          "uniform float uSize;",
+          "void main() {",
+          "  vColor = color;",
+          "  vec4 mv = modelViewMatrix * vec4(position, 1.0);",
+          "  gl_PointSize = clamp(uSize / -mv.z, 1.0, 36.0);",
+          "  gl_Position = projectionMatrix * mv;",
+          "}",
+        ].join("\n"),
+        fragmentShader: [
+          "varying vec3 vColor;",
+          "void main() {",
+          "  vec2 uv = (gl_PointCoord - 0.5) * 2.0;",
+          "  float d = dot(uv, uv);",
+          "  if (d > 1.0) discard;",
+          "  float a = 1.0 - d;",
+          "  a *= a;",
+          "  gl_FragColor = vec4(vColor, a);",
+          "}",
+        ].join("\n"),
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
       });
 
-      if (disposed) {
-        renderer.dispose();
-        return;
-      }
+      const points = new THREE.Points(geometry, material);
+      points.frustumCulled = false;
+      group.add(points);
 
-      // Subtle idle auto-orbit, drag to orbit, no scroll-wheel zoom-jacking.
-      const controls = viewer.controls;
-      if (controls) {
-        controls.enableZoom = false;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.6;
+      // Approach direction is pre-rotated (see lib/parseSplat.ts) to match
+      // this capture's up-aligned frame, so a plain Y-up camera works.
+      const approachDir = new THREE.Vector3(...HERO_APPROACH_DIR).normalize();
+
+      function frameCamera(w: number, h: number) {
+        const aspect = w / h;
+        camera.aspect = aspect;
+        const vFov = (camera.fov * Math.PI) / 180;
+        const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
+        const limitingHalf = Math.min(vFov, hFov) / 2;
+        const distance = (parsed!.radius / Math.tan(limitingHalf)) * FRAMING_PADDING;
+        camera.position.copy(approachDir).multiplyScalar(-distance);
+        camera.near = Math.max(0.01, distance * 0.02);
+        camera.far = distance * 8;
+        camera.lookAt(0, 0, 0);
+        camera.updateProjectionMatrix();
+        material!.uniforms.uSize.value = BASE_POINT_PX * distance * pixelRatio;
       }
+      frameCamera(width, height);
 
       resizeObserver = new ResizeObserver(() => {
-        if (!container || !viewer?.camera) return;
+        if (!container) return;
         const w = container.clientWidth || 1;
         const h = container.clientHeight || 1;
-        renderer.setSize(w, h, false);
-        viewer.camera.aspect = w / h;
-        viewer.camera.updateProjectionMatrix();
+        renderer!.setSize(w, h, false);
+        frameCamera(w, h);
+        if (reducedMotion) renderer!.render(scene, camera);
       });
       resizeObserver.observe(container);
 
-      try {
-        // progressiveLoad streams splats in, and addSplatScene's promise
-        // resolves BEFORE that streaming finishes — so framing only off the
-        // resolved promise measures a mesh that's still nearly empty and
-        // leaves the camera at its useless default. Re-frame when the loader
-        // reports Done, which is the first moment the full scene exists.
-        await viewer.addSplatScene(assetUrl, {
-          showLoadingUI: false,
-          progressiveLoad: true,
-          // NOTE: 2 is LoaderStatus.Done. That enum is defined inside the
-          // package but NOT exported, so referencing GaussianSplats3D
-          // .LoaderStatus.Done throws a TypeError on the first progress event
-          // — which aborts the whole download. The literal is the only safe
-          // way to spell it.
-          onProgress: (_percent: number, _label: string, status: number) => {
-            if (status === 2 && !disposed) frameSceneToCamera(viewer, THREE);
-          },
-        });
-        if (disposed) return;
-        frameSceneToCamera(viewer, THREE);
-        viewer.start();
-        setReady(true);
-      } catch (err) {
-        // Bad or incompatible asset — the photo stays visible either way, but
-        // log it: a silent failure here is otherwise indistinguishable from
-        // "no asset present", which makes a bad export very hard to diagnose.
-        console.warn("[SplatHero] splat failed to load:", err);
+      renderer.render(scene, camera);
+      if (!disposed) setReady(true);
+
+      if (reducedMotion) {
+        // "ideally just render the splat statically" — no cycling, no
+        // click-to-advance, no drift, no morph animation. advanceRef stays
+        // null, so the container's onClick is a no-op.
+        return;
       }
+
+      // ---- Animated behavior: drift, morph, click/timer cycling ----
+      const formCache = new Map<FormKey, FormData>([["splat", { pos: parsed.pos, col: parsed.col }]]);
+      const getFormData = (key: FormKey): FormData => {
+        let data = formCache.get(key);
+        if (!data) {
+          data = generateHeroShape(key as HeroShapeKey, parsed!.radius);
+          formCache.set(key, data);
+        }
+        return data;
+      };
+
+      let formIndex = 0;
+      let morphT = 1;
+      const targetPos = parsed.pos.slice();
+      const targetCol = parsed.col.slice();
+
+      const advance = () => {
+        formIndex = (formIndex + 1) % FORM_ORDER.length;
+        const data = getFormData(FORM_ORDER[formIndex]);
+        targetPos.set(data.pos);
+        targetCol.set(data.col);
+        morphT = 0;
+      };
+      const scheduleNext = () => {
+        const delay = CYCLE_MIN_MS + Math.random() * (CYCLE_MAX_MS - CYCLE_MIN_MS);
+        timeoutHandle = setTimeout(() => {
+          advance();
+          scheduleNext();
+        }, delay);
+      };
+      advanceRef.current = () => {
+        if (timeoutHandle) clearTimeout(timeoutHandle);
+        advance();
+        scheduleNext();
+      };
+      scheduleNext();
+
+      const clock = new THREE.Clock();
+      const loop = () => {
+        raf = requestAnimationFrame(loop);
+        const dt = Math.min(0.05, clock.getDelta());
+
+        group.rotation.y += dt * 0.045; // slow, subtle drift
+
+        if (morphT < 1) {
+          morphT = Math.min(1, morphT + dt * MORPH_RATE);
+          const ease = 1 - Math.exp(-dt * (3.4 + morphT * 2.2));
+          const pArr = positionAttr.array as Float32Array;
+          const cArr = colorAttr.array as Float32Array;
+          for (let i = 0; i < HERO_POINT_COUNT * 3; i++) {
+            pArr[i] += (targetPos[i] - pArr[i]) * ease;
+            cArr[i] += (targetCol[i] - cArr[i]) * ease;
+          }
+          positionAttr.needsUpdate = true;
+          colorAttr.needsUpdate = true;
+        }
+
+        renderer!.render(scene, camera);
+      };
+      loop();
     })();
 
     return () => {
       disposed = true;
+      advanceRef.current = null;
+      if (raf) cancelAnimationFrame(raf);
+      if (timeoutHandle) clearTimeout(timeoutHandle);
       resizeObserver?.disconnect();
-      if (viewer) {
-        viewer.stop();
-        viewer.dispose().catch(() => {});
-      }
+      geometry?.dispose();
+      material?.dispose();
       if (renderer) {
         renderer.dispose();
         renderer.domElement.parentElement?.removeChild(renderer.domElement);
       }
     };
-  }, [active, assetUrl]);
+  }, [active, reducedMotion]);
 
-  if (!assetUrl) return null;
+  if (!hasAsset) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 hidden lg:block">
+    <div className="pointer-events-none absolute inset-0 hidden lg:block">
       <div
         ref={containerRef}
-        className={`pointer-events-auto absolute bottom-0 right-0 h-[min(60%,26rem)] w-[min(34%,24.5rem)] transition-opacity duration-700 ${
-          active && ready ? "opacity-100" : "opacity-0"
-        }`}
+        onClick={() => advanceRef.current?.()}
+        className={`pointer-events-auto absolute inset-0 transition-opacity duration-700 ${
+          active && ready ? "" : "opacity-0"
+        } ${!reducedMotion ? "cursor-pointer" : ""}`}
+        // Tailwind can't generate an arbitrary-value opacity class from a
+        // runtime template literal (its scanner needs a static string), so
+        // the "on" opacity is set inline; the "off" state above stays a
+        // plain Tailwind class. Both animate via the same transition-opacity.
+        style={active && ready ? { opacity: BACKDROP_OPACITY } : undefined}
       />
       {active && ready && (
-        <p className="pointer-events-none absolute bottom-2 right-2 font-mono text-xs text-mist">
-          ← drag · a real Gaussian splat
+        // z-20: escapes the section's z-index:auto stacking bucket (shared
+        // with the portrait and headline) so this caption stays legible
+        // even where it falls over the portrait's bounding box.
+        <p className="pointer-events-none absolute bottom-4 right-4 z-20 font-mono text-xs text-mist">
+          {reducedMotion ? "a real 3D capture" : "click to reshape · a real 3D capture"}
         </p>
       )}
     </div>
