@@ -45,10 +45,12 @@ import { useEffect, useRef, useState } from "react";
 import {
   HERO_POINT_COUNT,
   HERO_SHAPE_ORDER,
+  HERO_SHAPE_LABELS,
   generateHeroShape,
   type FormData,
   type HeroShapeKey,
 } from "@/lib/heroShapes";
+import { pulseHeroConstellation } from "@/lib/heroPulse";
 import { HERO_APPROACH_DIR, parseSplatBuffer } from "@/lib/parseSplat";
 
 const ASSET_URL = "/hero.splat";
@@ -77,6 +79,10 @@ const BASE_POINT_PX = 2.4;
 // match for the splat's measured bounding sphere.
 const FRAMING_PADDING = 1.7;
 
+// Compose the visual weight in the lower half of the hero. The parent hero
+// section clips this canvas, so its bottom edge is also the marquee cutoff.
+const CLOUD_VERTICAL_OFFSET_FACTOR = -0.24;
+
 // Backdrop opacity once settled — low enough that the h1/portrait stay
 // crisp, high enough that the morph is still worth watching. Tune here.
 //
@@ -92,6 +98,7 @@ export default function SplatHero() {
   const [active, setActive] = useState(false);
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [currentForm, setCurrentForm] = useState<FormKey>("splat");
   const advanceRef = useRef<(() => void) | null>(null);
 
   // Track prefers-reduced-motion live (not just at mount) — cheap, and
@@ -205,6 +212,7 @@ export default function SplatHero() {
       const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
 
       const group = new THREE.Group();
+      group.position.y = parsed.radius * CLOUD_VERTICAL_OFFSET_FACTOR;
       scene.add(group);
 
       geometry = new THREE.BufferGeometry();
@@ -314,10 +322,13 @@ export default function SplatHero() {
 
       const advance = () => {
         formIndex = (formIndex + 1) % FORM_ORDER.length;
-        const data = getFormData(FORM_ORDER[formIndex]);
+        const form = FORM_ORDER[formIndex];
+        const data = getFormData(form);
         targetPos.set(data.pos);
         targetCol.set(data.col);
         morphT = 0;
+        setCurrentForm(form);
+        pulseHeroConstellation();
       };
       const scheduleNext = () => {
         timeoutHandle = setTimeout(() => {
@@ -392,8 +403,9 @@ export default function SplatHero() {
         // z-20: escapes the section's z-index:auto stacking bucket (shared
         // with the portrait and headline) so this caption stays legible
         // even where it falls over the portrait's bounding box.
-        <p className="pointer-events-none absolute bottom-4 right-4 z-20 font-mono text-xs text-mist">
-          {reducedMotion ? "a real 3D capture" : "click to reshape · a real 3D capture"}
+        <p className="pointer-events-none absolute bottom-4 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap font-mono text-xs text-mist">
+          {currentForm === "splat" ? "A Real 3D Capture" : HERO_SHAPE_LABELS[currentForm]}
+          {!reducedMotion && " · click to reshape"}
         </p>
       )}
     </div>

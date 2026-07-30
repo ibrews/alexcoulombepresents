@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { subscribeToHeroPulse } from "@/lib/heroPulse";
 
 // Calibrated for the transparent head-and-shoulders cutout: the face sits in
 // the top ~42% of the frame, centered horizontally around 0.45.
@@ -46,6 +47,26 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
 
     const palette = [174, 262, 42];
 
+    function seedParticles(burst = false) {
+      const count = Math.min(Math.floor(w * h * density), 320);
+      particles = Array.from({ length: count }, () => {
+        const angle = randAngle();
+        const speed = burst ? Math.random() * 2.3 + 0.8 : 0.35;
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: burst ? Math.cos(angle) * speed : (Math.random() - 0.5) * speed,
+          vy: burst ? Math.sin(angle) * speed : (Math.random() - 0.5) * speed,
+          r: Math.random() * 1.6 + 0.6,
+          hue: palette[Math.floor(Math.random() * palette.length)],
+        };
+      });
+    }
+
+    function randAngle() {
+      return Math.random() * Math.PI * 2;
+    }
+
     function resize() {
       if (!canvas) return;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -54,15 +75,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(Math.floor(w * h * density), 320);
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        r: Math.random() * 1.6 + 0.6,
-        hue: palette[Math.floor(Math.random() * palette.length)],
-      }));
+      seedParticles();
     }
 
     function getAttractors() {
@@ -179,6 +192,12 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
 
     resize();
     window.addEventListener("resize", resize);
+    const unsubscribePulse = reduced
+      ? () => undefined
+      : subscribeToHeroPulse(() => {
+          seedParticles(true);
+          lastMove = performance.now();
+        });
     if (!reduced) {
       window.addEventListener("pointermove", onMove, { passive: true });
       window.addEventListener("pointerleave", onLeave);
@@ -193,6 +212,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
+      unsubscribePulse();
     };
   }, [density]);
 
