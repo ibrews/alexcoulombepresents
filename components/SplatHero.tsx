@@ -241,7 +241,23 @@ export default function SplatHero() {
       resizeObserver.observe(container);
 
       try {
-        await viewer.addSplatScene(assetUrl, { showLoadingUI: false, progressiveLoad: true });
+        // progressiveLoad streams splats in, and addSplatScene's promise
+        // resolves BEFORE that streaming finishes — so framing only off the
+        // resolved promise measures a mesh that's still nearly empty and
+        // leaves the camera at its useless default. Re-frame when the loader
+        // reports Done, which is the first moment the full scene exists.
+        await viewer.addSplatScene(assetUrl, {
+          showLoadingUI: false,
+          progressiveLoad: true,
+          // NOTE: 2 is LoaderStatus.Done. That enum is defined inside the
+          // package but NOT exported, so referencing GaussianSplats3D
+          // .LoaderStatus.Done throws a TypeError on the first progress event
+          // — which aborts the whole download. The literal is the only safe
+          // way to spell it.
+          onProgress: (_percent: number, _label: string, status: number) => {
+            if (status === 2 && !disposed) frameSceneToCamera(viewer, THREE);
+          },
+        });
         if (disposed) return;
         frameSceneToCamera(viewer, THREE);
         viewer.start();
