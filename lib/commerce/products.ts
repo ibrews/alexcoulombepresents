@@ -39,7 +39,7 @@ export const digitalProducts: DigitalProduct[] = [
     kind: "Mac app",
     priceCents: 1400, // launch week; TODO(alex): bump to 1900 after
     blurb:
-      "Reads your Mac's own power log and explains exactly what drained your battery, which app blocked sleep, and what woke it overnight. Local-only, zero telemetry.",
+      "Reads your Mac's own power log and explains exactly what drained your battery, which app blocked sleep, and what woke it overnight. Local-only, completely private, no data sharing.",
     majorVersion: 1,
     updatesWindowDays: 365,
     r2Prefix: "drainspotting/1.0.0/Drainspotting-1.0.0.dmg",
