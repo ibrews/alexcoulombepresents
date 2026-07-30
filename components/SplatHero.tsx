@@ -79,7 +79,12 @@ const FRAMING_PADDING = 1.7;
 
 // Backdrop opacity once settled — low enough that the h1/portrait stay
 // crisp, high enough that the morph is still worth watching. Tune here.
-const BACKDROP_OPACITY = 0.5;
+//
+// Raised from 0.5: at half opacity a dark interior capture over this
+// near-black hero was indistinguishable from FaceField's ambient particles —
+// Alex looked straight at a working build and reported seeing no splats at
+// all. The point cloud has to read as a distinct object, not as dust.
+const BACKDROP_OPACITY = 0.85;
 
 export default function SplatHero() {
   const containerRef = useRef<HTMLDivElement>(null);
