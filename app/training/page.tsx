@@ -9,6 +9,7 @@ import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
 import CounterStat from "@/components/CounterStat";
 import TestimonialWall from "@/components/TestimonialWall";
+import { getCurriculumEntries } from "@/lib/curriculum";
 import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
@@ -21,6 +22,8 @@ export const metadata: Metadata = {
 };
 
 export default function Training() {
+  const aiClasses = getCurriculumEntries().filter((entry) => entry.status === "teasing");
+
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
       <JsonLd data={trainingCourse} />
@@ -403,6 +406,28 @@ export default function Training() {
                   <p className="mt-2 text-sm leading-relaxed text-mist">{c.d}</p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-10">
+              <p className="font-mono text-xs uppercase tracking-widest text-teal">AI classes are coming</p>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {aiClasses.map((entry) => (
+                  <div key={entry.slug} className="rounded-2xl border border-line p-5">
+                    <Link href={`/curriculum/${entry.slug}`} className="group block">
+                      <h3 className="font-bold text-snow group-hover:text-teal">{entry.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-mist">{entry.tagline}</p>
+                    </Link>
+                    <div className="mt-5">
+                      <InquireButton
+                        list="ai"
+                        label="Tell me when this runs →"
+                        context={entry.title}
+                        successMessage="You'll hear when this class is scheduled."
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mt-10 grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">

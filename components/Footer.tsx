@@ -24,6 +24,7 @@ export default function Footer() {
             <Link className="text-mist hover:text-snow" href="/store">Store</Link>
             <Link className="text-mist hover:text-snow" href="/members">Members</Link>
             <Link className="text-mist hover:text-snow" href="/newsletter">Newsletter</Link>
+            <Link className="text-mist hover:text-snow" href="/curriculum">Curriculum</Link>
             <Link className="text-mist hover:text-snow" href="/vote">Vote on what&apos;s next</Link>
             <Link className="text-mist hover:text-snow" href="/account">My Account</Link>
             <Link className="text-mist hover:text-snow" href="/support">Support the Lab</Link>
