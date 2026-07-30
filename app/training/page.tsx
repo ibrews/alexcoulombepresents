@@ -497,9 +497,10 @@ export default function Training() {
             Exclusive tools, only for members.
           </h2>
           <p className="mt-4 max-w-3xl leading-relaxed text-mist">
-            Membership includes hands-on access to real internal tools Alex builds for production work.
-            The first is xrsim: a working local, GPU-accelerated PICO Emulator harness for testing
-            OpenXR Android apps on a Mac without a headset. More tools land here only as they ship.
+            Membership includes hands-on access to real internal tools Alex builds for production
+            work — xrsim (test any OpenXR Android app on a Mac, no headset), Forage (an AI-first
+            scout for the Unreal asset packs you already own), and Constellation (your own notes
+            as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they&apos;re ready.
           </p>
           <Link
             href="/members"
