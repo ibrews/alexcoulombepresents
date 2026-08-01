@@ -65,12 +65,20 @@ export default async function Members() {
               </Link>
               ; more member perks unlock as the program rolls out.
             </p>
-            <Link
-              href="/members/recordings"
-              className="mt-5 inline-block rounded-full bg-snow px-6 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
-            >
-              Browse the recording library →
-            </Link>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/members/recordings"
+                className="rounded-full bg-snow px-6 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+              >
+                Browse the recording library →
+              </Link>
+              <Link
+                href="/members/tools"
+                className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+              >
+                Browse the Lab tools →
+              </Link>
+            </div>
           </div>
         </Reveal>
       ) : (

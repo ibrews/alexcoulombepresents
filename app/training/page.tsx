@@ -542,6 +542,30 @@ export default function Training() {
         </div>
       </Reveal>
 
+      {/* Members-only tools */}
+      <Reveal>
+        <section className="glass mt-16 rounded-3xl p-8 md:p-12">
+          <p className="font-mono text-xs uppercase tracking-widest text-teal">
+            Members only · shipping today
+          </p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
+            Exclusive tools, only for members.
+          </h2>
+          <p className="mt-4 max-w-3xl leading-relaxed text-mist">
+            Membership includes hands-on access to real internal tools Alex builds for production
+            work — xrsim (test any OpenXR Android app on a Mac, no headset), Forage (an AI-first
+            scout for the Unreal asset packs you already own), and Constellation (your own notes
+            as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they&apos;re ready.
+          </p>
+          <Link
+            href="/members"
+            className="mt-6 inline-block rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
+          >
+            See what&apos;s included →
+          </Link>
+        </section>
+      </Reveal>
+
       {/* Community */}
       <Reveal>
         <div className="mt-16 grid gap-5 md:grid-cols-2">

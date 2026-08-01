@@ -26,7 +26,8 @@ export const memberBenefits: { title: string; detail: string }[] = [
   },
   {
     title: "Early access to the Lab",
-    detail: "First seats for Pinchwork, UnRealityKit Bridge, and whatever escapes the private repos next.",
+    detail:
+      "First access to Lab tools like xrsim — test any OpenXR Android app locally, no headset needed — and whatever escapes the private repos next.",
   },
   {
     title: "Monthly members' office hours",
