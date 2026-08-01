@@ -391,8 +391,8 @@ export default function SplatHero() {
         group.rotation.y += deltaX * ROTATE_SENSITIVITY;
         group.rotation.x = THREE.MathUtils.clamp(
           group.rotation.x - deltaY * VERTICAL_ROTATE_SENSITIVITY,
-          -0.45,
-          0.45,
+          -1.3,
+          1.3,
         );
       };
       setDraggingRef.current = (nextIsDragging) => {
@@ -490,7 +490,10 @@ export default function SplatHero() {
 
           if (!pointer.isRotating) {
             if (totalDistance < DRAG_START_DISTANCE_PX) return;
-            if (Math.abs(totalX) <= Math.abs(totalY) * HORIZONTAL_DRAG_RATIO) {
+            if (
+              event.pointerType === "touch" &&
+              Math.abs(totalX) <= Math.abs(totalY) * HORIZONTAL_DRAG_RATIO
+            ) {
               // Leave a vertical swipe entirely to the browser's pan-y behavior.
               pointer.ignoreAsScroll = true;
               return;
