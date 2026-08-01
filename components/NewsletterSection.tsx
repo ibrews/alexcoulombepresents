@@ -7,8 +7,8 @@ import WaitlistForm from "@/components/WaitlistForm";
  * the bottom of any high-traffic page.
  */
 export default function NewsletterSection({
-  heading = "Hear about it before it's sold out.",
-  sub = "Class announcements before the store, Lab launches on day one, the founding membership rate, and a vote on what gets taught next. One email when something real happens — usually not even monthly.",
+  heading = "Be the first to hear what's new.",
+  sub = "Class announcements. Upcoming events. Day one lab launches. Voting on new products and courses. One email every few weeks so you don't have to keep up with Alex's flutter of social media posts.",
 }: {
   heading?: string;
   sub?: string;

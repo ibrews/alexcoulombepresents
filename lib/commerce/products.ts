@@ -7,6 +7,10 @@ export type DigitalProduct = {
   sku: string;
   name: string;
   tier: "indie";
+  /** Storefront badge — defaults to "Pipeline" if omitted, matching the
+   * section's original single-product assumption. Set explicitly once the
+   * catalog holds more than one kind of thing. */
+  kind?: string;
   priceCents: number; // TODO(alex): real launch price
   blurb: string;
   majorVersion: number;
@@ -27,6 +31,18 @@ export const digitalProducts: DigitalProduct[] = [
     majorVersion: 1,
     updatesWindowDays: 365,
     r2Prefix: "mh-godot-pipeline/1.0.0/mh-godot-pipeline-1.0.0.zip",
+  },
+  {
+    sku: "drainspotting",
+    name: "Drainspotting",
+    tier: "indie",
+    kind: "Mac app",
+    priceCents: 1400, // launch week; TODO(alex): bump to 1900 after
+    blurb:
+      "Reads your Mac's own power log and explains exactly what drained your battery, which app blocked sleep, and what woke it overnight. Local-only, completely private, no data sharing.",
+    majorVersion: 1,
+    updatesWindowDays: 365,
+    r2Prefix: "drainspotting/1.0.0/Drainspotting-1.0.0.dmg",
   },
   // UnRealityKit Bridge intentionally NOT listed here yet — per Alex
   // (2026-07-16) it isn't a product yet. lib/store.ts's "coming soon" /

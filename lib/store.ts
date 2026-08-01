@@ -206,6 +206,22 @@ export const storeItems: StoreItem[] = [
     ctaLabel: "Notify me at launch →",
     list: "unrealitykit-bridge",
   },
+  {
+    // Notify-only until the EULA and license-key delivery are real. Like
+    // unrealitykit-early, lib/commerce/products.ts deliberately has no entry —
+    // add one there in the same commit if this ever becomes a paid download.
+    slug: "receipt-reconciler",
+    name: "Receipt Reconciler — coming soon",
+    kind: "template",
+    priceCents: null,
+    priceNote: "not released yet",
+    blurb:
+      "Reconcile a year of card statements against the receipts buried in your inbox. Finds the matching email or photo receipt, reads the total with on-device OCR, and writes it back to your spreadsheet — with a local review UI for everything it isn't sure about. macOS, runs entirely on your machine.",
+    delivery: "No purchase yet — drop your email and you'll hear the moment it's for sale.",
+    fulfillment: "download-link",
+    ctaLabel: "Notify me at launch →",
+    list: "receipt-reconciler",
+  },
 ];
 
 export function formatPrice(cents: number | null, note?: string): string {

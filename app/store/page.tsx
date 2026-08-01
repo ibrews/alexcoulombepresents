@@ -219,9 +219,9 @@ export default async function Store() {
         })}
       </div>
 
-      {/* Instant-download pipelines — license key + R2 delivery on checkout */}
+      {/* Instant-download pipelines & apps — license key + R2 delivery on checkout */}
       <Reveal>
-        <h2 className="mt-16 text-2xl font-bold">Pipelines — instant delivery</h2>
+        <h2 className="mt-16 text-2xl font-bold">Pipelines &amp; apps — instant delivery</h2>
         <p className="mt-2 max-w-2xl text-sm text-mist">
           Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link
           all work at checkout.
@@ -232,7 +232,7 @@ export default async function Store() {
           <Reveal key={p.sku} delay={Math.min(i * 70, 280)}>
             <div className="glass flex h-full flex-col rounded-2xl p-7">
               <span className="self-start rounded-full border border-teal/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-teal">
-                Pipeline
+                {p.kind ?? "Pipeline"}
               </span>
               <h3 className="mt-4 font-bold leading-snug">{p.name}</h3>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-mist">{p.blurb}</p>

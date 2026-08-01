@@ -33,19 +33,19 @@
 - `[home.11]` ▸ Three passions, one through-line
 - `[home.12]` ▸ How can I make digital space feel visceral and alive?
 - `[home.13]` ▸ 01 / ENGINES
-- `[home.14]` ▸ Unreal & Godot, let's go further than the documentation
-- `[home.15]` ▸ Engine-level fixes & improvements for Vision Pro, Godot physics game at 90 fps on AVP, MetaHumans like you've never seen them before. When a plugin says "Experimental," the real fun begins.
+- `[home.14]` ▸ Unreal & Godot & even ThreeJS, let's go further than the documentation
+- `[home.15]` ▸ Engine-level improvements for Vision Pro, Godot looking gorgeous at 90 fps with custom source code, WebXR and WebGPU doing the impossible. MetaHumans up close & virtual like you've never seen them before. When a plugin says "Experimental," the real fun begins.
 - `[home.16]` ▸ 02 / AI
 - `[home.17]` ▸ Agents that ship real work. No tech for tech's sake.
 - `[home.18]` ▸ A fleet of machines at Agile Lens running AI agents around the clock without breaking the bank. Field manuals so agents drive Unreal without crashing it. Pipelines where the overnight build greets you with a new TestFlight-approved app waiting on device by morning.
-- `[home.19]` ▸ 03 / STAGES
+- `[home.19]` ▸ 03 / LIVE VR
 - `[home.20]` ▸ Theatre is the original VR
 - `[home.21]` ▸ Live actors performing in headsets since 2018. Worked on Venice Biennale's first global live VR show, an annual Christmas Carol in VR, mixed reality theatre with an actor surrounded by digital assets, and published SIGGRAPH papers on all of it.
 - `[home.22]` ▸ Training for companies & studios
 - `[home.23]` ▸ Bring your whole team. We'll build the curriculum.
 - `[home.24]` ▸ Custom curricula bundled from 50+ ready-to-teach classes — the same live training delivered to Epic Games' key partners, broadcast teams, and AAA studios. Remote or on-site, cloud workstations available, pricing scoped to your team.
 - `[home.25]` ▸ Get a team quote →
-- `[home.26]` ▸ Fresh from the repo
+- `[home.26]` ▸ Fresh from the public repos
 - `[home.27]` ▸ Real tools built for Agile Lens , now available to you.
 - `[home.28]` ▸ all repos →
 - `[home.29]` ▸ The Lab
@@ -317,21 +317,20 @@
 - `[store.9]` ▸ Capafy →
 - `[store.10]` ▸ You get:
 - `[store.11]` ▸ Get it on Capafy →
-- `[store.12]` ▸ Pipelines — instant delivery
+- `[store.12]` ▸ Pipelines & apps — instant delivery
 - `[store.13]` ▸ Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link all work at checkout.
-- `[store.14]` ▸ Pipeline
-- `[store.15]` ▸ Coming soon
-- `[store.16]` ▸ The membership: every recording, member pricing, early access.
-- `[store.17]` ▸ One subscription for the whole class-recording library, standing discounts on everything here, first seats on Lab launches, and monthly office hours with Alex. Founding waitlist is open — members hear the price first and get the founding rate.
-- `[store.18]` ▸ Join the founding waitlist →
-- `[store.19]` ▸ Not sure where to start?
-- `[store.20]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
-- `[store.21]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
-- `[store.22]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — that's Agile Lens territory (browse the portfolio). Email info@alexcoulombepresents.com or use the contact form .
-- `[store.23]` ▸ Join the list for the next one →
-- `[store.24]` ▸ You'll hear the moment the next one's scheduled.
-- `[store.25]` ▸ Sold out — join the waitlist →
-- `[store.26]` ▸ Buy →
+- `[store.14]` ▸ Coming soon
+- `[store.15]` ▸ The membership: every recording, member pricing, early access.
+- `[store.16]` ▸ One subscription for the whole class-recording library, standing discounts on everything here, first seats on Lab launches, and monthly office hours with Alex. Founding waitlist is open — members hear the price first and get the founding rate.
+- `[store.17]` ▸ Join the founding waitlist →
+- `[store.18]` ▸ Not sure where to start?
+- `[store.19]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
+- `[store.20]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
+- `[store.21]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — that's Agile Lens territory (browse the portfolio). Email info@alexcoulombepresents.com or use the contact form .
+- `[store.22]` ▸ Join the list for the next one →
+- `[store.23]` ▸ You'll hear the moment the next one's scheduled.
+- `[store.24]` ▸ Sold out — join the waitlist →
+- `[store.25]` ▸ Buy →
 
 ---
 
@@ -1154,7 +1153,7 @@
 ## Store catalog  ·  `lib/store.ts`
 <sub>Prices are placeholders until the store goes live; edit names, blurbs, and delivery text here.</sub>
 
-### storeItems  (11 entries — add or remove whole entries)
+### storeItems  (12 entries — add or remove whole entries)
 
 - `[store.storeItems.class-voucher.name]` ▸ Any-class voucher — founding batch
 
@@ -1202,4 +1201,9 @@
 - `[store.storeItems.unrealitykit-early.delivery]` ▸ No purchase — just drop your email and you'll get the launch announcement before anyone else.
 - `[store.storeItems.unrealitykit-early.ctaLabel]` ▸ Notify me at launch →
 - `[store.storeItems.unrealitykit-early.list]` ▸ unrealitykit-bridge
+- `[store.storeItems.receipt-reconciler.name]` ▸ Receipt Reconciler — coming soon
+- `[store.storeItems.receipt-reconciler.blurb]` ▸ Reconcile a year of card statements against the receipts buried in your inbox. Finds the matching email or photo receipt, reads the total with on-device OCR, and writes it back to your spreadsheet — with a local review UI for everything it isn't sure about. macOS, runs entirely on your machine.
+- `[store.storeItems.receipt-reconciler.delivery]` ▸ No purchase yet — drop your email and you'll hear the moment it's for sale.
+- `[store.storeItems.receipt-reconciler.ctaLabel]` ▸ Notify me at launch →
+- `[store.storeItems.receipt-reconciler.list]` ▸ receipt-reconciler
 
