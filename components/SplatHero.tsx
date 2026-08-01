@@ -79,6 +79,13 @@ const BASE_POINT_PX = 2.4;
 // match for the splat's measured bounding sphere.
 const FRAMING_PADDING = 1.7;
 
+// Screen-space nudge (CSS px equivalent, applied via camera.setViewOffset —
+// NOT a world-space offset) so the cloud sits lower and further right than
+// dead-center, clearing the h1/paragraph text better and reading as
+// deliberately off-center rather than centered-and-clipped.
+const SCREEN_SHIFT_X = 0.14; // fraction of container width, + = shift content right
+const SCREEN_SHIFT_Y = 0.16; // fraction of container height, + = shift content down
+
 // Compose the visual weight in the lower half of the hero. The parent hero
 // section clips this canvas, so its bottom edge is also the marquee cutoff.
 const CLOUD_VERTICAL_OFFSET_FACTOR = -0.24;
@@ -92,6 +99,33 @@ const CLOUD_VERTICAL_OFFSET_FACTOR = -0.24;
 // all. The point cloud has to read as a distinct object, not as dust.
 const BACKDROP_OPACITY = 0.85;
 
+const ROTATE_SENSITIVITY = 0.006;
+const VERTICAL_ROTATE_SENSITIVITY = 0.003;
+const DRAG_START_DISTANCE_PX = 8;
+const CLICK_DISTANCE_PX = 6;
+const HORIZONTAL_DRAG_RATIO = 1.3;
+const AUTO_ROTATE_RESUME_MS = 180;
+
+type PointerState = {
+  pointerId: number | null;
+  startX: number;
+  startY: number;
+  lastX: number;
+  lastY: number;
+  isRotating: boolean;
+  ignoreAsScroll: boolean;
+};
+
+const EMPTY_POINTER_STATE: PointerState = {
+  pointerId: null,
+  startX: 0,
+  startY: 0,
+  lastX: 0,
+  lastY: 0,
+  isRotating: false,
+  ignoreAsScroll: false,
+};
+
 export default function SplatHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasAsset, setHasAsset] = useState(false);
@@ -100,6 +134,9 @@ export default function SplatHero() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [currentForm, setCurrentForm] = useState<FormKey>("splat");
   const advanceRef = useRef<(() => void) | null>(null);
+  const rotateRef = useRef<((deltaX: number, deltaY: number) => void) | null>(null);
+  const setDraggingRef = useRef<((isDragging: boolean) => void) | null>(null);
+  const pointerStateRef = useRef<PointerState>(EMPTY_POINTER_STATE);
 
   // Track prefers-reduced-motion live (not just at mount) — cheap, and
   // means a mid-session OS setting change is respected without a reload.
@@ -280,6 +317,10 @@ export default function SplatHero() {
         camera.far = distance * 8;
         camera.lookAt(0, 0, 0);
         camera.updateProjectionMatrix();
+        camera.clearViewOffset();
+        // Three.js treats x/y as the sub-view's top-left corner in the full
+        // frustum. Moving that window up-left makes the world appear down-right.
+        camera.setViewOffset(w, h, -w * SCREEN_SHIFT_X, -h * SCREEN_SHIFT_Y, w, h);
         material!.uniforms.uSize.value = BASE_POINT_PX * distance * pixelRatio;
       }
       frameCamera(width, height);
@@ -344,11 +385,31 @@ export default function SplatHero() {
       scheduleNext();
 
       const clock = new THREE.Clock();
+      let isDragging = false;
+      let autoRotateResumeStartedAt = 0;
+      rotateRef.current = (deltaX, deltaY) => {
+        group.rotation.y += deltaX * ROTATE_SENSITIVITY;
+        group.rotation.x = THREE.MathUtils.clamp(
+          group.rotation.x + deltaY * VERTICAL_ROTATE_SENSITIVITY,
+          -0.45,
+          0.45,
+        );
+      };
+      setDraggingRef.current = (nextIsDragging) => {
+        isDragging = nextIsDragging;
+        if (!nextIsDragging) autoRotateResumeStartedAt = performance.now();
+      };
+
       const loop = () => {
         raf = requestAnimationFrame(loop);
         const dt = Math.min(0.05, clock.getDelta());
 
-        group.rotation.y += dt * 0.045; // slow, subtle drift
+        if (!isDragging) {
+          const resumeProgress = autoRotateResumeStartedAt
+            ? Math.min(1, (performance.now() - autoRotateResumeStartedAt) / AUTO_ROTATE_RESUME_MS)
+            : 1;
+          group.rotation.y += dt * 0.045 * resumeProgress; // slow, subtle drift
+        }
 
         if (morphT < 1) {
           morphT = Math.min(1, morphT + dt * MORPH_RATE);
@@ -371,6 +432,8 @@ export default function SplatHero() {
     return () => {
       disposed = true;
       advanceRef.current = null;
+      rotateRef.current = null;
+      setDraggingRef.current = null;
       if (raf) cancelAnimationFrame(raf);
       if (timeoutHandle) clearTimeout(timeoutHandle);
       resizeObserver?.disconnect();
@@ -385,19 +448,79 @@ export default function SplatHero() {
 
   if (!hasAsset) return null;
 
+  const releasePointer = (element: HTMLDivElement, pointerId: number) => {
+    if (element.hasPointerCapture(pointerId)) element.releasePointerCapture(pointerId);
+  };
+
+  const finishPointer = (pointerId: number, element: HTMLDivElement, shouldAdvance: boolean) => {
+    const pointer = pointerStateRef.current;
+    if (pointer.pointerId !== pointerId) return;
+
+    releasePointer(element, pointerId);
+    setDraggingRef.current?.(false);
+    pointerStateRef.current = EMPTY_POINTER_STATE;
+    if (shouldAdvance) advanceRef.current?.();
+  };
+
   return (
     <div className="pointer-events-none absolute inset-0 hidden lg:block">
       <div
         ref={containerRef}
-        onClick={() => advanceRef.current?.()}
+        onPointerDown={(event) => {
+          if (reducedMotion || !rotateRef.current) return;
+
+          event.currentTarget.setPointerCapture(event.pointerId);
+          pointerStateRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            lastX: event.clientX,
+            lastY: event.clientY,
+            isRotating: false,
+            ignoreAsScroll: false,
+          };
+        }}
+        onPointerMove={(event) => {
+          const pointer = pointerStateRef.current;
+          if (reducedMotion || pointer.pointerId !== event.pointerId || pointer.ignoreAsScroll) return;
+
+          const totalX = event.clientX - pointer.startX;
+          const totalY = event.clientY - pointer.startY;
+          const totalDistance = Math.hypot(totalX, totalY);
+
+          if (!pointer.isRotating) {
+            if (totalDistance < DRAG_START_DISTANCE_PX) return;
+            if (Math.abs(totalX) <= Math.abs(totalY) * HORIZONTAL_DRAG_RATIO) {
+              // Leave a vertical swipe entirely to the browser's pan-y behavior.
+              pointer.ignoreAsScroll = true;
+              return;
+            }
+
+            pointer.isRotating = true;
+            setDraggingRef.current?.(true);
+          }
+
+          event.preventDefault();
+          rotateRef.current?.(event.clientX - pointer.lastX, event.clientY - pointer.lastY);
+          pointer.lastX = event.clientX;
+          pointer.lastY = event.clientY;
+        }}
+        onPointerUp={(event) => {
+          const pointer = pointerStateRef.current;
+          if (pointer.pointerId !== event.pointerId) return;
+
+          const movement = Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY);
+          finishPointer(event.pointerId, event.currentTarget, !pointer.isRotating && movement < CLICK_DISTANCE_PX);
+        }}
+        onPointerCancel={(event) => finishPointer(event.pointerId, event.currentTarget, false)}
         className={`pointer-events-auto absolute inset-0 transition-opacity duration-700 ${
           active && ready ? "" : "opacity-0"
-        } ${!reducedMotion ? "cursor-pointer" : ""}`}
+        } ${active && ready && !reducedMotion ? "cursor-grab active:cursor-grabbing" : ""}`}
         // Tailwind can't generate an arbitrary-value opacity class from a
         // runtime template literal (its scanner needs a static string), so
         // the "on" opacity is set inline; the "off" state above stays a
         // plain Tailwind class. Both animate via the same transition-opacity.
-        style={active && ready ? { opacity: BACKDROP_OPACITY } : undefined}
+        style={active && ready ? { opacity: BACKDROP_OPACITY, touchAction: "pan-y" } : { touchAction: "pan-y" }}
       />
       {active && ready && (
         // z-20: escapes the section's z-index:auto stacking bucket (shared

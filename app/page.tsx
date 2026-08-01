@@ -56,7 +56,7 @@ export default function Home() {
           <h1 className="max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
             Building worlds you can <span className="grad-text">step inside.</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist md:text-xl">
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist [text-shadow:0_2px_10px_rgba(7,7,15,0.9)] md:text-xl">
             Architect turned XR-chitect. 10+ yrs of running{" "}
             <a
               href="https://agilelens.com"
@@ -70,7 +70,7 @@ export default function Home() {
             technology. Unreal Engine Gold Authorized Instructor. Now teaching machines to build
             alongside us.
           </p>
-          <p className="mt-5 text-lg md:text-xl">
+          <p className="mt-5 text-lg [text-shadow:0_2px_10px_rgba(7,7,15,0.9)] md:text-xl">
             Currently: <Typewriter words={roles} />
           </p>
           <div className="mt-10 flex flex-col gap-3">
