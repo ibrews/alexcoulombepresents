@@ -390,7 +390,7 @@ export default function SplatHero() {
       rotateRef.current = (deltaX, deltaY) => {
         group.rotation.y += deltaX * ROTATE_SENSITIVITY;
         group.rotation.x = THREE.MathUtils.clamp(
-          group.rotation.x + deltaY * VERTICAL_ROTATE_SENSITIVITY,
+          group.rotation.x - deltaY * VERTICAL_ROTATE_SENSITIVITY,
           -0.45,
           0.45,
         );
