@@ -105,6 +105,9 @@ const DRAG_START_DISTANCE_PX = 8;
 const CLICK_DISTANCE_PX = 6;
 const HORIZONTAL_DRAG_RATIO = 1.3;
 const AUTO_ROTATE_RESUME_MS = 180;
+const MAX_FLING_VELOCITY = 6;
+const FLING_FRICTION = 2.6;
+const FLING_EPSILON = 0.02;
 
 type PointerState = {
   pointerId: number | null;
@@ -386,6 +389,9 @@ export default function SplatHero() {
 
       const clock = new THREE.Clock();
       let isDragging = false;
+      let velY = 0;
+      let velX = 0;
+      let lastMoveAt = 0;
       let autoRotateResumeStartedAt = 0;
       rotateRef.current = (deltaX, deltaY) => {
         group.rotation.y += deltaX * ROTATE_SENSITIVITY;
@@ -394,10 +400,29 @@ export default function SplatHero() {
           -1.3,
           1.3,
         );
+
+        const now = performance.now();
+        const dt = lastMoveAt ? Math.max(0.001, (now - lastMoveAt) / 1000) : 1 / 60;
+        lastMoveAt = now;
+        const instVelY = (deltaX * ROTATE_SENSITIVITY) / dt;
+        const instVelX = (-deltaY * VERTICAL_ROTATE_SENSITIVITY) / dt;
+        const EMA = 0.35;
+        velY += (
+          THREE.MathUtils.clamp(instVelY, -MAX_FLING_VELOCITY, MAX_FLING_VELOCITY) - velY
+        ) * EMA;
+        velX += (
+          THREE.MathUtils.clamp(instVelX, -MAX_FLING_VELOCITY, MAX_FLING_VELOCITY) - velX
+        ) * EMA;
       };
       setDraggingRef.current = (nextIsDragging) => {
         isDragging = nextIsDragging;
-        if (!nextIsDragging) autoRotateResumeStartedAt = performance.now();
+        if (nextIsDragging) {
+          velX = 0;
+          velY = 0;
+          lastMoveAt = 0;
+        } else {
+          autoRotateResumeStartedAt = performance.now();
+        }
       };
 
       const loop = () => {
@@ -405,10 +430,20 @@ export default function SplatHero() {
         const dt = Math.min(0.05, clock.getDelta());
 
         if (!isDragging) {
-          const resumeProgress = autoRotateResumeStartedAt
-            ? Math.min(1, (performance.now() - autoRotateResumeStartedAt) / AUTO_ROTATE_RESUME_MS)
-            : 1;
-          group.rotation.y += dt * 0.045 * resumeProgress; // slow, subtle drift
+          const flinging = Math.abs(velX) > FLING_EPSILON || Math.abs(velY) > FLING_EPSILON;
+          if (flinging) {
+            group.rotation.y += velY * dt;
+            group.rotation.x = THREE.MathUtils.clamp(group.rotation.x + velX * dt, -1.3, 1.3);
+            const decay = Math.exp(-dt * FLING_FRICTION);
+            velX *= decay;
+            velY *= decay;
+            autoRotateResumeStartedAt = performance.now();
+          } else {
+            const resumeProgress = autoRotateResumeStartedAt
+              ? Math.min(1, (performance.now() - autoRotateResumeStartedAt) / AUTO_ROTATE_RESUME_MS)
+              : 1;
+            group.rotation.y += dt * 0.045 * resumeProgress; // slow, subtle drift
+          }
         }
 
         if (morphT < 1) {
