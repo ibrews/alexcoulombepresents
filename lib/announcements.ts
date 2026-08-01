@@ -26,12 +26,24 @@ export const announcements: Announcement[] = [
     start: "2026-07-16",
     end: "2026-07-22",
   },
+  // Split at the early-bird cutoff so the banner can't still be advertising a
+  // discount the store stopped honoring. lib/store.ts steps the price itself on
+  // 2026-07-30T04:00:00Z (Jul 29 EOD ET); these two windows meet at that seam.
   {
     id: "cohort-aug-2026",
     text: "Live Unreal classes return Aug 5 — early-bird seats through Jul 29",
     href: "/training#cohort",
     cta: "Reserve a seat",
     start: "2026-07-23",
-    end: "2026-08-05",
+    end: "2026-07-29",
+  },
+  {
+    id: "cohort-aug-2026-final",
+    text: "Unreal Foundations starts Wed Aug 5 — last call for seats",
+    href: "/training#cohort",
+    cta: "Reserve a seat",
+    start: "2026-07-30",
+    // Ends the day before class, since checkout closes when it starts.
+    end: "2026-08-04",
   },
 ];

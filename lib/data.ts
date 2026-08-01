@@ -737,6 +737,52 @@ export const products: Product[] = [
     accent: "purple",
   },
   {
+    slug: "renderman-bridge",
+    name: "UE→RenderMan Bridge",
+    status: "In development — renders end to end from the button",
+    tagline: "One button in the Unreal editor. Film-grade Pixar RenderMan on the other side.",
+    pitch:
+      "Unreal is where the scene gets built. RenderMan is where a lot of film work still gets finished. Getting between the two has always meant a manual export, a technical artist, and a week. The RenderMan Bridge is a \"Send to RenderMan\" button in the Unreal editor — the same shape as UnRealityKit's Live Link panel — that takes your open scene, hands it to an out-of-process RenderMan host over USD, and gives you back rendered frames. Geometry, instancing, cameras with correct filmback and depth of field, lights, animation, hierarchy: transferred automatically, no CLI.",
+    sections: [
+      {
+        heading: "What it honestly gives you",
+        body: "The bridge does not claim your Unreal materials become RenderMan materials at full fidelity — anyone who has done this in production knows that ends in tech-art tweaking. What it gives you is the scene transferred correctly and automatically, plus a material starting point. What you get on top of that is everything RenderMan is good at regardless of how the shading arrived: sampling quality, the Disney Research ML denoiser, Light Path Expressions for per-light and per-bounce comp control, Cryptomatte, checkpoint and resume, Stylized Looks, and XPU speed. Those are properties of the renderer, not of the translation.",
+      },
+      {
+        heading: "Hero looks stay yours",
+        body: "The escape hatch is the headline feature, not a footnote. Looks authored natively in RenderMan — Lama, Pxr networks, whatever your lookdev artist actually wants — compose over the bridge's export as USD sublayers. That is non-destructive and it survives re-export, so you can keep iterating in Unreal without stepping on the shading. The bridge's job is to get the scene right and then get out of the way.",
+      },
+      {
+        heading: "Measured, not self-graded",
+        body: "The material translator is scored against real third-party Unreal projects rather than a demo scene tuned to flatter it. On an outside arch-viz project it started at 0.177 coverage; pattern networks, static switches, material-function expansion and a normalize/clamp/if pass took it to 0.930, with fully-unresolved nodes falling from 1,525 to 35. Every one of those numbers came from someone else's content, and the ones that were self-graded got thrown out and re-measured.",
+      },
+      {
+        heading: "It survives real shots",
+        body: "The flagship test is a four-second animated sequence, not a spinning cube: five objects across metal, matte dielectric, glossy dielectric and textured surfaces, each animating differently; a sun keying warm to cool across the shot plus a colored rect-light kicker sweeping through it; and a two-camera cut. Ninety-six frames exported, rendered across three machines and assembled into a film, next to a genuine Unreal-side reference render of the identical sequence for comparison. Two real bugs only surfaced because someone opened the rendered frames — the export was clean, the renderer exited zero, and half the shot was pointed at the sky.",
+      },
+      {
+        heading: "AOVs and Cryptomatte, through the button",
+        body: "The settings panel now has a quality-preset dropdown, resolution X/Y fields, and checkboxes for denoise and Cryptomatte, alongside per-light diffuse/specular AOVs driven by the renderer's own compositing grammar. Getting the real texture-UV AOV right took catching a subtle bug: RenderMan's bare geometric u/v is not the artist's authored UV, and shipping the wrong one would have looked plausible in every render while being quietly incorrect. Sequence-level AOV collection across the multi-machine farm landed this week too, alongside a real actor-coverage measurement on a second outside project — 22,708 actors, 90.55% translated.",
+      },
+      {
+        heading: "Where it goes next",
+        body: "A two-way live connection is the destination: keep authoring in Unreal and watch RenderMan's progressive render update as you drag actors and lights — the same architecture as the UnRealityKit Live Link previewer, and the reason the render host is out-of-process by design. Also on the roadmap: Substrate's newer slab-based materials as a translation target, and the harder inverse — RenderMan looks coming back as Unreal materials.",
+      },
+    ],
+    bullets: [
+      "\"Send to RenderMan\" button in the Unreal editor — async render, no CLI",
+      "USD interchange to an out-of-process RenderMan host, verified on macOS and Windows",
+      "Scene transfer: geometry, instancing, animation, lights, and cameras with real filmback and DoF",
+      "Material translator measured on outside projects — 0.177 → 0.930 coverage",
+      "Hero looks authored natively in RenderMan compose over the export as USD sublayers",
+      "Full animated sequence proven end to end: 96 frames, multi-material, multi-light, two-camera cut",
+      "Multi-machine render farm — 2.72x measured speedup across 3 machines",
+      "AOVs and Cryptomatte wired through the settings panel, including sequence-level farm collection",
+    ],
+    links: [],
+    accent: "amber",
+  },
+  {
     slug: "pinchwork",
     name: "Pinchwork",
     status: "In development",
