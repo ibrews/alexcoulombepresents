@@ -11,6 +11,7 @@ import CounterStat from "@/components/CounterStat";
 import TestimonialWall from "@/components/TestimonialWall";
 import { getCurriculumEntries } from "@/lib/curriculum";
 import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
+import { storeItems, isPurchasable } from "@/lib/store";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
 
@@ -20,6 +21,35 @@ export const metadata: Metadata = {
     "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR including Vision Pro, MetaHumans, ArchViz, virtual production, and much much more.",
   alternates: { canonical: "/training" },
 };
+
+// Same hourly window the store page uses, for the same reason: the cohort CTA
+// below reads real cutoff dates, so the page has to re-render as they pass.
+export const revalidate = 3600;
+
+// The cohort's early-bird cutoff and start date live in lib/store.ts, next to
+// the price they actually gate. Deriving the CTA from them means this button
+// can never promise a discount checkout has already stepped past.
+function cohortCta(now: Date = new Date()): string {
+  const cohort = storeItems.find((i) => i.slug === "unreal-foundations-cohort");
+  if (!cohort) return "Reserve a seat →";
+
+  const inET = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-US", {
+      timeZone: "America/New_York",
+      month: "short",
+      day: "numeric",
+    });
+
+  if (!isPurchasable(cohort, now)) return "Join the list for the next cohort →";
+  if (cohort.earlyBird && now < new Date(cohort.earlyBird.untilISO)) {
+    // untilISO is the instant the price steps; the last eligible day is before it.
+    return `Reserve a seat — early-bird pricing through ${inET(
+      new Date(new Date(cohort.earlyBird.untilISO).getTime() - 1).toISOString(),
+    )} →`;
+  }
+  if (cohort.saleWindow) return `Reserve a seat — classes start ${inET(cohort.saleWindow.closesAtISO)} →`;
+  return "Reserve a seat →";
+}
 
 export default function Training() {
   const aiClasses = getCurriculumEntries().filter((entry) => entry.status === "teasing");
@@ -73,7 +103,7 @@ export default function Training() {
             href="/store"
             className="mt-5 inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
           >
-            Reserve a seat — early-bird pricing through Jul 29 →
+            {cohortCta()}
           </a>
         </div>
       </Reveal>
