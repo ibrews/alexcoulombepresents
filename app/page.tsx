@@ -29,6 +29,20 @@ const venues = [
 export default function Home() {
   const featured = [...repos].sort((a, b) => b.stars - a.stars).slice(0, 6);
 
+  // Hand-picked top 6 for the homepage teaser — the most mature, most
+  // visually distinctive work, ahead of the internal-only Agile Lens tooling
+  // further down the full /lab catalog. Order is deliberate, not alphabetical.
+  const bubbling = [
+    "unrealitykit-bridge",
+    "renderman-bridge",
+    "project-ion",
+    "forage",
+    "unreal-visionos",
+    "pinchwork",
+  ]
+    .map((slug) => products.find((p) => p.slug === slug))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
   return (
     <>
       <Ethereal variant="aurora" />
@@ -132,11 +146,12 @@ export default function Home() {
           <Reveal delay={0}>
             <Link href="/lab/unreal-visionos" className="glass block h-full rounded-2xl p-7">
               <p className="font-mono text-xs text-teal">01 / ENGINES</p>
-              <h3 className="mt-3 text-xl font-bold">Unreal & Godot, let&apos;s go further than the documentation</h3>
+              <h3 className="mt-3 text-xl font-bold">Unreal & Godot & even ThreeJS, let&apos;s go further than the documentation</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                Engine-level fixes &amp; improvements for Vision Pro, Godot physics game at 90 fps on AVP,
-                MetaHumans like you&apos;ve never seen them before. When a plugin says
-                &quot;Experimental,&quot; the real fun begins.
+                Engine-level improvements for Vision Pro, Godot looking gorgeous at 90 fps with custom
+                source code, WebXR and WebGPU doing the impossible. MetaHumans up close &amp; virtual
+                like you&apos;ve never seen them before. When a plugin says &quot;Experimental,&quot;
+                the real fun begins.
               </p>
             </Link>
           </Reveal>
@@ -153,7 +168,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={240}>
             <Link href="/about" className="glass block h-full rounded-2xl p-7">
-              <p className="font-mono text-xs text-amber">03 / STAGES</p>
+              <p className="font-mono text-xs text-amber">03 / LIVE VR</p>
               <h3 className="mt-3 text-xl font-bold">Theatre is the original VR</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
                 Live actors performing in headsets since 2018. Worked on Venice Biennale&apos;s first global
@@ -199,7 +214,7 @@ export default function Home() {
         <Reveal>
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Fresh from the repo</h2>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Fresh from the public repos</h2>
               <p className="mt-3 text-mist">
                 Real tools built for{" "}
                 <a
@@ -247,7 +262,7 @@ export default function Home() {
             </div>
           </Reveal>
           <div className="mt-10 grid gap-5 md:grid-cols-2">
-            {products.map((p, i) => (
+            {bubbling.map((p, i) => (
               <Reveal key={p.slug} delay={i * 90}>
                 <Link href={`/lab/${p.slug}`} className="glass block h-full rounded-2xl p-7">
                   <div className="flex items-center justify-between">

@@ -7,7 +7,7 @@ export default function Footer() {
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.svg" alt="Alex Coulombe Presents" className="-ml-3 w-64" />
-          <p className="mt-3 text-sm text-mist">
+          <p className="mt-3 text-center text-sm text-mist">
             Unreal Engine · Godot · Apple Vision Pro · AI agents · live immersive theatre.<br />
             Made in New York.
           </p>
@@ -44,7 +44,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-line py-5 text-center font-mono text-xs text-mist">
-        © {new Date().getFullYear()} Alex Coulombe · built with Claude Fable before it was forced back in the box · try the Konami code
+        © {new Date().getFullYear()} Alex Coulombe · try the Konami code
       </div>
     </footer>
   );
