@@ -63,8 +63,16 @@ async function groqVerdict(prompt: string): Promise<string> {
   return text as string;
 }
 
+// Excludes categories that produce off-topic drafts for a #uetips account —
+// caught empirically: a claude-usage-audit ("AI & Agents") draft was
+// perfectly accurate but had nothing to do with Unreal Engine, and Groq
+// correctly rejected it. Better to not generate it in the first place.
+const OFF_TOPIC_CATEGORIES = new Set(["AI & Agents", "Tools"]);
+
 function pickRandomRepos(n: number) {
-  const eligible = repos.filter((r) => r.highlights.length > 0 && r.story.length > 100);
+  const eligible = repos.filter(
+    (r) => r.highlights.length > 0 && r.story.length > 100 && !OFF_TOPIC_CATEGORIES.has(r.category)
+  );
   const shuffled = [...eligible].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, n);
 }
