@@ -5,7 +5,7 @@
       "name": "acp-site",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "/Users/alex/GH/alexcoulombepresents",
+      "cwd": ".",
       "port": 3000,
       "autoPort": true
     },
@@ -13,7 +13,7 @@
       "name": "newsletter-studio",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "studio"],
-      "cwd": "/Users/alex/GH/alexcoulombepresents",
+      "cwd": ".",
       "port": 4848
     }
   ]

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import { appearances, type Appearance } from "@/lib/appearances";
 
-function Card({ a, past }: { a: Appearance; past?: boolean }) {
+export function Card({ a, past }: { a: Appearance; past?: boolean }) {
   return (
     <a
       href={a.url}

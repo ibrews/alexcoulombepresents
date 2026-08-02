@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/repos", priority: 0.8 },
     { path: "/skills", priority: 0.8 },
     { path: "/videos", priority: 0.7 },
+    { path: "/appearances", priority: 0.7 },
     { path: "/lab", priority: 0.8 },
     { path: "/store", priority: 0.7 },
     { path: "/members", priority: 0.6 },

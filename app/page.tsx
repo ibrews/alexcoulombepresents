@@ -125,8 +125,12 @@ export default function Home() {
 
       {/* ── Venue marquee ─────────────────────────────────────── */}
       <section className="border-y border-line py-5">
-        <div className="flex items-center">
-          <span className="shrink-0 pl-5 pr-8 font-mono text-xs uppercase tracking-widest text-teal">
+        <Link
+          href="/appearances"
+          aria-label="See the full history of appearances"
+          className="group flex items-center transition-colors hover:bg-line/30"
+        >
+          <span className="shrink-0 pl-5 pr-8 font-mono text-xs uppercase tracking-widest text-teal transition-colors group-hover:text-snow">
             Featured in:
           </span>
           <div className="overflow-hidden">
@@ -139,7 +143,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
+        </Link>
       </section>
 
       <AppearancesSection />
