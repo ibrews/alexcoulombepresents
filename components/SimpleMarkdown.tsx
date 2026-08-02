@@ -32,8 +32,18 @@ function renderInline(text: string, keyBase: string): React.ReactNode[] {
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) out.push(...withLineBreaks(text.slice(last, m.index), `${keyBase}-t${i}`));
     if (m[2] !== undefined) {
-      // eslint-disable-next-line @next/next/no-img-element
-      out.push(<img key={`${keyBase}-${i++}`} src={m[2]} alt={m[1]} className="my-4 block max-w-full rounded-lg" />);
+      out.push(
+        <a
+          key={`${keyBase}-${i++}`}
+          href={m[2]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="my-4 block transition-opacity hover:opacity-90"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={m[2]} alt={m[1]} className="block max-w-full rounded-lg" />
+        </a>
+      );
     } else if (m[4] !== undefined) {
       out.push(
         <a key={`${keyBase}-${i++}`} href={m[4]} className="text-teal underline underline-offset-2 hover:text-snow">
@@ -103,8 +113,16 @@ export default function SimpleMarkdown({ markdown }: { markdown: string }) {
           return (
             <div key={bi} className="grid gap-4 my-4" style={{ gridTemplateColumns: `repeat(${row.length}, 1fr)` }}>
               {row.map((img, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={i} src={img.url} alt={img.alt} className="block w-full rounded-lg" />
+                <a
+                  key={i}
+                  href={img.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block transition-opacity hover:opacity-90"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img.url} alt={img.alt} className="block w-full rounded-lg" />
+                </a>
               ))}
             </div>
           );

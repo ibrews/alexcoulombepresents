@@ -58,7 +58,7 @@ function renderInline(text: string, siteUrl: string): string {
     out += escapeHtml(text.slice(last, m.index));
     if (m[2] !== undefined) {
       const src = absolutize(m[2], siteUrl);
-      out += `<img src="${src}" alt="${escapeHtml(m[1])}" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:16px 0" />`;
+      out += `<a href="${src}" target="_blank" style="display:block;margin:16px 0"><img src="${src}" alt="${escapeHtml(m[1])}" style="max-width:100%;height:auto;border-radius:8px;display:block" /></a>`;
     } else if (m[4] !== undefined) {
       const href = absolutize(m[4], siteUrl);
       out += `<a href="${href}" style="color:${TEAL};text-decoration:underline">${escapeHtml(m[3])}</a>`;
@@ -122,7 +122,7 @@ export function markdownToEmailHtml(markdown: string, siteUrl: string): string {
         .map(([alt, url], i) => {
           const src = absolutize(url, siteUrl);
           const pad = images.length === 1 ? "" : i === 0 ? "padding-right:8px" : i === images.length - 1 ? "padding-left:8px" : "padding-left:8px;padding-right:8px";
-          return `<td width="${width}" style="${pad}"><img src="${src}" alt="${escapeHtml(alt)}" style="width:100%;height:auto;border-radius:8px;display:block" /></td>`;
+          return `<td width="${width}" style="${pad}"><a href="${src}" target="_blank" style="display:block"><img src="${src}" alt="${escapeHtml(alt)}" style="width:100%;height:auto;border-radius:8px;display:block" /></a></td>`;
         })
         .join("");
       html.push(

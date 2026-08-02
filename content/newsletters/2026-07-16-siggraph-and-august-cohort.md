@@ -8,7 +8,7 @@ preheader: Live classes are back, and things are cooking in the lab
 ![Screenshot 2026-07-25 at 1.02.27 PM](/newsletter/screenshot-2026-07-25-at-1-02-27-pm.jpg) ![Screenshot 2026-07-25 at 1.05.49 PM](/newsletter/screenshot-2026-07-25-at-1-05-49-pm.jpg)
 
 *Top: oh look, SIGGRAPH.
-Bottom: a smattering of some amazing folks in LA*
+Bottom: a smattering of amazing folks in LA*
 
 Hey folks!
 
@@ -18,11 +18,11 @@ Most importantly:
 
 ## Live Unreal Engine classes start Wednesday
 
-Yes I'm teaching again! Working with [SensAI](https://www.youtube.com/watch?v=JR5397NUz3I) on the [Worlds in Action hackathon](https://sensaihack.com/worldsinaction-2-la/) (speaker, mentor, judge) and being part of [three wonderful sessions](https://s2026.conference-schedule.org/presenter/?uid=645453) at SIGGRAPH (talk, workshop, panelist) reminded me how much I love sharing knowledge and tools with eager learners. At the height of my 8-year partnership with Epic Games, I regularly taught 3-4 classes per week on their behalf, and while it was a struggle to balance with everything else in my life, it was an absolute blast.
+Yes I'm teaching again! Working with [SensAI](https://www.youtube.com/watch?v=JR5397NUz3I) on the [Worlds in Action hackathon](https://sensaihack.com/worldsinaction-2-la/) (speaker, mentor, judge) and being part of [three wonderful sessions](https://s2026.conference-schedule.org/presenter/?uid=645453) at SIGGRAPH (talk, workshop, panel) reminded me how much I love sharing knowledge and tools with eager learners. At the height of my 8-year partnership with Epic Games, I regularly taught 3-4 classes per week on their behalf, and while it was a struggle to balance with everything else in my life, it was an absolute blast.
 
 So I want to get back to it, and for the first time, doing it much more publicly.
 
-The biggest challenge? Settling on what to teach and when. I've taught hundreds of classes, but in many cases it was simply along the lines of being told "give ILM an Intro to PCG class on Tuesday" and then I would just do it. Even when I companies sign up for corporate training, their needs tend to be narrow enough that it wasn't particularly difficult to plan out a 30-course curriculum (and btw, yes we are still doing that)
+The biggest challenge? Settling on what to teach and when. I've taught hundreds of classes, but in many cases it was simply along the lines of being told "give ILM an Intro to PCG class on Tuesday" and then I would just do it. Even when I companies sign up for corporate training, their needs tend to be narrow enough that it wasn't particularly difficult to plan out a 30-course curriculum (and btw, [yes we are still doing that](https://alexcoulombepresents.com/training#teams))
 
 So I took a pass at doing something like that aimed at the general public, and it looks something like this:
 -------------------------------------
@@ -35,11 +35,11 @@ Editor & ecosystem → world building with Megascans & Nanite & Fab → Lumen & 
 - **$299** Newsletter readers: use code **NEWSLETTER20** at checkout for 20% off.
 -------------------------------------
 
-That's ready to go, but I'm second-guessing myself. I want to teach what will be most valuable to **YOU**, dear reader. So here's what I'm doing: this Wednesday **August 5 11a ET** will be a **FREE** session. I'm making it as simple as possible:
+That's ready to go, but I'm second-guessing myself. I want to teach what will be most valuable to **YOU**, dear reader. So here's what I'm doing: this **Wednesday August 5 at 11a ET / 8a PT** will be a **FREE** session. I'm making it as simple as possible:
 [Reserve a free seat →](https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA)
 
 Come hang out. This first one will be loose. I'll teach some Unreal basics, take some requests, point out some new features in 5.8, but this will also very much be a discussion. I'll have a couple of my other instructors with me and we'll be gathering as much information on how to plan our future classes. And if you'd like to give some feedback right away (or can't make it to the class, which yes, will be recorded, just register anyway), here's the same poll I'll be giving live:
-[https://www.agilelens.com/training/#poll](https://www.agilelens.com/training/#poll)
+[https://www.alexcoulombepresents.com/training/#poll](https://www.alexcoulombepresents.com/training/#poll)
 
 ## What's cooking in the Lab
 ![comparison](/newsletter/comparison.jpg)
