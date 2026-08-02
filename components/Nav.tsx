@@ -10,6 +10,7 @@ const links = [
   { href: "/repos", label: "Open Source" },
   { href: "/skills", label: "Skills" },
   { href: "/videos", label: "Videos" },
+  { href: "/appearances", label: "Appearances" },
   { href: "/lab", label: "The Lab" },
   { href: "/store", label: "Store" },
   { href: "/links", label: "Links" },
