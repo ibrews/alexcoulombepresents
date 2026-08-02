@@ -148,7 +148,7 @@ export default function VoteForm() {
           <p className="text-3xl">✦</p>
           <p className="mt-3 font-bold">Vote recorded — thanks.</p>
           <p className="mt-1.5 text-sm text-mist">
-            A vote is a promise I&apos;ll actually build it. Here&apos;s where things stand:
+            A vote is a promise Alex will actually build it. Here&apos;s where things stand:
           </p>
         </div>
         <Results counts={counts} total={total} />

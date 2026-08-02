@@ -236,7 +236,7 @@ export default function TrainingSurveyForm() {
       <div className="flex flex-col gap-8">
         <div className="glass rounded-2xl p-6 text-center">
           <p className="text-3xl">✦</p>
-          <p className="mt-3 font-bold">Thanks — that&apos;s exactly what I needed.</p>
+          <p className="mt-3 font-bold">Thanks — that&apos;s exactly what Alex needed.</p>
           <p className="mt-1.5 text-sm text-mist">Here&apos;s where things stand so far:</p>
         </div>
         <div className="glass grid gap-8 rounded-2xl p-6 sm:grid-cols-2">

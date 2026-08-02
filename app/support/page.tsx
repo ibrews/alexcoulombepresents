@@ -22,7 +22,7 @@ export default async function Support({
       {thanks && (
         <Reveal>
           <div className="mb-8 rounded-2xl border border-teal/40 bg-teal/10 p-5 text-snow">
-            <strong>Thank you!</strong> Truly. If you left a comment or request, I read every
+            <strong>Thank you!</strong> Truly. If you left a comment or request, Alex reads every
             single one — expect the lab to get a little weirder on your behalf.
           </div>
         </Reveal>

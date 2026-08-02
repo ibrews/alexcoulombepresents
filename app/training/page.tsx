@@ -64,7 +64,7 @@ export default function Training() {
             Live Unreal class — free, and we&apos;re deciding what comes next together
           </h2>
           <p className="mt-3 leading-relaxed text-mist">
-            One live session, no cost, no catch: a tour of what I know in Unreal, a look at what&apos;s
+            One live session, no cost, no catch: a tour of what Alex knows in Unreal, a look at what&apos;s
             new in 5.8, and an open Q&amp;A. From here on it&apos;s a standing weekly rhythm — a live
             class every <strong className="text-snow">Wednesday at 11a ET</strong>, plus{" "}
             <strong className="text-snow">office hours every Friday at 1p ET</strong>. What the paid
@@ -91,12 +91,11 @@ export default function Training() {
         <section id="poll" className="glow-card mt-10 scroll-mt-28 max-w-3xl rounded-3xl border border-grape/40 p-6 md:p-10">
           <p className="font-mono text-xs uppercase tracking-widest text-grape">4 quick questions</p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">
-            Help decide what gets taught — and how it&apos;s sold.
+            What do you want to learn?
           </h2>
           <p className="mt-3 leading-relaxed text-mist">
-            The original plan was a fixed 4-week cohort. Nobody bit, so instead of guessing again,
-            I&apos;m asking directly. Answer honestly — this genuinely sets the curriculum and the
-            pricing model for what comes after Aug 5.
+            Answer honestly — this data will be used to set the curriculum for everything in the
+            coming weeks.
           </p>
           <div className="mt-8">
             <TrainingSurveyForm />

@@ -26,8 +26,8 @@ The biggest challenge? Settling on what to teach and when. I've taught hundreds 
 
 So I tried to do something like that, and maybe it looks something like this:
 ---------------------------------------------------------
-**Unreal Foundations — Zero to Environment** · 
-Wednesdays starting **August 5**. Editor & ecosystem → world building with Megascans & Nanite → Lumen & lighting → cameras & Movie Render Queue. You leave with some portfolio-ready cinematic renders and a lot of lessons in gotchas and what not to do.
+**Unreal Foundations: Zero to World** 
+Wednesdays starting August 5. Editor & ecosystem → world building with Megascans & Nanite → Lumen & lighting → cameras & Movie Render Queue. You leave with some portfolio-ready cinematic renders and a lot of lessons in gotchas and what not to do.
 
 - Every class runs **each Wednesday** (11a–1p ET) so it works from Europe to the West Coast.
 - **Friday office hours** every week — bring anything you want to discuss.

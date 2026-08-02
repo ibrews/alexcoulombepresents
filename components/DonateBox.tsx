@@ -64,7 +64,7 @@ export default function DonateBox() {
       </div>
       <p className="mt-4 text-xs leading-relaxed text-mist">
         You&apos;ll get a spot at checkout to leave a comment or request — a tool you wish existed,
-        a topic you want covered, or just a hello. I read every one.
+        a topic you want covered, or just a hello. Alex reads every one.
       </p>
       <button
         onClick={donate}

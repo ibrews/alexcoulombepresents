@@ -486,7 +486,14 @@ function editorPage(slug) {
     try {
       const res = await fetch('/render', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ body: $('body').value, preheader: $('preheader').value }) });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      $('preview').srcdoc = await res.text();
+      const html = await res.text();
+      const iframe = $('preview');
+      // srcdoc swaps in a brand-new document every render, which resets
+      // scroll to the top by default — jarring when you're mid-edit and
+      // scrolled down to check something. Restore where you were.
+      const prevScroll = iframe.contentWindow ? iframe.contentWindow.scrollY : 0;
+      iframe.onload = () => { iframe.contentWindow.scrollTo(0, prevScroll); iframe.onload = null; };
+      iframe.srcdoc = html;
     } catch (err) { showError('Preview failed: ' + err.message); }
   }
   function scheduleRender() { clearTimeout(renderTimer); renderTimer = setTimeout(renderNow, 350); }

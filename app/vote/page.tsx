@@ -21,7 +21,7 @@ export default function Vote() {
         </h1>
         <p className="mt-6 leading-relaxed text-mist">
           No survey theater — the most-requested topic becomes the September cohort. Pick up to
-          two, drop your email, and watch the results move. A vote is a promise I&apos;ll actually
+          two, drop your email, and watch the results move. A vote is a promise Alex will actually
           build it.
         </p>
       </Reveal>
