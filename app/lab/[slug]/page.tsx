@@ -121,7 +121,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       )}
 
       <Reveal>
-        <div className="glass mt-8 rounded-3xl p-8 text-center md:p-10">
+        <div id="waitlist" className="glass mt-8 scroll-mt-24 rounded-3xl p-8 text-center md:p-10">
           {product.internal ? (
             <>
               <h2 className="text-xl font-bold">This one&apos;s internal.</h2>
