@@ -83,9 +83,16 @@ async function draftFromRepo(repo: (typeof repos)[number]) {
   const tweetText = draft.trim().replace(/^["']|["']$/g, "");
 
   const factCheck = await geminiGenerate(
-    `Fact-check every concrete technical claim (API/node/property names, specific numbers, specific behavior) in this ` +
-      `proposed Unreal Engine tip against real, current documentation and sources:\n\n"${tweetText}"\n\n` +
-      `State plainly whether each claim is REAL/VERIFIED or UNVERIFIED/WRONG, citing what you found.`,
+    `A tip for a public Unreal Engine tips account makes this claim:\n\n"${tweetText}"\n\n` +
+      `Here is the original source material it was drawn from (a real, already-shipped Agile Lens / Alex Coulombe project):\n\n${source}\n\n` +
+      `Split any concrete technical claims in the tip into two kinds, and check each differently:\n` +
+      `1. Claims about STOCK Unreal Engine features, APIs, nodes, or CVars (things Epic ships) — verify these against ` +
+      `real, current official Unreal Engine documentation via search.\n` +
+      `2. Claims about Alex/Agile Lens's OWN custom-built tools, systems, or project-specific numbers (things that ` +
+      `would never appear in Epic's public docs because they're proprietary) — these only need to match what the ` +
+      `source material above actually says, not public documentation.\n\n` +
+      `End your reply with exactly one line, verbatim: "OVERALL: PASS" if every claim checks out under the ` +
+      `appropriate standard above, or "OVERALL: FAIL" if any claim is actually wrong or unsupported by the source.`,
     true
   );
 
@@ -106,8 +113,8 @@ async function main() {
     console.log("Draft:", tweetText);
     console.log("Fact-check:", factCheck.slice(0, 300));
 
-    if (/UNVERIFIED|WRONG|cannot confirm|not (a real|verified)/i.test(factCheck)) {
-      console.log("→ Gemini fact-check flagged an issue, skipping.");
+    if (!/OVERALL:\s*PASS/i.test(factCheck)) {
+      console.log("→ Gemini fact-check did not pass, skipping.");
       rejected.push({ text: tweetText, reason: "gemini-fact-check" });
       continue;
     }
