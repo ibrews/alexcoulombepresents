@@ -39,11 +39,12 @@ export const announcements: Announcement[] = [
   },
   {
     id: "cohort-aug-2026-final",
-    text: "Unreal Foundations starts Wed Aug 5 — last call for seats",
+    text: "Free live Unreal class Wed Aug 5, 11a ET — help decide what's next",
     href: "/training#cohort",
-    cta: "Reserve a seat",
+    cta: "Reserve a free seat",
     start: "2026-07-30",
-    // Ends the day before class, since checkout closes when it starts.
-    end: "2026-08-04",
+    // Ends the day of class itself — the free session is the event, not a
+    // cutoff, so keep the banner up through Aug 5.
+    end: "2026-08-05",
   },
 ];

@@ -130,13 +130,16 @@ export const storeItems: StoreItem[] = [
       "Early-bird through July 29 — $299 after. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     capacity: 25,
     blurb:
-      "Zero to Environment in four live Wednesday classes starting Aug 5: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Every class runs twice (10a & 12:30p ET) plus Thursday office hours, and recordings are included.",
-    delivery: "You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class on Aug 5 (recordings after each).",
+      "Zero to Environment in four live Wednesday classes: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Recordings and project files included.",
+    delivery: "You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class.",
     fulfillment: "email-manual",
     earlyBird: { untilISO: "2026-07-30T04:00:00Z", regularPriceCents: 29900 }, // Jul 29 EOD ET
     saleWindow: {
-      closesAtISO: "2026-08-05T14:00:00Z", // first session, 10am ET
-      closedNote: "This cohort has already started — join the list for the next one.",
+      // Paused, not deleted: the Aug 5 plan changed to a free session +
+      // /training#poll to decide what this cohort actually becomes. Move
+      // closesAtISO back into the future to reopen sales once it's scheduled.
+      closesAtISO: "2026-08-02T00:00:00Z",
+      closedNote: "Paused while we settle the curriculum at the free Aug 5 session — back soon.",
       closedList: "unreal",
     },
   },

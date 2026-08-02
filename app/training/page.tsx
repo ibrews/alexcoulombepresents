@@ -9,9 +9,9 @@ import HashScroll from "@/components/HashScroll";
 import JsonLd from "@/components/JsonLd";
 import CounterStat from "@/components/CounterStat";
 import TestimonialWall from "@/components/TestimonialWall";
+import TrainingSurveyForm from "@/components/TrainingSurveyForm";
 import { getCurriculumEntries } from "@/lib/curriculum";
 import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
-import { storeItems, isPurchasable } from "@/lib/store";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
 
@@ -21,35 +21,6 @@ export const metadata: Metadata = {
     "Learn Unreal Engine from a top-rated Epic Games Authorized Instructor at Manhattan's first Unreal Authorized Training Center. AI for Unreal, Blueprints, VR/AR including Vision Pro, MetaHumans, ArchViz, virtual production, and much much more.",
   alternates: { canonical: "/training" },
 };
-
-// Same hourly window the store page uses, for the same reason: the cohort CTA
-// below reads real cutoff dates, so the page has to re-render as they pass.
-export const revalidate = 3600;
-
-// The cohort's early-bird cutoff and start date live in lib/store.ts, next to
-// the price they actually gate. Deriving the CTA from them means this button
-// can never promise a discount checkout has already stepped past.
-function cohortCta(now: Date = new Date()): string {
-  const cohort = storeItems.find((i) => i.slug === "unreal-foundations-cohort");
-  if (!cohort) return "Reserve a seat →";
-
-  const inET = (iso: string) =>
-    new Date(iso).toLocaleDateString("en-US", {
-      timeZone: "America/New_York",
-      month: "short",
-      day: "numeric",
-    });
-
-  if (!isPurchasable(cohort, now)) return "Join the list for the next cohort →";
-  if (cohort.earlyBird && now < new Date(cohort.earlyBird.untilISO)) {
-    // untilISO is the instant the price steps; the last eligible day is before it.
-    return `Reserve a seat — early-bird pricing through ${inET(
-      new Date(new Date(cohort.earlyBird.untilISO).getTime() - 1).toISOString(),
-    )} →`;
-  }
-  if (cohort.saleWindow) return `Reserve a seat — classes start ${inET(cohort.saleWindow.closesAtISO)} →`;
-  return "Reserve a seat →";
-}
 
 export default function Training() {
   const aiClasses = getCurriculumEntries().filter((entry) => entry.status === "teasing");
@@ -87,25 +58,50 @@ export default function Training() {
       <Reveal delay={80}>
         <div id="cohort" className="glow-card mt-10 max-w-2xl rounded-2xl border border-teal/40 p-6">
           <p className="font-mono text-xs tracking-widest text-teal">
-            NEXT COHORT · STARTS WEDNESDAY, AUGUST 5
+            FREE CLASS · WEDNESDAY, AUGUST 5 · 11A ET
           </p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight">
-            Unreal Foundations — Zero to Environment
+            Live Unreal class — free, and we&apos;re deciding what comes next together
           </h2>
           <p className="mt-3 leading-relaxed text-mist">
-            Four live Wednesday classes, each taught twice so the whole world can attend (10a–12p
-            and 12:30–2:30p ET), plus Thursday office hours. Week 1: the editor &amp; ecosystem.
-            Week 2: world building with Megascans &amp; Nanite. Week 3: Lumen &amp; lighting. Week 4:
-            cameras &amp; Movie Render Queue — you leave with a portfolio-ready render. Recordings
-            and project files included.
+            One live session, no cost, no catch: a tour of what I know in Unreal, a look at what&apos;s
+            new in 5.8, and an open Q&amp;A. From here on it&apos;s a standing weekly rhythm — a live
+            class every <strong className="text-snow">Wednesday at 11a ET</strong>, plus{" "}
+            <strong className="text-snow">office hours every Friday at 1p ET</strong>. What the paid
+            weeks actually cover is exactly what the poll below decides.
           </p>
-          <a
-            href="/store"
-            className="mt-5 inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
-          >
-            {cohortCta()}
-          </a>
+          <div className="mt-5 flex flex-wrap items-center gap-4">
+            <a
+              href="https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
+            >
+              Reserve a free seat →
+            </a>
+            <a href="#poll" className="font-mono text-xs text-mist hover:text-snow">
+              Help decide what&apos;s next →
+            </a>
+          </div>
         </div>
+      </Reveal>
+
+      {/* ── The poll — what to actually teach and how to sell it ── */}
+      <Reveal delay={40}>
+        <section id="poll" className="glow-card mt-10 scroll-mt-28 max-w-3xl rounded-3xl border border-grape/40 p-6 md:p-10">
+          <p className="font-mono text-xs uppercase tracking-widest text-grape">4 quick questions</p>
+          <h2 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">
+            Help decide what gets taught — and how it&apos;s sold.
+          </h2>
+          <p className="mt-3 leading-relaxed text-mist">
+            The original plan was a fixed 4-week cohort. Nobody bit, so instead of guessing again,
+            I&apos;m asking directly. Answer honestly — this genuinely sets the curriculum and the
+            pricing model for what comes after Aug 5.
+          </p>
+          <div className="mt-8">
+            <TrainingSurveyForm />
+          </div>
+        </section>
       </Reveal>
 
       {/* Numbers that matter — same stat tiles the about page earns trust with */}

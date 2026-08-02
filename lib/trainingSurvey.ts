@@ -1,0 +1,53 @@
+// ── Training survey — /training#poll ────────────────────────────────────────
+// A short pulse-check on what to actually build for paid classes, since the
+// original fixed 4-week cohort plan drew zero signups. Keep option keys
+// stable once real responses exist — they're stored as-is in the DB.
+
+export const ENGAGEMENT_OPTIONS = {
+  "single-serving": "Single-serving — drop into any class if the topic's relevant to me",
+  "packaged-curriculum": "Packaged curriculums — classes that build on each other over several weeks",
+  subscription: "Monthly subscription — as much live + recorded access as possible",
+} as const;
+
+export type EngagementOption = keyof typeof ENGAGEMENT_OPTIONS;
+
+export const TOPIC_OPTIONS = {
+  "5.8-features": "5.8 new features",
+  "xr-spatial": "XR / Spatial Computing",
+  archviz: "Archviz",
+  metahumans: "MetaHumans",
+  mocap: "Motion capture pipelines",
+  exporting: "Exporting out of Unreal (RealityKit, WebGPU, RenderMan…)",
+  "unity-to-unreal": "Unity → Unreal",
+} as const;
+
+export type TopicOption = keyof typeof TOPIC_OPTIONS;
+
+export const AI_STANCE_OPTIONS = {
+  "only-if-relevant": "Only when directly relevant to Unreal",
+  "all-workflows": "All workflows, big and small — even outside of Unreal",
+  "no-ai": "I don't want to hear those two letters spoken together",
+} as const;
+
+export type AiStanceOption = keyof typeof AI_STANCE_OPTIONS;
+
+export const SKILL_LEVEL_OPTIONS = {
+  newbie: "Newbie",
+  intermediate: "Intermediate",
+  advanced: "Advanced",
+} as const;
+
+export type SkillLevelOption = keyof typeof SKILL_LEVEL_OPTIONS;
+
+export function isEngagementOption(v: unknown): v is EngagementOption {
+  return typeof v === "string" && v in ENGAGEMENT_OPTIONS;
+}
+export function isTopicOption(v: unknown): v is TopicOption {
+  return typeof v === "string" && v in TOPIC_OPTIONS;
+}
+export function isAiStanceOption(v: unknown): v is AiStanceOption {
+  return typeof v === "string" && v in AI_STANCE_OPTIONS;
+}
+export function isSkillLevelOption(v: unknown): v is SkillLevelOption {
+  return typeof v === "string" && v in SKILL_LEVEL_OPTIONS;
+}

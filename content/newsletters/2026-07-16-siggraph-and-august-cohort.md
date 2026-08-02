@@ -34,14 +34,10 @@ Wednesdays starting **August 5**. Editor & ecosystem → world building with Meg
 - **$299** Newsletter readers: use code **NEWSLETTER20** at checkout for 20% off.
 ---------------------------------------------------------
 
-That's what I have ready to go, and I could still do it, but I'm second-guessing it. I want to teach what will be most valuable to **YOU**, dear reader. So here's what I'm doing. This Wednesday 11a ET will be a FREE session. I'm making it as simple as possible:
+That's what I have ready to go, and I could still do it, but I'm second-guessing myself. I want to teach what will be most valuable to **YOU**, dear reader. So here's what I'm doing. This Wednesday **August 5 11a ET** will be a **FREE** session. I'm making it as simple as possible:
 [Reserve a free seat →](https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA)
 
-Come hang out. This first one will be loose. I'll teach some Unreal basics, take some requests, point out some new features in 5.8, but mostly this will be a discussion. I'll have a couple other instructors with me and we'll be gathering as much information on how to plan our future classes. But if you'd like to give some feedback right away, here's a lovely Google Form.
-
-## What should I teach next?
-
-Month 2 candidates: Blueprints & interactivity, VR / Vision Pro, MetaHumans, archviz, AI-assisted Unreal workflows. **Reply with the one you'd actually pay for** — the most-requested topic becomes the September cohort.
+Come hang out. This first one will be loose. I'll teach some Unreal basics, take some requests, point out some new features in 5.8, but this will also very much be a discussion. I'll have a couple of my other instructors with me and we'll be gathering as much information on how to plan our future classes. And if you'd like to give some feedback right away, here's the same poll I'll be giving live: 
 
 ## What's cooking in the Lab
 
@@ -51,13 +47,15 @@ A few things in active development, hardware-verified and getting closer to a re
 - **UnRealityKit Bridge** — UE simulation driving RealityKit rendering, for genuinely native Vision Pro apps built on Unreal logic.
 - **Pinchwork** — a universal OpenXR hand-tracking template for Unreal, so you stop rebuilding the same hand-interaction rig per project.
 
-None of these are for sale yet — [the Lab](https://www.alexcoulombepresents.com/lab) has early-access signup for each.
+None of these are for sale yet — [the Lab](https://www.alexcoulombepresents.com/lab) has early-access signup for each. I'm also thinking that if I create a monthly subscription to my training content, some of these tools will be available for free as long you're subscribed-- just need to figure out licensing.
+
+And of course there's always a ton of free and open source work available on my [personal GitHub](https://github.com/ibrews).
 
 ## Don't you also run an XR studio?
 
 Yes! [Agile Lens](https://www.agilelens.com) has been busy, and that's the main reason I haven't been able to carve out more time for teaching. Recently we celebrated ten years of immersive work, and of course if your team wants to go beyond training and needs full-service consulting for XR, spatial computing, or AI-agent pipelines built, that's the door: [agilelens.com/contact](https://agilelens.com/contact). Be sure to sign up there for the Agile Lens newsletter — Unreal NYC meetup nights, live shows, demos, betas — all separate from what you'll get from this newsletter.
 
-Anyway, that's all for now! Drop me a line anytime by simply responding to this email, and I hope to see you this Wednesday.
+Anyway, that's all for now! Any questions? Drop me a line anytime by simply responding to this email, and I hope to see you this Wednesday.
 
 — Alex
 *Friendly neighborhood Unreal authorized instructor*

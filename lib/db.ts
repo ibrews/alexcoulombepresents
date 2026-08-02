@@ -142,6 +142,86 @@ export async function getVoteTotalVoters(): Promise<number> {
   return (rows as { count: number }[])[0]?.count ?? 0;
 }
 
+// ── Training survey — /training#poll ────────────────────────────────────────
+// Every submission is its own row (email is optional, so there's no natural
+// dedup key like course_votes has). Purely additive signal for what to teach
+// and how to package it.
+
+let _trainingSurveyEnsured = false;
+
+async function ensureTrainingSurveyTable() {
+  if (_trainingSurveyEnsured) return;
+  await sql()`
+    CREATE TABLE IF NOT EXISTS training_survey (
+      id           BIGSERIAL PRIMARY KEY,
+      email        TEXT,
+      engagement   TEXT[] NOT NULL,
+      topics       TEXT[] NOT NULL,
+      ai_stance    TEXT NOT NULL,
+      skill_level  TEXT NOT NULL,
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  _trainingSurveyEnsured = true;
+}
+
+export async function recordTrainingSurveyResponse(input: {
+  email: string | null;
+  engagement: string[];
+  topics: string[];
+  aiStance: string;
+  skillLevel: string;
+}) {
+  await ensureTrainingSurveyTable();
+  const { email, engagement, topics, aiStance, skillLevel } = input;
+  await sql()`
+    INSERT INTO training_survey (email, engagement, topics, ai_stance, skill_level)
+    VALUES (${email}, ${engagement}, ${topics}, ${aiStance}, ${skillLevel})
+  `;
+}
+
+export type TrainingSurveyCounts = {
+  engagement: { option: string; count: number }[];
+  topics: { option: string; count: number }[];
+  aiStance: { option: string; count: number }[];
+  skillLevel: { option: string; count: number }[];
+  total: number;
+};
+
+// Aggregate counts per question, for the public results view. Never exposes
+// individual emails or per-response answer combinations.
+export async function getTrainingSurveyCounts(): Promise<TrainingSurveyCounts> {
+  await ensureTrainingSurveyTable();
+  const [engagement, topics, aiStance, skillLevel, totalRows] = await Promise.all([
+    sql()`
+      SELECT option, COUNT(*)::int AS count
+      FROM training_survey, UNNEST(engagement) AS option
+      GROUP BY option ORDER BY count DESC
+    `,
+    sql()`
+      SELECT option, COUNT(*)::int AS count
+      FROM training_survey, UNNEST(topics) AS option
+      GROUP BY option ORDER BY count DESC
+    `,
+    sql()`
+      SELECT ai_stance AS option, COUNT(*)::int AS count
+      FROM training_survey GROUP BY ai_stance ORDER BY count DESC
+    `,
+    sql()`
+      SELECT skill_level AS option, COUNT(*)::int AS count
+      FROM training_survey GROUP BY skill_level ORDER BY count DESC
+    `,
+    sql()`SELECT COUNT(*)::int AS count FROM training_survey`,
+  ]);
+  return {
+    engagement: engagement as { option: string; count: number }[],
+    topics: topics as { option: string; count: number }[],
+    aiStance: aiStance as { option: string; count: number }[],
+    skillLevel: skillLevel as { option: string; count: number }[],
+    total: (totalRows as { count: number }[])[0]?.count ?? 0,
+  };
+}
+
 // ── Testimonials ─────────────────────────────────────────────────────────
 
 let _testimonialsEnsured = false;
