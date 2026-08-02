@@ -14,7 +14,7 @@ with no configuration.
 | `/` | Hero with an interactive particle constellation, rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
 | `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
-| `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + a Stripe price in `STRIPE_MEMBERSHIP_PRICE_ID` |
+| `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`, real "Join the membership" checkout via `components/JoinMembershipButton.tsx`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + a Stripe price in `STRIPE_MEMBERSHIP_PRICE_ID`. Live, it shows a $50/month Join card instead of the waitlist; post-checkout redirects to `/members?joined=1` |
 | `/members/recordings` | Members-only class-recording library (gated on the `membership` entitlement; entries in `lib/recordings.ts` — interim link list until the HLS player lands) |
 | `/account` | Magic-link sign-in, purchases/downloads, membership card (class credits, recording library, Stripe Customer Portal), and sign-out (linked from footer + store success page) |
 | `/repos` | Curated open-source catalog by category — each repo gets its own beautifully formatted page linking to its living GitHub wiki |
@@ -117,21 +117,43 @@ sell Epic-owned content off-Fab) — guardrail notes are in `lib/store.ts`.
 
 ### Membership billing
 
-The membership subscription lifecycle is fully wired
-([`lib/commerce/membershipBilling.ts`](lib/commerce/membershipBilling.ts) — decision logic,
-dependency-injected and unit-tested; [`lib/commerce/membership.ts`](lib/commerce/membership.ts) —
-persistence): `invoice.paid` grants/extends the `membership` entitlement and mints 2
-`booking_credit` entitlements per billing cycle; `customer.subscription.updated/deleted` revokes
-on cancellation; refunds revoke that cycle's entitlements through the existing `charge.refunded`
-branch. Everything is idempotent against webhook retries and dashboard resends. Members manage
-billing themselves via the Stripe Customer Portal
-([`app/api/account/portal/route.ts`](app/api/account/portal/route.ts), linked from `/account`),
-and class-credit redemption is an admin honor system for now
-(`GET/POST /api/admin/credits?key=ADMIN_KEY` — [`app/api/admin/credits/route.ts`](app/api/admin/credits/route.ts)).
-Launch requires two human steps: create the recurring price in Stripe and set
-`STRIPE_MEMBERSHIP_PRICE_ID`, then flip `NEXT_PUBLIC_MEMBERSHIP_LIVE=1`. Webhook-branch tests run
-with `npm test` (Node's built-in runner, Stripe fixture payloads —
-[`tests/membership-webhook.test.ts`](tests/membership-webhook.test.ts)).
+The membership subscription lifecycle is fully wired end-to-end — Join button, checkout, webhook
+fulfillment, welcome email, portal — and rehearsed against real Stripe test-mode events (not just
+unit fixtures). Live Stripe price already exists (`price_1U054TDALxplFYNoJHrIoHfN`, $50/month, set
+as `STRIPE_MEMBERSHIP_PRICE_ID` in Vercel production). The only thing gating public launch is
+`NEXT_PUBLIC_MEMBERSHIP_LIVE`, still `0` in production pending a final copy/UX check.
+
+- **Join flow**: [`components/JoinMembershipButton.tsx`](components/JoinMembershipButton.tsx) →
+  `POST /api/checkout` with `{ membership: true }` → a real `mode=subscription` Stripe Checkout
+  Session referencing the Price object directly (not inline `price_data`, unlike the one-time
+  items) → success redirects to `/members?joined=1`. The branch re-checks `MEMBERSHIP_LIVE`
+  server-side regardless of whether the button is rendered.
+- **Webhook fulfillment**: [`lib/commerce/membershipBilling.ts`](lib/commerce/membershipBilling.ts)
+  (decision logic, dependency-injected and unit-tested) +
+  [`lib/commerce/membership.ts`](lib/commerce/membership.ts) (persistence). `invoice.paid`
+  grants/extends the `membership` entitlement and mints 2 `booking_credit` entitlements per
+  billing cycle (first grant only sends the welcome email — renewals don't);
+  `customer.subscription.updated/deleted` revokes on cancellation; refunds revoke that cycle's
+  entitlements through the existing `charge.refunded` branch. Everything is idempotent against
+  webhook retries and dashboard resends. **The membership grant is a DB-level atomic upsert**
+  (partial unique index `entitlements_one_membership_per_customer`, schema.ts) — a real rehearsal
+  showed Stripe firing `customer.subscription.updated` and `invoice.paid` within milliseconds of
+  each other, and a naive check-then-insert let both race past the check and create duplicate
+  rows. A check-then-act pattern here is a bug, not a simplification.
+- **Welcome email**: [`lib/commerce/email.ts`](lib/commerce/email.ts)'s `sendMembershipWelcomeEmail`
+  (magic-link sign-in, mirrors the digital-purchase pattern). `brandedHtml()` — the shared
+  template every transactional email on the site uses — got a `<meta charset="utf-8">` fix here
+  too; without it, em-dashes/bullets can render as mojibake in some email clients (discovered by
+  actually rendering the output, not just reading the source).
+- Members manage billing via the Stripe Customer Portal
+  ([`app/api/account/portal/route.ts`](app/api/account/portal/route.ts), linked from `/account`;
+  activated in both Stripe test and live mode), and class-credit redemption is an admin honor
+  system for now (`GET/POST /api/admin/credits?key=ADMIN_KEY` —
+  [`app/api/admin/credits/route.ts`](app/api/admin/credits/route.ts)).
+- Webhook-branch tests run with `npm test` (Node's built-in runner, Stripe fixture payloads —
+  [`tests/membership-webhook.test.ts`](tests/membership-webhook.test.ts)), including cases only
+  found by running the real flow (e.g. Stripe's transient `customer.subscription.created` with
+  `status=incomplete` before a Checkout-driven subscription goes active).
 
 ## Signup lists & broadcasts
 

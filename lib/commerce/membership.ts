@@ -11,6 +11,10 @@ import { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU } from "./membershipBilling";
 
 export { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU };
 export const MEMBERSHIP_LIVE = process.env.NEXT_PUBLIC_MEMBERSHIP_LIVE === "1";
+// Display copy only — the real number lives in Stripe (the Price object
+// STRIPE_MEMBERSHIP_PRICE_ID points at). Keep these in sync by hand if the
+// price ever changes.
+export const MEMBERSHIP_PRICE_LABEL = "$50/month";
 
 // The benefits list is data, not copy-in-JSX, so /members, the store teaser,
 // and future launch emails all describe the same program.
@@ -61,22 +65,34 @@ export async function isMember(customerId: number): Promise<boolean> {
 // gets the same row back). No unique index on (customer_id, sku) exists, so
 // this is UPDATE-then-INSERT; a duplicate row from a webhook race is harmless
 // (isMember/revoke treat all of a customer's membership rows alike).
-export async function grantOrExtendMembership(customerId: number, paidThrough: Date): Promise<void> {
+// Atomic upsert on the partial unique index (entitlements_one_membership_per_
+// customer, schema.ts) — NOT a check-then-insert, which is racy: Stripe
+// fires customer.subscription.updated and invoice.paid within milliseconds
+// of each other for the same signup, and two concurrent webhook requests
+// both seeing "no row yet" would otherwise both insert (confirmed happening
+// in rehearsal before this fix — duplicate membership rows for one signup).
+// Returns isNew=true when this customer had no membership row at all (first
+// signup) — the caller uses that to decide whether to send the welcome email
+// (renewals and reactivations from a lapsed state don't get a new one).
+export async function grantOrExtendMembership(
+  customerId: number,
+  paidThrough: Date
+): Promise<{ isNew: boolean }> {
   await ensureCommerceSchema();
-  const db = sql();
-  const updated = (await db`
-    UPDATE entitlements
-    SET status = 'active', revoked_at = NULL,
-        updates_until = GREATEST(COALESCE(updates_until, to_timestamp(0)), ${paidThrough.toISOString()}::timestamptz)
-    WHERE customer_id = ${customerId} AND sku = ${MEMBERSHIP_SKU}
-    RETURNING id
-  `) as { id: number }[];
-  if (updated.length === 0) {
-    await db`
-      INSERT INTO entitlements (customer_id, sku, tier, status, updates_until)
-      VALUES (${customerId}, ${MEMBERSHIP_SKU}, 'member', 'active', ${paidThrough.toISOString()})
-    `;
-  }
+  const rows = (await sql()`
+    INSERT INTO entitlements (customer_id, sku, tier, status, updates_until)
+    VALUES (${customerId}, ${MEMBERSHIP_SKU}, 'member', 'active', ${paidThrough.toISOString()})
+    ON CONFLICT (customer_id) WHERE sku = 'membership'
+    DO UPDATE SET
+      status = 'active',
+      revoked_at = NULL,
+      updates_until = GREATEST(
+        COALESCE(entitlements.updates_until, to_timestamp(0)),
+        EXCLUDED.updates_until
+      )
+    RETURNING (xmax = 0) AS inserted
+  `) as { inserted: boolean }[];
+  return { isNew: rows[0]?.inserted ?? true };
 }
 
 // Tops the cycle's credits up to `count` instead of blindly inserting, keyed

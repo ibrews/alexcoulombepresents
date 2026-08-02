@@ -62,6 +62,20 @@ export async function ensureCommerceSchema() {
     )
   `;
 
+  // Partial (not table-wide) unique index: at most one `membership` row per
+  // customer. Booking credits legitimately have many rows per customer per
+  // sku, so this can't be a blanket (customer_id, sku) constraint — it only
+  // constrains sku='membership', matching the ON CONFLICT target in
+  // grantOrExtendMembership. Without this, two webhook events for the same
+  // signup (e.g. customer.subscription.updated + invoice.paid, which Stripe
+  // fires within milliseconds of each other) can both race past a
+  // check-then-insert and create duplicate membership rows.
+  await db`
+    CREATE UNIQUE INDEX IF NOT EXISTS entitlements_one_membership_per_customer
+      ON entitlements (customer_id)
+      WHERE sku = 'membership'
+  `;
+
   await db`
     CREATE TABLE IF NOT EXISTS license_keys (
       id             BIGSERIAL PRIMARY KEY,

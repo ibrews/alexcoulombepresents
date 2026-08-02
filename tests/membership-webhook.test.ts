@@ -39,7 +39,7 @@ function fakeDeps(overrides: Partial<MembershipBillingDeps> = {}) {
       email: "member@example.com",
       name: "Mem Ber",
     }),
-    grantOrExtendMembership: record("grantOrExtendMembership", undefined),
+    grantOrExtendMembership: record("grantOrExtendMembership", { isNew: true }),
     mintBookingCredits: record("mintBookingCredits", CREDITS_PER_CYCLE),
     revokeMembership: record("revokeMembership", 3),
     checkoutSessionProcessed: record("checkoutSessionProcessed", false),
@@ -104,6 +104,8 @@ test("invoice.paid grants membership, mints credits, records + links the order",
   const result = await handleMembershipEvent(invoicePaid(), deps);
 
   assert.equal(result.handled, true);
+  assert.equal(result.handled && result.newMember, true);
+  assert.equal(result.handled && result.email, "member@example.com");
   assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH]);
   assert.deepEqual(called("mintBookingCredits")[0].args, [42, CREDITS_PER_CYCLE, PAID_THROUGH]);
 
@@ -120,6 +122,15 @@ test("invoice.paid grants membership, mints credits, records + links the order",
   });
   assert.deepEqual(called("linkMembershipCycleToOrder")[0].args, [42, "in_1QxTest", PAID_THROUGH]);
   assert.deepEqual(called("setStripeCustomerId")[0].args, [42, "cus_TestABC"]);
+});
+
+test("invoice.paid on a renewal (existing member) does not set newMember", async () => {
+  const { deps } = fakeDeps({
+    grantOrExtendMembership: () => Promise.resolve({ isNew: false }),
+  });
+  const result = await handleMembershipEvent(invoicePaid(), deps);
+  assert.equal(result.handled, true);
+  assert.equal(result.handled && result.newMember, false);
 });
 
 test("invoice.paid dedupes on an already-processed event (check before work)", async () => {
@@ -204,6 +215,22 @@ test("subscription events resolve unknown Stripe customers via the Stripe API", 
   assert.deepEqual(called("fetchStripeCustomer")[0].args, ["cus_TestABC"]);
   assert.deepEqual(called("findOrCreateCustomer")[0].args, ["member@example.com", "Mem Ber"]);
   assert.deepEqual(called("setStripeCustomerId")[0].args, [42, "cus_TestABC"]);
+});
+
+test("subscription.created with status incomplete neither grants nor revokes (real Checkout flow: Stripe fires this before the payment confirms)", async () => {
+  // Confirmed against a live rehearsal (2026-08-02): a real Checkout-driven
+  // subscription always arrives as customer.subscription.created with
+  // status="incomplete" first, then a later customer.subscription.updated
+  // flips it to "active" once payment settles. This case wasn't in the
+  // original fixture set and only surfaced by actually running the flow.
+  const { deps, called } = fakeDeps();
+  const result = await handleMembershipEvent(
+    subscriptionEvent("customer.subscription.created", { status: "incomplete" }),
+    deps
+  );
+  assert.equal(result.handled, false);
+  assert.equal(called("grantOrExtendMembership").length, 0);
+  assert.equal(called("revokeMembership").length, 0);
 });
 
 test("subscription.updated to canceled revokes", async () => {

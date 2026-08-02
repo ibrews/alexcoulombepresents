@@ -3,6 +3,7 @@ import { storeItems, STORE_LIVE, effectivePriceCents, isPurchasable } from "@/li
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 import { getSeatsSold } from "@/lib/commerce/seats";
+import { MEMBERSHIP_LIVE } from "@/lib/commerce/membership";
 
 // Creates a Stripe Checkout Session for a catalog item.
 // Talks to the Stripe REST API directly (form-encoded) — no SDK dependency.
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let payload: { slug?: string; sku?: string; donationCents?: number };
+  let payload: { slug?: string; sku?: string; donationCents?: number; membership?: boolean };
   try {
     payload = await req.json();
   } catch {
@@ -89,6 +90,28 @@ export async function POST(req: NextRequest) {
       "metadata[kind]": "digital",
       "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup (see business plan §2.8)
       allow_promotion_codes: "true", // promo codes created in the Stripe Dashboard (e.g. newsletter code)
+    });
+  } else if (payload.membership) {
+    // ── Membership subscription (lib/commerce/membership.ts) — recurring,
+    // so this is mode=subscription referencing the real Stripe Price object
+    // (STRIPE_MEMBERSHIP_PRICE_ID), not inline price_data like the one-time
+    // items above. customer_creation is a payment-mode-only param — Stripe
+    // always creates a customer for a subscription, so it's omitted here.
+    if (!MEMBERSHIP_LIVE) {
+      return NextResponse.json({ error: "Membership isn't open yet." }, { status: 503 });
+    }
+    const priceId = process.env.STRIPE_MEMBERSHIP_PRICE_ID;
+    if (!priceId) {
+      return NextResponse.json({ error: "Membership isn't configured yet." }, { status: 503 });
+    }
+    body = new URLSearchParams({
+      mode: "subscription",
+      success_url: `${site}/members?joined=1`,
+      cancel_url: `${site}/members`,
+      "line_items[0][quantity]": "1",
+      "line_items[0][price]": priceId,
+      "metadata[kind]": "membership",
+      "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup
     });
   } else {
     if (!STORE_LIVE) {

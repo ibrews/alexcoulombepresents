@@ -70,7 +70,7 @@ export type MembershipBillingDeps = {
   setStripeCustomerId(customerId: number, stripeCustomerId: string): Promise<void>;
   customerIdForStripeCustomer(stripeCustomerId: string): Promise<number | null>;
   fetchStripeCustomer(stripeCustomerId: string): Promise<{ email: string | null; name: string | null } | null>;
-  grantOrExtendMembership(customerId: number, paidThrough: Date): Promise<void>;
+  grantOrExtendMembership(customerId: number, paidThrough: Date): Promise<{ isNew: boolean }>;
   mintBookingCredits(customerId: number, count: number, expiresAt: Date): Promise<number>;
   revokeMembership(customerId: number): Promise<number>;
   checkoutSessionProcessed(stripeEventId: string, stripeSessionId: string): Promise<boolean>;
@@ -88,7 +88,17 @@ export type MembershipBillingDeps = {
 
 export type MembershipEventResult =
   | { handled: false; reason: string }
-  | { handled: true; action: string; deduped?: boolean };
+  | {
+      handled: true;
+      action: string;
+      deduped?: boolean;
+      // Only set on invoice.paid for a first-ever membership grant — the
+      // webhook route uses this to fire the welcome email exactly once per
+      // member, never on renewal invoices.
+      newMember?: boolean;
+      email?: string;
+      name?: string | null;
+    };
 
 function membershipInvoiceLine(invoice: StripeInvoice, priceId: string): StripeInvoiceLine | undefined {
   return (invoice.lines?.data ?? []).find(
@@ -164,7 +174,7 @@ export async function handleMembershipEvent(
       await deps.setStripeCustomerId(customerId, invoice.customer);
     }
 
-    await deps.grantOrExtendMembership(customerId, paidThrough);
+    const { isNew } = await deps.grantOrExtendMembership(customerId, paidThrough);
     await deps.mintBookingCredits(customerId, CREDITS_PER_CYCLE, paidThrough);
     await deps.recordCheckoutSession({
       stripeEventId: event.id,
@@ -179,7 +189,13 @@ export async function handleMembershipEvent(
     // charge.refunded branch (revokeEntitlementsForPaymentIntent) revokes
     // them when THIS invoice is refunded.
     await deps.linkMembershipCycleToOrder(customerId, invoice.id, paidThrough);
-    return { handled: true, action: `granted through ${paidThrough.toISOString()} + ${CREDITS_PER_CYCLE} credits` };
+    return {
+      handled: true,
+      action: `granted through ${paidThrough.toISOString()} + ${CREDITS_PER_CYCLE} credits`,
+      newMember: isNew,
+      email,
+      name,
+    };
   }
 
   if (

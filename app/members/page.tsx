@@ -4,8 +4,9 @@ import { cookies } from "next/headers";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import WaitlistForm from "@/components/WaitlistForm";
+import JoinMembershipButton from "@/components/JoinMembershipButton";
 import { customerFromSession } from "@/lib/commerce/tokens";
-import { isMember, memberBenefits, MEMBERSHIP_LIVE } from "@/lib/commerce/membership";
+import { isMember, memberBenefits, MEMBERSHIP_LIVE, MEMBERSHIP_PRICE_LABEL } from "@/lib/commerce/membership";
 
 export const metadata: Metadata = {
   title: "Members — Coming Soon",
@@ -14,10 +15,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/members" },
 };
 
-export default async function Members() {
+export default async function Members({
+  searchParams,
+}: {
+  searchParams: Promise<{ joined?: string }>;
+}) {
   // Membership rides the existing magic-link session — a signed-in member
-  // (comped or, later, subscribed) sees the member view the day it opens.
-  const sessionToken = (await cookies()).get("acp_session")?.value;
+  // (comped or subscribed) sees the member view the day it opens.
+  const [sessionToken, { joined }] = await Promise.all([
+    cookies().then((c) => c.get("acp_session")?.value),
+    searchParams,
+  ]);
   const customerId = await customerFromSession(sessionToken).catch(() => null);
   const member = customerId ? await isMember(customerId).catch(() => false) : false;
 
@@ -37,8 +45,10 @@ export default async function Members() {
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
           One membership, everything behind the curtain: the full class-recording library, standing
           member pricing, first access to Lab launches, and a monthly hour where you get Alex&apos;s
-          full attention. Pricing lands with the launch — waitlist members hear first and get the
-          founding rate.
+          full attention.{" "}
+          {MEMBERSHIP_LIVE
+            ? `${MEMBERSHIP_PRICE_LABEL} — cancel anytime.`
+            : "Pricing lands with the launch — waitlist members hear first and get the founding rate."}
         </p>
       </Reveal>
 
@@ -79,6 +89,42 @@ export default async function Members() {
                 Browse the Lab tools →
               </Link>
             </div>
+          </div>
+        </Reveal>
+      ) : MEMBERSHIP_LIVE ? (
+        <Reveal>
+          <div className="glass mt-14 rounded-3xl p-8 text-center md:p-12">
+            {joined === "1" ? (
+              <>
+                <p className="font-mono text-xs uppercase tracking-widest text-teal">
+                  Payment received ✓
+                </p>
+                <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
+                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-mist">
+                  Your membership activates automatically — usually instant. Check your email for a
+                  sign-in link, or refresh this page in a moment. Nothing after a few minutes? Email{" "}
+                  <a
+                    href="mailto:info@alexcoulombepresents.com"
+                    className="text-teal hover:underline"
+                  >
+                    info@alexcoulombepresents.com
+                  </a>
+                  .
+                </p>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold tracking-tight">Join the membership.</h2>
+                <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-mist">
+                  {MEMBERSHIP_PRICE_LABEL} — 2 live-class credits every billing cycle, the full
+                  recording library, member pricing, and everything above. Cancel anytime from your
+                  account.
+                </p>
+                <div className="mt-6">
+                  <JoinMembershipButton />
+                </div>
+              </>
+            )}
           </div>
         </Reveal>
       ) : (

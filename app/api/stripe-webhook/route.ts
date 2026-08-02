@@ -9,7 +9,12 @@ import {
   setStripeCustomerId,
   customerIdForStripeCustomer,
 } from "@/lib/commerce/entitlements";
-import { sendDonationNotification, sendFulfillmentEmail, sendOrderEmails } from "@/lib/commerce/email";
+import {
+  sendDonationNotification,
+  sendFulfillmentEmail,
+  sendOrderEmails,
+  sendMembershipWelcomeEmail,
+} from "@/lib/commerce/email";
 import { storeItems } from "@/lib/store";
 import { createVoucherCode } from "@/lib/commerce/vouchers";
 import { sendVoucherEmail } from "@/lib/commerce/email";
@@ -223,6 +228,20 @@ export async function POST(req: NextRequest) {
       if (result.handled) {
         console.log(`[membership] ${event.type} → ${result.action}`);
         if (result.deduped) return NextResponse.json({ received: true, deduped: true });
+        // First-ever grant only — never fires on renewal invoices. A hiccup
+        // here must not fail the webhook: the grant already succeeded, and a
+        // 500 would make Stripe retry the (already-applied) grant forever.
+        if (result.newMember && result.email) {
+          try {
+            const customerId = await findOrCreateCustomer(result.email, result.name);
+            const magicToken = await issueMagicLink(customerId);
+            const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
+            const magicLinkUrl = `${site}/api/account/verify?token=${magicToken}`;
+            await sendMembershipWelcomeEmail({ email: result.email, name: result.name, magicLinkUrl });
+          } catch (err) {
+            console.error("[membership] welcome email failed", err);
+          }
+        }
       } else {
         console.log(`[membership] ${event.type} ignored — ${result.reason}`);
       }

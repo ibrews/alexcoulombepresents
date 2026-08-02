@@ -16,7 +16,10 @@ function brandedHtml(text: string): string {
     .map((p) => `<p style="margin:0 0 16px;white-space:pre-line;">${linkify(esc(p))}</p>`)
     .join("");
   return [
-    '<!doctype html><html><body style="margin:0;padding:24px;background:#f6f6fa;">',
+    // Explicit charset — some clients (older Outlook/Windows Mail) sniff the
+    // HTML's own declaration rather than trusting the MIME Content-Type
+    // header, and without this the em-dashes/bullets below render as mojibake.
+    '<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:24px;background:#f6f6fa;">',
     '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:14px;padding:32px;',
     "font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:#292524;",
     'border-top:4px solid #2dd4bf;">',
@@ -170,6 +173,47 @@ export async function sendOrderEmails(input: {
     html: brandedHtml(__ownerBody),
   });
   if (owner.error) console.error("owner fulfillment alert failed:", owner.error.message);
+}
+
+// Fires once per member — the first invoice.paid for a brand-new membership
+// signup, never on renewal invoices (see app/api/stripe-webhook/route.ts).
+export async function sendMembershipWelcomeEmail(input: {
+  email: string;
+  name?: string | null;
+  magicLinkUrl: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const first = input.name?.split(" ")[0];
+  const __body = [
+      `${first ? `Hey ${first}` : "Hey"} — you're a member! Welcome in.`,
+      "",
+      "Here's what's live for you right now:",
+      "  • 2 live-class credits every billing cycle — book any open class and the credit is honored, no code needed",
+      "  • The full class-recording library, including sessions you didn't attend",
+      "  • Member pricing on everything in the store",
+      "",
+      "Sign in here to see your account (link expires in 30 minutes):",
+      input.magicLinkUrl,
+      "",
+      "That's where your credits, the recording library, and billing all live. If that link expires, request a new",
+      "one any time at https://www.alexcoulombepresents.com/account.",
+      "",
+      "Questions, or want to cancel? Just reply — it goes straight to Alex.",
+      "",
+      "— Alex Coulombe Presents",
+    ].join("\n");
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    to: input.email,
+    replyTo: "info@alexcoulombepresents.com",
+    subject: "You're a member — welcome in",
+    text: __body,
+    html: brandedHtml(__body),
+  });
+  if (error) {
+    console.error("Resend membership welcome email error:", error);
+    throw new Error("Failed to send membership welcome email");
+  }
 }
 
 export async function sendVoucherEmail(input: {
