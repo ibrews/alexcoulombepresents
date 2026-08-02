@@ -1,41 +1,43 @@
 title: Live Unreal classes are back — and three talks at SIGGRAPH
-date: 2026-07-20
-subject: Sign up for live Unreal classes (and AI!) coming soon from Alex Coulombe
+date: 2026-08-02
+subject: Sign up for live Unreal classes (& more!) from Alex Coulombe
+preheader: Live classes are back, and things are cooking in the lab
 ---
 ![siggraph](/newsletter/siggraph.jpg)
 
-![judgesmentors](/newsletter/judgesmentors.jpg) ![hackers](/newsletter/hackers.jpg)
+![Screenshot 2026-07-25 at 1.02.27 PM](/newsletter/screenshot-2026-07-25-at-1-02-27-pm.jpg) ![Screenshot 2026-07-25 at 1.05.49 PM](/newsletter/screenshot-2026-07-25-at-1-05-49-pm.jpg)
 
 *Top: oh look, SIGGRAPH.
-Bottom: with the other judges/mentors, and watching hackers from our panopticon*
+Bottom: just a smattering of the amazing folks in LA*
 
-Hey folks! It's Alex coming at you live from LA.
+Hey folks!
 
-Two quick things, one this week and one next month.
+Alex here with some news. 
 
-## I'm at SIGGRAPH 2026 (July 19–23)
+Most importantly:
 
-- **Stage Presence: Design and Testing of a Virtual Rehearsal Room Toolset** — Talk, Sunday July 19, 4:25pm PT with David Gochfeld and Kevin Laibson (already done!)
-- **Powered by Gaussian Splats: From World Models to 3D Interactive Worlds** — Hands-on course, Monday July 20, 3:30pm PT, Concourse Hall with Nigel Hartman
-- **Virtual Theatre: Producing Live Theatre on Virtual Stages** — Panel, Wednesday July 22, 1:00pm PT, Concourse Hall with Stephen Butchko, Joe Geigel, and Jason Moore
+## Live Unreal Engine classes start on Wednesday
 
-I also had an amazing time being a judge and mentor for SensAI's Worlds in Action hackathon, as well as their one shot challenge. Keep an eye on future newsletters to be alerted on our upcoming partnerships. 
+Yes I'm teaching again! Working with [SensAI](https://www.youtube.com/watch?v=JR5397NUz3I) on the [Worlds in Action hackathon](https://sensaihack.com/worldsinaction-2-la/) (speaker, mentor, judge) and being part of [three wonderful talks](https://s2026.conference-schedule.org/presenter/?uid=645453) at SIGGRAPH (talk, workshop, panelist) reminded me how much I love sharing knowledge and tools with eager learners. At the height of my 8-year partnership with Epic Games, I regularly taught 3-4 classes per week on their behalf, and while it was a struggle to balance with everything else in my life, it was an absolute blast.
 
-If you're here in LA, I'm around until the evening of the 23rd. Come say hi! Meeting you all and seeing what you're building is my favorite part of these events. [Full session details here](https://s2026.conference-schedule.org/presenter/?uid=645453).
+So I want to get back to it, and for the first time, doing it much more publicly.
 
-## Live Unreal Engine classes are coming!
+The biggest challenge? Settling on what to teach and when. I've taught hundreds of classes, but in many cases it was simply along the lines of "give ILM an Intro to PCG class on Tuesday" and I just did it. Even when I've had companies sign up for corporate training, their needs tend to be narrow enough that it wasn't difficult to plan out a curriculum.
 
-Some of you know that during my 8 years contracting with Epic Games, I taught over 300 sessions for their key partners and collaborated on over 50 courses. I miss it, so I'm now starting a proper effort to proactively reach out to the world and teach rather than only when companies reach out to me. I'm bringing that back as public classes with a fixed weekly rhythm, starting with:
-
+So I tried to do something like that, and maybe it looks something like this:
+---------------------------------------------------------
 **Unreal Foundations — Zero to Environment** · 
-4 Wednesdays starting **August 5**. Editor & ecosystem → world building with Megascans & Nanite → Lumen & lighting → cameras & Movie Render Queue. You leave with some portfolio-ready cinematic renders and a lot of lessons in gotchas and what not to do.
+Wednesdays starting **August 5**. Editor & ecosystem → world building with Megascans & Nanite → Lumen & lighting → cameras & Movie Render Queue. You leave with some portfolio-ready cinematic renders and a lot of lessons in gotchas and what not to do.
 
-- Every class runs **twice each Wednesday** (10a–12p and 12:30–2:30p ET) so it works from Europe to the West Coast — attend either, recordings included.
-- **Thursday office hours** every week — bring anything.
-- **$249 early-bird through July 29** ($299 after). Newsletter readers: use code **NEWSLETTER20** at checkout for 20% off anything through July 29.
-- Student or between jobs? Reply and we'll work something out.
+- Every class runs **each Wednesday** (11a–1p ET) so it works from Europe to the West Coast.
+- **Friday office hours** every week — bring anything you want to discuss.
+- **$299** Newsletter readers: use code **NEWSLETTER20** at checkout for 20% off.
+---------------------------------------------------------
 
-[Reserve a seat →](https://www.alexcoulombepresents.com/training)
+That's what I have ready to go, and I could still do it, but I'm second-guessing it. I want to teach what will be most valuable to **YOU**, dear reader. So here's what I'm doing. This Wednesday 11a ET will be a FREE session. I'm making it as simple as possible:
+[Reserve a free seat →](https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA)
+
+Come hang out. This first one will be loose. I'll teach some Unreal basics, take some requests, point out some new features in 5.8, but mostly this will be a discussion. I'll have a couple other instructors with me and we'll be gathering as much information on how to plan our future classes. But if you'd like to give some feedback right away, here's a lovely Google Form.
 
 ## What should I teach next?
 
@@ -53,8 +55,11 @@ None of these are for sale yet — [the Lab](https://www.alexcoulombepresents.co
 
 ## Don't you also run an XR studio?
 
-This site and the classes are the public side of [Agile Lens](https://agilelens.com), the NYC studio I co-founded — ten years of immersive work for the Royal Shakespeare Company, Four Seasons, NEOM, Samsung, and Royal Caribbean, among others. If your team needs XR, spatial computing, or AI-agent pipelines built (not just taught), that's the door: [agilelens.com/contact](https://agilelens.com/contact). Agile Lens also runs its own newsletter — meetup nights, shows, demos, betas — separate from this one.
+Yes! [Agile Lens](https://www.agilelens.com) has been busy, and that's the main reason I haven't been able to carve out more time for teaching. Recently we celebrated ten years of immersive work, and of course if your team wants to go beyond training and needs full-service consulting for XR, spatial computing, or AI-agent pipelines built, that's the door: [agilelens.com/contact](https://agilelens.com/contact). Be sure to sign up there for the Agile Lens newsletter — Unreal NYC meetup nights, live shows, demos, betas — all separate from what you'll get from this newsletter.
+
+Anyway, that's all for now! Drop me a line anytime by simply responding to this email, and I hope to see you this Wednesday.
 
 — Alex
+*Friendly neighborhood Unreal authorized instructor*
 
-![logo](/newsletter/logo.png)
+![instructor-partner-2026](/newsletter/instructor-partner-2026.png) ![acp logo](/newsletter/acp-logo.png) ![training-partner-2026](/newsletter/training-partner-2026.png)

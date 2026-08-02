@@ -8,6 +8,13 @@
       "cwd": "/Users/alex/GH/alexcoulombepresents",
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "newsletter-studio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "studio"],
+      "cwd": "/Users/alex/GH/alexcoulombepresents",
+      "port": 4848
     }
   ]
 }
