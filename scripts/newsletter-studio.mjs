@@ -757,6 +757,10 @@ async function sendPage(slug, err, notice) {
      ${!s.db ? `<div class="card" style="border-color:#7a2a2a"><h2>Not ready</h2><p class="hint" style="color:#ff8080">${esc(blockers[0])}</p></div>` : `
      <form method="post" class="card" id="sendForm">
        <h2>1 · Choose the audience — several lists combine, duplicates collapse</h2>
+       <div style="display:flex;gap:8px;margin-bottom:10px">
+         <button type="button" class="secondary" onclick="selectAllLists(true)">Select all</button>
+         <button type="button" class="secondary" onclick="selectAllLists(false)">Select none</button>
+       </div>
        ${options}
        <p class="hint">Combined unique recipients: <b id="countLabel" style="color:#fbbf24">…</b></p>
        <h2 style="margin-top:20px">2 · The footer every recipient sees</h2>
@@ -777,6 +781,10 @@ async function sendPage(slug, err, notice) {
      </form>`}
      <script>
        let currentCount = null;
+       function selectAllLists(checked) {
+         document.querySelectorAll('input[name=list]').forEach((cb) => { cb.checked = checked; });
+         updateCount();
+       }
        async function updateCount() {
          const picked = Array.from(document.querySelectorAll('input[name=list]:checked'));
          const lists = picked.map((r) => r.value);
