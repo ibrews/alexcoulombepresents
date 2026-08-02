@@ -54,7 +54,7 @@ export const appearances: Appearance[] = [
     date: "2014",
     endsISO: "2014-06-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://openlab.citytech.cuny.edu/fuselab/event/intersections-2014/",
+    url: "https://openlab.citytech.cuny.edu/fuselab/event/intersections-2014/intersections-2014-speaker-profiles/",
   },
   {
     slug: "opera-america-2014",
@@ -272,7 +272,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-09-15T00:00:00Z",
     location: "Venice, Italy",
-    url: "https://www.labiennale.org/en/cinema/2019",
   },
   {
     slug: "3ds-new-york-2019",
@@ -292,7 +291,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-09-30T00:00:00Z",
     location: "Bellingham, WA",
-    url: "http://collider.com/north-bend-film-fest-2019-awards/",
   },
   {
     slug: "ieee-gem-2019",
@@ -378,7 +376,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-04-26T00:00:00Z",
     location: "Virtual",
-    url: "https://realtimeconference.com/26-april-2021",
   },
   {
     slug: "5th-wall-forum-2020",
@@ -444,7 +441,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Phoenix, AZ",
-    url: "https://www.tcg.org/Default.aspx?TabID=1614",
   },
   {
     slug: "theatre-young-audiences-2020",
@@ -463,7 +459,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual (Dubai)",
-    url: "https://www.virtualiteach.com/cpd-in-vr",
   },
   {
     slug: "realtime-conference-2020-architecture",
@@ -473,7 +468,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-04-28T00:00:00Z",
     location: "Virtual",
-    url: "https://realtimeconference.com/26-april-2021",
   },
   {
     slug: "arkit-meetup-mit-reality-hack-2020",
@@ -666,7 +660,6 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-06-30T00:00:00Z",
     location: "Vienna, Austria",
-    url: "https://events.wien.info/en/1369/civa-festival-contemporary-immersive-virtual-art/",
   },
   {
     slug: "nyvr-art-in-vr-2021",

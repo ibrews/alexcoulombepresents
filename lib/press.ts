@@ -57,7 +57,6 @@ export const pressMentions: PressMention[] = [
     title: "HTC's Vive Tracker Has Brought Out The Best In VR Innovation",
     date: "2017",
     dateISO: "2017-06-15T00:00:00Z",
-    url: "https://uploadvr.com/vive-tracker-vr-innovation/",
   },
   {
     slug: "ibm-thinkleaders-2017",
@@ -66,7 +65,7 @@ export const pressMentions: PressMention[] = [
     title: "Designing like you're there: What I learned using VR for architecture",
     date: "2017",
     dateISO: "2017-06-15T00:00:00Z",
-    url: "https://www.ibm.com/blogs/insights-on-business/ibmix/designing-like-youre-learned-using-vr-architecture/",
+    url: "http://web.archive.org/web/20190918032916/https://www.ibm.com/blogs/insights-on-business/ibmix/designing-like-youre-learned-using-vr-architecture/",
   },
   {
     slug: "oregon-arts-watch-2017",
@@ -277,7 +276,6 @@ export const pressMentions: PressMention[] = [
     title: "Video Interview",
     date: "2020",
     dateISO: "2020-06-15T00:00:00Z",
-    url: "https://currentsnewmedia.org/festivals/currents-new-media-2020/",
   },
   {
     slug: "alive-in-plasticland-tempest-2020",
@@ -349,7 +347,7 @@ export const pressMentions: PressMention[] = [
     title: "Interviewee — Cathy Hackl & John Buzzell",
     date: "2021",
     dateISO: "2021-06-15T00:00:00Z",
-    url: "https://smile.amazon.com/Augmented-Workforce-Artificial-Intelligence-Reality-ebook/dp/B094LL26BD",
+    url: "https://www.amazon.com/dp/B094LL26BD",
   },
   {
     slug: "100-original-voices-xr-2021",
