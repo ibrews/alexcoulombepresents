@@ -22,7 +22,7 @@
  * degrades gracefully (with visible status chips) when one is missing.
  */
 import { createServer } from "node:http";
-import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync, unlinkSync, statSync } from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -97,6 +97,24 @@ function listIssues() {
     .sort()
     .reverse()
     .map(parseIssue);
+}
+
+// Every /newsletter/<file> reference across EVERY issue — past sends
+// included, since an old sent issue's images still need to stay put.
+function allNewsletterImageRefs() {
+  const refs = new Set();
+  for (const file of readdirSync(NEWSLETTER_DIR).filter((f) => f.endsWith(".md"))) {
+    const body = readFileSync(path.join(NEWSLETTER_DIR, file), "utf8");
+    for (const m of body.matchAll(/\/newsletter\/([\w][\w.\-]*)/g)) refs.add(m[1]);
+  }
+  return refs;
+}
+
+// Files sitting in public/newsletter/ that no issue (draft or sent) links to.
+// Dotfiles (e.g. .gitkeep) are directory bookkeeping, not images — skip them.
+function unusedImages() {
+  const refs = allNewsletterImageRefs();
+  return readdirSync(IMAGE_DIR).filter((f) => !f.startsWith(".") && !refs.has(f));
 }
 
 function loadIssue(slug) {
@@ -282,6 +300,7 @@ function layout(title, body, { active = "" } = {}) {
   const nav = [
     ["/", "Issues"],
     ["/audience", "Audience"],
+    ["/images", "Images"],
   ]
     .map(([href, label]) => `<a href="${href}" style="${active === href ? "color:#ecedf6;font-weight:600" : ""}">${label}</a>`)
     .join("");
@@ -395,6 +414,41 @@ async function audiencePage(list, query) {
        <p class="hint" style="margin-top:12px">Removals happen via each email's one-click unsubscribe link — no manual delete here, so an accidental click can't silently drop a subscriber.</p>
      </div>`,
     { active: "/audience" }
+  );
+}
+
+function imagesPage(notice) {
+  const unused = unusedImages();
+  const rows = unused
+    .map((f) => {
+      let size = "";
+      try {
+        size = `${(statSync(path.join(IMAGE_DIR, f)).size / 1024).toFixed(0)} KB`;
+      } catch { /* stat race — file already gone, ignore */ }
+      return `<tr>
+        <td><img src="/newsletter/${esc(f)}" style="height:40px;width:40px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:10px" /> ${esc(f)}</td>
+        <td class="hint">${size}</td>
+        <td style="text-align:right">
+          <form method="post" action="/delete-image/${encodeURIComponent(f)}" onsubmit="return confirm('Delete ${esc(f).replace(/'/g, "\\'")} ? This can't be undone from here (though git history still has it).')">
+            <button class="danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>`;
+    })
+    .join("");
+  return layout(
+    "Images",
+    `<h1>Images</h1>
+     <p class="sub">public/newsletter/ — files no draft or sent issue currently links to.</p>
+     ${notice ? `<div class="card" style="border-color:#14b8a666;margin-bottom:16px"><p style="margin:0;color:#14b8a6">${esc(notice)}</p></div>` : ""}
+     <div class="card">
+       ${
+         unused.length
+           ? `<table><tr><th>File</th><th>Size</th><th></th></tr>${rows}</table>`
+           : `<p class="hint">Nothing unused right now — every file in public/newsletter/ is linked from some issue.</p>`
+       }
+     </div>`,
+    { active: "/images" }
   );
 }
 
@@ -853,6 +907,23 @@ const server = createServer(async (req, res) => {
 
     if (req.method === "GET" && p === "/") return sendHtml(await dashboardPage());
     if (req.method === "GET" && p === "/audience") return sendHtml(await audiencePage(url.searchParams.get("list") || undefined, url.searchParams.get("q") || undefined));
+    if (req.method === "GET" && p === "/images") return sendHtml(imagesPage(url.searchParams.get("notice") || undefined));
+    if (req.method === "POST" && p.startsWith("/delete-image/")) {
+      const filename = decodeURIComponent(p.slice("/delete-image/".length));
+      // Reject anything that isn't a plain filename inside IMAGE_DIR — no
+      // traversal, no absolute paths.
+      const target = path.join(IMAGE_DIR, filename);
+      if (path.dirname(target) !== IMAGE_DIR || !existsSync(target)) {
+        return redirect(`/images?notice=${encodeURIComponent(`${filename}: not found.`)}`);
+      }
+      // Re-check right before deleting — it may have been added to a draft
+      // in the seconds since the page loaded.
+      if (!unusedImages().includes(filename)) {
+        return redirect(`/images?notice=${encodeURIComponent(`${filename} is now referenced by an issue — not deleted.`)}`);
+      }
+      unlinkSync(target);
+      return redirect(`/images?notice=${encodeURIComponent(`Deleted ${filename}.`)}`);
+    }
     if (req.method === "GET" && p.startsWith("/edit/")) {
       const slug = decodeURIComponent(p.slice("/edit/".length));
       return sendHtml(editorPage(slug));

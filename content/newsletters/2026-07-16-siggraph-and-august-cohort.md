@@ -1,7 +1,7 @@
 title: Live Unreal classes are back — and three talks at SIGGRAPH
 date: 2026-08-02
 subject: AUG 5: Live Unreal Classes (& More!) from Alex Coulombe
-preheader: Live classes are back, and things are cooking in the lab
+preheader: Live classes are back & things are cooking in the lab
 ---
 ![siggraph](/newsletter/siggraph.jpg)
 
