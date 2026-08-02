@@ -592,11 +592,15 @@ export default function Training() {
           <div className="glass rounded-2xl p-7">
             <h3 className="font-bold">Free stuff first</h3>
             <p className="mt-2 text-sm leading-relaxed text-mist">
-              The{" "}
+              iBrews (
               <a href="https://youtube.com/@ibrews" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
-                YouTube channel
+                YouTube
               </a>{" "}
-              (&quot;I Wish I Learned This Sooner&quot;) and{" "}
+              /{" "}
+              <a href="https://twitter.com/ibrews" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
+                X
+              </a>
+              ) and{" "}
               <a href="https://uepodcast.com" className="text-snow underline decoration-teal/50 hover:decoration-teal" target="_blank" rel="noopener noreferrer">
                 The (Unofficial) Unreal Engine Podcast
               </a>{" "}
@@ -607,8 +611,10 @@ export default function Training() {
                 href="https://linktr.ee/unoffunrealpod"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+                className="flex items-center gap-2 rounded-full border border-line py-1.5 pl-1.5 pr-3.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logos/ue-podcast.jpg" alt="" className="h-5 w-5 rounded-full" />
                 Podcast on all platforms ↗
               </a>
             </div>

@@ -160,6 +160,7 @@ export function renderNewsletterEmail(opts: {
     : "";
   return `<!doctype html>
 <html>
+<head><meta charset="utf-8" /></head>
 <body style="margin:0;padding:0;background:#f4f4f5;font-family:${FONT_STACK}">
   ${preheader}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 16px">
     <tr><td align="center">
