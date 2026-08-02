@@ -8,6 +8,7 @@ import Reveal from "@/components/Reveal";
 import RepoCard from "@/components/RepoCard";
 import AppearancesSection from "@/components/AppearancesSection";
 import LatestVideo from "@/components/LatestVideo";
+import VenueMarquee from "@/components/VenueMarquee";
 import { repos, products, roles } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 
@@ -23,14 +24,6 @@ export const metadata: Metadata = {
     "Unreal Engine, Godot, Apple Vision Pro, and AI-agent workflows — live training from an Epic Games Authorized Instructor, open-source tools, and a decade of immersive design.",
   alternates: { canonical: "/" },
 };
-
-const venues = [
-  "SIGGRAPH", "HarvardXR", "Unreal Fest", "Venice Biennale", "AWE", "FMX",
-  "NXT BLD", "Lincoln Center", "Autodesk University", "Raindance Immersive",
-  "Park Avenue Armory", "Theatre Communications Group", "USITT", "NXT DEV",
-  "NATEAC", "Opera America", "VRTO",
-  "Columbia", "Princeton", "Cornell", "Yale",
-];
 
 export default function Home() {
   const featured = [...repos].sort((a, b) => b.stars - a.stars).slice(0, 6);
@@ -123,28 +116,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Venue marquee ─────────────────────────────────────── */}
-      <section className="border-y border-line py-5">
-        <Link
-          href="/appearances"
-          aria-label="See the full history of appearances"
-          className="group flex items-center transition-colors hover:bg-line/30"
-        >
-          <span className="shrink-0 pl-5 pr-8 font-mono text-xs uppercase tracking-widest text-teal transition-colors group-hover:text-snow">
-            Featured in:
-          </span>
-          <div className="overflow-hidden">
-            <div className="marquee-track flex w-max gap-12 whitespace-nowrap font-mono text-sm text-mist">
-              {[...venues, ...venues].map((v, i) => (
-                <span key={i} className="flex items-center gap-12">
-                  <span>{v}</span>
-                  <span className="text-teal">✦</span>
-                </span>
-              ))}
-            </div>
-          </div>
-        </Link>
-      </section>
+      <VenueMarquee />
 
       <AppearancesSection />
 
