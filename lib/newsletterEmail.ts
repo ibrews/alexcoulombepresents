@@ -20,6 +20,15 @@
 // <textarea>) renders as a visible line break; a BLANK line (Enter twice)
 // starts a whole new block instead. Deliberately the same small surface as
 // SimpleMarkdown.tsx — keep them in sync if you add a block type to one.
+//
+// Images tap/click through to their own full-resolution file by default —
+// unless wrapped in a link, standard nested-markdown style:
+// [![alt](u)](https://example.com) opens that URL instead. In a row, one or
+// more images can carry an explicit width via the title slot —
+// ![alt](u "44") takes 44% of the row; images without a title split
+// whatever's left equally. Useful when the images aren't the same aspect
+// ratio and equal columns make one look tiny (a wide logo next to square
+// badges, say).
 
 const FONT_STACK =
   "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
@@ -46,26 +55,36 @@ function escapeHtml(s: string): string {
     .replace(/\n/g, "<br>");
 }
 
+// A linked image [![alt](u "title")](href) is tried before a plain link so
+// its brackets don't get misread as [text](url); a plain image is tried
+// before a plain link for the same reason (shared [](  ) syntax, !-prefixed).
+// Bold before italic so **x** matches as bold, not *(*x*)*.
+const INLINE_RE =
+  /\[!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)\]\(([^)]+)\)|!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+
 function renderInline(text: string, siteUrl: string): string {
-  // Images first (own token so they don't get swallowed by the link regex —
-  // markdown images share [](  ) syntax with links, just prefixed with !).
-  // Bold before italic so **x** matches as bold, not *(*x*)*.
-  const re = /!\[([^\]]*)\]\(([^)]+)\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  const re = new RegExp(INLINE_RE);
   let out = "";
   let last = 0;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
     out += escapeHtml(text.slice(last, m.index));
     if (m[2] !== undefined) {
+      // Linked image: alt=m[1], src=m[2], title=m[3] (unused standalone), href=m[4].
       const src = absolutize(m[2], siteUrl);
-      out += `<a href="${src}" target="_blank" style="display:block;margin:16px 0"><img src="${src}" alt="${escapeHtml(m[1])}" style="max-width:100%;height:auto;border-radius:8px;display:block" /></a>`;
-    } else if (m[4] !== undefined) {
       const href = absolutize(m[4], siteUrl);
-      out += `<a href="${href}" style="color:${TEAL};text-decoration:underline">${escapeHtml(m[3])}</a>`;
-    } else if (m[5] !== undefined) {
-      out += `<strong style="color:${INK}">${escapeHtml(m[5])}</strong>`;
+      out += `<a href="${href}" target="_blank" style="display:block;width:100%;margin:16px 0"><img src="${src}" alt="${escapeHtml(m[1])}" style="max-width:100%;height:auto;border-radius:8px;display:block" /></a>`;
+    } else if (m[6] !== undefined) {
+      // Plain image: alt=m[5], src=m[6] — click-through defaults to itself.
+      const src = absolutize(m[6], siteUrl);
+      out += `<a href="${src}" target="_blank" style="display:block;width:100%;margin:16px 0"><img src="${src}" alt="${escapeHtml(m[5])}" style="max-width:100%;height:auto;border-radius:8px;display:block" /></a>`;
+    } else if (m[9] !== undefined) {
+      const href = absolutize(m[9], siteUrl);
+      out += `<a href="${href}" style="color:${TEAL};text-decoration:underline">${escapeHtml(m[8])}</a>`;
+    } else if (m[10] !== undefined) {
+      out += `<strong style="color:${INK}">${escapeHtml(m[10])}</strong>`;
     } else {
-      out += `<em>${escapeHtml(m[6])}</em>`;
+      out += `<em>${escapeHtml(m[11])}</em>`;
     }
     last = m.index + m[0].length;
   }
@@ -80,18 +99,32 @@ function captionText(block: string): string | null {
   return m ? m[1] : null;
 }
 
-// A block of 2+ image refs and nothing else → side-by-side row. Returns the
-// [alt, url] pairs, or null if the block isn't purely images (alt text can
-// itself contain spaces, so this can't just whitespace-split the block —
-// it extracts every ![]() match, then checks nothing but whitespace is left).
-function imageRow(block: string): [string, string][] | null {
-  const re = /!\[([^\]]*)\]\(([^)]+)\)/g;
-  const pairs: [string, string][] = [];
-  const stripped = block.replace(re, (_, alt, url) => {
-    pairs.push([alt, url]);
+type ImgToken = { alt: string; url: string; title?: string; href?: string };
+
+// A block of 2+ image refs (plain or linked) and nothing else → side-by-side
+// row. Returns each image's alt/url/title/href, or null if the block isn't
+// purely images (alt text can itself contain spaces, so this can't just
+// whitespace-split the block — it extracts every image match, then checks
+// nothing but whitespace is left).
+function imageRow(block: string): ImgToken[] | null {
+  const re = /\[!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)\]\(([^)]+)\)|!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)/g;
+  const tokens: ImgToken[] = [];
+  const stripped = block.replace(re, (_m, la, lu, lt, lh, pa, pu, pt) => {
+    if (lu !== undefined) tokens.push({ alt: la, url: lu, title: lt, href: lh });
+    else tokens.push({ alt: pa, url: pu, title: pt });
     return "";
   });
-  return pairs.length >= 2 && stripped.trim() === "" ? pairs : null;
+  return tokens.length >= 2 && stripped.trim() === "" ? tokens : null;
+}
+
+// Per-image width %, honoring an explicit title (e.g. "44") and splitting
+// whatever's left equally among images that don't specify one.
+function rowWidths(tokens: ImgToken[]): number[] {
+  const specified = tokens.map((t) => (t.title && /^\d+(\.\d+)?$/.test(t.title) ? parseFloat(t.title) : null));
+  const specifiedSum = specified.reduce((sum: number, w) => sum + (w ?? 0), 0);
+  const unspecifiedCount = specified.filter((w) => w === null).length;
+  const remainingShare = unspecifiedCount > 0 ? Math.max(0, 100 - specifiedSum) / unspecifiedCount : 0;
+  return specified.map((w) => w ?? remainingShare);
 }
 
 /** The email body only — no <html>/<head>, so callers can append a footer. */
@@ -108,21 +141,23 @@ export function markdownToEmailHtml(markdown: string, siteUrl: string): string {
       html.push(
         `<h2 style="font-size:20px;font-weight:700;color:${INK};margin:28px 0 12px">${renderInline(b.slice(3), siteUrl)}</h2>`
       );
-    } else if (/^!\[[^\]]*\]\([^)]+\)$/.test(b)) {
-      // A paragraph that's ONLY an image — render at full block width, not
-      // wrapped in a <p>, so it doesn't inherit paragraph line-height.
+    } else if (/^(?:\[!\[[^\]]*\]\([^)"]+?(?:\s+"[^"]*")?\)\]\([^)]+\)|!\[[^\]]*\]\([^)"]+?(?:\s+"[^"]*")?\))$/.test(b)) {
+      // A paragraph that's ONLY an image (plain or linked) — render at full
+      // block width, not wrapped in a <p>, so it doesn't inherit paragraph
+      // line-height.
       html.push(renderInline(b, siteUrl));
     } else if (captionText(b) !== null) {
       html.push(
         `<p style="font-size:13px;line-height:1.5;color:${MIST};text-align:center;font-style:italic;margin:0 0 20px">${renderInline(captionText(b)!, siteUrl)}</p>`
       );
     } else if (images) {
-      const width = `${(100 / images.length).toFixed(4)}%`;
+      const widths = rowWidths(images);
       const cells = images
-        .map(([alt, url], i) => {
-          const src = absolutize(url, siteUrl);
+        .map((img, i) => {
+          const src = absolutize(img.url, siteUrl);
+          const href = img.href ? absolutize(img.href, siteUrl) : src;
           const pad = images.length === 1 ? "" : i === 0 ? "padding-right:8px" : i === images.length - 1 ? "padding-left:8px" : "padding-left:8px;padding-right:8px";
-          return `<td width="${width}" style="${pad}"><a href="${src}" target="_blank" style="display:block"><img src="${src}" alt="${escapeHtml(alt)}" style="width:100%;height:auto;border-radius:8px;display:block" /></a></td>`;
+          return `<td width="${widths[i].toFixed(4)}%" style="${pad}"><a href="${href}" target="_blank" style="display:block;width:100%"><img src="${src}" alt="${escapeHtml(img.alt)}" style="width:100%;height:auto;border-radius:8px;display:block" /></a></td>`;
         })
         .join("");
       html.push(

@@ -427,6 +427,9 @@ function editorPage(slug) {
   <a href="/" class="brand" style="text-decoration:none">✦ Studio</a>
   <span style="font-family:monospace;font-size:13px;color:#7a7a85">/${esc(slug)}.md</span>${sentBanner}
   <button class="secondary" id="save">Save</button>
+  <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:#7a7a85;cursor:pointer;user-select:none">
+    <input type="checkbox" id="autosave" /> Autosave
+  </label>
   ${sendBtn}
   <span class="chips" id="status" style="font-size:12px;color:#7a7a85"></span>
 </header>
@@ -481,6 +484,21 @@ function editorPage(slug) {
   function clearError() { $('errorBanner').classList.remove('show'); }
   function flash(msg) { $('status').textContent = msg; setTimeout(() => $('status').textContent = '', 4000); }
 
+  // Autosave: on by default, remembered per-browser. Debounced separately
+  // from the preview render so it doesn't fire on every keystroke.
+  const AUTOSAVE_KEY = 'newsletter-studio-autosave';
+  $('autosave').checked = localStorage.getItem(AUTOSAVE_KEY) !== 'off';
+  $('autosave').addEventListener('change', () => {
+    localStorage.setItem(AUTOSAVE_KEY, $('autosave').checked ? 'on' : 'off');
+    if ($('autosave').checked && dirty) scheduleAutosave();
+  });
+  let autosaveTimer;
+  function scheduleAutosave() {
+    if (!$('autosave').checked) return;
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(save, 1200);
+  }
+
   let renderTimer;
   async function renderNow() {
     try {
@@ -497,8 +515,8 @@ function editorPage(slug) {
     } catch (err) { showError('Preview failed: ' + err.message); }
   }
   function scheduleRender() { clearTimeout(renderTimer); renderTimer = setTimeout(renderNow, 350); }
-  $('body').addEventListener('input', () => { dirty = true; scheduleRender(); });
-  ['title','date','subject','preheader'].forEach((id) => $(id).addEventListener('input', () => { dirty = true; }));
+  $('body').addEventListener('input', () => { dirty = true; scheduleRender(); scheduleAutosave(); });
+  ['title','date','subject','preheader'].forEach((id) => $(id).addEventListener('input', () => { dirty = true; scheduleAutosave(); }));
   renderNow();
 
   async function save() {
@@ -539,7 +557,7 @@ function editorPage(slug) {
     } else {
       ta.value = ta.value.slice(0, start) + before + (sel || 'text') + after + ta.value.slice(end);
     }
-    dirty = true; scheduleRender(); ta.focus();
+    dirty = true; scheduleRender(); scheduleAutosave(); ta.focus();
   }
   document.querySelectorAll('.toolbar button').forEach((b) => b.addEventListener('click', () => applyMd(b.dataset.md)));
 
@@ -595,6 +613,7 @@ function editorPage(slug) {
       dirty = true;
       flash('Inserted ' + results.length + ' image' + (results.length > 1 ? 's' : ''));
       scheduleRender();
+      scheduleAutosave();
     } catch (err) { $('status').textContent = ''; showError('Upload failed: ' + err.message); }
   }
   const dz = $('dropzone');

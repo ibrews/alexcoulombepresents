@@ -1,6 +1,6 @@
 title: Live Unreal classes are back — and three talks at SIGGRAPH
 date: 2026-08-02
-subject: WEDNESDAY: Live Unreal Classes (& More!) from Alex Coulombe
+subject: AUG 5: Live Unreal Classes (& More!) from Alex Coulombe
 preheader: Live classes are back, and things are cooking in the lab
 ---
 ![siggraph](/newsletter/siggraph.jpg)
@@ -12,9 +12,7 @@ Bottom: a smattering of amazing folks in LA*
 
 Hey folks!
 
-Alex here with some news. 
-
-Most importantly:
+Alex here with some news. Most importantly:
 
 ## Live Unreal Engine classes start Wednesday
 
@@ -58,11 +56,11 @@ And of course there's always a ton of free and open source work available on my 
 
 ## Don't you also run an XR studio?
 
-Yes! [Agile Lens](https://www.agilelens.com) has been busy, and that's the main reason I haven't been able to carve out more time for teaching. Recently we celebrated ten years of immersive work, and of course if your team wants to go beyond training and needs full-service consulting for XR, spatial computing, or AI-agent pipelines built, that's the door: [agilelens.com/contact](https://agilelens.com/contact). Be sure to sign up there for the Agile Lens newsletter — Unreal NYC meetup nights, live shows, demos, betas — all separate from what you'll get from this newsletter.
+Yes! [Agile Lens](https://www.agilelens.com) has been busy, and that's the main reason I haven't been able to carve out more time for teaching. Recently we celebrated ten years of immersive work, and of course if your team wants to go beyond training and needs full-service consulting for XR, spatial computing, or complex Unreal Engine pipelines, that's the door: [agilelens.com/contact](https://agilelens.com/contact). Be sure to sign up there for the Agile Lens newsletter — Unreal NYC meetup nights, live shows, demos, betas — all separate from what you'll get from this newsletter.
 
 Anyway, that's all for now! Any questions? Drop me a line anytime by simply responding to this email, and I hope to see you this Wednesday.
 
 — Alex
 *Friendly neighborhood Unreal authorized instructor*
 
-![instructor-partner-2026](/newsletter/instructor-partner-2026.png) ![acp logo](/newsletter/acp-logo.png) ![training-partner-2026](/newsletter/training-partner-2026.png)
+[![instructor-partner-2026](/newsletter/instructor-partner-2026.png "24")](https://credential.unrealengine.com/ae75c735-f7c6-4fc5-a633-f400ec2efd4b#acc.Mpe8GrAh) [![acp logo](/newsletter/acp-logo.png "54")](https://alexcoulombepresents.com) [![training-partner-2026](/newsletter/training-partner-2026.png "22")](https://credential.unrealengine.com/2e350d0f-ee6d-4239-a596-975ff749d550#acc.H86EwZ9F)

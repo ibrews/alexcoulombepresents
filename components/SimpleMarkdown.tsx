@@ -5,6 +5,12 @@ import React from "react";
 // dependency) and matched to what the newsletter issues actually use; extend
 // as issues need. Keep in sync with lib/newsletterEmail.ts (the email-HTML
 // version of this same renderer) if you add a block/inline type here.
+//
+// Images open their own full-resolution file in a new tab by default —
+// unless wrapped in a link, standard nested-markdown style:
+// [![alt](u)](https://example.com) goes there instead. In a row, give one or
+// more images an explicit width via the title slot — ![alt](u "44") takes
+// 44% of the row; images without a title split whatever's left equally.
 
 // Plain HTML collapses a raw "\n" to nothing visible — split on it and
 // interleave real <br /> elements so a single line break WITHIN a block (one
@@ -21,21 +27,27 @@ function withLineBreaks(text: string, keyBase: string): React.ReactNode[] {
   return out;
 }
 
+// A linked image [![alt](u "title")](href) is tried before a plain link so
+// its brackets don't get misread as [text](url); a plain image is tried
+// before a plain link for the same reason (shared [](  ) syntax, !-prefixed).
+// Bold before italic so **x** matches as bold, not *(*x*)*.
+const INLINE_RE =
+  /\[!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)\]\(([^)]+)\)|!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+
 function renderInline(text: string, keyBase: string): React.ReactNode[] {
   const out: React.ReactNode[] = [];
-  // Images first — they share [](  ) syntax with links, just !-prefixed.
-  // Bold before italic so **x** matches as bold, not *(*x*)*.
-  const re = /!\[([^\]]*)\]\(([^)]+)\)|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  const re = new RegExp(INLINE_RE);
   let last = 0;
   let m: RegExpExecArray | null;
   let i = 0;
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) out.push(...withLineBreaks(text.slice(last, m.index), `${keyBase}-t${i}`));
     if (m[2] !== undefined) {
+      // Linked image: alt=m[1], src=m[2], title=m[3] (unused standalone), href=m[4].
       out.push(
         <a
           key={`${keyBase}-${i++}`}
-          href={m[2]}
+          href={m[4]}
           target="_blank"
           rel="noopener noreferrer"
           className="my-4 block transition-opacity hover:opacity-90"
@@ -44,20 +56,34 @@ function renderInline(text: string, keyBase: string): React.ReactNode[] {
           <img src={m[2]} alt={m[1]} className="block max-w-full rounded-lg" />
         </a>
       );
-    } else if (m[4] !== undefined) {
+    } else if (m[6] !== undefined) {
+      // Plain image: alt=m[5], src=m[6] — click-through defaults to itself.
       out.push(
-        <a key={`${keyBase}-${i++}`} href={m[4]} className="text-teal underline underline-offset-2 hover:text-snow">
-          {m[3]}
+        <a
+          key={`${keyBase}-${i++}`}
+          href={m[6]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="my-4 block transition-opacity hover:opacity-90"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={m[6]} alt={m[5]} className="block max-w-full rounded-lg" />
         </a>
       );
-    } else if (m[5] !== undefined) {
+    } else if (m[9] !== undefined) {
+      out.push(
+        <a key={`${keyBase}-${i++}`} href={m[9]} className="text-teal underline underline-offset-2 hover:text-snow">
+          {m[8]}
+        </a>
+      );
+    } else if (m[10] !== undefined) {
       out.push(
         <strong key={`${keyBase}-${i++}`} className="text-snow">
-          {withLineBreaks(m[5], `${keyBase}-b${i}`)}
+          {withLineBreaks(m[10], `${keyBase}-b${i}`)}
         </strong>
       );
     } else {
-      out.push(<em key={`${keyBase}-${i++}`}>{withLineBreaks(m[6], `${keyBase}-i${i}`)}</em>);
+      out.push(<em key={`${keyBase}-${i++}`}>{withLineBreaks(m[11], `${keyBase}-i${i}`)}</em>);
     }
     last = m.index + m[0].length;
   }
@@ -72,17 +98,31 @@ function captionText(block: string): string | null {
   return m ? m[1] : null;
 }
 
-// A block of 2+ image refs and nothing else → side-by-side row (mirrors
-// lib/newsletterEmail.ts's imageRow, kept here since this file has no
-// import path to that one — a JSX component vs. a plain string renderer).
-function imageRow(block: string): { alt: string; url: string }[] | null {
-  const re = /!\[([^\]]*)\]\(([^)]+)\)/g;
-  const pairs: { alt: string; url: string }[] = [];
-  const stripped = block.replace(re, (_, alt, url) => {
-    pairs.push({ alt, url });
+type ImgToken = { alt: string; url: string; title?: string; href?: string };
+
+// A block of 2+ image refs (plain or linked) and nothing else → side-by-side
+// row (mirrors lib/newsletterEmail.ts's imageRow, kept here since this file
+// has no import path to that one — a JSX component vs. a plain string
+// renderer).
+function imageRow(block: string): ImgToken[] | null {
+  const re = /\[!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)\]\(([^)]+)\)|!\[([^\]]*)\]\(([^)"]+?)(?:\s+"([^"]*)")?\)/g;
+  const tokens: ImgToken[] = [];
+  const stripped = block.replace(re, (_m, la, lu, lt, lh, pa, pu, pt) => {
+    if (lu !== undefined) tokens.push({ alt: la, url: lu, title: lt, href: lh });
+    else tokens.push({ alt: pa, url: pu, title: pt });
     return "";
   });
-  return pairs.length >= 2 && stripped.trim() === "" ? pairs : null;
+  return tokens.length >= 2 && stripped.trim() === "" ? tokens : null;
+}
+
+// Per-image width %, honoring an explicit title (e.g. "44") and splitting
+// whatever's left equally among images that don't specify one.
+function rowWidths(tokens: ImgToken[]): number[] {
+  const specified = tokens.map((t) => (t.title && /^\d+(\.\d+)?$/.test(t.title) ? parseFloat(t.title) : null));
+  const specifiedSum = specified.reduce((sum: number, w) => sum + (w ?? 0), 0);
+  const unspecifiedCount = specified.filter((w) => w === null).length;
+  const remainingShare = unspecifiedCount > 0 ? Math.max(0, 100 - specifiedSum) / unspecifiedCount : 0;
+  return specified.map((w) => w ?? remainingShare);
 }
 
 export default function SimpleMarkdown({ markdown }: { markdown: string }) {
@@ -110,20 +150,38 @@ export default function SimpleMarkdown({ markdown }: { markdown: string }) {
         }
         const row = imageRow(b);
         if (row) {
+          const widths = rowWidths(row);
           return (
-            <div key={bi} className="grid gap-4 my-4" style={{ gridTemplateColumns: `repeat(${row.length}, 1fr)` }}>
-              {row.map((img, i) => (
-                <a
-                  key={i}
-                  href={img.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block transition-opacity hover:opacity-90"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img.url} alt={img.alt} className="block w-full rounded-lg" />
-                </a>
-              ))}
+            <div
+              key={bi}
+              className="grid gap-4 my-4"
+              style={{ gridTemplateColumns: widths.map((w) => `${w}%`).join(" ") }}
+            >
+              {row.map((img, i) =>
+                img.href ? (
+                  <a
+                    key={i}
+                    href={img.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block transition-opacity hover:opacity-90"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img.url} alt={img.alt} className="block w-full rounded-lg" />
+                  </a>
+                ) : (
+                  <a
+                    key={i}
+                    href={img.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block transition-opacity hover:opacity-90"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img.url} alt={img.alt} className="block w-full rounded-lg" />
+                  </a>
+                )
+              )}
             </div>
           );
         }
