@@ -46,9 +46,9 @@ Come hang out. This first one will be loose. I'll teach some Unreal basics, take
 
 A few things in active development, hardware-verified and getting closer to a real release:
 
-- **Forage** — an AI-first scout for the Fab/Marketplace packs you already own. You describe what you need ("castle with horses running around the gates"), it finds the 2–3 best-fit packs in your own library and installs the hero assets.
-- **UnRealityKit Bridge** — UE simulation driving RealityKit rendering, for genuinely native Vision Pro apps built on Unreal logic. Also in the early phases of a similar export to Pixar's Renderman.
-- **Pinchwork** — a universal OpenXR hand-tracking template for Unreal (including Apple Vision Pro!), so you stop rebuilding the same hand-interaction rig per project and device.
+- [Forage](https://alexcoulombepresents.com/lab/forage) — an AI-first scout for the Fab/Marketplace packs you already own. You describe what you need ("castle with horses running around the gates"), it finds the 2–3 best-fit packs in your own library and installs the hero assets.
+- [UnRealityKit Bridge](https://alexcoulombepresents.com/lab/unrealitykit-bridge) — UE simulation driving RealityKit rendering, for genuinely native Vision Pro apps built on Unreal logic. Also in the early phases of a similar export to [Pixar's Renderman](https://alexcoulombepresents.com/lab/renderman-bridge).
+- [Pinchwork](https://alexcoulombepresents.com/lab/pinchwork) — a universal OpenXR hand-tracking template for Unreal (including Apple Vision Pro!), so you stop rebuilding the same hand-interaction rig per project and device.
 
 None of these are for sale yet but [the Lab](https://www.alexcoulombepresents.com/lab) has early-access signup for each and it's been exciting to see those waitlists grow. I'm also thinking that if I create a monthly subscription to our training content, some of these tools will be available for free as long you're subscribed. We'll see !
 
