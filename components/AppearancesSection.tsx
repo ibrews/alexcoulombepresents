@@ -5,15 +5,11 @@ import { CATEGORY_STYLE } from "@/lib/categories";
 
 export function Card({ a, past }: { a: Appearance; past?: boolean }) {
   const style = CATEGORY_STYLE[categoryForAppearance(a)];
-  return (
-    <a
-      href={a.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`glass flex h-full gap-4 rounded-2xl p-6 transition hover:border-teal/40 ${
-        past ? "opacity-70" : ""
-      }`}
-    >
+  const className = `glass flex h-full gap-4 rounded-2xl p-6 transition hover:border-teal/40 ${
+    past ? "opacity-70" : ""
+  }`;
+  const body = (
+    <>
       {a.image && (
         <Image
           src={a.image}
@@ -35,6 +31,16 @@ export function Card({ a, past }: { a: Appearance; past?: boolean }) {
           {a.date} · {a.location}
         </p>
       </div>
+    </>
+  );
+
+  if (!a.url) {
+    return <div className={className}>{body}</div>;
+  }
+
+  return (
+    <a href={a.url} target="_blank" rel="noopener noreferrer" className={className}>
+      {body}
     </a>
   );
 }

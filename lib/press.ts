@@ -123,18 +123,14 @@ export const pressMentions: PressMention[] = [
     url: "https://www.engadget.com/2018/03/06/intel-is-funding-the-future-of-large-scale-vr-environments/",
   },
   {
-    slug: "fabio-palvelli-interview-2018",
-    kind: "Press",
-    outlet: "Fabio Palvelli",
-    title: "Talking VR with Alex Coulombe",
-    date: "2018",
-    dateISO: "2018-06-15T00:00:00Z",
-    url: "http://fabiopalvelli.com/",
-  },
-  {
+    // Two press-mentions.md lines ("Im-Arch" and "Fabio Palvelli") both cite
+    // the identical title "Talking VR with Alex Coulombe" — the YouTube
+    // video's real channel (confirmed via oEmbed) is Fabio Palvelli, who
+    // conducted this interview for Im-Arch. Same underlying interview,
+    // merged rather than double-counted.
     slug: "im-arch-talking-vr-2018",
     kind: "Podcast",
-    outlet: "Im-Arch",
+    outlet: "Im-Arch (interview by Fabio Palvelli)",
     title: "Talking VR with Alex Coulombe",
     date: "2018",
     dateISO: "2018-06-15T00:00:00Z",
@@ -147,7 +143,6 @@ export const pressMentions: PressMention[] = [
     title: "Judge",
     date: "2018",
     dateISO: "2018-06-15T00:00:00Z",
-    url: "http://3dawards.cgarchitect.com/",
   },
   {
     slug: "that-bim-girl-2018",
@@ -426,5 +421,23 @@ export const pressMentions: PressMention[] = [
     date: "Sep 2024",
     dateISO: "2024-09-15T00:00:00Z",
     url: "https://www.uploadvr.com/alex-coulombe-orion-glasses-hands-on/",
+  },
+  {
+    slug: "ue-podcast-webxr-pixel-streaming-2023",
+    kind: "Podcast",
+    outlet: "The (Unofficial) Unreal Engine Podcast",
+    title: "Is WebXR Pixel Streaming the Future?",
+    date: "2023",
+    dateISO: "2023-06-15T00:00:00Z",
+    url: "https://youtu.be/QS_SsrxdQGM",
+  },
+  {
+    slug: "ue-podcast-vision-pro-support-2024",
+    kind: "Podcast",
+    outlet: "The (Unofficial) Unreal Engine Podcast",
+    title: "Will Unreal Engine Support Apple Vision Pro?",
+    date: "2024",
+    dateISO: "2024-06-15T00:00:00Z",
+    url: "https://youtu.be/Y8HOQPpkRPg",
   },
 ];

@@ -19,7 +19,12 @@ export type Appearance = {
   date: string; // human-readable range, e.g. "Jul 18–19, 2026"
   endsISO: string; // instant the appearance is over; past this it reads as history
   location: string;
-  url: string;
+  // Link hierarchy, in order of preference: 1) video of the talk, 2) deck,
+  // 3) conference listing for his specific session, 4) anything naming him
+  // or Agile Lens by name. A generic org homepage that doesn't show what
+  // role he played is worse than no link — omit `url` rather than pad it
+  // with one.
+  url?: string;
   image?: string; // path under /public
 };
 
@@ -59,7 +64,6 @@ export const appearances: Appearance[] = [
     date: "Jun 2014",
     endsISO: "2014-06-30T00:00:00Z",
     location: "San Francisco, CA",
-    url: "https://www.operaamerica.org/",
   },
   {
     slug: "nyvr-designing-theaters-2015",
@@ -129,7 +133,6 @@ export const appearances: Appearance[] = [
     date: "2017",
     endsISO: "2017-06-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://www.jumpintovrfest.com/",
   },
   {
     slug: "tcg-petting-zoo-2017",
@@ -149,7 +152,6 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://www.nyvrexpo.com/",
   },
   {
     slug: "vr-strategy-conference-2018",
@@ -159,7 +161,6 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "San Francisco, CA",
-    url: "https://www.vrsconference.com/",
   },
   {
     slug: "smithsonian-vr-2018",
@@ -169,7 +170,6 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "Washington, DC",
-    url: "https://www.si.edu/",
   },
   {
     slug: "unreal-engine-london-2018",
@@ -199,7 +199,6 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "London, UK",
-    url: "https://www.iteac.co.uk/",
   },
   {
     slug: "im-arch-venice-2018",
@@ -209,7 +208,6 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "Venice, Italy",
-    url: "http://www.im-arch.com/",
   },
   {
     slug: "propelify-2018",
@@ -219,7 +217,6 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-09-30T00:00:00Z",
     location: "Hoboken, NJ",
-    url: "https://propelify.com/festival18/",
   },
   {
     slug: "vrara-webinar-2018",
@@ -229,7 +226,6 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "Virtual",
-    url: "http://www.thevrara.com/webinars/",
   },
   {
     slug: "smps-northeast-2018",
@@ -249,7 +245,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-11-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://namt.org/",
   },
   {
     slug: "state-of-art-adx-2019",
@@ -259,7 +254,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-06-30T00:00:00Z",
     location: "Mogliano Veneto, Italy",
-    url: "https://www.stateofartacademy.com/",
   },
   {
     slug: "nyc-media-lab-summit-2019",
@@ -269,7 +263,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-11-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://nycmedialab.org/",
   },
   {
     slug: "venice-film-festival-2019",
@@ -309,7 +302,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-06-30T00:00:00Z",
     location: "New Haven, CT (Yale)",
-    url: "https://ieee-gem.space/",
   },
   {
     slug: "tcg-national-2019",
@@ -339,7 +331,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-06-30T00:00:00Z",
     location: "St. Johnsbury, VT",
-    url: "https://www.stjacademy.org/",
   },
   {
     slug: "sxsw-2019",
@@ -359,7 +350,6 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-06-30T00:00:00Z",
     location: "Singapore",
-    url: "http://www.im-arch.asia/",
   },
   {
     slug: "computational-aec-melbourne-2020",
@@ -379,7 +369,6 @@ export const appearances: Appearance[] = [
     date: "Jun 5, 2020",
     endsISO: "2020-06-05T23:00:00Z",
     location: "Virtual",
-    url: "https://www.tcg.org/",
   },
   {
     slug: "realtime-conference-2020-multiuser",
@@ -399,7 +388,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual",
-    url: "http://5thwallforum.com/",
   },
   {
     slug: "nxtbld-inside-out-2020",
@@ -409,7 +397,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual",
-    url: "https://nxtbld.com/",
+    url: "https://youtu.be/13y52rZw9ns",
   },
   {
     slug: "here-fest-2020",
@@ -419,7 +407,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual",
-    url: "https://www.herefest.com/",
   },
   {
     slug: "nyu-tisch-brendan-bradley-2020",
@@ -429,7 +416,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://tisch.nyu.edu/",
   },
   {
     slug: "currents-new-media-2020",
@@ -439,7 +425,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Santa Fe, NM",
-    url: "https://currentscon.org/",
   },
   {
     slug: "realtime-conference-2020-storytelling",
@@ -469,7 +454,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual",
-    url: "http://www.tyausa.org/",
   },
   {
     slug: "cpd-vr-dubai-2020",
@@ -529,7 +513,6 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Syracuse, NY",
-    url: "https://soa.syr.edu/",
   },
   {
     slug: "nvidia-gtc-heavenue-2021",
@@ -549,7 +532,7 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-06-30T00:00:00Z",
     location: "London, UK",
-    url: "https://nxtbld.com/web-stream-2021/",
+    url: "https://www.youtube.com/watch?v=ulJaAzDqn9w",
   },
   {
     slug: "power-up-dance-ireland-2021",
@@ -559,7 +542,7 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-06-30T00:00:00Z",
     location: "Virtual (Dublin)",
-    url: "https://www.danceireland.ie/whats-on/events/power-up-exploring-the-intersection-of-art-technology/",
+    url: "https://youtu.be/X6MWshB0JL8",
   },
   {
     slug: "siggraph-2021-vr-theatre-no-budget",
@@ -629,7 +612,6 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-05-30T00:00:00Z",
     location: "Syracuse, NY",
-    url: "https://soa.syr.edu/",
   },
   {
     slug: "nyu-itp-guest-critic-2021",
@@ -639,7 +621,6 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-05-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://itp.nyu.edu/",
   },
   {
     slug: "columbia-arch-guest-critic-2021",
@@ -649,7 +630,6 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-05-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://www.arch.columbia.edu/",
   },
   {
     slug: "realtime-conference-2021-host",
@@ -659,7 +639,6 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-04-26T00:00:00Z",
     location: "Virtual",
-    url: "https://realtimeconference.com/videos/",
   },
   {
     slug: "nyu-steinhardt-2021",
@@ -669,7 +648,6 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-06-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://steinhardt.nyu.edu/",
   },
   {
     slug: "5th-wall-forum-reveal-2021",
@@ -679,7 +657,6 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-06-30T00:00:00Z",
     location: "Virtual",
-    url: "http://5thwallforum.com/",
   },
   {
     slug: "vienna-civa-festival-2021",
@@ -729,7 +706,6 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-10-30T00:00:00Z",
     location: "Seoul, South Korea",
-    url: "https://www.spaf.or.kr/",
   },
   {
     slug: "unreal-fest-2022-new-orleans",
@@ -759,7 +735,6 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-06-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://www.unrealengine.com/",
   },
   {
     slug: "cornell-guest-lecture-2022",
@@ -769,7 +744,6 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-06-30T00:00:00Z",
     location: "Ithaca, NY",
-    url: "https://www.cornell.edu/",
   },
   {
     slug: "awe-2022-xr-boot-camp",
@@ -789,7 +763,6 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-06-30T00:00:00Z",
     location: "Seoul, South Korea",
-    url: "https://www.karts.ac.kr/",
   },
   {
     slug: "gdc-2022-live-vr-actors",
@@ -799,7 +772,6 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-03-25T00:00:00Z",
     location: "San Francisco, CA",
-    url: "https://youtu.be/X6MWshB0JL8?t=2820",
   },
   {
     slug: "usitt-2022",
@@ -819,7 +791,6 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-06-30T00:00:00Z",
     location: "New York, NY",
-    url: "https://tisch.nyu.edu/",
   },
   {
     slug: "chapman-university-2022",
@@ -829,7 +800,6 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-06-30T00:00:00Z",
     location: "Orange, CA",
-    url: "https://www.chapman.edu/",
   },
   {
     slug: "sxsw-2023-xr-live-events",
@@ -839,7 +809,6 @@ export const appearances: Appearance[] = [
     date: "Mar 2023",
     endsISO: "2023-03-15T00:00:00Z",
     location: "Austin, TX",
-    url: "https://www.sxsw.com/",
   },
   {
     slug: "nvidia-vcr-2023",
@@ -849,7 +818,16 @@ export const appearances: Appearance[] = [
     date: "Feb 2023",
     endsISO: "2023-02-28T00:00:00Z",
     location: "Virtual",
-    url: "https://www.nvidia.com/gtc/",
+  },
+  {
+    slug: "nyvr-2023",
+    role: "Speaker",
+    title: "Agile Lens Update",
+    org: "NYVR",
+    date: "Jun 2023",
+    endsISO: "2023-06-15T00:00:00Z",
+    location: "New York, NY",
+    url: "https://youtu.be/7GH-bPLj_NM",
   },
   {
     slug: "vrto-2023",
@@ -859,7 +837,6 @@ export const appearances: Appearance[] = [
     date: "Jul 2023",
     endsISO: "2023-07-15T00:00:00Z",
     location: "Toronto, Canada",
-    url: "https://vrto.org/",
   },
   {
     slug: "digital-fashion-week-2023",
@@ -869,7 +846,6 @@ export const appearances: Appearance[] = [
     date: "Sep 2023",
     endsISO: "2023-09-15T00:00:00Z",
     location: "New York, NY",
-    url: "https://youtu.be/QS_SsrxdQGM",
   },
   {
     slug: "unreal-fest-2023-metahuman",
@@ -879,7 +855,6 @@ export const appearances: Appearance[] = [
     date: "Oct 2023",
     endsISO: "2023-10-15T00:00:00Z",
     location: "Seattle, WA",
-    url: "https://www.unrealengine.com/en-US/events",
   },
   {
     slug: "ubc-guest-speaker-2023",
@@ -889,7 +864,6 @@ export const appearances: Appearance[] = [
     date: "Nov 2023",
     endsISO: "2023-11-15T00:00:00Z",
     location: "Vancouver, Canada",
-    url: "https://www.ubc.ca/",
   },
   {
     slug: "sva-2023",
@@ -899,7 +873,6 @@ export const appearances: Appearance[] = [
     date: "Dec 2023",
     endsISO: "2023-12-15T00:00:00Z",
     location: "New York, NY",
-    url: "https://www.sva.edu/",
   },
   {
     slug: "worlds-in-play-2024",
@@ -909,7 +882,6 @@ export const appearances: Appearance[] = [
     date: "Jan 2024",
     endsISO: "2024-01-31T00:00:00Z",
     location: "Chicago, IL",
-    url: "https://youtu.be/Y8HOQPpkRPg",
   },
   {
     slug: "unreal-fest-gold-coast-2024",
@@ -919,7 +891,6 @@ export const appearances: Appearance[] = [
     date: "May 29–30, 2024",
     endsISO: "2024-05-30T23:00:00Z",
     location: "Gold Coast, Australia",
-    url: "https://www.unrealengine.com/en-US/events",
   },
   {
     slug: "unreal-fest-prague-2024",
@@ -929,7 +900,6 @@ export const appearances: Appearance[] = [
     date: "Jun 18–20, 2024",
     endsISO: "2024-06-20T23:00:00Z",
     location: "Prague, Czech Republic",
-    url: "https://www.unrealengine.com/en-US/events",
   },
   {
     slug: "svvr-connect-2024",
@@ -939,7 +909,7 @@ export const appearances: Appearance[] = [
     date: "Sep 2024",
     endsISO: "2024-09-15T00:00:00Z",
     location: "Santa Clara, CA",
-    url: "https://youtu.be/OWwPUlGJr8k",
+    url: "https://youtu.be/9q7GIQVh2Nc",
   },
   {
     slug: "unreal-fest-seattle-2024",
@@ -949,7 +919,7 @@ export const appearances: Appearance[] = [
     date: "Oct 2024",
     endsISO: "2024-10-15T00:00:00Z",
     location: "Seattle, WA",
-    url: "https://www.unrealengine.com/en-US/events",
+    url: "https://youtu.be/OWwPUlGJr8k",
   },
   {
     slug: "unreal-day-belgrade-2024",
@@ -959,7 +929,7 @@ export const appearances: Appearance[] = [
     date: "Oct 2024",
     endsISO: "2024-10-20T00:00:00Z",
     location: "Belgrade, Serbia",
-    url: "https://www.unrealengine.com/en-US/events",
+    url: "https://youtu.be/9q7GIQVh2Nc",
   },
   {
     slug: "digital-body-festival-2024",
@@ -969,7 +939,6 @@ export const appearances: Appearance[] = [
     date: "Nov 2024",
     endsISO: "2024-11-15T00:00:00Z",
     location: "New York, NY",
-    url: "https://uepodcast.com/",
   },
   {
     slug: "raindance-immersive-2025",
@@ -979,7 +948,6 @@ export const appearances: Appearance[] = [
     date: "2025",
     endsISO: "2025-10-15T00:00:00Z",
     location: "London, UK / Virtual",
-    url: "https://www.raindanceimmersive.com/",
   },
   {
     slug: "siggraph-2025-paper",
@@ -989,7 +957,6 @@ export const appearances: Appearance[] = [
     date: "Aug 2025",
     endsISO: "2025-08-15T00:00:00Z",
     location: "Vancouver, Canada",
-    url: "https://www.siggraph.org/",
   },
   {
     slug: "unreal-fest-orlando-2025",
@@ -999,7 +966,6 @@ export const appearances: Appearance[] = [
     date: "2025",
     endsISO: "2025-09-30T00:00:00Z",
     location: "Orlando, FL",
-    url: "https://www.unrealengine.com/en-US/events",
   },
   {
     slug: "unreal-fest-stockholm-2025",
@@ -1009,7 +975,6 @@ export const appearances: Appearance[] = [
     date: "2025",
     endsISO: "2025-11-15T00:00:00Z",
     location: "Stockholm, Sweden",
-    url: "https://www.unrealengine.com/en-US/events",
   },
   {
     slug: "harvardxr-2026-keynote",
@@ -1019,7 +984,6 @@ export const appearances: Appearance[] = [
     date: "Apr 17, 2026",
     endsISO: "2026-04-17T23:00:00Z",
     location: "Cambridge, MA (Harvard University)",
-    url: "https://www.linkedin.com/company/harvardxr",
   },
   {
     slug: "fmx-2026",
@@ -1029,7 +993,6 @@ export const appearances: Appearance[] = [
     date: "Thu May 7, 2026",
     endsISO: "2026-05-07T22:00:00Z",
     location: "Stuttgart, Germany",
-    url: "http://www.fmx.de",
   },
   {
     slug: "nxt-bld-2026",
