@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
@@ -92,6 +93,29 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.videos && product.videos.length > 0 && (
               <VideoUpdates videos={product.videos} />
             )}
+          </div>
+        </Reveal>
+      )}
+
+      {product.screenshots && product.screenshots.length > 0 && (
+        <Reveal>
+          <div className="mt-14">
+            <p className="font-mono text-xs uppercase tracking-widest text-mist">See it in use</p>
+            <div className="mt-5 grid gap-6 sm:grid-cols-2">
+              {product.screenshots.map((s) => (
+                <figure key={s.src} className="overflow-hidden rounded-2xl border border-line">
+                  <Image
+                    src={s.src}
+                    alt={s.alt}
+                    width={1440}
+                    height={900}
+                    unoptimized
+                    className="w-full"
+                  />
+                  <figcaption className="p-4 text-xs leading-relaxed text-mist">{s.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
           </div>
         </Reveal>
       )}
