@@ -66,4 +66,9 @@ export const venues: Venue[] = [
   { name: "VR 20/20", url: "https://twitter.com/DipakPatel/status/919994810173394944" },
   { name: "VenueConnect", url: "https://www.youtube.com/watch?v=96CMiNrmz1E" },
   { name: "NYIT", url: "https://openlab.citytech.cuny.edu/fuselab/event/intersections-2014/" },
+  { name: "Meta Connect", url: "https://www.uploadvr.com/alex-coulombe-orion-glasses-hands-on/" },
+  { name: "UploadVR", url: "https://www.uploadvr.com/alex-coulombe-orion-glasses-hands-on/" },
+  { name: "NY Times", url: "https://www.nytimes.com/2012/06/24/arts/music/stockhausens-gruppen-at-park-avenue-armory.html" },
+  { name: "AR Insider" },
+  { name: "Road to VR" },
 ];

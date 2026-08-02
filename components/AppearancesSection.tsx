@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
-import { appearances, type Appearance } from "@/lib/appearances";
+import { appearances, categoryForAppearance, type Appearance } from "@/lib/appearances";
+import { CATEGORY_STYLE } from "@/lib/categories";
 
 export function Card({ a, past }: { a: Appearance; past?: boolean }) {
+  const style = CATEGORY_STYLE[categoryForAppearance(a)];
   return (
     <a
       href={a.url}
@@ -23,9 +25,7 @@ export function Card({ a, past }: { a: Appearance; past?: boolean }) {
       )}
       <div className="min-w-0">
         <span
-          className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-wider ${
-            past ? "border-mist/40 text-mist" : "border-teal/60 text-teal"
-          }`}
+          className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-wider ${style.border} ${style.text}`}
         >
           {a.role}
         </span>

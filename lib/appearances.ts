@@ -9,6 +9,8 @@
 // itself out of "what's next" and into the "recently" row below — no manual
 // edit needed on the day an event ends.
 
+import type { CardCategory } from "@/lib/categories";
+
 export type Appearance = {
   slug: string;
   role: string; // "Speaker", "Judge + Mentor", "Panelist"...
@@ -20,6 +22,14 @@ export type Appearance = {
   url: string;
   image?: string; // path under /public
 };
+
+// "Official Selection" entries are work that got selected/screened, not a
+// talk he personally gave — that's "Work Featured", not an attendance mode.
+// Everything else splits on whether `location` says it was virtual.
+export function categoryForAppearance(a: Appearance): CardCategory {
+  if (a.role === "Official Selection") return "Work Featured";
+  return a.location.toLowerCase().includes("virtual") ? "Virtual" : "In Person";
+}
 
 // ── Historical record (2014–2026) ───────────────────────────────────────
 //
