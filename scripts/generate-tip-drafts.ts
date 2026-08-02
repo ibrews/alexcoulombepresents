@@ -91,11 +91,15 @@ async function draftFromRepo(repo: (typeof repos)[number]) {
       `It must be a concrete, actionable technique someone could actually apply — not a vague summary of the project. ` +
       `Only state facts that are directly supported by the text above; do not invent API names, node names, or numbers ` +
       `that aren't in the source.\n\n` +
-      `Current latest Unreal Engine release is ${CURRENT_UE_VERSION}. Do NOT tag the tip with a specific engine ` +
-      `version (e.g. "UE5.7 tip:", "5.6.1") unless it's genuinely a workaround for a bug that only affects specific ` +
-      `versions and doesn't apply to ${CURRENT_UE_VERSION}. A technique that's simply been available since some ` +
-      `earlier version and still works today should just say "UE5" or nothing version-specific at all — most ` +
-      `techniques aren't version-scoped and shouldn't read like they are.\n\n` +
+      `Current latest Unreal Engine release is ${CURRENT_UE_VERSION}. Follow this version-tagging rule:\n` +
+      `- A bug workaround that only affects specific versions (and not ${CURRENT_UE_VERSION}): name the exact ` +
+      `affected version(s), e.g. "5.6.1/5.7/5.8".\n` +
+      `- A relatively new feature that was introduced in a specific version and is still supported today: use a ` +
+      `"+" minimum-version tag, e.g. "UE5.7+" — never bare "UE5.7", which wrongly implies it's limited to that one ` +
+      `version.\n` +
+      `- A technique that's old/foundational and applies broadly across many versions: no version tag at all, or ` +
+      `just "UE5".\n` +
+      `Most techniques fall in the third bucket — don't reach for a version number by default.\n\n` +
       `Reply with ONLY the tweet text, nothing else.`,
     false
   );
