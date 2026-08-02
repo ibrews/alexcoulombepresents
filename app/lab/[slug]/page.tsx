@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
@@ -96,8 +97,31 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </Reveal>
       )}
 
+      {product.screenshots && product.screenshots.length > 0 && (
+        <Reveal>
+          <div className="mt-14">
+            <p className="font-mono text-xs uppercase tracking-widest text-mist">See it in use</p>
+            <div className="mt-5 grid gap-6 sm:grid-cols-2">
+              {product.screenshots.map((s) => (
+                <figure key={s.src} className="overflow-hidden rounded-2xl border border-line">
+                  <Image
+                    src={s.src}
+                    alt={s.alt}
+                    width={1440}
+                    height={900}
+                    unoptimized
+                    className="w-full"
+                  />
+                  <figcaption className="p-4 text-xs leading-relaxed text-mist">{s.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      )}
+
       <Reveal>
-        <div className="glass mt-8 rounded-3xl p-8 text-center md:p-10">
+        <div id="waitlist" className="glass mt-8 scroll-mt-24 rounded-3xl p-8 text-center md:p-10">
           {product.internal ? (
             <>
               <h2 className="text-xl font-bold">This one&apos;s internal.</h2>

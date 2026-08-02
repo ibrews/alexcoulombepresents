@@ -586,6 +586,10 @@ export type Product = {
   accent: string; // tailwind-friendly hue token
   video?: string; // primary / featured YouTube id
   videos?: { id: string; title: string }[]; // additional updates, newest first
+  // Real product screenshots (not mockups — see the "Coming to the editor"
+  // preview cards in-app for aspirational/not-yet-wired surfaces, which stay
+  // out of this list). Paths are under /public.
+  screenshots?: { src: string; alt: string; caption: string }[];
   // Internal Agile Lens tooling with no public release planned — shown for
   // transparency but WITHOUT a waitlist CTA (nothing to wait for).
   internal?: boolean;
@@ -617,8 +621,12 @@ export const products: Product[] = [
         body: "Fab caps your wishlist around 150 items. Forage keeps an unlimited local one — and alerts you the moment a wishlisted pack lands in your owned library. `forage ui` opens a local browser dashboard for searching your library and managing the wishlist without touching the CLI.",
       },
       {
-        heading: "More on the way",
-        body: "A Chrome extension is in development: owned and wishlisted badges that appear directly on fab.com as you browse, so you never accidentally buy something you already have. Multi-engine support is planned — groundwork is already in for Unity and Godot alongside Unreal. Megascans and Cosmos integration is on the roadmap.",
+        heading: "Getting started",
+        body: "`forage login` for a one-time Epic OAuth, then `forage refresh-library` to pull your owned catalog into a local database. From there: `forage query \"cyberpunk neon city street\"` ranks your own packs by intent, `forage doctor` sanity-checks your setup (Epic auth, library, and — if a UE project is open — Remote Control reachability) in one shot, and `Window > Forage` in the editor opens the same dashboard as `forage ui` without a terminal at all.",
+      },
+      {
+        heading: "Already shipped, not just planned",
+        body: "The Chrome extension ('Forage for Fab') is live: owned and wishlisted badges directly on fab.com, plus per-license-tier price capture. Unity and Godot installs already work today via `forage install-file` — drop an already-downloaded asset into any project, engine auto-detected. Megascans support is real for packs that migrated to Fab; Twinmotion the same. Chaos Cosmos integration is parked — no public API for it exists yet.",
       },
       {
         heading: "Not a marketplace, not a generator",
@@ -632,10 +640,23 @@ export const products: Product[] = [
       "Unlimited local wishlist with What's New alerts",
       "Bloat report: spot the dead project versions in every pack",
       "Local web UI (`forage ui`) — library search + wishlist, no CLI needed",
-      "Chrome extension coming: owned + wishlisted badges on fab.com",
+      "Chrome extension shipped: owned + wishlisted badges on fab.com",
+      "Unity + Godot installs work today via `forage install-file`",
     ],
     links: [{ label: "Landing page + wishlist", url: "https://ibrews.github.io/forage-site/" }],
     video: "oQf8w26a36M",
+    screenshots: [
+      {
+        src: "/lab/forage/dashboard.png",
+        alt: "Forage's local web dashboard showing the describe-find-import-prune-scene pipeline rail and owned-library stats",
+        caption: "forage ui — the local dashboard. Same view opens inside the editor via Window > Forage.",
+      },
+      {
+        src: "/lab/forage/posture-automation-gates.png",
+        alt: "Forage's automation posture panel showing Advisory, Assisted, and Automated levels, plus experimental feature gates",
+        caption: "Every automation level is explicit and yours to set. Automated (zero-click) is fully built but held back pending Epic's review — labeled honestly, not hidden.",
+      },
+    ],
     accent: "amber",
   },
   {
