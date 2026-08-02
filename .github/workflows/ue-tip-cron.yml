@@ -1,0 +1,22 @@
+# Pings the @alexctraining #uetips poster every 15 minutes — Vercel's
+# Hobby-plan cron only fires daily (see vercel.json, kept as a backstop), so
+# this is what makes the "post at 10am ET" schedule actually land at 10am ET
+# regardless of daylight saving (the route itself checks the real Eastern
+# wall-clock hour on every ping — see app/api/cron/post-ue-tip/route.ts).
+#
+# Reuses the same CRON_SECRET Actions secret as newsletter-cron.yml.
+name: ue-tip-cron
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the daily #uetips post check
+        run: |
+          curl -fsS -m 60 \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://www.alexcoulombepresents.com/api/cron/post-ue-tip"

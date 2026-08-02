@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/send-newsletter",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/post-ue-tip",
+      "schedule": "0 14 * * *"
     }
   ]
 }

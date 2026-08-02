@@ -293,3 +293,165 @@ export async function deleteTestimonial(id: number): Promise<number> {
   `;
   return (rows as unknown[]).length;
 }
+
+// ── @alexctraining X bot — OAuth token state ────────────────────────────────
+// Single row per account. The OAuth 2.0 refresh token rotates on every use,
+// so both fields get overwritten together on each refresh — never just the
+// access token.
+
+let _xBotStateEnsured = false;
+
+async function ensureXBotStateTable() {
+  if (_xBotStateEnsured) return;
+  await sql()`
+    CREATE TABLE IF NOT EXISTS x_bot_state (
+      account       TEXT PRIMARY KEY,
+      access_token  TEXT NOT NULL,
+      refresh_token TEXT NOT NULL,
+      updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  _xBotStateEnsured = true;
+}
+
+export type XBotState = { accessToken: string; refreshToken: string };
+
+export async function getXBotState(account: string): Promise<XBotState | null> {
+  await ensureXBotStateTable();
+  const rows = await sql()`
+    SELECT access_token, refresh_token FROM x_bot_state WHERE account = ${account}
+  `;
+  const row = (rows as { access_token: string; refresh_token: string }[])[0];
+  return row ? { accessToken: row.access_token, refreshToken: row.refresh_token } : null;
+}
+
+export async function setXBotState(account: string, state: XBotState): Promise<void> {
+  await ensureXBotStateTable();
+  await sql()`
+    INSERT INTO x_bot_state (account, access_token, refresh_token, updated_at)
+    VALUES (${account}, ${state.accessToken}, ${state.refreshToken}, now())
+    ON CONFLICT (account) DO UPDATE
+      SET access_token = EXCLUDED.access_token,
+          refresh_token = EXCLUDED.refresh_token,
+          updated_at = now()
+  `;
+}
+
+// ── @alexctraining X bot — tip draft queue ──────────────────────────────────
+// Drafts get inserted with status='pending_approval' and a Telegram message
+// sent for each; a tap on the inline keyboard flips status to 'approved' or
+// 'rejected' via the Telegram webhook. The daily posting cron only ever
+// consumes 'approved' rows, oldest first, and marks them 'posted' once sent.
+
+let _tipQueueEnsured = false;
+
+async function ensureTipQueueTable() {
+  if (_tipQueueEnsured) return;
+  await sql()`
+    CREATE TABLE IF NOT EXISTS ue_tip_queue (
+      id                  BIGSERIAL PRIMARY KEY,
+      account             TEXT NOT NULL,
+      text                TEXT NOT NULL,
+      source              TEXT,
+      status              TEXT NOT NULL DEFAULT 'pending_approval',
+      telegram_message_id BIGINT,
+      tweet_id            TEXT,
+      created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+      decided_at          TIMESTAMPTZ,
+      posted_at           TIMESTAMPTZ
+    )
+  `;
+  _tipQueueEnsured = true;
+}
+
+export type TipQueueRow = {
+  id: number;
+  account: string;
+  text: string;
+  source: string | null;
+  status: string;
+  telegram_message_id: number | null;
+  tweet_id: string | null;
+  created_at: string;
+  decided_at: string | null;
+  posted_at: string | null;
+};
+
+export async function insertDraftTip(input: {
+  account: string;
+  text: string;
+  source?: string | null;
+}): Promise<TipQueueRow> {
+  await ensureTipQueueTable();
+  const rows = await sql()`
+    INSERT INTO ue_tip_queue (account, text, source)
+    VALUES (${input.account}, ${input.text}, ${input.source ?? null})
+    RETURNING *
+  `;
+  return (rows as TipQueueRow[])[0];
+}
+
+export async function setTipTelegramMessageId(id: number, telegramMessageId: number): Promise<void> {
+  await ensureTipQueueTable();
+  await sql()`
+    UPDATE ue_tip_queue SET telegram_message_id = ${telegramMessageId} WHERE id = ${id}
+  `;
+}
+
+// Looks up a draft by its Telegram message id — the webhook only has the
+// message id + callback data to go on, not the queue row id directly.
+export async function getTipByTelegramMessageId(telegramMessageId: number): Promise<TipQueueRow | null> {
+  await ensureTipQueueTable();
+  const rows = await sql()`
+    SELECT * FROM ue_tip_queue WHERE telegram_message_id = ${telegramMessageId}
+  `;
+  return (rows as TipQueueRow[])[0] ?? null;
+}
+
+export async function decideTip(id: number, decision: "approved" | "rejected"): Promise<TipQueueRow | null> {
+  await ensureTipQueueTable();
+  const rows = await sql()`
+    UPDATE ue_tip_queue
+    SET status = ${decision}, decided_at = now()
+    WHERE id = ${id} AND status = 'pending_approval'
+    RETURNING *
+  `;
+  return (rows as TipQueueRow[])[0] ?? null;
+}
+
+export async function getNextApprovedUnpostedTip(account: string): Promise<TipQueueRow | null> {
+  await ensureTipQueueTable();
+  const rows = await sql()`
+    SELECT * FROM ue_tip_queue
+    WHERE account = ${account} AND status = 'approved'
+    ORDER BY decided_at ASC
+    LIMIT 1
+  `;
+  return (rows as TipQueueRow[])[0] ?? null;
+}
+
+export async function markTipPosted(id: number, tweetId: string): Promise<void> {
+  await ensureTipQueueTable();
+  await sql()`
+    UPDATE ue_tip_queue SET status = 'posted', tweet_id = ${tweetId}, posted_at = now() WHERE id = ${id}
+  `;
+}
+
+export async function wasAlreadyPostedToday(account: string, todayEt: string): Promise<boolean> {
+  await ensureTipQueueTable();
+  const rows = await sql()`
+    SELECT id FROM ue_tip_queue
+    WHERE account = ${account} AND status = 'posted'
+      AND posted_at AT TIME ZONE 'America/New_York' >= ${todayEt}::date
+    LIMIT 1
+  `;
+  return (rows as unknown[]).length > 0;
+}
+
+export async function countPendingApproval(account: string): Promise<number> {
+  await ensureTipQueueTable();
+  const rows = await sql()`
+    SELECT COUNT(*)::int AS count FROM ue_tip_queue WHERE account = ${account} AND status = 'pending_approval'
+  `;
+  return (rows as { count: number }[])[0]?.count ?? 0;
+}
