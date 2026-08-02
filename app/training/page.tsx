@@ -575,8 +575,10 @@ export default function Training() {
                 href="https://agilelens.com/unrealnyc"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+                className="flex items-center gap-2 rounded-full border border-line py-1.5 pl-1.5 pr-3.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logos/unreal-nyc.png" alt="" className="h-5 w-5 rounded-full" />
                 agilelens.com/unrealnyc ↗
               </a>
               <a
