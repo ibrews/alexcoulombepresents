@@ -38,6 +38,7 @@ export default function Footer() {
             <a className="text-mist hover:text-snow" href="https://github.com/ibrews" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a className="text-mist hover:text-snow" href="https://linkedin.com/in/alexcoulombe" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a className="text-mist hover:text-snow" href="https://twitter.com/ibrews" target="_blank" rel="noopener noreferrer">X / @ibrews</a>
+            <a className="text-mist hover:text-snow" href="https://twitter.com/alexctraining" target="_blank" rel="noopener noreferrer">X — UE Tips</a>
             <a className="text-mist hover:text-snow" href="https://agilelens.com" target="_blank" rel="noopener noreferrer">Agile Lens</a>
             <a className="text-mist hover:text-snow" href="https://linktr.ee/unoffunrealpod" target="_blank" rel="noopener noreferrer">UE Podcast</a>
             <a className="text-mist hover:text-snow" href="https://agilelens.com/unrealnyc" target="_blank" rel="noopener noreferrer">Unreal NYC</a>

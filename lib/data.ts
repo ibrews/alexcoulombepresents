@@ -1321,6 +1321,12 @@ export const externalLinks: {
     extra: { label: "Recent: the Europe tour recap (FMX + NXT BLD)", url: "https://www.linkedin.com/posts/alexcoulombe_long-overdue-europe-post-1-of-2-this-activity-7464479226625265665-d8dF" },
   },
   { label: "X / Twitter — @ibrews", url: "https://twitter.com/ibrews", note: "Shorter hot takes.", vibe: "serious" },
+  {
+    label: "X / Twitter — @alexctraining",
+    url: "https://twitter.com/alexctraining",
+    note: "A separate account, just for Unreal Engine tips — recurring #uetips pulled from the training knowledge base. Not the personal @ibrews feed above.",
+    vibe: "serious",
+  },
   { label: "YouTube", url: "https://youtube.com/@ibrews", note: "Unreal Engine tutorials, Unity→UE5 migration guides, MetaHuman deep dives.", vibe: "serious" },
 ];
 
