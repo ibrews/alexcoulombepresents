@@ -15,6 +15,7 @@ Hey folks!
 Alex here with some news. First up:
 
 ## Live Unreal Engine classes start Wednesday
+[Reserve a free seat →](https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA)
 
 Yes I'm teaching again! Working with [SensAI](https://www.youtube.com/watch?v=JR5397NUz3I) on the [Worlds in Action hackathon](https://sensaihack.com/worldsinaction-2-la/) (speaker, mentor, judge) and being part of [three wonderful sessions](https://s2026.conference-schedule.org/presenter/?uid=645453) at SIGGRAPH (talk, workshop, panel) reminded me how much I love sharing knowledge and tools with eager learners. At the height of my 8-year partnership with Epic Games, I regularly taught 3-4 classes per week on their behalf, and while it was a struggle to balance with everything else in my life, it was an absolute blast.
 
@@ -26,11 +27,13 @@ So I took a pass at doing something like that aimed at the general public, and i
 -------------------------------------
 **Unreal Foundations: Zero to World** 
 Wednesdays starting August 5. 
-Editor & ecosystem → world building with Megascans & Nanite & Fab → Lumen & lighting → cameras & Movie Render Queue. You leave with some portfolio-ready cinematic renders and a lot of lessons in gotchas and what not to do.
+Editor & ecosystem → world building with Megascans & Nanite & Fab → Lumen & lighting → cameras & Movie Render Queue. 
+You leave with some portfolio-ready cinematic renders and a lot of lessons in gotchas and what not to do.
 
 - Every class runs **each Wednesday** (11a–1p ET) so it works from Europe to the West Coast.
 - **Friday office hours** every week — bring anything you want to discuss.
-- **$299** Newsletter readers: use code **NEWSLETTER20** at checkout for 20% off.
+- **$299** use code **NEWSLETTER20** at checkout for 20% off.
+
 -------------------------------------
 
 That's ready to go, but I'm second-guessing myself. I want to teach what will be most valuable to **YOU**, dear reader. So here's what I'm doing: this **Wednesday August 5 at 11a ET / 8a PT** will be a **FREE** session. I'm making it as simple as possible:
@@ -57,6 +60,15 @@ And of course there's always a ton of free and open source work available on my 
 ## Don't you also run an XR studio?
 
 Yes! [Agile Lens](https://www.agilelens.com) has been busy, and that's the main reason I haven't been able to carve out more time for teaching. Recently we celebrated ten years of immersive work, and of course if your team wants to go beyond training and needs full-service consulting for XR, spatial computing, or complex Unreal Engine pipelines, that's the door: [agilelens.com/contact](https://agilelens.com/contact). Be sure to sign up there for the Agile Lens newsletter — Unreal NYC meetup nights, live shows, demos, betas — all separate from what you'll get from this newsletter.
+
+## How to stay in touch!
+
+The newsletters won't be very often. If you want to stay more up to date with what's new and exciting with Alex Coulombe Presents:
+
+- [Unreal NYC Training Discord](https://discord.gg/bNh4aqSEg)
+- [Instagram](https://instagram.com/alexctraining)
+- [LinkedIn](https://www.linkedin.com/company/alexctraining)
+- [X (daily #uetips!)](https://x.com/alexctraining)
 
 Anyway, that's all for now! Any questions? Drop me a line anytime by simply responding to this email, and I hope to see you this Wednesday.
 

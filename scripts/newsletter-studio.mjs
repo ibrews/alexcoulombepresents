@@ -521,8 +521,10 @@ function editorPage(slug) {
     <div class="testrow">
       <input type="email" id="testEmail" placeholder="you@example.com" value="info@agilelens.com" />
       <button class="secondary" id="testSend">Send test email</button>
+      <button class="secondary" id="checkLinks" type="button">Check links</button>
     </div>
     <div class="hint">Test sends go ONLY to that address, with a [TEST] subject prefix. Save first — the test uses the saved file.</div>
+    <div id="linkResults"></div>
     <div class="error-banner" id="errorBanner"></div>
   </div>
   <div class="preview"><iframe id="preview"></iframe></div>
@@ -698,6 +700,23 @@ function editorPage(slug) {
       flash('Test sent to ' + to + ' ✓');
     } catch (err) { $('status').textContent = ''; showError('Test send failed: ' + err.message); }
   });
+
+  $('checkLinks').addEventListener('click', async () => {
+    clearError();
+    const box = $('linkResults');
+    box.innerHTML = '<p class="hint">Checking…</p>';
+    try {
+      const res = await fetch('/check-links', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ body: $('body').value }) });
+      const d = await res.json();
+      if (!d.results.length) { box.innerHTML = '<p class="hint">No links or images in this draft yet.</p>'; return; }
+      if (!d.broken.length) {
+        box.innerHTML = '<p class="hint" style="color:#14b8a6">✓ ' + d.results.length + ' link' + (d.results.length === 1 ? '' : 's') + ' checked, all OK.</p>';
+        return;
+      }
+      const rows = d.broken.map((b) => '<li style="margin:4px 0"><span style="font-family:monospace;word-break:break-all">' + b.url.replace(/</g,'&lt;') + '</span> — ' + (b.error || ('HTTP ' + b.status)) + '</li>').join('');
+      box.innerHTML = '<div class="error-banner show"><b>' + d.broken.length + ' of ' + d.results.length + ' link' + (d.results.length === 1 ? '' : 's') + ' broken:</b><ul style="margin:6px 0 0;padding-left:18px">' + rows + '</ul></div>';
+    } catch (err) { box.innerHTML = ''; showError('Link check failed: ' + err.message); }
+  });
 </script>
 </body></html>`;
 }
@@ -737,6 +756,20 @@ async function sendPage(slug, err, notice) {
        <p class="hint" style="margin-top:8px">Cancelling pushes to main too — it must deploy before the send time to take effect.</p></div>`
     : "";
 
+  // Checked automatically here — this is the moment it actually matters,
+  // right before real recipients would see it. Best-effort: a network hiccup
+  // checking links shouldn't block the send screen from rendering at all.
+  let linkBanner = "";
+  try {
+    const { results, broken } = await checkAllLinks(issue.body);
+    if (broken.length) {
+      const rows = broken
+        .map((b) => `<li style="margin:4px 0"><span style="font-family:monospace;word-break:break-all">${esc(b.url)}</span> — ${esc(b.error || `HTTP ${b.status}`)}</li>`)
+        .join("");
+      linkBanner = `<div class="card" style="border-color:#7a2a2a;margin-bottom:16px"><h2 style="color:#ff8080">⚠ ${broken.length} of ${results.length} link${results.length === 1 ? "" : "s"} broken</h2><ul style="margin:6px 0 0;padding-left:18px">${rows}</ul><p class="hint" style="margin-top:10px"><a href="/edit/${esc(slug)}">Fix in the editor →</a></p></div>`;
+    }
+  } catch { /* best-effort — a check failure shouldn't block sending */ }
+
   const blockers = [];
   if (!s.db) blockers.push("DATABASE_URL is missing — can't load recipients.");
   if (!s.resend) blockers.push("RESEND_API_KEY is missing — can't send email now. (Scheduling still works: the PRODUCTION key does the sending.)");
@@ -753,6 +786,7 @@ async function sendPage(slug, err, notice) {
      <p class="sub">Subject: <b style="color:#ecedf6">${esc(issue.subject || issue.title)}</b> · <a href="/edit/${esc(slug)}">back to editor</a></p>
      ${err ? `<div class="error-banner show" style="margin-bottom:16px">${esc(err)}</div>` : ""}
      ${notice ? `<div class="card" style="border-color:#14b8a666;margin-bottom:16px"><p style="margin:0;color:#14b8a6">${esc(notice)}</p></div>` : ""}
+     ${linkBanner}
      ${scheduledBanner}
      ${!s.db ? `<div class="card" style="border-color:#7a2a2a"><h2>Not ready</h2><p class="hint" style="color:#ff8080">${esc(blockers[0])}</p></div>` : `
      <form method="post" class="card" id="sendForm">
@@ -912,6 +946,67 @@ function renderPreview(body, preheader) {
   return renderNewsletterEmail({ bodyMarkdown: body, footerHtml, siteUrl: `http://localhost:${PORT}`, preheader });
 }
 
+// ── Link checking ────────────────────────────────────────────────────────────
+// Every markdown link/image/linked-image ultimately has a `](url)` — that
+// covers [text](url), ![alt](url "title"), and both halves of the linked-image
+// form [![alt](imgUrl)](href), without needing to know which construct it is.
+function extractLinks(markdown) {
+  const urls = new Set();
+  for (const m of markdown.matchAll(/\]\(([^)]+)\)/g)) {
+    const raw = m[1].replace(/\s+"[^"]*"$/, "").trim(); // strip an image's optional "title"
+    if (raw) urls.add(raw);
+  }
+  return [...urls];
+}
+
+async function checkLink(url) {
+  if (/^mailto:/i.test(url)) return { url, ok: true, note: "mailto — not checked" };
+  if (url.startsWith("/newsletter/")) {
+    const file = decodeURIComponent(url.slice("/newsletter/".length));
+    const exists = path.dirname(path.join(IMAGE_DIR, file)) === IMAGE_DIR && existsSync(path.join(IMAGE_DIR, file));
+    return { url, ok: exists, note: exists ? "local file" : "local file — not found in public/newsletter/" };
+  }
+  let target = url.startsWith("/") ? SITE_URL.replace(/\/$/, "") + url : url;
+  if (!/^https?:\/\//i.test(target)) return { url, ok: true, note: "not a checkable URL — skipped" };
+  // The bare apex domain has real bot-mitigation ("attack mode") that a burst
+  // of automated requests can trip — even a handful of parallel checks did it
+  // once already (2026-08-02). www. serves identical content and doesn't have
+  // this problem, so check our own links there instead of the fragile apex.
+  target = target.replace(/^(https?:\/\/)alexcoulombepresents\.com\b/i, "$1www.alexcoulombepresents.com");
+  const attempt = async (method) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    try {
+      return await fetch(target, { method, redirect: "follow", signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+  try {
+    let res = await attempt("HEAD");
+    // Some servers don't implement HEAD — a real GET is the honest fallback.
+    if (res.status === 405 || res.status === 501) res = await attempt("GET");
+    return { url, ok: res.ok, status: res.status };
+  } catch (err) {
+    return { url, ok: false, error: err.name === "AbortError" ? "timed out" : err.message };
+  }
+}
+
+// A handful of parallel checks to alexcoulombepresents.com was enough to trip
+// Vercel's bot mitigation once already — cap concurrency so "check every link
+// in this draft" can never look like a burst/attack to anything it points at.
+const LINK_CHECK_CONCURRENCY = 3;
+
+async function checkAllLinks(markdown) {
+  const urls = extractLinks(markdown);
+  const results = [];
+  for (let i = 0; i < urls.length; i += LINK_CHECK_CONCURRENCY) {
+    const batch = urls.slice(i, i + LINK_CHECK_CONCURRENCY);
+    results.push(...(await Promise.all(batch.map(checkLink))));
+  }
+  return { results, broken: results.filter((r) => !r.ok) };
+}
+
 // ── Server ──────────────────────────────────────────────────────────────────
 
 const server = createServer(async (req, res) => {
@@ -988,6 +1083,10 @@ const server = createServer(async (req, res) => {
       } catch {
         return sendHtml(renderPreview(raw));
       }
+    }
+    if (req.method === "POST" && p === "/check-links") {
+      const { body } = JSON.parse((await readBody(req)).toString("utf8"));
+      return sendJson(await checkAllLinks(body ?? ""));
     }
     if (req.method === "POST" && p.startsWith("/save/")) {
       const slug = decodeURIComponent(p.slice("/save/".length));
