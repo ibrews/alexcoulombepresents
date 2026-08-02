@@ -34,6 +34,7 @@ import {
   claimCampaignSend,
   completeCampaignSend,
   getCampaignSends,
+  recordResendCompletion,
 } from "../lib/sendNewsletter.ts";
 import { campaignStats } from "../lib/tracking.ts";
 import { neon } from "@neondatabase/serverless";
@@ -154,6 +155,15 @@ function markSent(slug, lists, count) {
   });
 }
 
+// A resend-missed completion doesn't change WHEN the campaign first went
+// out (sentAt stays the original send timestamp) — it just tops up the
+// recipient count so the report reflects everyone who's actually gotten it.
+function markResendCompleted(slug, additionalSent) {
+  const issue = loadIssue(slug);
+  if (!issue) return;
+  writeIssue(slug, { ...issue, sentCount: (Number(issue.sentCount) || 0) + additionalSent });
+}
+
 function markScheduled(slug, { sendAt, sendLists, sendBroad }) {
   const issue = loadIssue(slug);
   if (!issue) return;
@@ -236,6 +246,26 @@ async function subscribers(list, query) {
     return await sql`SELECT email, name, list, created_at FROM signups WHERE list = ${list} ORDER BY created_at DESC LIMIT 200`;
   }
   return await sql`SELECT email, name, list, created_at FROM signups ORDER BY created_at DESC LIMIT 200`;
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// A prior send can partially fail (one bad address poisons a whole 100-batch;
+// a provider-side rate/quota limit mid-run) — this diffs "who should have
+// gotten campaign X" against "who email_events confirms actually got it", so
+// a follow-up send can target exactly the gap without re-emailing anyone.
+async function missedRecipients(campaign, lists) {
+  const sql = neon(process.env.DATABASE_URL);
+  const all = await sql`SELECT DISTINCT lower(email) AS email FROM signups WHERE list = ANY(${lists}) ORDER BY email`;
+  const sent = await sql`SELECT DISTINCT email FROM email_events WHERE campaign = ${campaign} AND type = 'send'`;
+  const sentSet = new Set(sent.map((r) => r.email));
+  const missed = all.map((r) => r.email).filter((e) => !sentSet.has(e));
+  return {
+    valid: missed.filter((e) => EMAIL_RE.test(e)),
+    malformed: missed.filter((e) => !EMAIL_RE.test(e)),
+    totalRecipients: all.length,
+    totalSent: sentSet.size,
+  };
 }
 
 function envStatus() {
@@ -898,12 +928,93 @@ async function reportPage(slug, celebrate) {
   const sentLine = issue.sentAt
     ? `Sent ${esc(issue.sentAt)} to “${esc(issue.sentList)}” — ${esc(issue.sentCount)} recipients.`
     : "Not sent yet.";
+
+  // A prior batch send can partially fail — surface the gap right on the
+  // report so it's impossible to miss, with a one-click path to close it.
+  let missedBanner = "";
+  if (issue.sentAt && envStatus().db) {
+    try {
+      const lists = issue.sentList.split(",").map((s) => s.trim()).filter(isListSlug);
+      const m = await missedRecipients(slug, lists);
+      const missedCount = m.valid.length + m.malformed.length;
+      if (missedCount > 0) {
+        missedBanner = `<div class="card" style="border-color:#7a2a2a;margin-bottom:16px">
+          <h2 style="color:#ff8080">⚠ ${missedCount} of ${m.totalRecipients} intended recipients didn't get this</h2>
+          <p class="hint">${m.valid.length} have a valid address and can be resent to now.${m.malformed.length ? ` ${m.malformed.length} have a malformed address on file and need to be fixed before they can be reached.` : ""}</p>
+          <a href="/resend-missed/${esc(slug)}" class="btn">Resend to the missing ${m.valid.length} →</a>
+        </div>`;
+      }
+    } catch { /* best-effort — a check failure shouldn't block the report */ }
+  }
+
   return layout(
     `Report: ${issue.title}`,
     `${confetti}<h1>${esc(issue.title)}</h1>
      <p class="sub">${sentLine} · <a href="/edit/${esc(slug)}">view content</a> · auto-refreshes every 60s</p>
+     ${missedBanner}
      <div class="card">${statsHtml}</div>
      <script>setTimeout(() => location.href = location.pathname, 60000)</script>`
+  );
+}
+
+// A dedicated page (not folded into /report) because this is its own
+// real-people-get-emailed moment and needs the same type-to-confirm
+// guard as the original send — burying it in the auto-refreshing report
+// page would risk wiping a half-typed confirmation out from under someone.
+async function resendMissedPage(slug, err) {
+  const issue = loadIssue(slug);
+  if (!issue) return null;
+  if (!issue.sentAt) {
+    return layout("Not sent yet", `<h1>${esc(issue.title)}</h1><p class="sub">This issue hasn't been sent yet. <a href="/send/${esc(slug)}">Send it →</a></p>`);
+  }
+  const s = envStatus();
+  if (!s.db) {
+    return layout(`Resend missed: ${issue.title}`, `<h1>${esc(issue.title)}</h1><div class="card" style="border-color:#7a2a2a"><p class="hint" style="color:#ff8080">DATABASE_URL is missing — can't compute who's missing.</p></div>`);
+  }
+  const lists = issue.sentList.split(",").map((x) => x.trim()).filter(isListSlug);
+  const m = await missedRecipients(slug, lists);
+
+  if (m.valid.length === 0) {
+    return layout(
+      `Resend missed: ${issue.title}`,
+      `<h1>Resend “${esc(issue.title)}”</h1>
+       <p class="sub"><a href="/report/${esc(slug)}">back to report</a></p>
+       <div class="card"><p style="margin:0">Nothing to resend — ${m.totalSent} of ${m.totalRecipients} confirmed delivered${m.malformed.length ? `, and the other ${m.malformed.length} have a malformed address (see below) rather than a missed send` : ""}.</p></div>
+       ${m.malformed.length ? `<div class="card" style="margin-top:16px;border-color:#f59e0b66"><h2>Malformed addresses (${m.malformed.length}) — not sent, not counted as missed</h2><p class="hint">These aren't valid email addresses as stored — fix them at the source (signup form data) before they can receive anything.</p><ul style="margin:8px 0 0;padding-left:18px;font-family:monospace;font-size:13px">${m.malformed.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></div>` : ""}`
+    );
+  }
+
+  const malformedCard = m.malformed.length
+    ? `<div class="card" style="margin-top:16px;border-color:#f59e0b66"><h2>Also flagged: ${m.malformed.length} malformed address${m.malformed.length === 1 ? "" : "es"} — not included</h2><p class="hint">These are stored as invalid email addresses, so they were never going to send. They're excluded from the resend rather than guessed-at; fix the underlying signup record before retrying.</p><ul style="margin:8px 0 0;padding-left:18px;font-family:monospace;font-size:13px">${m.malformed.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></div>`
+    : "";
+
+  return layout(
+    `Resend missed: ${issue.title}`,
+    `<h1>Resend “${esc(issue.title)}”</h1>
+     <p class="sub">Originally sent ${esc(issue.sentAt)} to “${esc(issue.sentList)}” · <a href="/report/${esc(slug)}">back to report</a></p>
+     ${err ? `<div class="error-banner show" style="margin-bottom:16px">${esc(err)}</div>` : ""}
+     <div class="card">
+       <h2>What happened</h2>
+       <p style="margin:0">${m.totalSent} of ${m.totalRecipients} intended recipients are confirmed delivered (per send events). <b style="color:#fbbf24">${m.valid.length}</b> never got it and have a valid address — this sends ONLY to them, so nobody already delivered gets a duplicate.</p>
+     </div>
+     ${malformedCard}
+     ${!s.resend || !s.auth ? `<div class="card" style="margin-top:16px;border-color:#7a2a2a"><p class="hint" style="color:#ff8080">${!s.resend ? "RESEND_API_KEY is missing — can't send from here." : "AUTH_SECRET is missing — can't build unsubscribe links locally."}</p></div>` : `
+     <form method="post" action="/resend-missed/${esc(slug)}" class="card" style="margin-top:16px" id="resendForm">
+       <h2>Confirm</h2>
+       <p class="hint">Type <b>${m.valid.length}</b> to arm the button. This emails real people who haven't seen this issue yet — there is no undo.</p>
+       <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;align-items:center">
+         <input type="text" name="confirmCount" placeholder="recipient count" autocomplete="off" id="confirmCount" />
+         <button type="submit" class="danger" id="resendBtn">Send to the missing ${m.valid.length}</button>
+       </div>
+     </form>
+     <script>
+       document.getElementById('resendForm')?.addEventListener('submit', (e) => {
+         if (document.getElementById('confirmCount').value.trim() !== ${JSON.stringify(String(m.valid.length))}) {
+           e.preventDefault();
+           alert('Type exactly ${m.valid.length} to confirm.');
+         }
+       });
+     </script>`}`
   );
 }
 
@@ -1051,6 +1162,10 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === "GET" && p.startsWith("/report/")) {
       const page = await reportPage(decodeURIComponent(p.slice("/report/".length)), url.searchParams.get("sent") === "1");
+      return page ? sendHtml(page) : sendHtml("Not found", 404);
+    }
+    if (req.method === "GET" && p.startsWith("/resend-missed/")) {
+      const page = await resendMissedPage(decodeURIComponent(p.slice("/resend-missed/".length)), url.searchParams.get("err") || undefined);
       return page ? sendHtml(page) : sendHtml("Not found", 404);
     }
     if (req.method === "GET" && p.startsWith("/newsletter/")) {
@@ -1202,6 +1317,53 @@ const server = createServer(async (req, res) => {
       console.log(`[studio] done: ${result.sent}/${result.recipients} sent${result.errors.length ? `, errors: ${result.errors.join("; ")}` : ""}`);
       if (result.errors.length && result.sent === 0) {
         return fail("Send failed: " + result.errors.join("; "));
+      }
+      return redirect(`/report/${slug}?sent=1`);
+    }
+    if (req.method === "POST" && p.startsWith("/resend-missed/")) {
+      const slug = decodeURIComponent(p.slice("/resend-missed/".length));
+      const issue = loadIssue(slug);
+      if (!issue) return sendHtml("Not found", 404);
+      if (!issue.sentAt) return redirect(`/send/${slug}`);
+      const params = new URLSearchParams((await readBody(req)).toString("utf8"));
+      const confirm = (params.get("confirmCount") ?? "").trim();
+      const fail = (msg) => redirect(`/resend-missed/${slug}?err=${encodeURIComponent(msg)}`);
+
+      // Re-derive server-side, right now — never trust a count carried from
+      // the GET page render, which could be stale by the time this posts.
+      const lists = issue.sentList.split(",").map((x) => x.trim()).filter(isListSlug);
+      const m = await missedRecipients(slug, lists);
+      if (!m.valid.length) return fail("Nothing left to resend — everyone with a valid address is already confirmed delivered.");
+      if (confirm !== String(m.valid.length)) {
+        return fail(`Confirmation mismatch: ${m.valid.length} people currently have a valid address and haven't received it — type exactly that.`);
+      }
+      const reason = lists.length === 1 ? LIST_REASON[lists[0]] : LIST_REASON.newsletter;
+
+      console.log(`[studio] RESENDING missed "${slug}" to ${m.valid.length} people…`);
+      let result;
+      try {
+        result = await sendCampaign({
+          campaign: slug,
+          subject: issue.subject || issue.title,
+          bodyMarkdown: issue.body,
+          list: lists,
+          reason,
+          broad: true,
+          webUrl: `${SITE_URL}/newsletter/${slug}`,
+          preheader: issue.preheader || undefined,
+          onlyTo: m.valid,
+          onProgress: (sent, total) => console.log(`[studio]   ${sent}/${total}`),
+        });
+      } catch (err) {
+        console.error(`[studio] resend-missed failed before any email went out:`, err.message);
+        return fail("Resend failed: " + err.message);
+      }
+      await recordResendCompletion(slug, result);
+      appendFileSync(SEND_LOG, JSON.stringify({ slug, lists, at: new Date().toISOString(), resend: true, ...result }) + "\n");
+      if (result.sent > 0) markResendCompleted(slug, result.sent);
+      console.log(`[studio] resend-missed done: ${result.sent}/${result.recipients} sent${result.errors.length ? `, errors: ${result.errors.join("; ")}` : ""}`);
+      if (result.errors.length && result.sent === 0) {
+        return fail("Resend failed: " + result.errors.join("; "));
       }
       return redirect(`/report/${slug}?sent=1`);
     }

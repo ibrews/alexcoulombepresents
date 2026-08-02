@@ -186,6 +186,28 @@ export async function getCampaignSends(): Promise<CampaignSendRow[]> {
 }
 
 /**
+ * Tops up an already-completed campaign_sends row after a resend-missed
+ * completion — adds to sent/recipients instead of overwriting, and appends
+ * (rather than replaces) errors, so the row stays an honest cumulative
+ * record of every send attempt for this campaign.
+ */
+export async function recordResendCompletion(campaign: string, result: SendResult): Promise<void> {
+  const sql = neon(process.env.DATABASE_URL!);
+  const rows = (await sql`
+    SELECT sent, recipients, errors FROM campaign_sends WHERE campaign = ${campaign}
+  `) as { sent: number | null; recipients: number | null; errors: string | null }[];
+  const prev = rows[0] ?? { sent: 0, recipients: 0, errors: null };
+  const sent = (prev.sent ?? 0) + result.sent;
+  const recipients = (prev.recipients ?? 0) + result.recipients;
+  const errors = [prev.errors, result.errors.join("; ") || null].filter(Boolean).join("; ") || null;
+  await sql`
+    UPDATE campaign_sends
+    SET completed_at = now(), sent = ${sent}, recipients = ${recipients}, errors = ${errors}
+    WHERE campaign = ${campaign}
+  `;
+}
+
+/**
  * Send a campaign to one or more lists (deduped union) — or, with testTo
  * set, ONLY to those addresses (subject gets a [TEST] prefix, no events
  * recorded, tracking off). The caller is responsible for having confirmed
@@ -206,6 +228,14 @@ export async function sendCampaign(opts: {
   testTo?: string[];
   /** Test sends default to tracking OFF; set true to exercise the pixel/links. */
   testTracking?: boolean;
+  /**
+   * Real (non-test, tracked) send to this exact address list instead of
+   * deriving recipients from `list`. For completing a partially-failed
+   * campaign — resending to whoever a prior run's email_events shows as
+   * NOT sent — without re-deriving (and potentially re-including) anyone
+   * who already got it.
+   */
+  onlyTo?: string[];
   onProgress?: (sent: number, total: number) => void;
 }): Promise<SendResult> {
   const key = process.env.RESEND_API_KEY;
@@ -217,7 +247,7 @@ export async function sendCampaign(opts: {
   const from = "Alex Coulombe Presents <info@alexcoulombepresents.com>";
 
   const isTest = !!opts.testTo?.length;
-  const emails = isTest ? opts.testTo! : await listRecipients(opts.list);
+  const emails = isTest ? opts.testTo! : opts.onlyTo ?? (await listRecipients(opts.list));
   const errors: string[] = [];
   let sent = 0;
 
