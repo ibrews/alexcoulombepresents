@@ -92,8 +92,11 @@ async function draftFromRepo(repo: (typeof repos)[number]) {
       `Only state facts that are directly supported by the text above; do not invent API names, node names, or numbers ` +
       `that aren't in the source.\n\n` +
       `Current latest Unreal Engine release is ${CURRENT_UE_VERSION}. Follow this version-tagging rule:\n` +
-      `- A bug workaround that only affects specific versions (and not ${CURRENT_UE_VERSION}): name the exact ` +
-      `affected version(s), e.g. "5.6.1/5.7/5.8".\n` +
+      `- A bug workaround still broken as of ${CURRENT_UE_VERSION} (started at some version and never got fixed): ` +
+      `use "+" from where it started, e.g. "5.6.1+" — don't enumerate every affected version individually, since ` +
+      `that list silently goes stale the moment a new point release ships and is also still broken.\n` +
+      `- A bug workaround that's bounded (affects some versions but is fixed by ${CURRENT_UE_VERSION}, or only ever ` +
+      `affected a specific closed range): name the exact affected version(s) or range, e.g. "5.6.1/5.7" or "5.6 only".\n` +
       `- A relatively new feature that was introduced in a specific version and is still supported today: use a ` +
       `"+" minimum-version tag, e.g. "UE5.7+" — never bare "UE5.7", which wrongly implies it's limited to that one ` +
       `version.\n` +
