@@ -211,7 +211,15 @@ async function audienceCounts() {
     const sql = neon(url);
     const rows = await sql`SELECT list, COUNT(DISTINCT email)::int AS count FROM signups GROUP BY list ORDER BY count DESC`;
     const total = await sql`SELECT COUNT(DISTINCT email)::int AS n FROM signups`;
-    return { lists: rows, total: total[0].n };
+    // Every list in lib/lists.ts shows up, even ones with zero signups so
+    // far — a registered list silently disappearing everywhere in the
+    // Studio (dashboard, audience page, send checkboxes) reads as "did I
+    // wire this up wrong?" rather than "nobody's signed up yet".
+    const seen = new Set(rows.map((r) => r.list));
+    const zeros = Object.keys(LISTS)
+      .filter((list) => !seen.has(list))
+      .map((list) => ({ list, count: 0 }));
+    return { lists: [...rows, ...zeros], total: total[0].n };
   } catch (err) {
     console.error("[studio] audience query failed:", err.message);
     return null;
@@ -711,7 +719,9 @@ async function sendPage(slug, err, notice) {
   }
   const counts = Object.fromEntries((audience?.lists ?? []).map((l) => [l.list, l.count]));
   const options = Object.entries(LISTS)
-    .filter(([k]) => counts[k])
+    // `in`, not truthiness — a 0-subscriber list is still a real list to
+    // show (and audienceCounts() now always includes every registered one).
+    .filter(([k]) => k in counts)
     .map(
       ([k, label]) => `<label style="display:flex;align-items:center;gap:10px;margin:8px 0;text-transform:none;letter-spacing:0;font-size:14px;color:#e5e5ea">
         <input type="checkbox" name="list" value="${esc(k)}" ${k === "newsletter" ? "checked" : ""} onchange="updateCount()" data-reason="${esc(LIST_REASON[k] ?? "")}" />

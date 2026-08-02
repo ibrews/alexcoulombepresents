@@ -34,7 +34,7 @@ export const LIST_REASON: Record<ListSlug, string> = {
   lab: "you asked for early access to Lab projects",
   skills: "you inquired about a custom AI skill",
   store: "you inquired about something in the store",
-  newsletter: "you expressed interest in Unreal Engine and related training opportunities",
+  newsletter: "you expressed interest in Unreal Engine and related training and tools",
   members: "you joined the founding waitlist for membership",
   "team-training": "you inquired about team or studio training",
   "receipt-reconciler": "you asked to be notified when Receipt Reconciler goes on sale",

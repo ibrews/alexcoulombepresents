@@ -12,7 +12,7 @@ Bottom: a smattering of amazing folks in LA*
 
 Hey folks!
 
-Alex here with some news. Most importantly:
+Alex here with some news. First up:
 
 ## Live Unreal Engine classes start Wednesday
 
