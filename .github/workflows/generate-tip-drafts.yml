@@ -1,0 +1,36 @@
+# Generates a batch of #uetips drafts with no dependency on any specific
+# machine (Sam included) — runs entirely on GitHub's own infra, sourcing
+# real project content already in this repo (lib/data.ts) and using only
+# cloud APIs (Gemini + Groq) for drafting/fact-checking. See
+# scripts/generate-tip-drafts.ts for the actual logic — this workflow just
+# checks out the repo, installs deps, and runs it with the right secrets.
+#
+# One-time setup: repo → Settings → Secrets and variables → Actions → add
+# GEMINI_API_KEY and GROQ_API_KEY (CRON_SECRET already exists, shared with
+# the other cron workflows).
+name: generate-tip-drafts
+on:
+  schedule:
+    - cron: "0 13 * * 0" # weekly, Sunday — "next week's worth" per the batch size below
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "How many draft tips to generate"
+        required: false
+        default: "5"
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm ci
+      - name: Generate and queue tip drafts
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: npx tsx scripts/generate-tip-drafts.ts "${{ github.event.inputs.count || '5' }}"
