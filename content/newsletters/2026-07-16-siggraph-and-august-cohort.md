@@ -63,14 +63,14 @@ Yes! [Agile Lens](https://www.agilelens.com) has been busy, and that's the main 
 
 ## How to stay in touch!
 
-The newsletters won't be very often. If you want to stay more up to date with what's new and exciting with Alex Coulombe Presents:
+These newsletters won't be very often. If you want to stay more up to date with what's new and exciting with Alex Coulombe Presents:
 
 - [Unreal NYC Training Discord](https://discord.gg/bNh4aqSEg)
 - [Instagram](https://instagram.com/alexctraining)
 - [LinkedIn](https://www.linkedin.com/company/alexctraining)
 - [X (daily #uetips!)](https://x.com/alexctraining)
 
-Anyway, that's all for now! Any questions? Drop me a line anytime by simply responding to this email, and I hope to see you this Wednesday.
+That's all for now! Any questions? Drop me a line anytime by simply responding to this email, and I hope to see you this Wednesday.
 
 — Alex
 *Friendly neighborhood Unreal authorized instructor*
