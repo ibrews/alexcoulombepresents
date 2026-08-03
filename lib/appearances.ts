@@ -103,7 +103,7 @@ export const appearances: Appearance[] = [
     date: "2017",
     endsISO: "2017-11-30T00:00:00Z",
     location: "Las Vegas, NV",
-    url: "https://vimeo.com/243184988",
+    url: "https://www.autodesk.com/autodesk-university/class/First-Line-Final-Design-VR-Ultimate-Creative-Medium-2017",
   },
   {
     slug: "autodesk-university-2017-panel",
@@ -113,7 +113,7 @@ export const appearances: Appearance[] = [
     date: "2017",
     endsISO: "2017-11-30T00:00:00Z",
     location: "Las Vegas, NV",
-    url: "https://au.autodesk.com/au-online/classes-on-demand/class-catalog/classes/year-2017/class-detail/as129811",
+    url: "https://www.autodesk.com/autodesk-university/class/vision-future-Virtual-Reality-Design-Viz-Advice-Experts-2017",
   },
   {
     slug: "vr2020-summit-2017",
@@ -189,7 +189,7 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "London, UK",
-    url: "https://au.autodesk.com/au-online/classes-on-demand/class-catalog/classes/year-2018/revit/aulon747",
+    url: "https://www.autodesk.com/autodesk-university/class/Beyond-Presentations-Designing-Naturally-VR-2018",
   },
   {
     slug: "iteac-2018",

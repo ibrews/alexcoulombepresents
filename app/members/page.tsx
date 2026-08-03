@@ -88,6 +88,12 @@ export default async function Members({
               >
                 Browse the Lab tools →
               </Link>
+              <Link
+                href="/members/decks"
+                className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+              >
+                Spatial Deck presentations →
+              </Link>
             </div>
           </div>
         </Reveal>

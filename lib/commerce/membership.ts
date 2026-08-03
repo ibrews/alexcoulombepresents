@@ -41,6 +41,11 @@ export const memberBenefits: { title: string; detail: string }[] = [
     title: "Vote with extra weight",
     detail: "Members steer what gets taught and built next — your vote counts double on upcoming class topics.",
   },
+  {
+    title: "The Spatial Deck presentation library",
+    detail:
+      "Every public talk built and delivered in Spatial Deck, consolidated in one place with more context than a conference listing gives you — instead of hunting them down one at a time.",
+  },
 ];
 
 // True when the customer holds an active membership entitlement that hasn't
