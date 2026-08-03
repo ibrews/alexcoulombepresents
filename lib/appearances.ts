@@ -142,7 +142,7 @@ export const appearances: Appearance[] = [
     date: "Jun 2017",
     endsISO: "2017-06-30T00:00:00Z",
     location: "Portland, OR",
-    url: "http://www.tcg.org/Events/NationalConference/PastConferenceArchives/2017/TCGinPDX.aspx",
+    url: "http://web.archive.org/web/20230126222427/https://www.tcg.org/Events/NationalConference/PastConferenceArchives/2017/TCGinPDX.aspx",
   },
   {
     slug: "nyvr-expo-2018",
@@ -179,7 +179,7 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "London, UK",
-    url: "https://skillsmatter.com/skillscasts/12229-agile-lens-immersive-design",
+    url: "https://web.archive.org/web/20190401185507/https://skillsmatter.com/skillscasts/12229-agile-lens-immersive-design",
   },
   {
     slug: "autodesk-university-london-2018",
@@ -431,7 +431,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-04-27T00:00:00Z",
     location: "Virtual",
-    url: "http://bit.ly/RTCHighFidelity",
+    url: "http://web.archive.org/web/20200704175915/https://realtimeconference.com/",
   },
   {
     slug: "tcg-phoenix-2020",
@@ -497,7 +497,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual",
-    url: "https://thekarmabirdhouse.com/happening/alex-coulombe-its-like-youre-there/",
+    url: "http://web.archive.org/web/20240716065319/https://thekarmabirdhouse.com/happening/alex-coulombe-its-like-youre-there/",
   },
   {
     slug: "syracuse-arc682-2020",
@@ -586,7 +586,7 @@ export const appearances: Appearance[] = [
     date: "2021",
     endsISO: "2021-06-30T00:00:00Z",
     location: "Virtual",
-    url: "https://aixr.org/event-listing/aixr-insights-live-going-digital-pivoting-live-events-to-virtual-experiences/",
+    url: "http://web.archive.org/web/20250908181200/https://aixr.org/event-listing/aixr-insights-live-going-digital-pivoting-live-events-to-virtual-experiences/",
   },
   {
     slug: "vivecon-2021",

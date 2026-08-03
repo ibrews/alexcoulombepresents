@@ -39,7 +39,7 @@ export const pressMentions: PressMention[] = [
     title: "Developer Uses Vive Tracker to Battle Ceiling Fan",
     date: "2017",
     dateISO: "2017-06-15T00:00:00Z",
-    url: "https://vrscout.com/news/developer-vive-tracker-battle-ceiling-fan/",
+    url: "http://web.archive.org/web/20231208153053/https://vrscout.com/news/developer-vive-tracker-battle-ceiling-fan/",
   },
   {
     slug: "what-is-vr-book-2017",
@@ -48,7 +48,7 @@ export const pressMentions: PressMention[] = [
     title: "Contributed chapter",
     date: "2017",
     dateISO: "2017-06-15T00:00:00Z",
-    url: "http://whatisvrbook.com/",
+    url: "http://web.archive.org/web/20250821203925/http://www.whatisvrbook.com/",
   },
   {
     slug: "uploadvr-vive-tracker-2017",
@@ -159,7 +159,7 @@ export const pressMentions: PressMention[] = [
     title: "Interview with Chris Nichols",
     date: "2018",
     dateISO: "2018-06-15T00:00:00Z",
-    url: "https://www.chaosgroup.com/blog/alex-coulombe-agile-lens",
+    url: "https://www.chaos.com/cg-garage/alex-coulombe-agile-lens",
   },
   {
     slug: "unreal-engine-designing-in-vr-2018",
@@ -168,7 +168,7 @@ export const pressMentions: PressMention[] = [
     title: "Designing in VR: Agile Lens helps furnish a theater with Unreal Engine",
     date: "2018",
     dateISO: "2018-06-15T00:00:00Z",
-    url: "https://www.unrealengine.com/en-US/blog/designing-in-vr-agile-lens-helps-furnish-a-theater-with-unreal-engine",
+    url: "https://www.unrealengine.com/en-US/spotlights/designing-in-vr-agile-lens-helps-furnish-a-theater-with-unreal-engine",
   },
   {
     slug: "vr-voice-leapcon-2018",
@@ -213,7 +213,7 @@ export const pressMentions: PressMention[] = [
     title: "Film Judge",
     date: "2019",
     dateISO: "2019-06-15T00:00:00Z",
-    url: "https://www.socapa.org/tapintofilm/",
+    url: "http://web.archive.org/web/20251029125550/https://socapa.org/tapintofilm/",
   },
   {
     slug: "voices-of-vr-806-2019",
@@ -285,7 +285,7 @@ export const pressMentions: PressMention[] = [
     title: "Alex Coulombe Talks Unreal Engine Workflows",
     date: "Jan 2020",
     dateISO: "2020-01-22T00:00:00Z",
-    url: "https://theia.io/2020/01/22/unreal-engine-workflow-interview-alex-coulombe/",
+    url: "http://web.archive.org/web/20210420190734/https://theia.io/2020/01/22/unreal-engine-workflow-interview-alex-coulombe/",
   },
   {
     slug: "yahoo-finance-realtime-conference-2020",
@@ -329,7 +329,7 @@ export const pressMentions: PressMention[] = [
     title: "25 People in Social VR, Virtual Worlds, and the Metaverse Whom You Should Be Following",
     date: "Feb 2021",
     dateISO: "2021-02-18T00:00:00Z",
-    url: "https://ryanschultz.com/2021/02/18/my-list-of-25-people-in-social-vr-virtual-worlds-and-the-metaverse-whom-you-should-be-following-plus-a-few-alternates/",
+    url: "http://web.archive.org/web/20210224171204/https://ryanschultz.com/2021/02/18/my-list-of-25-people-in-social-vr-virtual-worlds-and-the-metaverse-whom-you-should-be-following-plus-a-few-alternates/",
   },
   {
     slug: "aea-consulting-2021",
@@ -347,7 +347,7 @@ export const pressMentions: PressMention[] = [
     title: "NFTs and Architecture (with Samuel Arsenault-Brassard)",
     date: "2021",
     dateISO: "2021-06-15T00:00:00Z",
-    url: "https://www.chaosgroup.com/blog/samuel-arsenault-brassard-alex-coulombe-nfts-and-architecture",
+    url: "https://www.youtube.com/watch?v=pxAyuPhLL7s",
   },
   {
     slug: "unreal-engine-meet-someone-unreal-2021",
