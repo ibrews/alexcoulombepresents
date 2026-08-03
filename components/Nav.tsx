@@ -39,11 +39,11 @@ export default function Nav() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <Link href="/" className="group flex items-center gap-2.5 font-bold tracking-tight">
-          <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true" className="transition-transform duration-300 group-hover:rotate-45">
+        <Link href="/" className="group flex shrink-0 items-center gap-2.5 font-bold tracking-tight">
+          <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true" className="shrink-0 transition-transform duration-300 group-hover:rotate-45">
             <path d="M16 2 L19 13 L30 16 L19 19 L16 30 L13 19 L2 16 L13 13 Z" fill="#2dd4bf" />
           </svg>
-          <span className="flex items-baseline gap-2">
+          <span className="flex items-baseline gap-2 whitespace-nowrap">
             <span className="text-lg">Alex Coulombe</span>
             <span className="grad-text text-lg transition-transform group-hover:translate-x-0.5">Presents</span>
           </span>

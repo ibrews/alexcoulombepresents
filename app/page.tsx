@@ -74,8 +74,9 @@ export default function Home() {
               Agile Lens
             </a>
             , 16+ yrs of immersive design across the built environment, live theatre, and emerging
-            technology. Unreal Engine Gold Authorized Instructor. Now teaching machines to build
-            alongside us.
+            technology. Unreal Engine Gold Authorized Instructor.
+            <br />
+            Now teaching machines to build alongside us.
           </p>
           <p className="mt-5 text-lg [text-shadow:0_2px_10px_rgba(7,7,15,0.9)] md:text-xl">
             Currently: <Typewriter words={roles} />

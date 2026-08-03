@@ -47,8 +47,8 @@ export default function Training() {
           >
             Agile Lens
           </a>
-          . He has collaborated on the creation of 50+
-          courses and taught 300+ sessions on behalf of Epic Games to their key partners. Our
+          . He has developed or co-developed 50+
+          courses and taught 300+ courses on behalf of Epic Games to their key partners. Our
           curriculums come from those lessons merged with nearly a decade of real client work from
           Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now
           AI-driven workflows. You&apos;ll learn methodologies you won&apos;t find anywhere else.

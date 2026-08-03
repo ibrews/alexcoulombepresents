@@ -1124,6 +1124,7 @@ export const timeline: { year: string; title: string; detail: string }[] = [
   { year: "2013", title: "First VR theatrical sightlines — anywhere", detail: "Discovers the Oculus DK1 Kickstarter while at Fisher Dachs Associates and pioneers the world's first use of VR for theatrical sightline testing." },
   { year: "2014", title: "Agile Lens founded", detail: "An immersive design studio born from architecture and theatre. Clients would come to include the Four Seasons, Royal Shakespeare Company, NEOM, Samsung, Intel, and Royal Caribbean." },
   { year: "2016", title: "Early UE4 VR for real buildings", detail: "Yale Schwarzman Center in UE4 VR; The Shed at Hudson Yards equipment clearance; the Statue of Liberty Museum. Real decisions, made in headsets." },
+  { year: "2018", title: "First live performances", detail: "Alive in Plasticland — an improv/research theatre superteam performing live in early high-fidelity VR, with writing and research published on the group's own Medium blog of the same name." },
   { year: "2019", title: "Live performance goes immersive", detail: "Ghosted — an award-winning volumetric AR piece on Magic Leap. 'Loveseat' at the Venice Biennale: the first live VR show viewable globally." },
   { year: "2021", title: "A Christmas Carol VR", detail: "Two live actors, 45 minutes, avatar switching, facial capture — five holiday seasons on Quest, capped by a Raindance Immersive 2025 Official Selection, then retired as an annual show. The recorded replay is now finding its way to Apple Vision Pro." },
   { year: "2024", title: "Royal Shakespeare Company R&D", detail: "A mixed-reality rehearsal application with the RSC. Theatre and XR, finally in the same room." },
@@ -1133,12 +1134,13 @@ export const timeline: { year: string; title: string; detail: string }[] = [
 
 export const roles: string[] = [
   "XR-chitect",
-  "Unreal Authorized Instructor",
+  "Friendly Neighborhood UE5 Authorized Instructor",
   "Godot × Vision Pro pioneer",
   "AI fleet commander",
   "recovering architect",
   "theatre director's secret weapon",
   "podcast host",
+  "MetaHuman Wrangler",
   "Blueprint un-spaghettifier",
 ];
 
@@ -1323,11 +1325,14 @@ export const epicCourses: { kind: "Video" | "Course" | "Talk"; name: string; not
 
 // ── Links ───────────────────────────────────────────────────────────────────
 
+export type LinkGroup = "Agile Lens" | "Alex Coulombe personal" | "Alex Coulombe Presents";
+
 export const externalLinks: {
   label: string;
   url: string;
   note: string;
   vibe?: "serious" | "joke";
+  group?: LinkGroup;
   extra?: { label: string; url: string };
 }[] = [
   {
@@ -1335,39 +1340,64 @@ export const externalLinks: {
     url: "https://agilelens.com",
     note: "The immersive design studio Alex co-founded. Ten years of XR for architecture, theatre, and brands you've heard of — Hyperreal Estate, Holodeck Anywhere, Stage Presence, and more.",
     vibe: "serious",
+    group: "Agile Lens",
     extra: { label: "Browse the portfolio", url: "https://agilelens.com/portfolio" },
   },
-  { label: "alexcoulombe.com", url: "http://alexcoulombe.com", note: "Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine to experience it in its full Macromedia Flash glory, as nature intended.", vibe: "joke" },
-  { label: "GitHub — @ibrews", url: "https://github.com/ibrews", note: "Where the code lives. Engines plural, agents plural.", vibe: "serious" },
   {
     label: "Unreal NYC",
     url: "https://agilelens.com/unrealnyc",
     note: "The NYC Unreal Engine meetup, led by Alex — talks, demos, and the only room in Manhattan where 'nanite' is small talk.",
     vibe: "serious",
+    group: "Agile Lens",
     extra: { label: "Official Epic community page", url: "https://communities.unrealengine.com/new-york" },
+  },
+  {
+    label: "alexcoulombe.com",
+    url: "http://alexcoulombe.com",
+    note: "Lovingly preserved in 2013 amber. The TLS certificate has been on sabbatical for years. Enter via the Wayback Machine to experience it in its full Macromedia Flash glory, as nature intended.",
+    vibe: "joke",
+    group: "Alex Coulombe personal",
+  },
+  { label: "GitHub — @ibrews", url: "https://github.com/ibrews", note: "Where the code lives. Engines plural, agents plural.", vibe: "serious", group: "Alex Coulombe personal" },
+  {
+    label: "LinkedIn",
+    url: "https://linkedin.com/in/alexcoulombe",
+    note: "16,000+ followers' worth of XR hot takes and project reveals.",
+    vibe: "serious",
+    group: "Alex Coulombe personal",
+    extra: { label: "Recent: the Europe tour recap (FMX + NXT BLD)", url: "https://www.linkedin.com/posts/alexcoulombe_long-overdue-europe-post-1-of-2-this-activity-7464479226625265665-d8dF" },
+  },
+  { label: "X / Twitter — @ibrews", url: "https://twitter.com/ibrews", note: "Shorter hot takes.", vibe: "serious", group: "Alex Coulombe personal" },
+  {
+    label: "5th Wall Forum",
+    url: "https://www.5thwallforum.com/team",
+    note: "Founding Advisory Board — Creative Director & Co-Founder. XR community and podcast Alex helped build from the start.",
+    vibe: "serious",
+    group: "Alex Coulombe personal",
+  },
+  {
+    label: "Isle",
+    url: "https://www.isleworlds.com/",
+    note: "Founding Advisor. Real-world, live-action videogames played inside physical arenas using next-gen mixed reality.",
+    vibe: "serious",
+    group: "Alex Coulombe personal",
   },
   {
     label: "The (Unofficial) Unreal Engine Podcast",
     url: "https://linktr.ee/unoffunrealpod",
     note: "Co-hosted with Jacob Feldman. Unreal news, takes, and guests.",
     vibe: "serious",
+    group: "Alex Coulombe Presents",
     extra: { label: "All platforms (Linktree)", url: "https://linktr.ee/unoffunrealpod" },
   },
-  {
-    label: "LinkedIn",
-    url: "https://linkedin.com/in/alexcoulombe",
-    note: "16,000+ followers' worth of XR hot takes and project reveals.",
-    vibe: "serious",
-    extra: { label: "Recent: the Europe tour recap (FMX + NXT BLD)", url: "https://www.linkedin.com/posts/alexcoulombe_long-overdue-europe-post-1-of-2-this-activity-7464479226625265665-d8dF" },
-  },
-  { label: "X / Twitter — @ibrews", url: "https://twitter.com/ibrews", note: "Shorter hot takes.", vibe: "serious" },
   {
     label: "X / Twitter — @alexctraining",
     url: "https://twitter.com/alexctraining",
     note: "A separate account, just for Unreal Engine tips — recurring #uetips pulled from the training knowledge base. Not the personal @ibrews feed above.",
     vibe: "serious",
+    group: "Alex Coulombe Presents",
   },
-  { label: "YouTube", url: "https://youtube.com/@ibrews", note: "Unreal Engine tutorials, Unity→UE5 migration guides, MetaHuman deep dives.", vibe: "serious" },
+  { label: "YouTube", url: "https://youtube.com/@ibrews", note: "Unreal Engine tutorials, Unity→UE5 migration guides, MetaHuman deep dives.", vibe: "serious", group: "Alex Coulombe Presents" },
 ];
 
 export const site = {

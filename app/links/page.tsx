@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
-import { externalLinks } from "@/lib/data";
+import { externalLinks, type LinkGroup } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
@@ -10,9 +10,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/links" },
 };
 
+const GROUP_ORDER: LinkGroup[] = ["Agile Lens", "Alex Coulombe personal", "Alex Coulombe Presents"];
+
 export default function Links() {
   const serious = externalLinks.filter((l) => l.vibe !== "joke");
   const joke = externalLinks.find((l) => l.vibe === "joke");
+  let cardIndex = 0;
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-32">
@@ -24,38 +27,52 @@ export default function Links() {
         </h1>
       </Reveal>
 
-      <div className="mt-12 space-y-4">
-        {serious.map((l, i) => (
-          <Reveal key={l.url} delay={Math.min(i * 60, 240)}>
-            <div className="glass group relative rounded-2xl p-6">
-              <a
-                href={l.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between gap-6"
-              >
-                <div>
-                  <h2 className="font-bold group-hover:text-teal">{l.label}</h2>
-                  <p className="mt-1 text-sm text-mist">{renderBreaks(l.note)}</p>
-                </div>
-                <span className="font-mono text-mist transition-transform group-hover:translate-x-1 group-hover:text-teal">
-                  →
-                </span>
-              </a>
-              {l.extra && (
-                <a
-                  href={l.extra.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-block rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
-                >
-                  {l.extra.label} ↗
-                </a>
-              )}
+      {GROUP_ORDER.map((group) => {
+        const links = serious.filter((l) => l.group === group);
+        if (!links.length) return null;
+        return (
+          <div key={group} className="mt-12">
+            <Reveal>
+              <p className="font-mono text-xs uppercase tracking-widest text-mist">{group}</p>
+            </Reveal>
+            <div className="mt-4 space-y-4">
+              {links.map((l) => {
+                const delay = Math.min(cardIndex++ * 60, 240);
+                return (
+                  <Reveal key={l.url} delay={delay}>
+                    <div className="glass group relative rounded-2xl p-6">
+                      <a
+                        href={l.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between gap-6"
+                      >
+                        <div>
+                          <h2 className="font-bold group-hover:text-teal">{l.label}</h2>
+                          <p className="mt-1 text-sm text-mist">{renderBreaks(l.note)}</p>
+                        </div>
+                        <span className="font-mono text-mist transition-transform group-hover:translate-x-1 group-hover:text-teal">
+                          →
+                        </span>
+                      </a>
+                      {l.extra && (
+                        <a
+                          href={l.extra.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-block rounded-full border border-line px-3.5 py-1.5 font-mono text-xs text-mist transition-colors hover:border-teal/60 hover:text-snow"
+                        >
+                          {l.extra.label} ↗
+                        </a>
+                      )}
+                    </div>
+                  </Reveal>
+                );
+              })}
             </div>
-          </Reveal>
-        ))}
-      </div>
+          </div>
+        );
+      })}
 
       {joke && (
         <Reveal>

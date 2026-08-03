@@ -551,7 +551,7 @@ export default function SplatHero() {
           finishPointer(event.pointerId, event.currentTarget, !pointer.isRotating && movement < CLICK_DISTANCE_PX);
         }}
         onPointerCancel={(event) => finishPointer(event.pointerId, event.currentTarget, false)}
-        className={`pointer-events-auto absolute inset-0 transition-opacity duration-700 ${
+        className={`pointer-events-auto absolute inset-0 select-none transition-opacity duration-700 ${
           active && ready ? "" : "opacity-0"
         } ${active && ready && !reducedMotion ? "cursor-grab active:cursor-grabbing" : ""}`}
         // Tailwind can't generate an arbitrary-value opacity class from a

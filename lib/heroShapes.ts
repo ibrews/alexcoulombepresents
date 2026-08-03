@@ -173,7 +173,9 @@ export function genGlobe(R: number): FormData {
       push(pos, col, v[0], v[1], v[2], jitter(STEEL2, 0.22));
     }
   }
-  // Beacons — generic positions (not real client/site data)
+  // Beacons — generic positions (not real client/site data). Nine, not six —
+  // a busier scatter reads less like "a sphere with a few dots" once the
+  // network below connects them.
   const BEACON_LAT_LON: [number, number, boolean][] = [
     [40.7, 0, true],
     [28.5, -55, false],
@@ -181,6 +183,9 @@ export function genGlobe(R: number): FormData {
     [-33.9, 140, false],
     [35.7, -140, false],
     [55.8, 20, false],
+    [1.3, 15, false],
+    [-23.5, -95, false],
+    [22.3, 100, false],
   ];
   const HOME: RGB = hexToRgb(0xff9eb4);
   const beacons: [number, number, number][] = [];
@@ -192,21 +197,33 @@ export function genGlobe(R: number): FormData {
       push(pos, col, vv[0] + rand(-0.015, 0.015) * R, vv[1] + rand(-0.015, 0.015) * R, vv[2] + rand(-0.015, 0.015) * R, jitter(home ? HOME : AMBER, 0.15));
     }
   }
-  // Great-circle arcs, home to everywhere
-  const home = norm(beacons[0]);
-  for (let bi = 1; bi < beacons.length; bi++) {
+  // Great-circle arcs across a small route network — not just home-to-
+  // everywhere (a single hub/spoke reads as static once you've seen it
+  // once). Multiple pairs, including some that never touch "home," so
+  // there's always more than one arc animating and it reads as traffic
+  // hopping between places rather than one node broadcasting outward.
+  const EDGES: [number, number][] = [
+    [0, 1], [0, 2], [0, 5],
+    [1, 3], [1, 7],
+    [2, 4], [2, 8],
+    [3, 6], [3, 8],
+    [4, 5], [4, 7],
+    [6, 7], [6, 8],
+  ];
+  for (const [ai, bi] of EDGES) {
+    const from = norm(beacons[ai]);
     const dst = norm(beacons[bi]);
-    const ang = Math.acos(Math.max(-1, Math.min(1, dot(home, dst))));
+    const ang = Math.acos(Math.max(-1, Math.min(1, dot(from, dst))));
     const sa = Math.sin(ang);
     if (sa < 0.001) continue;
-    const steps = Math.floor(HERO_POINT_COUNT * 0.02);
+    const steps = Math.floor(HERO_POINT_COUNT * 0.012);
     for (let i = 0; i < steps; i++) {
       const t = i / (steps - 1);
       const a = Math.sin((1 - t) * ang) / sa;
       const b = Math.sin(t * ang) / sa;
-      const vx = home[0] * a + dst[0] * b;
-      const vy = home[1] * a + dst[1] * b;
-      const vz = home[2] * a + dst[2] * b;
+      const vx = from[0] * a + dst[0] * b;
+      const vy = from[1] * a + dst[1] * b;
+      const vz = from[2] * a + dst[2] * b;
       const rr = R * (1 + 0.18 * Math.sin(Math.PI * t));
       push(pos, col, vx * rr + rand(-0.006, 0.006) * R, vy * rr + rand(-0.006, 0.006) * R, vz * rr + rand(-0.006, 0.006) * R, jitter(TEAL, 0.15));
     }
@@ -512,7 +529,9 @@ export function genMonocle(R: number): FormData {
 
 export type HeroShapeKey = "scan" | "theater" | "headset" | "skyline" | "marquee" | "guitar" | "wave" | "globe" | "dominoes" | "monocle";
 
-export const HERO_SHAPE_ORDER: HeroShapeKey[] = ["scan", "theater", "headset", "skyline", "marquee", "guitar", "wave", "globe", "dominoes", "monocle"];
+// "scan" (Forest Scan) is disabled — Alex: not a good fit, don't cycle to it.
+// genScan/its label/generator stay defined below so it's a one-line revert.
+export const HERO_SHAPE_ORDER: HeroShapeKey[] = ["theater", "headset", "skyline", "marquee", "guitar", "wave", "globe", "dominoes", "monocle"];
 
 export const HERO_SHAPE_LABELS: Record<HeroShapeKey, string> = {
   scan: "Forest Scan",
