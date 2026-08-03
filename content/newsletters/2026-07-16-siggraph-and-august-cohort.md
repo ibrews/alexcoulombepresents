@@ -4,7 +4,7 @@ subject: AUG 5: Live Unreal Classes (& More!) from Alex Coulombe
 preheader: Live classes are back & things are cooking in the lab
 sentAt: 2026-08-02T22:38:56.304Z
 sentList: ai,unreal,forage,unrealitykit-bridge,renderman-bridge,pinchwork,unreal-visionos,lab,skills,store,newsletter,members,team-training,receipt-reconciler,legacy-interest
-sentCount: 123
+sentCount: 423
 ---
 ![siggraph](/newsletter/siggraph.jpg)
 
