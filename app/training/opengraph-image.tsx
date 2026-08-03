@@ -10,7 +10,10 @@ export default function Image() {
     ogImage({
       kicker: "/training",
       title: "Learn Unreal from someone who ships with it every day.",
-      sub: "Live classes · Next cohort Aug 5 — Epic Games Authorized Instructor",
+      // Deliberately undated: this image is cached hard by every social
+      // platform that has ever scraped it, so a specific date here outlives
+      // the class it names.
+      sub: "Live classes every Wednesday — Epic Games Authorized Instructor",
       accent: "training",
     }),
     { ...size }

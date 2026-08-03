@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
     return [
       { source: "/lab/unrealitykit", destination: "/lab/unrealitykit-bridge", permanent: true },
       { source: "/urk", destination: "/lab/unrealitykit-bridge", permanent: true },
+      // Drainspotting's launch video end card and pre-domain marketing copy
+      // point here; the product's real home is its own domain now. Temporary
+      // on purpose — if it ever gets a page on this site, a cached 301 in
+      // someone's browser would be the thing standing in the way.
+      { source: "/drainspotting", destination: "https://drainspotting.app", permanent: false },
       // The "view in browser" link in every already-delivered copy of this
       // issue (423 inboxes) points at the old slug — must keep resolving.
       {
