@@ -8,7 +8,7 @@ sentCount: 123
 ---
 ![siggraph](/newsletter/siggraph.jpg)
 
-![Screenshot 2026-07-25 at 1.02.27 PM](/newsletter/screenshot-2026-07-25-at-1-02-27-pm.jpg) ![Screenshot 2026-07-25 at 1.05.49 PM](/newsletter/screenshot-2026-07-25-at-1-05-49-pm.jpg)
+![Collage of selfies with friends and colleagues at SIGGRAPH 2026 in LA](/newsletter/siggraph-collage01.jpg) ![Second collage of selfies from SIGGRAPH 2026, including one holding a Meta Quest headset and a big nighttime group photo](/newsletter/siggraph-collage02.jpg)
 
 *Top: oh look, SIGGRAPH.
 Bottom: a smattering of amazing folks in LA*
