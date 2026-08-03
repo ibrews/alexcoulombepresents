@@ -185,13 +185,26 @@ export function renderNewsletterEmail(opts: {
   siteUrl?: string;
   /** Inbox preview text — the gray line after the subject. Hidden in the body. */
   preheader?: string;
+  /**
+   * "hidden" (default): display:none — invisible AND correct for every real
+   * send, since Resend transmits this HTML source directly.
+   * "copyable": browsers exclude display:none content from a Select
+   * All → Copy — a manual send (paste this HTML into Gmail's compose box,
+   * see scripts/manual-send-kit.mjs) would silently lose the preheader.
+   * This variant keeps the node genuinely rendered (opacity, not display)
+   * so the browser's copy includes it, while staying visually blended into
+   * the page background — needed ONLY for that copy/paste path.
+   */
+  preheaderStyle?: "hidden" | "copyable";
 }): string {
   const siteUrl = opts.siteUrl ?? "https://alexcoulombepresents.com";
   const body = markdownToEmailHtml(opts.bodyMarkdown, siteUrl);
   // Zero-width padding stops inbox previews from bleeding past the
   // preheader into the first real line of the email.
   const preheader = opts.preheader
-    ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${escapeHtml(opts.preheader)}${"&nbsp;&zwnj;".repeat(40)}</div>\n  `
+    ? opts.preheaderStyle === "copyable"
+      ? `<div style="font-size:1px;line-height:1px;color:#f4f4f5;opacity:0;overflow:hidden">${escapeHtml(opts.preheader)}</div>\n  `
+      : `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${escapeHtml(opts.preheader)}${"&nbsp;&zwnj;".repeat(40)}</div>\n  `
     : "";
   return `<!doctype html>
 <html>

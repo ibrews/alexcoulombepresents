@@ -37,6 +37,7 @@ import {
   recordResendCompletion,
 } from "../lib/sendNewsletter.ts";
 import { campaignStats } from "../lib/tracking.ts";
+import { isValidEmail } from "../lib/email.ts";
 import { neon } from "@neondatabase/serverless";
 
 const SITE_URL = "https://alexcoulombepresents.com";
@@ -248,7 +249,16 @@ async function subscribers(list, query) {
   return await sql`SELECT email, name, list, created_at FROM signups ORDER BY created_at DESC LIMIT 200`;
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Signups themselves can no longer be malformed — lib/db.ts validates on
+// insert AND the DB has a CHECK constraint backstopping every other write
+// path — but a campaign's already-recorded email_events or an address from
+// before that constraint existed could still be. Same shape check the DB
+// enforces, so "valid" here always means "the DB would currently accept it."
+async function malformedSignups() {
+  const sql = neon(process.env.DATABASE_URL);
+  const rows = await sql`SELECT DISTINCT email FROM signups ORDER BY email`;
+  return rows.map((r) => r.email).filter((e) => !isValidEmail(e));
+}
 
 // A prior send can partially fail (one bad address poisons a whole 100-batch;
 // a provider-side rate/quota limit mid-run) — this diffs "who should have
@@ -261,8 +271,8 @@ async function missedRecipients(campaign, lists) {
   const sentSet = new Set(sent.map((r) => r.email));
   const missed = all.map((r) => r.email).filter((e) => !sentSet.has(e));
   return {
-    valid: missed.filter((e) => EMAIL_RE.test(e)),
-    malformed: missed.filter((e) => !EMAIL_RE.test(e)),
+    valid: missed.filter((e) => isValidEmail(e)),
+    malformed: missed.filter((e) => !isValidEmail(e)),
     totalRecipients: all.length,
     totalSent: sentSet.size,
   };
@@ -363,6 +373,19 @@ async function dashboardPage() {
   }
   const issues = listIssues();
   const audience = await audienceCounts();
+  let malformedBanner = "";
+  if (envStatus().db) {
+    try {
+      const bad = await malformedSignups();
+      if (bad.length) {
+        malformedBanner = `<div class="card" style="border-color:#7a2a2a;margin-bottom:16px">
+          <h2 style="color:#ff8080">⚠ ${bad.length} malformed address${bad.length === 1 ? "" : "es"} in signups</h2>
+          <p class="hint">New signups can't get into this state anymore (validated on write, plus a DB constraint) — these predate that. They're silently excluded from every send until fixed.</p>
+          <ul style="margin:8px 0 0;padding-left:18px;font-family:monospace;font-size:13px">${bad.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>
+        </div>`;
+      }
+    } catch { /* best-effort — dashboard still renders */ }
+  }
 
   const issueRows = await Promise.all(
     issues.map(async (i) => {
@@ -404,6 +427,7 @@ async function dashboardPage() {
     "Newsletter Studio",
     `<h1>Issues</h1>
      <p class="sub">Markdown files in <span style="font-family:monospace">content/newsletters/</span> — git is the version history.</p>
+     ${malformedBanner}
      <div class="grid">
        <div class="card">
          <table><tr><th>Issue</th><th>Date</th><th>Status</th><th>Engagement</th><th></th></tr>${issueRows.join("")}</table>
@@ -686,21 +710,60 @@ function editorPage(slug) {
       r.readAsDataURL(file);
     });
   }
-  async function uploadOne(file) {
+  // "screenshot-2026-07-25-at-1-02-27-pm.jpg" with alt="Screenshot 2026-07-25
+  // at 1.02.27 PM" is what every screen-capture tool names a file by default
+  // — it tells a reader (or a screen reader) nothing. Block that at the one
+  // place it can be stopped: before the file leaves the browser. A generic
+  // name gets NO seeded guess (nothing to lightly edit past); a plausible
+  // one gets a cleaned-up starting point the person can still improve.
+  const GENERIC_NAME_RE = /^(screen[-_ ]?shot|screenshot|img|image|photo|pic|picture|dsc|scan|unnamed|untitled|clipboard|file|download|asset)(?![a-z])/i;
+  function humanizeFilename(name) {
+    const base = name.replace(/\\.[a-z0-9]+$/i, '');
+    return GENERIC_NAME_RE.test(base.trim()) ? '' : base.replace(/[-_]+/g, ' ').trim();
+  }
+  function slugifyAlt(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+\$/g, '').slice(0, 60) || 'image';
+  }
+  function describeImage(file) {
+    let guess = humanizeFilename(file.name);
+    while (true) {
+      const desc = window.prompt(
+        'Alt text for ' + file.name + ' — describe what\\'s in the image (read aloud by screen readers, shown if it fails to load):',
+        guess
+      );
+      if (desc === null) return null; // cancelled — skip this file
+      const trimmed = desc.trim();
+      if (!trimmed) { guess = ''; alert('Alt text can\\'t be empty — describe what the image actually shows.'); continue; }
+      if (GENERIC_NAME_RE.test(trimmed)) { guess = ''; alert('That\\'s still just a generic label, not a description — say what\\'s actually in the image.'); continue; }
+      return trimmed;
+    }
+  }
+  async function uploadOne(file, alt) {
     const resized = await resizeImage(file);
     const dataUrl = await readAsDataUrl(resized);
-    const res = await fetch('/upload', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ filename: resized.name, dataUrl }) });
+    const ext = (resized.name.match(/\\.[a-z0-9]+\$/i) || ['.jpg'])[0];
+    const suggestedName = slugifyAlt(alt) + ext;
+    const res = await fetch('/upload', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ filename: suggestedName, dataUrl }) });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
-    return { path: data.path, alt: file.name.replace(/\\.[a-z0-9]+$/i, '') };
+    return { path: data.path, alt };
   }
   async function uploadFiles(fileList) {
     const files = Array.from(fileList);
     if (!files.length) return;
     clearError();
-    $('status').textContent = 'Uploading ' + files.length + '…';
+    // Sequential and blocking on purpose — prompt() can't run concurrently,
+    // and asking one at a time keeps "which file is this for" unambiguous.
+    const described = [];
+    for (const file of files) {
+      const alt = describeImage(file);
+      if (alt === null) continue; // this one file skipped, not the whole batch
+      described.push({ file, alt });
+    }
+    if (!described.length) return;
+    $('status').textContent = 'Uploading ' + described.length + '…';
     try {
-      const results = await Promise.all(files.map(uploadOne));
+      const results = await Promise.all(described.map((d) => uploadOne(d.file, d.alt)));
       const line = results.map((r) => '![' + r.alt + '](' + r.path + ')').join(' ');
       const ta = $('body');
       ta.value = ta.value + (ta.value.trim() ? '\\n\\n' : '') + line + '\\n';

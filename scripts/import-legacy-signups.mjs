@@ -18,6 +18,7 @@
  */
 import { readFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
+import { isValidEmail } from "../lib/email.ts";
 
 function loadEnvLocal() {
   try {
@@ -91,9 +92,21 @@ async function main() {
 
   const seen = new Set();
   const people = [];
+  const skipped = [];
   for (const r of rows.slice(1)) {
     const email = (r[emailIdx] || "").trim().toLowerCase();
-    if (!email || !email.includes("@") || seen.has(email)) continue;
+    if (!email || seen.has(email)) continue;
+    // A loose ".includes('@')" check here is exactly how a real typo —
+    // "amy@cosmokitty,com", comma for period — got into the DB undetected
+    // (parsed fine, so it never surfaced until a batch send tried to mail
+    // it). isValidEmail is the same shape check the DB itself now enforces
+    // via a CHECK constraint, so a bad row is caught here with the
+    // offending value visible, instead of crashing the import loop
+    // partway through on a constraint violation.
+    if (!isValidEmail(email)) {
+      skipped.push(email);
+      continue;
+    }
     seen.add(email);
     people.push({
       name: nameIdx !== -1 ? (r[nameIdx] || "").trim() || null : null,
@@ -103,6 +116,10 @@ async function main() {
   }
 
   console.log(`Parsed ${rows.length - 1} row(s), ${people.length} unique valid email(s).`);
+  if (skipped.length) {
+    console.log(`Skipped ${skipped.length} malformed address(es) — fix these at the source and re-run if they matter:`);
+    skipped.forEach((e) => console.log(`  ${e}`));
+  }
   if (dryRun) {
     people.slice(0, 10).forEach((p) => console.log(`  ${p.email}${p.name ? ` (${p.name})` : ""}`));
     if (people.length > 10) console.log(`  ... and ${people.length - 10} more`);

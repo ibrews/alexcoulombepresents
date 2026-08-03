@@ -137,6 +137,10 @@ const html = renderNewsletterEmail({
   footerHtml,
   siteUrl: SITE,
   preheader: issue.preheader || undefined,
+  // The normal display:none trick doesn't survive Select All → Copy → Paste
+  // into Gmail — browsers only copy genuinely-rendered content. This variant
+  // stays invisible on screen but is still real, copyable content.
+  preheaderStyle: "copyable",
 });
 
 const groups = groupsOf(m.valid, GROUP_SIZE);

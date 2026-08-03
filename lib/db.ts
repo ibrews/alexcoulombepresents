@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import type { ListSlug } from "@/lib/lists";
+import { isValidEmail } from "@/lib/email";
 
 // Lazy singleton — never touch the DB at module load / build time.
 let _sql: ReturnType<typeof neon> | null = null;
@@ -26,6 +27,24 @@ async function ensureTable() {
       UNIQUE (email, list)
     )
   `;
+  // Backstop for every insert path, present or future — recordSignup()
+  // below already rejects malformed addresses, but a raw one-off script
+  // (see scripts/import-legacy-signups.mjs, which is exactly how
+  // "amy@cosmokitty,com" got in — a comma-for-period typo that passed its
+  // old ".includes('@')" check) can still write directly with SQL. This
+  // makes bad shape impossible at the table level regardless of which code
+  // touches it. Postgres has no "ADD CONSTRAINT IF NOT EXISTS" for CHECK,
+  // so swallow the "already exists" error on every warm start after the
+  // first.
+  try {
+    await sql()`
+      ALTER TABLE signups
+      ADD CONSTRAINT signups_email_shape CHECK (email ~ '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+    `;
+  } catch (err) {
+    const code = (err as { code?: string }).code;
+    if (code !== "42710") throw err; // 42710 = duplicate_object (constraint already exists)
+  }
   _ensured = true;
 }
 
@@ -36,7 +55,11 @@ export async function recordSignup(input: {
   list: ListSlug;
 }) {
   await ensureTable();
-  const { email, name, message, list } = input;
+  const email = input.email.trim();
+  if (!isValidEmail(email)) {
+    throw new Error(`Not a valid email address: "${email}"`);
+  }
+  const { name, message, list } = input;
   // Re-signups update name/message but keep the original created_at.
   await sql()`
     INSERT INTO signups (email, name, message, list)
