@@ -24,3 +24,4 @@ next-env.d.ts
 # never commit them.
 .newsletter-sends.jsonl
 .manual-send/
+.wrangler/
