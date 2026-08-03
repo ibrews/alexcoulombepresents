@@ -431,7 +431,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-04-27T00:00:00Z",
     location: "Virtual",
-    url: "http://web.archive.org/web/20200704175915/https://realtimeconference.com/",
+    url: "https://realtime.community/june-2020-immersive-storytelling-panel-discussion/",
   },
   {
     slug: "tcg-phoenix-2020",
@@ -468,6 +468,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-04-28T00:00:00Z",
     location: "Virtual",
+    url: "https://realtime.community/architecture-crafting-real-and-virtual-architecture-in-real-time-part-2/",
   },
   {
     slug: "arkit-meetup-mit-reality-hack-2020",
