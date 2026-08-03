@@ -22,8 +22,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "/training" },
 };
 
+// The Aug 5 session is a single dated event, and its Zoom link is a
+// single-occurrence registration — past it, both the date and the CTA are
+// dead. The next session isn't on the calendar yet, so the card falls back to
+// the standing rhythm and the poll instead of inventing a date. When the next
+// one IS scheduled: bump this, swap in the new Zoom link, and the dated copy
+// comes back on its own.
+const FREE_CLASS_ENDS_ISO = "2026-08-05T17:00:00Z"; // Aug 5, 11a ET + ~2h
+const FREE_CLASS_ZOOM = "https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA";
+
+// Without this the date check above would freeze at build time.
+export const revalidate = 3600;
+
 export default function Training() {
   const aiClasses = getCurriculumEntries().filter((entry) => entry.status === "teasing");
+  const freeClassAhead = Date.now() < new Date(FREE_CLASS_ENDS_ISO).getTime();
 
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
@@ -57,31 +70,68 @@ export default function Training() {
 
       <Reveal delay={80}>
         <div id="cohort" className="glow-card mt-10 max-w-2xl rounded-2xl border border-teal/40 p-6">
-          <p className="font-mono text-xs tracking-widest text-teal">
-            FREE CLASS · WEDNESDAY, AUGUST 5 · 11A ET
-          </p>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight">
-            Live Unreal class — free, and we&apos;re deciding what comes next together
-          </h2>
-          <p className="mt-3 leading-relaxed text-mist">
-            One live session, no cost, no catch: a tour of what Alex knows in Unreal, a look at what&apos;s
-            new in 5.8, and an open Q&amp;A. From here on it&apos;s a standing weekly rhythm — a live
-            class every <strong className="text-snow">Wednesday at 11a ET</strong>, plus{" "}
-            <strong className="text-snow">office hours every Friday at 1p ET</strong>. What the paid
-            weeks actually cover is exactly what the poll below decides.
-          </p>
+          {/* Both states spell their copy out as JSX text rather than as
+              ternary string operands — scripts/gen-content.mjs only sees the
+              former, and copy that's invisible to CONTENT.md can't be edited
+              there. */}
+          {freeClassAhead ? (
+            <p className="font-mono text-xs tracking-widest text-teal">
+              FREE CLASS · WEDNESDAY, AUGUST 5 · 11A ET
+            </p>
+          ) : (
+            <p className="font-mono text-xs tracking-widest text-teal">
+              LIVE CLASSES · WEDNESDAYS 11A ET · OFFICE HOURS FRIDAYS 1P ET
+            </p>
+          )}
+          {freeClassAhead ? (
+            <h2 className="mt-2 text-2xl font-bold tracking-tight">
+              Live Unreal class — free, and we&apos;re deciding what comes next together
+            </h2>
+          ) : (
+            <h2 className="mt-2 text-2xl font-bold tracking-tight">
+              Live Unreal classes — and you decide what they cover
+            </h2>
+          )}
+          {freeClassAhead ? (
+            <p className="mt-3 leading-relaxed text-mist">
+              One live session, no cost, no catch: a tour of what Alex knows in Unreal, a look at
+              what&apos;s new in 5.8, and an open Q&amp;A. From here on it&apos;s a standing weekly
+              rhythm — a live class every <strong className="text-snow">Wednesday at 11a ET</strong>,
+              plus <strong className="text-snow">office hours every Friday at 1p ET</strong>. What
+              the paid weeks actually cover is exactly what the poll below decides.
+            </p>
+          ) : (
+            <p className="mt-3 leading-relaxed text-mist">
+              The free kickoff session has happened, and the rhythm it started continues: a live
+              class every <strong className="text-snow">Wednesday at 11a ET</strong>, plus{" "}
+              <strong className="text-snow">office hours every Friday at 1p ET</strong>. What those
+              weeks actually cover is exactly what the poll below decides — answer it and you&apos;ll
+              hear the moment the next dates and pricing are set.
+            </p>
+          )}
           <div className="mt-5 flex flex-wrap items-center gap-4">
-            <a
-              href="https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
-            >
-              Reserve a free seat →
-            </a>
-            <a href="#poll" className="font-mono text-xs text-mist hover:text-snow">
-              Help decide what&apos;s next →
-            </a>
+            {freeClassAhead ? (
+              <>
+                <a
+                  href={FREE_CLASS_ZOOM}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
+                >
+                  Reserve a free seat →
+                </a>
+                <a href="#poll" className="font-mono text-xs text-mist hover:text-snow">
+                  Help decide what&apos;s next →
+                </a>
+              </>
+            ) : (
+              <a
+                href="#poll"
+                className="inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
+              >
+                Help decide what&apos;s next →
+              </a>
+            )}
           </div>
         </div>
       </Reveal>

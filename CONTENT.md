@@ -100,70 +100,73 @@
 - `[training.1]` ▸ Learn Unreal from someone who ships with it every day.
 - `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens . He has developed or co-developed 50+ courses and taught 300+ courses on behalf of Epic Games to their key partners. Our curriculums come from those lessons merged with nearly a decade of real client work from Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
 - `[training.3]` ▸ FREE CLASS · WEDNESDAY, AUGUST 5 · 11A ET
-- `[training.4]` ▸ Live Unreal class — free, and we're deciding what comes next together
-- `[training.5]` ▸ One live session, no cost, no catch: a tour of what Alex knows in Unreal, a look at what's new in 5.8, and an open Q&A. From here on it's a standing weekly rhythm — a live class every Wednesday at 11a ET, plus office hours every Friday at 1p ET. What the paid weeks actually cover is exactly what the poll below decides.
-- `[training.6]` ▸ Reserve a free seat →
-- `[training.7]` ▸ Help decide what's next →
-- `[training.8]` ▸ 4 quick questions
-- `[training.9]` ▸ What do you want to learn?
-- `[training.10]` ▸ Answer honestly — this data will be used to set the curriculum for everything in the coming weeks.
-- `[training.11]` ▸ Company & studio training · bundled curricula
-- `[training.12]` ▸ Represent a team? This is the fast lane.
-- `[training.13]` ▸ Custom multi-week curricula assembled from the 50+ ready-to-teach classes below — the same live, hands-on training delivered on behalf of Epic Games to their key partner studios, broadcast graphics teams, and enterprises. Live over Zoom or on-site, cloud workstations available for every learner, Q&A sessions woven between modules. Pricing varies with team size, class count, and scheduling — tell us what your team needs and you'll have a scoped quote fast.
-- `[training.14]` ▸ or email info@alexcoulombepresents.com
-- `[training.15]` ▸ FORMAT
-- `[training.16]` ▸ Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team training for entire studios.
-- `[training.17]` ▸ SCHEDULE
-- `[training.18]` ▸ Intro classes typically start on the first Monday of the month at 1pm ET, with additional sessions throughout the week.
-- `[training.19]` ▸ CREDENTIALS
-- `[training.20]` ▸ Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
-- `[training.21]` ▸ Certified by Epic Games
-- `[training.22]` ▸ Authorized, and re-authorized every year.
-- `[training.23]` ▸ The curriculum
-- `[training.24]` ▸ Twelve tracks. Every one books as a live two-hour session — intro tracks and specialized deep-dives, priced separately. Take one, take them all, or bundle them for your team above. Pricing shows at checkout in the store . Not sure what's next? Vote on the September cohort →
-- `[training.25]` ▸ New
-- `[training.26]` ▸ The full teaching catalog
-- `[training.27]` ▸ 50+ classes, ready to run.
-- `[training.28]` ▸ Every class below has been taught live — most many times over — as two-hour, instructor-led sessions on behalf of Epic Games to their key partner studios, broadcast teams, and enterprises. Book any of them as an open-enrollment session, or point at a column and say "that one, for my whole team."
-- `[training.29]` ▸ Book a session in the store →
-- `[training.30]` ▸ Bundle these for your team →
-- `[training.31]` ▸ Try the teaching first
-- `[training.32]` ▸ All
-- `[training.33]` ▸ talks on YouTube →
-- `[training.34]` ▸ From the Epic Games archives
-- `[training.35]` ▸ Courses built for Epic Games.
-- `[training.36]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
-- `[training.37]` ▸ AI training · its own track
-- `[training.38]` ▸ Learn AI workflows, Unreal optional.
-- `[training.39]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
-- `[training.40]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
-- `[training.41]` ▸ AI classes are coming
-- `[training.42]` ▸ Watch the full talk →
-- `[training.43]` ▸ Learn AI
-- `[training.44]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
-- `[training.45]` ▸ Learn Unreal
-- `[training.46]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
-- `[training.47]` ▸ Why learn here and not from an on-demand video course?
-- `[training.48]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
-- `[training.49]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
-- `[training.50]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
-- `[training.51]` ▸ Book a class — instant checkout →
-- `[training.52]` ▸ Team / studio training
-- `[training.53]` ▸ Members only · shipping today
-- `[training.54]` ▸ Exclusive tools, only for members.
-- `[training.55]` ▸ Membership includes hands-on access to real internal tools Alex builds for production work — xrsim (test any OpenXR Android app on a Mac, no headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
-- `[training.56]` ▸ See what's included →
-- `[training.57]` ▸ Unreal NYC
-- `[training.58]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
-- `[training.59]` ▸ agilelens.com/unrealnyc ↗
-- `[training.60]` ▸ Epic community page ↗
-- `[training.61]` ▸ Free stuff first
-- `[training.62]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
-- `[training.63]` ▸ Podcast on all platforms ↗
-- `[training.64]` ▸ Request a team quote →
-- `[training.65]` ▸ Alex will follow up with a scoped quote — usually within a day.
-- `[training.66]` ▸ Tell me when this runs →
-- `[training.67]` ▸ You'll hear when this class is scheduled.
+- `[training.4]` ▸ LIVE CLASSES · WEDNESDAYS 11A ET · OFFICE HOURS FRIDAYS 1P ET
+- `[training.5]` ▸ Live Unreal class — free, and we're deciding what comes next together
+- `[training.6]` ▸ Live Unreal classes — and you decide what they cover
+- `[training.7]` ▸ One live session, no cost, no catch: a tour of what Alex knows in Unreal, a look at what's new in 5.8, and an open Q&A. From here on it's a standing weekly rhythm — a live class every Wednesday at 11a ET, plus office hours every Friday at 1p ET. What the paid weeks actually cover is exactly what the poll below decides.
+- `[training.8]` ▸ The free kickoff session has happened, and the rhythm it started continues: a live class every Wednesday at 11a ET, plus office hours every Friday at 1p ET. What those weeks actually cover is exactly what the poll below decides — answer it and you'll hear the moment the next dates and pricing are set.
+- `[training.9]` ▸ Reserve a free seat →
+- `[training.10]` ▸ Help decide what's next →
+- `[training.11]` ▸ 4 quick questions
+- `[training.12]` ▸ What do you want to learn?
+- `[training.13]` ▸ Answer honestly — this data will be used to set the curriculum for everything in the coming weeks.
+- `[training.14]` ▸ Company & studio training · bundled curricula
+- `[training.15]` ▸ Represent a team? This is the fast lane.
+- `[training.16]` ▸ Custom multi-week curricula assembled from the 50+ ready-to-teach classes below — the same live, hands-on training delivered on behalf of Epic Games to their key partner studios, broadcast graphics teams, and enterprises. Live over Zoom or on-site, cloud workstations available for every learner, Q&A sessions woven between modules. Pricing varies with team size, class count, and scheduling — tell us what your team needs and you'll have a scoped quote fast.
+- `[training.17]` ▸ or email info@alexcoulombepresents.com
+- `[training.18]` ▸ FORMAT
+- `[training.19]` ▸ Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team training for entire studios.
+- `[training.20]` ▸ SCHEDULE
+- `[training.21]` ▸ Intro classes typically start on the first Monday of the month at 1pm ET, with additional sessions throughout the week.
+- `[training.22]` ▸ CREDENTIALS
+- `[training.23]` ▸ Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
+- `[training.24]` ▸ Certified by Epic Games
+- `[training.25]` ▸ Authorized, and re-authorized every year.
+- `[training.26]` ▸ The curriculum
+- `[training.27]` ▸ Twelve tracks. Every one books as a live two-hour session — intro tracks and specialized deep-dives, priced separately. Take one, take them all, or bundle them for your team above. Pricing shows at checkout in the store . Not sure what's next? Vote on the September cohort →
+- `[training.28]` ▸ New
+- `[training.29]` ▸ The full teaching catalog
+- `[training.30]` ▸ 50+ classes, ready to run.
+- `[training.31]` ▸ Every class below has been taught live — most many times over — as two-hour, instructor-led sessions on behalf of Epic Games to their key partner studios, broadcast teams, and enterprises. Book any of them as an open-enrollment session, or point at a column and say "that one, for my whole team."
+- `[training.32]` ▸ Book a session in the store →
+- `[training.33]` ▸ Bundle these for your team →
+- `[training.34]` ▸ Try the teaching first
+- `[training.35]` ▸ All
+- `[training.36]` ▸ talks on YouTube →
+- `[training.37]` ▸ From the Epic Games archives
+- `[training.38]` ▸ Courses built for Epic Games.
+- `[training.39]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
+- `[training.40]` ▸ AI training · its own track
+- `[training.41]` ▸ Learn AI workflows, Unreal optional.
+- `[training.42]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
+- `[training.43]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
+- `[training.44]` ▸ AI classes are coming
+- `[training.45]` ▸ Watch the full talk →
+- `[training.46]` ▸ Learn AI
+- `[training.47]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
+- `[training.48]` ▸ Learn Unreal
+- `[training.49]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
+- `[training.50]` ▸ Why learn here and not from an on-demand video course?
+- `[training.51]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
+- `[training.52]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
+- `[training.53]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
+- `[training.54]` ▸ Book a class — instant checkout →
+- `[training.55]` ▸ Team / studio training
+- `[training.56]` ▸ Members only · shipping today
+- `[training.57]` ▸ Exclusive tools, only for members.
+- `[training.58]` ▸ Membership includes hands-on access to real internal tools Alex builds for production work — xrsim (test any OpenXR Android app on a Mac, no headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
+- `[training.59]` ▸ See what's included →
+- `[training.60]` ▸ Unreal NYC
+- `[training.61]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
+- `[training.62]` ▸ agilelens.com/unrealnyc ↗
+- `[training.63]` ▸ Epic community page ↗
+- `[training.64]` ▸ Free stuff first
+- `[training.65]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
+- `[training.66]` ▸ Podcast on all platforms ↗
+- `[training.67]` ▸ Request a team quote →
+- `[training.68]` ▸ Alex will follow up with a scoped quote — usually within a day.
+- `[training.69]` ▸ Tell me when this runs →
+- `[training.70]` ▸ You'll hear when this class is scheduled.
 
 ---
 
@@ -1213,7 +1216,7 @@
 - `[store.storeItems.unreal-foundations-cohort.delivery]` ▸ You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class.
 - `[store.storeItems.unreal-foundations-cohort.earlyBird.untilISO]` ▸ 2026-07-30T04:00:00Z
 - `[store.storeItems.unreal-foundations-cohort.saleWindow.closesAtISO]` ▸ 2026-08-02T00:00:00Z
-- `[store.storeItems.unreal-foundations-cohort.saleWindow.closedNote]` ▸ Paused while we settle the curriculum at the free Aug 5 session — back soon.
+- `[store.storeItems.unreal-foundations-cohort.saleWindow.closedNote]` ▸ Paused while the poll settles what these weeks actually cover — back soon.
 - `[store.storeItems.unreal-foundations-cohort.saleWindow.closedList]` ▸ unreal
 - `[store.storeItems.ue-curriculum-bundle.name]` ▸ Unreal Engine curriculum bundle
 - `[store.storeItems.ue-curriculum-bundle.blurb]` ▸ The full track: all eleven classes, scheduled at your pace, with homework review between sessions.

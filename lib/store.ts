@@ -139,7 +139,9 @@ export const storeItems: StoreItem[] = [
       // /training#poll to decide what this cohort actually becomes. Move
       // closesAtISO back into the future to reopen sales once it's scheduled.
       closesAtISO: "2026-08-02T00:00:00Z",
-      closedNote: "Paused while we settle the curriculum at the free Aug 5 session — back soon.",
+      // Undated on purpose — this note has no expiry of its own, so naming a
+      // day that's already passed is the one thing it can't do.
+      closedNote: "Paused while the poll settles what these weeks actually cover — back soon.",
       closedList: "unreal",
     },
   },
