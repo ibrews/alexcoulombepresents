@@ -455,3 +455,11 @@ export async function countPendingApproval(account: string): Promise<number> {
   `;
   return (rows as { count: number }[])[0]?.count ?? 0;
 }
+
+export async function listTips(account: string): Promise<TipQueueRow[]> {
+  await ensureTipQueueTable();
+  const rows = await sql()`
+    SELECT * FROM ue_tip_queue WHERE account = ${account} ORDER BY id ASC
+  `;
+  return rows as TipQueueRow[];
+}
