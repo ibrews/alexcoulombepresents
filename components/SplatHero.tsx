@@ -56,7 +56,10 @@ import { HERO_APPROACH_DIR, parseSplatBuffer } from "@/lib/parseSplat";
 const ASSET_URL = "/hero.splat";
 
 type FormKey = "splat" | HeroShapeKey;
-const FORM_ORDER: FormKey[] = ["splat", ...HERO_SHAPE_ORDER];
+// "splat" (the raw capture) is deliberately excluded from the visible
+// cycle — see the currentForm comment below. It stays a valid FormKey so
+// formCache can still hold it as morph-target backing data.
+const FORM_ORDER: FormKey[] = [...HERO_SHAPE_ORDER];
 
 // Timer cadence. Alex: "I don't want a single splat to linger for too long
 // — swap every 10 seconds." Held at a flat 10s rather than a random band so
@@ -135,7 +138,11 @@ export default function SplatHero() {
   const [active, setActive] = useState(false);
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [currentForm, setCurrentForm] = useState<FormKey>("splat");
+  // Never starts on "splat" (the raw capture, "A Real 3D Capture") — Alex:
+  // it reads oddly on the homepage. It stays a valid FormKey and cached
+  // form (below) purely as morph-target backing data; HERO_SHAPE_ORDER[0]
+  // is what's actually shown and cycled from.
+  const [currentForm, setCurrentForm] = useState<FormKey>(HERO_SHAPE_ORDER[0]);
   const advanceRef = useRef<(() => void) | null>(null);
   const rotateRef = useRef<((deltaX: number, deltaY: number) => void) | null>(null);
   const setDraggingRef = useRef<((isDragging: boolean) => void) | null>(null);
@@ -255,9 +262,14 @@ export default function SplatHero() {
       group.position.y = parsed.radius * CLOUD_VERTICAL_OFFSET_FACTOR;
       scene.add(group);
 
+      // Seeded from the first procedural shape, not the raw parsed.pos/col —
+      // the raw capture ("A Real 3D Capture"/"splat") never gets painted,
+      // not even for one frame before the first morph. parsed.radius still
+      // drives camera framing and every shape's scale below.
+      const initialShape = generateHeroShape(HERO_SHAPE_ORDER[0], parsed.radius);
       geometry = new THREE.BufferGeometry();
-      const positionAttr = new THREE.BufferAttribute(parsed.pos.slice(), 3).setUsage(THREE.DynamicDrawUsage);
-      const colorAttr = new THREE.BufferAttribute(parsed.col.slice(), 3).setUsage(THREE.DynamicDrawUsage);
+      const positionAttr = new THREE.BufferAttribute(initialShape.pos.slice(), 3).setUsage(THREE.DynamicDrawUsage);
+      const colorAttr = new THREE.BufferAttribute(initialShape.col.slice(), 3).setUsage(THREE.DynamicDrawUsage);
       geometry.setAttribute("position", positionAttr);
       geometry.setAttribute("color", colorAttr);
 
@@ -349,7 +361,10 @@ export default function SplatHero() {
       }
 
       // ---- Animated behavior: drift, morph, click/timer cycling ----
-      const formCache = new Map<FormKey, FormData>([["splat", { pos: parsed.pos, col: parsed.col }]]);
+      const formCache = new Map<FormKey, FormData>([
+        ["splat", { pos: parsed.pos, col: parsed.col }],
+        [HERO_SHAPE_ORDER[0], initialShape],
+      ]);
       const getFormData = (key: FormKey): FormData => {
         let data = formCache.get(key);
         if (!data) {
@@ -361,8 +376,8 @@ export default function SplatHero() {
 
       let formIndex = 0;
       let morphT = 1;
-      const targetPos = parsed.pos.slice();
-      const targetCol = parsed.col.slice();
+      const targetPos = initialShape.pos.slice();
+      const targetCol = initialShape.col.slice();
 
       const advance = () => {
         formIndex = (formIndex + 1) % FORM_ORDER.length;

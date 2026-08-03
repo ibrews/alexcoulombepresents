@@ -529,9 +529,7 @@ export function genMonocle(R: number): FormData {
 
 export type HeroShapeKey = "scan" | "theater" | "headset" | "skyline" | "marquee" | "guitar" | "wave" | "globe" | "dominoes" | "monocle";
 
-// "scan" (Forest Scan) is disabled — Alex: not a good fit, don't cycle to it.
-// genScan/its label/generator stay defined below so it's a one-line revert.
-export const HERO_SHAPE_ORDER: HeroShapeKey[] = ["theater", "headset", "skyline", "marquee", "guitar", "wave", "globe", "dominoes", "monocle"];
+export const HERO_SHAPE_ORDER: HeroShapeKey[] = ["scan", "theater", "headset", "skyline", "marquee", "guitar", "wave", "globe", "dominoes", "monocle"];
 
 export const HERO_SHAPE_LABELS: Record<HeroShapeKey, string> = {
   scan: "Forest Scan",
