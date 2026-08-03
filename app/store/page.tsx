@@ -230,7 +230,7 @@ export default async function Store() {
       <div className="mt-6 grid gap-5 md:grid-cols-2">
         {digitalProducts.map((p, i) => (
           <Reveal key={p.sku} delay={Math.min(i * 70, 280)}>
-            <div className="glass flex h-full flex-col rounded-2xl p-7">
+            <div id={p.sku} className="glass flex h-full flex-col rounded-2xl p-7 scroll-mt-24">
               <span className="self-start rounded-full border border-teal/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-teal">
                 {p.kind ?? "Pipeline"}
               </span>
