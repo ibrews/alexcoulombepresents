@@ -597,6 +597,46 @@ export type Product = {
 
 export const products: Product[] = [
   {
+    slug: "video-qa-workbench",
+    name: "Video QA Workbench",
+    status: "Design-partner preview · local-first",
+    tagline: "Stop scrubbing for proof. Review the whole render with evidence.",
+    pitch:
+      "Final render review should not depend on who happened to catch the bad frame. Video QA Workbench watches a local render or a matched revision pair, points to the times and regions worth reviewing, and keeps measured signals separate from your team's camera and pacing preferences. Your footage stays on infrastructure you control. Your reviewer keeps the final call.",
+    sections: [
+      {
+        heading: "Evidence, not a mystery score",
+        body: "A local screening room turns a long render into a seekable review board: frozen spans, black frames, focus and motion proxies, cue-alignment measurements, and context around cuts. Every alert says what was measured and what remains ambiguous. An empty board is never called a clean certification.",
+      },
+      {
+        heading: "Compare the same shot, where it matters",
+        body: "Put two aligned stills or explicitly matched video frames side by side and the workbench maps where they disagree: regional luma, color, edge structure, tile distribution, and a heatmap. It does not flatten a renderer comparison into a single winner. A broad lighting shift and a small wardrobe or material regression are different review conversations.",
+      },
+      {
+        heading: "Local AI can describe. It cannot overrule.",
+        body: "An optional local vision pass adds an open-ended observation alongside the measured regions. In a real renderer comparison it correctly named a missing garment, but missed a smaller eye-material difference in the same frame — exactly why the model stays advisory and never suppresses deterministic evidence or replaces the reviewer.",
+      },
+      {
+        heading: "Built to learn without leaking the work",
+        body: "Confirm, dismiss, mark intentional, or log a missed issue. Those dispositions feed a controlled improvement loop while raw source media, evidence frames, and feedback stay local by default. Creative intent and team preferences remain distinct from technical signals.",
+      },
+      {
+        heading: "Looking for one serious design partner",
+        body: "The first pilot is a four-week, local-first review workflow for a team with 10–20 real revisions and a technical reviewer. The goal is simple: find out whether timestamped evidence saves review time or catches a costly miss without creating a false-alarm tax. No performance percentages promised before the pilot earns them.",
+      },
+    ],
+    bullets: [
+      "Seekable local review board with timestamped technical evidence",
+      "Paired still and matched-video-frame comparison — regions, tiles, and heatmaps instead of a winner score",
+      "Optional local semantic observation, explicitly separate from measured evidence",
+      "Team camera and pacing preferences never masquerade as objective defects",
+      "Local feedback/dispositions designed for controlled improvement, not private-media leakage",
+      "Design-partner pilot: 10–20 revisions, a technical reviewer, and an honest baseline",
+    ],
+    links: [],
+    accent: "teal",
+  },
+  {
     slug: "forage",
     name: "Forage",
     status: "Private beta — wishlist open",
