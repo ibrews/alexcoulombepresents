@@ -1,4 +1,4 @@
-title: Live Unreal classes are back and lab stuff
+title: WE'RE BACK! Live Unreal Classes (& More!) from Alex Coulombe and Partners
 date: 2026-08-02
 subject: AUG 5: Live Unreal Classes (& More!) from Alex Coulombe
 preheader: Live classes are back & things are cooking in the lab
