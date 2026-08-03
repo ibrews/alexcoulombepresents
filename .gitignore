@@ -19,3 +19,8 @@ next-env.d.ts
 *.tsbuildinfo
 .env.local
 .newsletter-preview-*.html
+
+# Send logs and manual-send kits contain real subscriber email addresses —
+# never commit them.
+.newsletter-sends.jsonl
+.manual-send/

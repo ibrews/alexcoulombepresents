@@ -67,11 +67,18 @@ export async function getSignups(list?: string): Promise<SignupRow[]> {
 
 // Remove a signup (admin cleanup / unsubscribe). Scoped to one list, or all
 // lists when `list` is omitted. Returns how many rows were deleted.
+//
+// Case-insensitive on purpose: sends always go to lower(email) (see
+// listRecipients), so an unsubscribe always arrives lowercased — but signups
+// are stored exactly as typed. An exact-match DELETE silently removed ZERO
+// rows for anyone who signed up as "Name@Example.com", reporting success
+// while continuing to email them. Never match addresses by case.
 export async function deleteSignup(email: string, list?: string): Promise<number> {
   await ensureTable();
+  const e = email.trim().toLowerCase();
   const rows = list
-    ? await sql()`DELETE FROM signups WHERE email = ${email} AND list = ${list} RETURNING id`
-    : await sql()`DELETE FROM signups WHERE email = ${email} RETURNING id`;
+    ? await sql()`DELETE FROM signups WHERE lower(email) = ${e} AND list = ${list} RETURNING id`
+    : await sql()`DELETE FROM signups WHERE lower(email) = ${e} RETURNING id`;
   return (rows as unknown[]).length;
 }
 
