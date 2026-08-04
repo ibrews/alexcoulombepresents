@@ -74,9 +74,34 @@ async function groqVerdict(prompt: string): Promise<string> {
 // correctly rejected it. Better to not generate it in the first place.
 const OFF_TOPIC_CATEGORIES = new Set(["AI & Agents", "Tools"]);
 
-function pickRandomRepos(n: number) {
+// Repeat-avoidance — found empirically 2026-08-03: with no exclusion, a
+// second batch picked unreal-mac-getstats-fix again and produced a
+// near-duplicate of an already-approved draft. `source` on every row this
+// generator writes is tagged `lib/data.ts repos["<slug>"]`, so recovering
+// which slugs have already been used is just parsing that back out of
+// whatever's already in the queue (any status — pending, approved,
+// rejected, or posted all count as "already tried this one recently").
+async function alreadyUsedSlugs(cronSecret: string): Promise<Set<string>> {
+  const res = await fetch(`${SITE_URL}/api/admin/tip-queue-status`, {
+    headers: { Authorization: `Bearer ${cronSecret}` },
+  });
+  if (!res.ok) throw new Error(`Failed to fetch tip queue status: ${res.status}`);
+  const { tips } = (await res.json()) as { tips: { source: string | null }[] };
+  const slugs = new Set<string>();
+  for (const tip of tips) {
+    const match = tip.source?.match(/repos\["([^"]+)"\]/);
+    if (match) slugs.add(match[1]);
+  }
+  return slugs;
+}
+
+function pickRandomRepos(n: number, exclude: Set<string>) {
   const eligible = repos.filter(
-    (r) => r.highlights.length > 0 && r.story.length > 100 && !OFF_TOPIC_CATEGORIES.has(r.category)
+    (r) =>
+      r.highlights.length > 0 &&
+      r.story.length > 100 &&
+      !OFF_TOPIC_CATEGORIES.has(r.category) &&
+      !exclude.has(r.slug)
   );
   const shuffled = [...eligible].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, n);
@@ -126,10 +151,13 @@ async function draftFromRepo(repo: (typeof repos)[number]) {
 }
 
 async function main() {
-  const candidates = pickRandomRepos(COUNT);
-  if (candidates.length === 0) throw new Error("No eligible repos found in lib/data.ts");
-
   const cronSecret = requireEnv("CRON_SECRET");
+  const used = await alreadyUsedSlugs(cronSecret);
+  console.log(`Excluding ${used.size} already-used repo(s): ${[...used].join(", ") || "(none yet)"}`);
+
+  const candidates = pickRandomRepos(COUNT, used);
+  if (candidates.length === 0) throw new Error("No eligible, not-yet-used repos found in lib/data.ts");
+
   const drafts: { text: string; source: string }[] = [];
   const rejected: { text: string; reason: string }[] = [];
 
