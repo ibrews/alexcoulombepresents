@@ -59,12 +59,35 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Read-only tallies are cross-origin readable so live surfaces off this domain — the
+// class decks on ibrews.github.io, which show these results on screen while the room
+// answers — can render them. getTrainingSurveyCounts returns aggregate counts only; it
+// never exposes emails or per-response answer combinations. Deliberately GET-only: POST
+// stays same-origin, so opening up the display path cannot open up response stuffing.
+const READ_CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: READ_CORS });
+}
+
 export async function GET() {
   try {
     const counts = await getTrainingSurveyCounts();
-    return NextResponse.json({ ok: true, ...counts });
+    return NextResponse.json(
+      { ok: true, ...counts },
+      // A live display polls this repeatedly; a cached response would freeze the
+      // on-screen numbers mid-class exactly when they are supposed to be moving.
+      { headers: { ...READ_CORS, "Cache-Control": "no-store" } }
+    );
   } catch (err) {
     console.error("Training survey GET error:", err);
-    return NextResponse.json({ error: "Couldn't load results." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Couldn't load results." },
+      { status: 500, headers: READ_CORS }
+    );
   }
 }
