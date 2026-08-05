@@ -61,6 +61,17 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <p className="mt-8 text-lg leading-relaxed text-mist">{renderBreaks(product.pitch)}</p>
       </Reveal>
 
+      {product.guide && (
+        <Reveal>
+          <Link
+            href={product.guide.href}
+            className={`mt-8 inline-flex rounded-full border border-current px-5 py-3 text-sm font-semibold transition-colors hover:bg-teal hover:text-ink ${accent}`}
+          >
+            {product.guide.label} →
+          </Link>
+        </Reveal>
+      )}
+
       <div className="mt-12 space-y-6">
         {product.sections.map((s, i) => (
           <Reveal key={s.heading} delay={i * 80}>

@@ -590,6 +590,7 @@ export type Product = {
   // preview cards in-app for aspirational/not-yet-wired surfaces, which stay
   // out of this list). Paths are under /public.
   screenshots?: { src: string; alt: string; caption: string }[];
+  guide?: { href: string; label: string };
   // Internal Agile Lens tooling with no public release planned — shown for
   // transparency but WITHOUT a waitlist CTA (nothing to wait for).
   internal?: boolean;
@@ -634,6 +635,7 @@ export const products: Product[] = [
       "Design-partner pilot: 10–20 revisions, a technical reviewer, and an honest baseline",
     ],
     links: [],
+    guide: { href: "/lab/video-qa-workbench/field-guide", label: "Read the beta field guide" },
     accent: "teal",
   },
   {
