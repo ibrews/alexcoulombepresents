@@ -59,12 +59,35 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Read-only tallies are cross-origin readable so live surfaces off this domain — the
+// class decks on ibrews.github.io, which display the poll on screen while the room votes
+// — can render them. This is aggregate, already-public data (the same numbers /training
+// shows anyone); no emails or per-voter rows are exposed here. Deliberately GET-only:
+// POST stays same-origin so opening up the display path cannot open up ballot stuffing.
+const READ_CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: READ_CORS });
+}
+
 export async function GET() {
   try {
     const [counts, total] = await Promise.all([getVoteCounts(), getVoteTotalVoters()]);
-    return NextResponse.json({ ok: true, counts, total, topics: VOTE_TOPICS });
+    return NextResponse.json(
+      { ok: true, counts, total, topics: VOTE_TOPICS },
+      // A live display polls this repeatedly; caching it would freeze the on-screen
+      // numbers mid-class exactly when they are supposed to be moving.
+      { headers: { ...READ_CORS, "Cache-Control": "no-store" } }
+    );
   } catch (err) {
     console.error("Vote GET error:", err);
-    return NextResponse.json({ error: "Couldn't load results." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Couldn't load results." },
+      { status: 500, headers: READ_CORS }
+    );
   }
 }
