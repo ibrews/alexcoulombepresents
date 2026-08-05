@@ -6,6 +6,7 @@ import { entitlementsForCustomer, getCustomer } from "@/lib/commerce/entitlement
 import { findDigitalProduct } from "@/lib/commerce/products";
 import { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU } from "@/lib/commerce/membership";
 import LoginForm from "./LoginForm";
+import CopyableCode from "@/components/CopyableCode";
 
 export const metadata: Metadata = { title: "My account" };
 
@@ -161,9 +162,7 @@ export default async function Account({
               {e.key_text && (
                 <div className="mt-4">
                   <p className="text-xs text-mist">License key:</p>
-                  <code className="mt-1 block break-all rounded-lg border border-line bg-black/20 p-3 text-xs">
-                    {e.key_text}
-                  </code>
+                  <CopyableCode value={e.key_text} />
                 </div>
               )}
               <p className="mt-3 text-xs text-mist">
