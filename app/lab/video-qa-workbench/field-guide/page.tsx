@@ -149,6 +149,9 @@ export default function VideoQAFieldGuide() {
           >
             Join the early-access list →
           </Link>
+          <Link href="/lab/video-qa-workbench/beta-handbook" className="ml-5 text-sm font-semibold text-teal hover:underline">
+            Read the tester handbook →
+          </Link>
         </section>
       </Reveal>
     </div>
