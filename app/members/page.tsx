@@ -8,10 +8,13 @@ import JoinMembershipButton from "@/components/JoinMembershipButton";
 import { customerFromSession } from "@/lib/commerce/tokens";
 import { isMember, memberBenefits, MEMBERSHIP_LIVE, MEMBERSHIP_PRICE_LABEL } from "@/lib/commerce/membership";
 
+// Title/description track MEMBERSHIP_LIVE so the tab and social cards never
+// advertise "Coming Soon" over a page that is actually selling a subscription.
 export const metadata: Metadata = {
-  title: "Members — Coming Soon",
-  description:
-    "The Alex Coulombe Presents membership: every class recording, member pricing, early Lab access, monthly office hours, and a vote on what gets taught next. Join the founding waitlist.",
+  title: MEMBERSHIP_LIVE ? "Members" : "Members — Coming Soon",
+  description: MEMBERSHIP_LIVE
+    ? `The Alex Coulombe Presents membership, ${MEMBERSHIP_PRICE_LABEL}: every class recording, 2 live-class credits a month, member pricing, early Lab access, monthly office hours, and a vote on what gets taught next.`
+    : "The Alex Coulombe Presents membership: every class recording, member pricing, early Lab access, monthly office hours, and a vote on what gets taught next. Join the founding waitlist.",
   alternates: { canonical: "/members" },
 };
 
