@@ -49,6 +49,50 @@ body {
   box-shadow: 0 0 42px -12px color-mix(in srgb, var(--color-teal) 35%, transparent);
 }
 
+/* Isle board: a contained cork surface with deliberately uneven paper notes. */
+.isle-pinboard {
+  background-color: #332019;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255, 225, 181, 0.14) 1px, transparent 1.5px),
+    linear-gradient(125deg, rgba(139, 87, 51, 0.28), transparent 42%),
+    linear-gradient(315deg, rgba(84, 47, 28, 0.42), transparent 55%);
+  background-size: 19px 19px, auto, auto;
+  border-color: #704b37;
+  box-shadow: inset 0 1px rgba(255, 225, 181, 0.12), 0 20px 50px -30px rgba(0, 0, 0, 0.9);
+}
+
+.isle-note-columns {
+  column-fill: balance;
+}
+
+.isle-note {
+  background: var(--note-background);
+  border: 1px solid var(--note-border);
+  border-radius: 0.45rem 0.7rem 0.55rem 0.35rem;
+  box-shadow: 2px 5px 0 rgba(29, 20, 18, 0.25), 0 11px 18px -13px rgba(0, 0, 0, 0.8);
+  transform: rotate(var(--note-rotation));
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+
+.isle-note:hover {
+  box-shadow: 3px 11px 0 rgba(29, 20, 18, 0.18), 0 22px 26px -15px rgba(0, 0, 0, 0.9);
+  transform: rotate(0deg) translateY(-6px);
+  z-index: 1;
+}
+
+.isle-note-pin {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border: 2px solid rgba(255, 255, 255, 0.48);
+  border-radius: 9999px;
+  background: var(--note-pin);
+  box-shadow: 0 2px 3px rgba(29, 20, 18, 0.45);
+  transform: translateX(-50%);
+}
+
 /* Scroll-reveal */
 .reveal {
   opacity: 0;
