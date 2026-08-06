@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Ethereal from "@/components/Ethereal";
 import IsleBoard from "@/components/IsleBoard";
 import IsleDiagram from "@/components/IsleDiagram";
+import IsleLayoutExplorer from "@/components/IsleLayoutExplorer";
 import IsleRoomExplorer from "@/components/IsleRoomExplorer";
 import Reveal from "@/components/Reveal";
 import { getIsleEntries } from "@/lib/isle";
@@ -31,6 +32,10 @@ export default function IslePortal() {
 
       <Reveal>
         <IsleRoomExplorer />
+      </Reveal>
+
+      <Reveal>
+        <IsleLayoutExplorer />
       </Reveal>
 
       <section className="mt-16" aria-labelledby="isle-log-heading">
