@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { islePortalToken, islePortalTokensMatch } from "@/lib/islePortalAuth";
 
 // CORS for /api/checkout only, so a product's own marketing site (e.g.
 // drainspotting.app) can POST straight to checkout instead of round-tripping
@@ -17,7 +18,21 @@ function corsHeaders(origin: string | null): HeadersInit {
   };
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  const isIslePortal = pathname === "/lab/isle" || pathname.startsWith("/lab/isle/");
+  const isGate = pathname === "/lab/isle/gate";
+
+  if (isIslePortal && !isGate) {
+    const secret = process.env.AUTH_SECRET;
+    const cookie = req.cookies.get("isle_portal")?.value;
+    const expectedToken = secret ? await islePortalToken(secret) : "";
+
+    if (!cookie || !expectedToken || !islePortalTokensMatch(cookie, expectedToken)) {
+      return NextResponse.redirect(new URL("/lab/isle/gate", req.url));
+    }
+  }
+
   const origin = req.headers.get("origin");
   const headers = corsHeaders(origin);
 
@@ -31,5 +46,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/api/checkout",
+  matcher: ["/api/checkout", "/lab/isle", "/lab/isle/:path*"],
 };
