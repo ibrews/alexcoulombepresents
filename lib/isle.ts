@@ -41,7 +41,18 @@ export type IsleEntry = {
   diagram: IsleDiagramData | null;
 };
 
+export type IsleBoardCard = {
+  title: string;
+  notes: string[];
+};
+
+export type IsleBoard = {
+  updated: string;
+  cards: IsleBoardCard[];
+};
+
 const DIR = path.join(process.cwd(), "content", "isle");
+const ENTRY_FILE = /^\d{4}-\d{2}-\d{2}-.+\.md$/;
 
 function parseDiagram(body: string): IsleDiagramData | null {
   const rawDiagram = body.match(/```isle-diagram\s*\r?\n([\s\S]*?)```/m)?.[1];
@@ -78,7 +89,7 @@ function parseDiagram(body: string): IsleDiagramData | null {
 export function getIsleEntries(): IsleEntry[] {
   let files: string[] = [];
   try {
-    files = readdirSync(DIR).filter((file) => file.endsWith(".md") && file !== "README.md");
+    files = readdirSync(DIR).filter((file) => ENTRY_FILE.test(file));
   } catch {
     return [];
   }
@@ -103,4 +114,27 @@ export function getIsleEntries(): IsleEntry[] {
     })
     .filter((entry) => entry.title && entry.date)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function getIsleBoard(): IsleBoard {
+  try {
+    const raw = readFileSync(path.join(DIR, "board.md"), "utf8");
+    const updated = raw.match(/^updated:\s*(.+)$/m)?.[1].trim() ?? "";
+    const sections = raw.split(/^##\s+(.+)\s*$/m);
+    const cards: IsleBoardCard[] = [];
+
+    for (let index = 1; index < sections.length; index += 2) {
+      cards.push({
+        title: sections[index].trim(),
+        notes: [...sections[index + 1].matchAll(/^\s*[-*]\s+(.+?)\s*$/gm)].map((note) => note[1]),
+      });
+    }
+
+    return {
+      updated,
+      cards,
+    };
+  } catch {
+    return { updated: "", cards: [] };
+  }
 }

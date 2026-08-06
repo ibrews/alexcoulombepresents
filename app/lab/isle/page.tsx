@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Ethereal from "@/components/Ethereal";
+import IsleBoard from "@/components/IsleBoard";
 import IsleDiagram from "@/components/IsleDiagram";
 import Reveal from "@/components/Reveal";
 import { getIsleEntries } from "@/lib/isle";
@@ -25,33 +26,43 @@ export default function IslePortal() {
         </p>
       </Reveal>
 
-      <div className="relative mt-14 space-y-10 border-l border-line pl-7 md:pl-10">
-        {entries.map((entry, index) => (
-          <Reveal key={entry.slug} delay={index * 80}>
-            <article className="glass relative rounded-3xl p-6 md:p-8">
-              <span className="absolute -left-[2.1rem] top-8 h-3 w-3 rounded-full border-2 border-ink bg-teal md:-left-[2.85rem]" />
-              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-                <p className="font-mono text-xs uppercase tracking-widest text-amber">{entry.date}</p>
-                <h2 className="text-2xl font-bold tracking-tight text-snow">{entry.title}</h2>
-              </div>
-              <p className="mt-4 max-w-3xl leading-relaxed text-mist">{entry.summary}</p>
+      <IsleBoard />
 
-              {entry.notes.length > 0 ? (
-                <ul className="mt-6 space-y-3 text-sm leading-relaxed text-mist">
-                  {entry.notes.map((note) => (
-                    <li key={note} className="flex gap-3">
-                      <span className="text-teal">✦</span>
-                      <span>{note}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
+      <section className="mt-16" aria-labelledby="isle-log-heading">
+        <div className="mb-6">
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">Log</p>
+          <h2 id="isle-log-heading" className="mt-2 text-2xl font-bold tracking-tight text-snow">
+            Meetings &amp; discussions
+          </h2>
+        </div>
+        <div className="relative space-y-10 border-l border-line pl-7 md:pl-10">
+          {entries.map((entry, index) => (
+            <Reveal key={entry.slug} delay={index * 80}>
+              <article className="glass relative rounded-3xl p-6 md:p-8">
+                <span className="absolute -left-[2.1rem] top-8 h-3 w-3 rounded-full border-2 border-ink bg-teal md:-left-[2.85rem]" />
+                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                  <p className="font-mono text-xs uppercase tracking-widest text-amber">{entry.date}</p>
+                  <h2 className="text-2xl font-bold tracking-tight text-snow">{entry.title}</h2>
+                </div>
+                <p className="mt-4 max-w-3xl leading-relaxed text-mist">{entry.summary}</p>
 
-              {entry.diagram ? <IsleDiagram nodes={entry.diagram.nodes} edges={entry.diagram.edges} /> : null}
-            </article>
-          </Reveal>
-        ))}
-      </div>
+                {entry.notes.length > 0 ? (
+                  <ul className="mt-6 space-y-3 text-sm leading-relaxed text-mist">
+                    {entry.notes.map((note) => (
+                      <li key={note} className="flex gap-3">
+                        <span className="text-teal">✦</span>
+                        <span>{note}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+
+                {entry.diagram ? <IsleDiagram nodes={entry.diagram.nodes} edges={entry.diagram.edges} /> : null}
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

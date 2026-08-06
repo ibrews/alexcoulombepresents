@@ -1,7 +1,8 @@
 # Isle portal entries
 
 Create one dated markdown file per meeting or update: `YYYY-MM-DD-slug.md`.
-The loader reads a frontmatter-like header block at the top of each entry,
+Only files matching that convention are loaded into the timeline. The loader
+reads a frontmatter-like header block at the top of each entry,
 terminated by a line containing only `---`:
 
 ```md
