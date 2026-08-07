@@ -101,6 +101,17 @@ export async function getRemaining(item: StoreItem): Promise<number | null> {
   return Math.max(0, item.capacity - sold);
 }
 
+// Every non-refunded order for one slug — used by the class-cancellation
+// flow (app/api/telegram/webhook.ts's class-no handling) to email every
+// buyer of a session that missed its minEnrollment.
+export async function getOrdersForSlug(slug: string): Promise<CatalogOrderRow[]> {
+  await ensureTable();
+  const rows = (await sql()`
+    SELECT * FROM catalog_orders WHERE slug = ${slug} AND refunded = false ORDER BY created_at ASC
+  `) as CatalogOrderRow[];
+  return rows;
+}
+
 // All orders, newest first — for the admin roster export.
 export async function getAllCatalogOrders(): Promise<CatalogOrderRow[]> {
   await ensureTable();

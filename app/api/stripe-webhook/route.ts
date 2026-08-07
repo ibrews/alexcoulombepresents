@@ -15,11 +15,12 @@ import {
   sendOrderEmails,
   sendMembershipWelcomeEmail,
 } from "@/lib/commerce/email";
-import { storeItems } from "@/lib/store";
+import { storeItems, wednesdayCalendar } from "@/lib/store";
 import { createVoucherCode } from "@/lib/commerce/vouchers";
 import { sendVoucherEmail } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
-import { recordCatalogOrder, markCatalogOrdersRefunded } from "@/lib/commerce/seats";
+import { recordCatalogOrder, markCatalogOrdersRefunded, getSeatsSold } from "@/lib/commerce/seats";
+import { sendTelegramNotice } from "@/lib/telegram";
 import { handleMembershipEvent, type MembershipBillingDeps } from "@/lib/commerce/membershipBilling";
 import {
   grantOrExtendMembership,
@@ -45,7 +46,11 @@ import {
 // stay lazy.
 function membershipDeps(): MembershipBillingDeps {
   return {
-    membershipPriceId: process.env.STRIPE_MEMBERSHIP_PRICE_ID,
+    membershipPriceIds: {
+      starter: process.env.STRIPE_MEMBERSHIP_PRICE_ID_STARTER,
+      unlimited: process.env.STRIPE_MEMBERSHIP_PRICE_ID_UNLIMITED,
+      insider: process.env.STRIPE_MEMBERSHIP_PRICE_ID_INSIDER,
+    },
     findOrCreateCustomer,
     setStripeCustomerId,
     customerIdForStripeCustomer,
@@ -207,6 +212,21 @@ export async function POST(req: NextRequest) {
           amountCents: session.amount_total ?? 0,
         });
         console.log(`[fulfill] ${fulfillment ?? "manual"} confirmation sent → ${email} for ${slug}`);
+
+        // Dated Wednesday-calendar classes only (not every catalog item —
+        // the running-total framing only makes sense where there's a
+        // minEnrollment target to compare against). Best-effort: a Telegram
+        // hiccup must never fail a real, already-charged purchase.
+        if (wednesdayCalendar.some((c) => c.slug === slug)) {
+          try {
+            const sold = await getSeatsSold(slug);
+            await sendTelegramNotice(
+              `🎟 ${name ?? email} signed up for "${item?.name ?? slug}" — ${sold} signed up so far.`
+            );
+          } catch (err) {
+            console.error("[class-signup] telegram notice failed", err);
+          }
+        }
       } catch (err) {
         console.error("[fulfill] order emails failed", err);
         return NextResponse.json({ error: "Order email failed" }, { status: 500 });

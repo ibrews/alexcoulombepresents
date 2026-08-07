@@ -6,15 +6,21 @@ import Ethereal from "@/components/Ethereal";
 import WaitlistForm from "@/components/WaitlistForm";
 import JoinMembershipButton from "@/components/JoinMembershipButton";
 import { customerFromSession } from "@/lib/commerce/tokens";
-import { isMember, memberBenefits, MEMBERSHIP_LIVE, MEMBERSHIP_PRICE_LABEL } from "@/lib/commerce/membership";
+import {
+  isMember,
+  memberTierForCustomer,
+  memberBenefits,
+  MEMBERSHIP_LIVE,
+  MEMBERSHIP_TIERS,
+} from "@/lib/commerce/membership";
 
 // Title/description track MEMBERSHIP_LIVE so the tab and social cards never
 // advertise "Coming Soon" over a page that is actually selling a subscription.
 export const metadata: Metadata = {
   title: MEMBERSHIP_LIVE ? "Members" : "Members — Coming Soon",
   description: MEMBERSHIP_LIVE
-    ? `The Alex Coulombe Presents membership, ${MEMBERSHIP_PRICE_LABEL}: every class recording, 2 live-class credits a month, member pricing, early Lab access, monthly office hours, and a vote on what gets taught next.`
-    : "The Alex Coulombe Presents membership: every class recording, member pricing, early Lab access, monthly office hours, and a vote on what gets taught next. Join the founding waitlist.",
+    ? "The Alex Coulombe Presents membership: three tiers from $99–$299/mo — class credits or unlimited classes, every recording, member pricing, and a vote on what gets taught next that counts for more the higher your tier."
+    : "The Alex Coulombe Presents membership: every class recording, member pricing, early Lab access, and a vote on what gets taught next. Join the founding waitlist.",
   alternates: { canonical: "/members" },
 };
 
@@ -30,7 +36,10 @@ export default async function Members({
     searchParams,
   ]);
   const customerId = await customerFromSession(sessionToken).catch(() => null);
-  const member = customerId ? await isMember(customerId).catch(() => false) : false;
+  const [member, tierId] = customerId
+    ? await Promise.all([isMember(customerId).catch(() => false), memberTierForCustomer(customerId).catch(() => null)])
+    : [false, null];
+  const activeTier = MEMBERSHIP_TIERS.find((t) => t.id === tierId);
 
   return (
     <div className="mx-auto max-w-6xl px-5 pb-24 pt-32">
@@ -46,11 +55,11 @@ export default async function Members({
           The members&apos; side <span className="grad-text">of the lab.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
-          One membership, everything behind the curtain: the full class-recording library, standing
-          member pricing, first access to Lab launches, and a monthly hour where you get Alex&apos;s
-          full attention.{" "}
+          Three tiers, everything behind the curtain: the full class-recording library, standing
+          member pricing, and a vote on what gets taught next that counts for more the higher your
+          tier.{" "}
           {MEMBERSHIP_LIVE
-            ? `${MEMBERSHIP_PRICE_LABEL} — cancel anytime.`
+            ? "$99–$299/mo — cancel anytime."
             : "Pricing lands with the launch — waitlist members hear first and get the founding rate."}
         </p>
       </Reveal>
@@ -69,7 +78,9 @@ export default async function Members({
       {member ? (
         <Reveal>
           <div className="glow-card mt-14 rounded-3xl border border-teal/40 p-8 text-center md:p-10">
-            <p className="font-mono text-xs uppercase tracking-widest text-teal">Membership active ✓</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">
+              {activeTier ? `${activeTier.name} membership active ✓` : "Membership active ✓"}
+            </p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
             <p className="mx-auto mt-3 max-w-md text-sm text-mist">
               Your class credits and billing live in{" "}
@@ -102,39 +113,61 @@ export default async function Members({
         </Reveal>
       ) : MEMBERSHIP_LIVE ? (
         <Reveal>
-          <div className="glass mt-14 rounded-3xl p-8 text-center md:p-12">
-            {joined === "1" ? (
-              <>
-                <p className="font-mono text-xs uppercase tracking-widest text-teal">
-                  Payment received ✓
-                </p>
-                <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
-                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-mist">
-                  Your membership activates automatically — usually instant. Check your email for a
-                  sign-in link, or refresh this page in a moment. Nothing after a few minutes? Email{" "}
-                  <a
-                    href="mailto:info@alexcoulombepresents.com"
-                    className="text-teal hover:underline"
+          {joined === "1" ? (
+            <div className="glass mt-14 rounded-3xl p-8 text-center md:p-12">
+              <p className="font-mono text-xs uppercase tracking-widest text-teal">
+                Payment received ✓
+              </p>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-mist">
+                Your membership activates automatically — usually instant. Check your email for a
+                sign-in link, or refresh this page in a moment. Nothing after a few minutes? Email{" "}
+                <a href="mailto:info@alexcoulombepresents.com" className="text-teal hover:underline">
+                  info@alexcoulombepresents.com
+                </a>
+                .
+              </p>
+            </div>
+          ) : (
+            <div className="mt-14">
+              <h2 className="text-center text-2xl font-bold tracking-tight md:text-3xl">
+                Pick a tier.
+              </h2>
+              <p className="mx-auto mt-3 max-w-lg text-center text-sm leading-relaxed text-mist">
+                Every tier includes recordings and member pricing. Cancel anytime from your account.
+              </p>
+              <div className="mt-8 grid gap-5 md:grid-cols-3">
+                {MEMBERSHIP_TIERS.map((tier, i) => (
+                  <div
+                    key={tier.id}
+                    className={`glass flex h-full flex-col rounded-2xl p-7 ${
+                      i === 1 ? "border-teal/50" : "border-line"
+                    }`}
                   >
-                    info@alexcoulombepresents.com
-                  </a>
-                  .
-                </p>
-              </>
-            ) : (
-              <>
-                <h2 className="text-2xl font-bold tracking-tight">Join the membership.</h2>
-                <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-mist">
-                  {MEMBERSHIP_PRICE_LABEL} — 2 live-class credits every billing cycle, the full
-                  recording library, member pricing, and everything above. Cancel anytime from your
-                  account.
-                </p>
-                <div className="mt-6">
-                  <JoinMembershipButton />
-                </div>
-              </>
-            )}
-          </div>
+                    {i === 1 && (
+                      <span className="self-start rounded-full bg-teal px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+                        Most popular
+                      </span>
+                    )}
+                    <h3 className="mt-3 font-bold">{tier.name}</h3>
+                    <p className="mt-1 text-2xl font-bold text-snow">{tier.priceLabel}</p>
+                    <p className="mt-1 text-sm text-mist">{tier.tagline}</p>
+                    <ul className="mt-4 flex-1 space-y-2">
+                      {tier.benefits.map((b) => (
+                        <li key={b} className="flex gap-2 text-xs leading-relaxed text-mist">
+                          <span className="mt-0.5 text-teal/70">✦</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-6">
+                      <JoinMembershipButton tier={tier.id} label={`Join ${tier.name} →`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </Reveal>
       ) : (
         <Reveal>

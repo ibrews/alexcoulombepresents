@@ -19,10 +19,15 @@
 
 export const MEMBERSHIP_SKU = "membership";
 export const BOOKING_CREDIT_SKU = "booking_credit";
-// 2 live-class credits per billing cycle (Alex's sketch, 2026-07-29). Credits
+// Pooled live-class credits per billing cycle for the "starter" tier only
+// (2 classes + 1 office hours, see lib/commerce/membership.ts's
+// MEMBERSHIP_TIERS comment on the pooling simplification). "unlimited" and
+// "insider" skip credit minting entirely — see hasUnlimitedBooking. Credits
 // expire with the cycle they were minted for; rollover (recommended: max 1
 // month) is an open decision — revisit `updates_until` handling if granted.
-export const CREDITS_PER_CYCLE = 2;
+export const STARTER_CREDITS_PER_CYCLE = 3;
+
+export type MembershipTierId = "starter" | "unlimited" | "insider";
 
 // Minimal structural types for the webhook payload shapes we touch. Stripe
 // moved some fields between API versions (noted inline) — read both shapes.
@@ -63,14 +68,16 @@ export type StripeEvent = {
 };
 
 export type MembershipBillingDeps = {
-  // env STRIPE_MEMBERSHIP_PRICE_ID — undefined until Alex creates the price
-  // (human launch step 1); every branch no-ops without it.
-  membershipPriceId: string | undefined;
+  // One Stripe Price id per tier (STRIPE_MEMBERSHIP_PRICE_ID_STARTER/
+  // _UNLIMITED/_INSIDER) — undefined for any tier Alex hasn't created in
+  // Stripe yet; events referencing a not-yet-configured tier's price simply
+  // never match (same no-op behavior the single-price version had).
+  membershipPriceIds: Partial<Record<MembershipTierId, string>>;
   findOrCreateCustomer(email: string, name?: string | null): Promise<number>;
   setStripeCustomerId(customerId: number, stripeCustomerId: string): Promise<void>;
   customerIdForStripeCustomer(stripeCustomerId: string): Promise<number | null>;
   fetchStripeCustomer(stripeCustomerId: string): Promise<{ email: string | null; name: string | null } | null>;
-  grantOrExtendMembership(customerId: number, paidThrough: Date): Promise<{ isNew: boolean }>;
+  grantOrExtendMembership(customerId: number, paidThrough: Date, tier: MembershipTierId): Promise<{ isNew: boolean }>;
   mintBookingCredits(customerId: number, count: number, expiresAt: Date): Promise<number>;
   revokeMembership(customerId: number): Promise<number>;
   checkoutSessionProcessed(stripeEventId: string, stripeSessionId: string): Promise<boolean>;
@@ -100,14 +107,40 @@ export type MembershipEventResult =
       name?: string | null;
     };
 
-function membershipInvoiceLine(invoice: StripeInvoice, priceId: string): StripeInvoiceLine | undefined {
-  return (invoice.lines?.data ?? []).find(
-    (l) => (l.price?.id ?? l.pricing?.price_details?.price) === priceId
+// Finds which configured tier (if any) an invoice's membership line or a
+// subscription's item matches — a customer is only ever on one tier's price
+// at a time, so first match wins.
+function tierForPriceId(
+  priceIds: Partial<Record<MembershipTierId, string>>,
+  priceId: string | null | undefined
+): MembershipTierId | null {
+  if (!priceId) return null;
+  const entry = (Object.entries(priceIds) as [MembershipTierId, string | undefined][]).find(
+    ([, id]) => id === priceId
   );
+  return entry?.[0] ?? null;
 }
 
-function subscriptionHasMembershipPrice(sub: StripeSubscription, priceId: string): boolean {
-  return (sub.items?.data ?? []).some((i) => i.price?.id === priceId);
+function membershipInvoiceLine(
+  invoice: StripeInvoice,
+  priceIds: Partial<Record<MembershipTierId, string>>
+): { line: StripeInvoiceLine; tier: MembershipTierId } | undefined {
+  for (const line of invoice.lines?.data ?? []) {
+    const tier = tierForPriceId(priceIds, line.price?.id ?? line.pricing?.price_details?.price);
+    if (tier) return { line, tier };
+  }
+  return undefined;
+}
+
+function subscriptionTier(
+  sub: StripeSubscription,
+  priceIds: Partial<Record<MembershipTierId, string>>
+): MembershipTierId | null {
+  for (const item of sub.items?.data ?? []) {
+    const tier = tierForPriceId(priceIds, item.price?.id);
+    if (tier) return tier;
+  }
+  return null;
 }
 
 function subscriptionPeriodEnd(sub: StripeSubscription): number | null {
@@ -139,13 +172,15 @@ export async function handleMembershipEvent(
   event: StripeEvent,
   deps: MembershipBillingDeps
 ): Promise<MembershipEventResult> {
-  const priceId = deps.membershipPriceId;
+  const priceIds = deps.membershipPriceIds;
+  const anyPriceConfigured = Object.values(priceIds).some(Boolean);
 
   if (event.type === "invoice.paid") {
-    if (!priceId) return { handled: false, reason: "STRIPE_MEMBERSHIP_PRICE_ID not set" };
+    if (!anyPriceConfigured) return { handled: false, reason: "no STRIPE_MEMBERSHIP_PRICE_ID_* set" };
     const invoice = event.data.object as StripeInvoice;
-    const line = membershipInvoiceLine(invoice, priceId);
-    if (!line) return { handled: false, reason: "no membership line on invoice" };
+    const match = membershipInvoiceLine(invoice, priceIds);
+    if (!match) return { handled: false, reason: "no membership line on invoice" };
+    const { line, tier } = match;
 
     // Same idempotency pattern as the checkout branches: dedupe on the event
     // id AND the invoice id (dashboard resends mint fresh event ids), check
@@ -174,8 +209,11 @@ export async function handleMembershipEvent(
       await deps.setStripeCustomerId(customerId, invoice.customer);
     }
 
-    const { isNew } = await deps.grantOrExtendMembership(customerId, paidThrough);
-    await deps.mintBookingCredits(customerId, CREDITS_PER_CYCLE, paidThrough);
+    const { isNew } = await deps.grantOrExtendMembership(customerId, paidThrough, tier);
+    // "unlimited"/"insider" skip credit minting entirely — they never redeem
+    // against the pooled-credit system, see hasUnlimitedBooking.
+    const credits = tier === "starter" ? STARTER_CREDITS_PER_CYCLE : 0;
+    if (credits > 0) await deps.mintBookingCredits(customerId, credits, paidThrough);
     await deps.recordCheckoutSession({
       stripeEventId: event.id,
       stripeSessionId: invoice.id,
@@ -191,7 +229,7 @@ export async function handleMembershipEvent(
     await deps.linkMembershipCycleToOrder(customerId, invoice.id, paidThrough);
     return {
       handled: true,
-      action: `granted through ${paidThrough.toISOString()} + ${CREDITS_PER_CYCLE} credits`,
+      action: `granted ${tier} through ${paidThrough.toISOString()}${credits > 0 ? ` + ${credits} credits` : " (unlimited)"}`,
       newMember: isNew,
       email,
       name,
@@ -203,10 +241,11 @@ export async function handleMembershipEvent(
     event.type === "customer.subscription.updated" ||
     event.type === "customer.subscription.deleted"
   ) {
-    if (!priceId) return { handled: false, reason: "STRIPE_MEMBERSHIP_PRICE_ID not set" };
+    if (!anyPriceConfigured) return { handled: false, reason: "no STRIPE_MEMBERSHIP_PRICE_ID_* set" };
     const sub = event.data.object as StripeSubscription;
-    if (!subscriptionHasMembershipPrice(sub, priceId)) {
-      return { handled: false, reason: "subscription is not the membership price" };
+    const tier = subscriptionTier(sub, priceIds);
+    if (!tier) {
+      return { handled: false, reason: "subscription is not a membership price" };
     }
 
     const customerId = await resolveCustomer(sub.customer, deps);
@@ -228,8 +267,8 @@ export async function handleMembershipEvent(
       const periodEnd = subscriptionPeriodEnd(sub);
       if (!periodEnd) return { handled: false, reason: "subscription has no period end" };
       const paidThrough = new Date(periodEnd * 1000);
-      await deps.grantOrExtendMembership(customerId, paidThrough);
-      return { handled: true, action: `active through ${paidThrough.toISOString()}` };
+      await deps.grantOrExtendMembership(customerId, paidThrough, tier);
+      return { handled: true, action: `active (${tier}) through ${paidThrough.toISOString()}` };
     }
 
     // past_due / incomplete: no grant, no revoke — access simply lapses when

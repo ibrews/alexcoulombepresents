@@ -85,3 +85,53 @@ export async function answerCallbackQuery(callbackQueryId: string, text?: string
 export async function sendTelegramAlert(text: string) {
   await call("sendMessage", { chat_id: chatId(), text: `⚠️ ${text}` });
 }
+
+// Plain informational notification, no ⚠️ prefix — for routine good-news
+// pings (a class signup) that shouldn't read as an alert.
+export async function sendTelegramNotice(text: string) {
+  await call("sendMessage", { chat_id: chatId(), text });
+}
+
+// The Wednesday-calendar equivalent of sendTipForApproval — sent by the
+// class-checkin cron (app/api/cron/class-checkin) the Tuesday before a class
+// that's under its minEnrollment. app/api/telegram/webhook handles the tap.
+export async function sendClassCheckinPrompt(input: {
+  slug: string;
+  name: string;
+  sessionDateLabel: string;
+  seatsSold: number;
+  minEnrollment: number;
+}): Promise<number> {
+  const text = [
+    `🪑 "${input.name}" (${input.sessionDateLabel}) has ${input.seatsSold} of ${input.minEnrollment} minimum signed up.`,
+    "",
+    "Still want to teach it tomorrow?",
+  ].join("\n");
+
+  const keyboard: InlineKeyboardButton[][] = [
+    [
+      { text: "✅ Yes, teach it", callback_data: `class-yes:${input.slug}` },
+      { text: "❌ No, cancel it", callback_data: `class-no:${input.slug}` },
+    ],
+  ];
+
+  const result = await call("sendMessage", {
+    chat_id: chatId(),
+    text,
+    reply_markup: { inline_keyboard: keyboard },
+  });
+  return result.message_id as number;
+}
+
+export async function markClassCheckinDecided(
+  messageId: number,
+  originalText: string,
+  decision: "confirmed" | "cancelled"
+) {
+  const marker = decision === "confirmed" ? "✅ TEACHING IT" : "❌ CANCELLED";
+  await call("editMessageText", {
+    chat_id: chatId(),
+    message_id: messageId,
+    text: `${marker}\n\n${originalText}`,
+  });
+}

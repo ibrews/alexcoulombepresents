@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { recordVote, getVoteCounts, getVoteTotalVoters, recordSignup } from "@/lib/db";
 import { isVoteTopic, MAX_TOPICS_PER_VOTE, VOTE_TOPICS } from "@/lib/vote";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
+import { memberTierForEmail, voteWeightForTier } from "@/lib/commerce/membership";
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,7 +37,12 @@ export async function POST(req: NextRequest) {
 
     const subscribed = Boolean(subscribe);
 
-    await recordVote({ email, topics, subscribed });
+    // Members' votes count for more, scaled to tier — a lookup failure
+    // (DB hiccup, unrecognized email) falls back to weight 1, same as a
+    // non-member, rather than blocking the vote entirely.
+    const weight = voteWeightForTier(await memberTierForEmail(email).catch(() => null));
+
+    await recordVote({ email, topics, subscribed, weight });
 
     // Opting in to announcements piggybacks on the site's existing signup
     // storage/notification path, filed under the "unreal" list.

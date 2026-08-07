@@ -131,6 +131,12 @@ async function ensureVotesTable() {
       updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `;
+  // Member votes count for more, scaled to tier (lib/commerce/membership.ts's
+  // voteWeightForTier) — 1 for a non-member. Captured at vote time rather
+  // than re-derived on every read, matching the same "re-voting overwrites"
+  // semantics topics/subscribed already have (an upgrade/downgrade after
+  // voting takes effect next time that email votes again, not retroactively).
+  await sql()`ALTER TABLE course_votes ADD COLUMN IF NOT EXISTS weight INTEGER NOT NULL DEFAULT 1`;
   _votesEnsured = true;
 }
 
@@ -138,25 +144,28 @@ export async function recordVote(input: {
   email: string;
   topics: string[];
   subscribed: boolean;
+  weight: number;
 }) {
   await ensureVotesTable();
-  const { email, topics, subscribed } = input;
+  const { email, topics, subscribed, weight } = input;
   await sql()`
-    INSERT INTO course_votes (email, topics, subscribed)
-    VALUES (${email}, ${topics}, ${subscribed})
+    INSERT INTO course_votes (email, topics, subscribed, weight)
+    VALUES (${email}, ${topics}, ${subscribed}, ${weight})
     ON CONFLICT (email) DO UPDATE
       SET topics = EXCLUDED.topics,
           subscribed = EXCLUDED.subscribed,
+          weight = EXCLUDED.weight,
           updated_at = now()
   `;
 }
 
-// Aggregate counts per topic, for the public results bars. Never exposes
-// individual emails.
+// Aggregate WEIGHTED score per topic, for the public results bars — a
+// member's pick counts for their tier's vote weight, not just 1. Never
+// exposes individual emails.
 export async function getVoteCounts(): Promise<{ topic: string; count: number }[]> {
   await ensureVotesTable();
   const rows = await sql()`
-    SELECT topic, COUNT(*)::int AS count
+    SELECT topic, SUM(weight)::int AS count
     FROM course_votes, UNNEST(topics) AS topic
     GROUP BY topic
     ORDER BY count DESC
@@ -164,8 +173,9 @@ export async function getVoteCounts(): Promise<{ topic: string; count: number }[
   return rows as { topic: string; count: number }[];
 }
 
-// Total number of people who have voted (distinct emails), for a "N votes so
-// far" line alongside the per-topic bars.
+// Total number of PEOPLE who have voted (distinct emails, unweighted) — for
+// an honest "N votes so far" line. The per-topic bars above are weighted;
+// this deliberately isn't, so it still reads as a real headcount.
 export async function getVoteTotalVoters(): Promise<number> {
   await ensureVotesTable();
   const rows = await sql()`SELECT COUNT(*)::int AS count FROM course_votes`;

@@ -10,13 +10,17 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   handleMembershipEvent,
-  CREDITS_PER_CYCLE,
+  STARTER_CREDITS_PER_CYCLE,
   MEMBERSHIP_SKU,
   type MembershipBillingDeps,
   type StripeEvent,
 } from "../lib/commerce/membershipBilling.ts";
 
-const PRICE_ID = "price_membership_test";
+// Three tiers, three prices — a real customer is only ever on one at a time.
+const STARTER_PRICE_ID = "price_membership_starter_test";
+const UNLIMITED_PRICE_ID = "price_membership_unlimited_test";
+const INSIDER_PRICE_ID = "price_membership_insider_test";
+const PRICE_ID = STARTER_PRICE_ID; // default price most fixtures exercise
 const PERIOD_END = 1_756_425_600; // epoch seconds; exact value is arbitrary
 const PAID_THROUGH = new Date(PERIOD_END * 1000);
 
@@ -31,7 +35,7 @@ function fakeDeps(overrides: Partial<MembershipBillingDeps> = {}) {
       return Promise.resolve(result);
     };
   const deps: MembershipBillingDeps = {
-    membershipPriceId: PRICE_ID,
+    membershipPriceIds: { starter: STARTER_PRICE_ID, unlimited: UNLIMITED_PRICE_ID, insider: INSIDER_PRICE_ID },
     findOrCreateCustomer: record("findOrCreateCustomer", 42),
     setStripeCustomerId: record("setStripeCustomerId", undefined),
     customerIdForStripeCustomer: record("customerIdForStripeCustomer", 42),
@@ -40,7 +44,7 @@ function fakeDeps(overrides: Partial<MembershipBillingDeps> = {}) {
       name: "Mem Ber",
     }),
     grantOrExtendMembership: record("grantOrExtendMembership", { isNew: true }),
-    mintBookingCredits: record("mintBookingCredits", CREDITS_PER_CYCLE),
+    mintBookingCredits: record("mintBookingCredits", STARTER_CREDITS_PER_CYCLE),
     revokeMembership: record("revokeMembership", 3),
     checkoutSessionProcessed: record("checkoutSessionProcessed", false),
     recordCheckoutSession: record("recordCheckoutSession", undefined),
@@ -106,8 +110,8 @@ test("invoice.paid grants membership, mints credits, records + links the order",
   assert.equal(result.handled, true);
   assert.equal(result.handled && result.newMember, true);
   assert.equal(result.handled && result.email, "member@example.com");
-  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH]);
-  assert.deepEqual(called("mintBookingCredits")[0].args, [42, CREDITS_PER_CYCLE, PAID_THROUGH]);
+  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH, "starter"]);
+  assert.deepEqual(called("mintBookingCredits")[0].args, [42, STARTER_CREDITS_PER_CYCLE, PAID_THROUGH]);
 
   const recorded = called("recordCheckoutSession");
   assert.equal(recorded.length, 1);
@@ -156,11 +160,33 @@ test("invoice.paid for a non-membership price is ignored", async () => {
   assert.equal(called("grantOrExtendMembership").length, 0);
 });
 
-test("invoice.paid with no STRIPE_MEMBERSHIP_PRICE_ID configured is a no-op", async () => {
-  const { deps, calls } = fakeDeps({ membershipPriceId: undefined });
+test("invoice.paid with no STRIPE_MEMBERSHIP_PRICE_ID_* configured is a no-op", async () => {
+  const { deps, calls } = fakeDeps({ membershipPriceIds: {} });
   const result = await handleMembershipEvent(invoicePaid(), deps);
   assert.equal(result.handled, false);
   assert.equal(calls.length, 0);
+});
+
+test("invoice.paid for the unlimited tier grants membership but mints zero credits", async () => {
+  const { deps, called } = fakeDeps();
+  const result = await handleMembershipEvent(
+    invoicePaid({ lines: { data: [{ price: { id: UNLIMITED_PRICE_ID }, period: { end: PERIOD_END } }] } }),
+    deps
+  );
+  assert.equal(result.handled, true);
+  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH, "unlimited"]);
+  assert.equal(called("mintBookingCredits").length, 0);
+});
+
+test("invoice.paid for the insider tier grants membership but mints zero credits", async () => {
+  const { deps, called } = fakeDeps();
+  const result = await handleMembershipEvent(
+    invoicePaid({ lines: { data: [{ price: { id: INSIDER_PRICE_ID }, period: { end: PERIOD_END } }] } }),
+    deps
+  );
+  assert.equal(result.handled, true);
+  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH, "insider"]);
+  assert.equal(called("mintBookingCredits").length, 0);
 });
 
 test("invoice.paid without customer_email falls back to fetching the Stripe customer", async () => {
@@ -201,7 +227,7 @@ test("subscription.created (active) grants through current_period_end", async ()
   const result = await handleMembershipEvent(subscriptionEvent("customer.subscription.created"), deps);
 
   assert.equal(result.handled, true);
-  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH]);
+  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH, "starter"]);
   assert.equal(called("mintBookingCredits").length, 0); // credits mint on invoice.paid only
 });
 
@@ -265,7 +291,7 @@ test("subscription events read the 2025+ per-item current_period_end", async () 
     deps
   );
   assert.equal(result.handled, true);
-  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH]);
+  assert.deepEqual(called("grantOrExtendMembership")[0].args, [42, PAID_THROUGH, "starter"]);
 });
 
 test("subscription events for a different price are ignored", async () => {

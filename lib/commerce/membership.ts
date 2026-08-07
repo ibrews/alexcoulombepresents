@@ -7,17 +7,112 @@
 // founding-member waitlist until NEXT_PUBLIC_MEMBERSHIP_LIVE=1.
 
 import { sql, ensureCommerceSchema } from "./schema";
-import { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU } from "./membershipBilling";
+import { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU, type MembershipTierId } from "./membershipBilling";
 
 export { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU };
+export type { MembershipTierId };
 export const MEMBERSHIP_LIVE = process.env.NEXT_PUBLIC_MEMBERSHIP_LIVE === "1";
-// Display copy only — the real number lives in Stripe (the Price object
-// STRIPE_MEMBERSHIP_PRICE_ID points at). Keep these in sync by hand if the
-// price ever changes.
-export const MEMBERSHIP_PRICE_LABEL = "$50/month";
+
+// ── Tiers — three, replacing the original single $50/mo tier (launched
+// 2026-08-05, replaced 2026-08-07 with zero live subscribers — confirmed
+// against prod before this change, so there was no migration to design for).
+// Each tier is its own Stripe subscription Price, in its own env var — the
+// entitlements.tier column (already existed, previously always 'member')
+// now stores which one a customer is on.
+export type MembershipTier = {
+  id: MembershipTierId;
+  name: string;
+  priceLabel: string;
+  priceCents: number; // display only — the real number lives in the Stripe Price
+  // Which env var holds this tier's Stripe Price ID. Until Alex creates the
+  // three prices in Stripe and sets these, checkout for that tier 503s the
+  // same way membership-at-large already 503s without STRIPE_MEMBERSHIP_PRICE_ID.
+  priceEnvVar: string;
+  // Multiplier applied to this tier's vote on /vote (lib/vote.ts) — a
+  // non-member's vote is weight 1.
+  voteWeight: number;
+  // "unlimited" members skip the booking-credit system entirely (see
+  // hasUnlimitedBooking below); starter gets a flat pooled monthly count.
+  // NOTE: the ask was "2 classes + 1 office hours" specifically — this pools
+  // both into one 3-credit count redeemable for either, which is a real
+  // simplification of the admin honor-system redemption flow
+  // (app/api/admin/credits) rather than tracking two credit types. Flagged
+  // for Alex to split later if the pooling turns out to matter in practice.
+  monthlyCredits: number | "unlimited";
+  tagline: string;
+  benefits: string[];
+};
+
+export const MEMBERSHIP_TIERS: MembershipTier[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    priceLabel: "$99/mo",
+    priceCents: 9900,
+    priceEnvVar: "STRIPE_MEMBERSHIP_PRICE_ID_STARTER",
+    voteWeight: 2,
+    monthlyCredits: 3,
+    tagline: "2 classes + 1 office hours a month",
+    benefits: [
+      "3 live-class credits every month — 2 classes + 1 office hours, or however you want to split them",
+      "Every class recording",
+      "Member pricing on the store",
+      "2x vote weight on what's taught next",
+    ],
+  },
+  {
+    id: "unlimited",
+    name: "Unlimited",
+    priceLabel: "$149/mo",
+    priceCents: 14900,
+    priceEnvVar: "STRIPE_MEMBERSHIP_PRICE_ID_UNLIMITED",
+    voteWeight: 4,
+    monthlyCredits: "unlimited",
+    tagline: "Unlimited classes and office hours",
+    benefits: [
+      "Unlimited live classes and office hours — no monthly cap",
+      "Every class recording",
+      "Member pricing on the store",
+      "4x vote weight on what's taught next",
+    ],
+  },
+  {
+    id: "insider",
+    name: "Insider",
+    priceLabel: "$299/mo",
+    priceCents: 29900,
+    priceEnvVar: "STRIPE_MEMBERSHIP_PRICE_ID_INSIDER",
+    voteWeight: 10,
+    monthlyCredits: "unlimited",
+    tagline: "Unlimited, plus the stuff nobody else sees",
+    benefits: [
+      "Everything in Unlimited",
+      "Early access to in-progress tools and betas as they land in the Lab",
+      "The full back catalog — sessions that don't surface anywhere else",
+      "The Gumroad course library, bundled in (redemption codes by email after joining)",
+      "10x vote weight on what's taught next",
+    ],
+  },
+];
+
+export function membershipTier(id: MembershipTierId | string | null | undefined): MembershipTier | undefined {
+  return MEMBERSHIP_TIERS.find((t) => t.id === id);
+}
+
+export function hasUnlimitedBooking(tierId: MembershipTierId | string | null | undefined): boolean {
+  return membershipTier(tierId)?.monthlyCredits === "unlimited";
+}
+
+// Vote weight for a given tier id — 1 (a normal, non-member vote) for
+// anything unrecognized, including null/undefined.
+export function voteWeightForTier(tierId: MembershipTierId | string | null | undefined): number {
+  return membershipTier(tierId)?.voteWeight ?? 1;
+}
 
 // The benefits list is data, not copy-in-JSX, so /members, the store teaser,
-// and future launch emails all describe the same program.
+// and future launch emails all describe the same program. Tier-agnostic
+// items only (recordings + member pricing) — tier-specific perks live on
+// MembershipTier.benefits above.
 export const memberBenefits: { title: string; detail: string }[] = [
   {
     title: "Every class recording",
@@ -34,12 +129,8 @@ export const memberBenefits: { title: string; detail: string }[] = [
       "First access to Lab tools like xrsim — test any OpenXR Android app locally, no headset needed — and whatever escapes the private repos next.",
   },
   {
-    title: "Monthly members' office hours",
-    detail: "A live AMA hour with Alex — bring your broken Blueprint, your pipeline question, your career fork.",
-  },
-  {
     title: "Vote with extra weight",
-    detail: "Members steer what gets taught and built next — your vote counts double on upcoming class topics.",
+    detail: "Members steer what gets taught and built next — your vote counts more, scaled to your tier.",
   },
   {
     title: "The Spatial Deck presentation library",
@@ -50,6 +141,9 @@ export const memberBenefits: { title: string; detail: string }[] = [
 
 // True when the customer holds an active membership entitlement that hasn't
 // lapsed (updates_until doubles as the paid-through date for subscriptions).
+// Tier-agnostic on purpose — every tier is still "a member" for recordings/
+// Lab-tools gating; use memberTierForCustomer for tier-specific checks (vote
+// weight, insider-only perks).
 export async function isMember(customerId: number): Promise<boolean> {
   await ensureCommerceSchema();
   const rows = (await sql()`
@@ -61,6 +155,39 @@ export async function isMember(customerId: number): Promise<boolean> {
     LIMIT 1
   `) as { id: number }[];
   return rows.length > 0;
+}
+
+// The active tier id for a customer, or null if not currently a member.
+export async function memberTierForCustomer(customerId: number): Promise<MembershipTierId | null> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT tier FROM entitlements
+    WHERE customer_id = ${customerId}
+      AND sku = ${MEMBERSHIP_SKU}
+      AND status = 'active'
+      AND (updates_until IS NULL OR updates_until > now())
+    LIMIT 1
+  `) as { tier: string }[];
+  const tier = rows[0]?.tier;
+  return membershipTier(tier) ? (tier as MembershipTierId) : null;
+}
+
+// Same, keyed by email — for /vote, which only ever collects an email, never
+// a session/customer id. Returns null for a non-member or an email with no
+// customer row at all (someone who's never checked out anything).
+export async function memberTierForEmail(email: string): Promise<MembershipTierId | null> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT e.tier AS tier FROM entitlements e
+    JOIN customers c ON c.id = e.customer_id
+    WHERE lower(c.email) = lower(${email})
+      AND e.sku = ${MEMBERSHIP_SKU}
+      AND e.status = 'active'
+      AND (e.updates_until IS NULL OR e.updates_until > now())
+    LIMIT 1
+  `) as { tier: string }[];
+  const tier = rows[0]?.tier;
+  return membershipTier(tier) ? (tier as MembershipTierId) : null;
 }
 
 // ── Subscription-webhook persistence (wired into membershipBilling deps) ────
@@ -79,16 +206,22 @@ export async function isMember(customerId: number): Promise<boolean> {
 // Returns isNew=true when this customer had no membership row at all (first
 // signup) — the caller uses that to decide whether to send the welcome email
 // (renewals and reactivations from a lapsed state don't get a new one).
+// `tier` is written on every call, including renewals — an upgrade/downgrade
+// shows up as a new Stripe price on the next invoice.paid/subscription.updated,
+// and the member's row should reflect whichever price is actually current,
+// not whatever they first signed up at.
 export async function grantOrExtendMembership(
   customerId: number,
-  paidThrough: Date
+  paidThrough: Date,
+  tier: MembershipTierId
 ): Promise<{ isNew: boolean }> {
   await ensureCommerceSchema();
   const rows = (await sql()`
     INSERT INTO entitlements (customer_id, sku, tier, status, updates_until)
-    VALUES (${customerId}, ${MEMBERSHIP_SKU}, 'member', 'active', ${paidThrough.toISOString()})
+    VALUES (${customerId}, ${MEMBERSHIP_SKU}, ${tier}, 'active', ${paidThrough.toISOString()})
     ON CONFLICT (customer_id) WHERE sku = 'membership'
     DO UPDATE SET
+      tier = EXCLUDED.tier,
       status = 'active',
       revoked_at = NULL,
       updates_until = GREATEST(

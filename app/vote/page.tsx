@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import VoteForm from "@/components/VoteForm";
@@ -20,9 +21,15 @@ export default function Vote() {
           What should Alex teach <span className="grad-text">next?</span>
         </h1>
         <p className="mt-6 leading-relaxed text-mist">
-          No survey theater — the most-requested topic becomes the September cohort. Pick up to
-          two, drop your email, and watch the results move. A vote is a promise Alex will actually
-          build it.
+          No survey theater — the most-requested topic becomes what&apos;s taught after the current
+          calendar wraps. Pick up to two, drop your email, and watch the results move. A vote is a
+          promise Alex will actually build it.
+        </p>
+        <p className="mt-3 text-sm text-mist">
+          <Link href="/members" className="text-snow underline decoration-teal/50 hover:decoration-teal">
+            Members
+          </Link>{" "}
+          vote with extra weight, scaled to tier — 2x, 4x, or 10x a normal vote.
         </p>
       </Reveal>
 

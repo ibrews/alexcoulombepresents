@@ -63,3 +63,73 @@ export async function createVoucherCode(input: {
   }
   return data.code as string;
 }
+
+// ── Class-cancellation refund coupon ─────────────────────────────────────
+// Separate from the fixed $250 class-voucher coupon above: this mints a
+// FRESH per-order Stripe coupon (amount_off = 110% of what that specific
+// buyer paid) when a Wednesday-calendar class is cancelled for missing its
+// minEnrollment (see app/api/telegram/webhook.ts's class-no handling). One
+// coupon per cancelled session, one promotion code per buyer under it — code
+// is deterministic from the session id, same retry-safety shape as
+// createVoucherCode above.
+export async function createCancellationCoupon(input: {
+  classSlug: string;
+  buyerEmail: string;
+  stripeSessionId: string;
+  amountOffCents: number;
+}): Promise<string> {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("STRIPE_SECRET_KEY not set");
+
+  const couponId = `cancel-${input.classSlug}`.slice(0, 40);
+  const code = voucherCodeForSession(`${input.classSlug}:${input.stripeSessionId}`);
+
+  // Coupon is per-CLASS (every buyer of the same cancelled session shares
+  // one coupon id) but its amount_off is fixed at creation — since everyone
+  // who paid the same listed price gets the same 110%, this only breaks if
+  // buyers paid different net amounts (a promo code applied). Create-once,
+  // tolerate "already exists" same as the voucher path; a mixed-amount class
+  // would need per-buyer coupons instead — not needed for the current
+  // fixed-price calendar items, flagged here if that ever changes.
+  const couponRes = await fetch("https://api.stripe.com/v1/coupons", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      id: couponId,
+      amount_off: String(input.amountOffCents),
+      currency: "usd",
+      duration: "once",
+      "metadata[reason]": "class-cancelled-min-enrollment",
+      "metadata[class_slug]": input.classSlug,
+    }),
+  });
+  if (!couponRes.ok) {
+    const data = await couponRes.json();
+    const msg: string = data.error?.message ?? "";
+    if (!(data.error?.code === "resource_already_exists" || /already exists/i.test(msg))) {
+      throw new Error(`cancellation coupon creation failed: ${msg}`);
+    }
+  }
+
+  const promoRes = await fetch("https://api.stripe.com/v1/promotion_codes", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      coupon: couponId,
+      code,
+      max_redemptions: "1",
+      "metadata[buyer_email]": input.buyerEmail,
+      "metadata[class_slug]": input.classSlug,
+      "metadata[stripe_session_id]": input.stripeSessionId,
+    }),
+  });
+  const promoData = await promoRes.json();
+  if (!promoRes.ok) {
+    const msg: string = promoData.error?.message ?? "";
+    if (promoData.error?.code === "resource_already_exists" || /already exists/i.test(msg)) {
+      return code;
+    }
+    throw new Error(`cancellation promotion code creation failed: ${msg}`);
+  }
+  return promoData.code as string;
+}

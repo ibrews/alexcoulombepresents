@@ -3,7 +3,7 @@ import { storeItems, STORE_LIVE, effectivePriceCents, isPurchasable } from "@/li
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 import { getSeatsSold } from "@/lib/commerce/seats";
-import { MEMBERSHIP_LIVE } from "@/lib/commerce/membership";
+import { MEMBERSHIP_LIVE, membershipTier } from "@/lib/commerce/membership";
 
 // Creates a Stripe Checkout Session for a catalog item.
 // Talks to the Stripe REST API directly (form-encoded) — no SDK dependency.
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let payload: { slug?: string; sku?: string; donationCents?: number; membership?: boolean };
+  let payload: { slug?: string; sku?: string; donationCents?: number; membership?: boolean; tier?: string };
   try {
     payload = await req.json();
   } catch {
@@ -94,15 +94,19 @@ export async function POST(req: NextRequest) {
   } else if (payload.membership) {
     // ── Membership subscription (lib/commerce/membership.ts) — recurring,
     // so this is mode=subscription referencing the real Stripe Price object
-    // (STRIPE_MEMBERSHIP_PRICE_ID), not inline price_data like the one-time
+    // for whichever tier was picked, not inline price_data like the one-time
     // items above. customer_creation is a payment-mode-only param — Stripe
     // always creates a customer for a subscription, so it's omitted here.
     if (!MEMBERSHIP_LIVE) {
       return NextResponse.json({ error: "Membership isn't open yet." }, { status: 503 });
     }
-    const priceId = process.env.STRIPE_MEMBERSHIP_PRICE_ID;
+    const tier = membershipTier(payload.tier);
+    if (!tier) {
+      return NextResponse.json({ error: "Unknown membership tier." }, { status: 400 });
+    }
+    const priceId = process.env[tier.priceEnvVar];
     if (!priceId) {
-      return NextResponse.json({ error: "Membership isn't configured yet." }, { status: 503 });
+      return NextResponse.json({ error: "This tier isn't configured yet." }, { status: 503 });
     }
     body = new URLSearchParams({
       mode: "subscription",
@@ -111,6 +115,7 @@ export async function POST(req: NextRequest) {
       "line_items[0][quantity]": "1",
       "line_items[0][price]": priceId,
       "metadata[kind]": "membership",
+      "metadata[tier]": tier.id,
       "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup
     });
   } else {

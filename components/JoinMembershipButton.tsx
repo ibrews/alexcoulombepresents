@@ -6,8 +6,10 @@ import { useState } from "react";
 // "inquire" fallback (this button only ever renders when MEMBERSHIP_LIVE is
 // true; /api/checkout re-checks the flag server-side regardless).
 export default function JoinMembershipButton({
-  label = "Join the membership →",
+  tier,
+  label = "Join →",
 }: {
+  tier: string;
   label?: string;
 }) {
   const [busy, setBusy] = useState(false);
@@ -20,7 +22,7 @@ export default function JoinMembershipButton({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ membership: true }),
+        body: JSON.stringify({ membership: true, tier }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");

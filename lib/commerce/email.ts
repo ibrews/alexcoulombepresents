@@ -251,3 +251,51 @@ export async function sendVoucherEmail(input: {
   });
   if (error) throw new Error(`voucher email failed: ${error.message}`);
 }
+
+// Sent to every buyer of a Wednesday-calendar class that didn't reach its
+// minEnrollment by the Tuesday-before check-in (app/api/telegram/webhook.ts
+// class-no handling). Coupon is auto-generated (110% of what they paid);
+// refund is a manual reply — no self-serve refund endpoint exists yet.
+export async function sendClassCancelledEmail(input: {
+  email: string;
+  name?: string;
+  className: string;
+  amountPaidCents: number;
+  couponCode: string;
+  couponValueCents: number;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const first = input.name?.split(" ")[0];
+  const fmt = (c: number) => `$${(c / 100).toFixed(c % 100 === 0 ? 0 : 2)}`;
+  const __body = [
+    `${first ? `Hey ${first}` : "Hey"} — bad news on "${input.className}": it didn't hit the 5-person`,
+    "minimum, so it's not running as scheduled. Genuinely sorry — nobody likes an",
+    "empty room, including us.",
+    "",
+    "Two ways to make it right, your choice:",
+    "",
+    `  1. A coupon worth ${fmt(input.couponValueCents)} (110% of what you paid) toward any future`,
+    "     class or cohort — code below, no expiration.",
+    "",
+    `         ${input.couponCode}`,
+    "",
+    "  2. A full refund of your original payment — just reply to this email and",
+    "     Alex will process it directly.",
+    "",
+    "Either way, keep an eye on the calendar at",
+    "https://www.alexcoulombepresents.com/training#calendar — this topic will very",
+    "likely be back.",
+    "",
+    "— Alex Coulombe Presents",
+    "https://www.alexcoulombepresents.com",
+  ].join("\n");
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    to: input.email,
+    replyTo: "info@alexcoulombepresents.com",
+    subject: `"${input.className}" didn't make the minimum — coupon or refund inside`,
+    text: __body,
+    html: brandedHtml(__body),
+  });
+  if (error) throw new Error(`class-cancelled email failed: ${error.message}`);
+}

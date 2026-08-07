@@ -10,6 +10,7 @@ import JsonLd from "@/components/JsonLd";
 import CounterStat from "@/components/CounterStat";
 import TestimonialWall from "@/components/TestimonialWall";
 import TrainingSurveyForm from "@/components/TrainingSurveyForm";
+import TrainingCalendar from "@/components/TrainingCalendar";
 import { getCurriculumEntries } from "@/lib/curriculum";
 import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
@@ -104,9 +105,9 @@ export default function Training() {
             <p className="mt-3 leading-relaxed text-mist">
               The free kickoff session has happened, and the rhythm it started continues: a live
               class every <strong className="text-snow">Wednesday at 11a ET</strong>, plus{" "}
-              <strong className="text-snow">office hours every Friday at 1p ET</strong>. What those
-              weeks actually cover is exactly what the poll below decides — answer it and you&apos;ll
-              hear the moment the next dates and pricing are set.
+              <strong className="text-snow">office hours every Friday at 1p ET</strong>. The next
+              eight Wednesdays are on the calendar below at introductory pricing — book any of them
+              right now. After that run, what gets taught is exactly what the poll decides.
             </p>
           )}
           <div className="mt-5 flex flex-wrap items-center gap-4">
@@ -126,15 +127,17 @@ export default function Training() {
               </>
             ) : (
               <a
-                href="#poll"
+                href="#calendar"
                 className="inline-block rounded-full bg-teal px-6 py-2.5 font-semibold text-[#0a0a12] transition hover:opacity-90"
               >
-                Help decide what&apos;s next →
+                See the calendar →
               </a>
             )}
           </div>
         </div>
       </Reveal>
+
+      <TrainingCalendar />
 
       {/* ── The poll — what to actually teach and how to sell it ── */}
       <Reveal delay={40}>
@@ -144,8 +147,8 @@ export default function Training() {
             What do you want to learn?
           </h2>
           <p className="mt-3 leading-relaxed text-mist">
-            Answer honestly — this data will be used to set the curriculum for everything in the
-            coming weeks.
+            The next eight weeks are already on the calendar above — this poll decides what comes
+            after. Answer honestly, and vote as a member for extra weight.
           </p>
           <div className="mt-8">
             <TrainingSurveyForm />
