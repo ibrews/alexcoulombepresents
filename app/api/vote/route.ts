@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { recordVote, getVoteCounts, getVoteTotalVoters, recordSignup } from "@/lib/db";
-import { isVoteTopic, MAX_TOPICS_PER_VOTE, VOTE_TOPICS } from "@/lib/vote";
+import {
+  isVoteTopic,
+  isOtherTopic,
+  otherTopicLabel,
+  sanitizeOtherTopic,
+  encodeOtherTopic,
+  MAX_TOPICS_PER_VOTE,
+  VOTE_TOPICS,
+} from "@/lib/vote";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 import { memberTierForEmail, voteWeightForTier } from "@/lib/commerce/membership";
 
@@ -27,10 +35,29 @@ export async function POST(req: NextRequest) {
       !Array.isArray(topics) ||
       topics.length === 0 ||
       topics.length > MAX_TOPICS_PER_VOTE ||
-      !topics.every(isVoteTopic)
+      !topics.every((t) => typeof t === "string" && (isVoteTopic(t) || isOtherTopic(t)))
     ) {
       return NextResponse.json(
-        { error: `Pick 1–${MAX_TOPICS_PER_VOTE} topics from the list.` },
+        { error: `Pick 1–${MAX_TOPICS_PER_VOTE} topics from the list, or write in your own.` },
+        { status: 400 }
+      );
+    }
+
+    // Re-sanitize any write-in server-side — the client already does this,
+    // but a crafted request shouldn't be trusted to have. A write-in that
+    // sanitizes down to nothing (e.g. all whitespace) is dropped from the
+    // vote rather than rejecting the whole submission, so a stray blank
+    // Other field never blocks a vote that also picked a real topic.
+    const cleanedTopics = topics
+      .map((t: string) => {
+        if (isVoteTopic(t)) return t;
+        const sanitized = sanitizeOtherTopic(otherTopicLabel(t));
+        return sanitized ? encodeOtherTopic(sanitized) : null;
+      })
+      .filter((t): t is string => t !== null);
+    if (cleanedTopics.length === 0) {
+      return NextResponse.json(
+        { error: `Pick 1–${MAX_TOPICS_PER_VOTE} topics from the list, or write in your own.` },
         { status: 400 }
       );
     }
@@ -42,13 +69,13 @@ export async function POST(req: NextRequest) {
     // non-member, rather than blocking the vote entirely.
     const weight = voteWeightForTier(await memberTierForEmail(email).catch(() => null));
 
-    await recordVote({ email, topics, subscribed, weight });
+    await recordVote({ email, topics: cleanedTopics, subscribed, weight });
 
     // Opting in to announcements piggybacks on the site's existing signup
     // storage/notification path, filed under the "unreal" list.
     if (subscribed) {
       try {
-        await recordSignup({ email, message: `Voted: ${topics.join(", ")}`, list: "unreal" });
+        await recordSignup({ email, message: `Voted: ${cleanedTopics.join(", ")}`, list: "unreal" });
       } catch (dbErr) {
         console.error("recordSignup (from vote) failed:", dbErr);
       }

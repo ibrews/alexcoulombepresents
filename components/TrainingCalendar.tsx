@@ -91,14 +91,8 @@ export default async function TrainingCalendar() {
                 {purchasable ? (
                   <>
                     <div className="mt-3">
-                      {item.regularPriceCents && (
-                        <p className="font-mono text-xs text-mist">
-                          <span className="mr-2 line-through decoration-amber/70">
-                            {formatPrice(item.regularPriceCents)}
-                          </span>
-                        </p>
-                      )}
                       <p className="text-lg font-bold text-snow">{formatPrice(item.priceCents)}</p>
+                      <p className="font-mono text-[11px] text-teal">Code UE5 → 50% off</p>
                     </div>
                     {underMin && (
                       <p className="mt-1 font-mono text-[11px] text-amber">

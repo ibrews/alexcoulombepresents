@@ -192,6 +192,23 @@ export async function POST(req: NextRequest) {
         if (await checkoutSessionProcessed(event.id, session.id)) {
           return NextResponse.json({ received: true, deduped: true });
         }
+
+        // Seat count AFTER this order (recordCatalogOrder already ran above,
+        // unconditionally, before this branch) — reused for both the
+        // buyer-facing under-minimum warning and Alex's Telegram notice, so
+        // they can never disagree with each other. Only meaningful for
+        // dated Wednesday-calendar items (the only ones with a
+        // minEnrollment target); best-effort, since a seat-count hiccup
+        // must never block a real, already-charged confirmation email.
+        let seatsSold: number | undefined;
+        if (item?.sessionDateISO && item.minEnrollment !== undefined) {
+          try {
+            seatsSold = await getSeatsSold(slug);
+          } catch (err) {
+            console.error("[class-signup] seat count failed", err);
+          }
+        }
+
         await sendOrderEmails({
           email,
           name,
@@ -201,6 +218,8 @@ export async function POST(req: NextRequest) {
             item?.delivery ?? "Alex will follow up by email within a day to complete your order.",
           amountCents: session.amount_total ?? 0,
           sessionId: session.id,
+          seatsSold,
+          minEnrollment: item?.minEnrollment,
         });
         await recordCheckoutSession({
           stripeEventId: event.id,
@@ -219,9 +238,8 @@ export async function POST(req: NextRequest) {
         // hiccup must never fail a real, already-charged purchase.
         if (wednesdayCalendar.some((c) => c.slug === slug)) {
           try {
-            const sold = await getSeatsSold(slug);
             await sendTelegramNotice(
-              `🎟 ${name ?? email} signed up for "${item?.name ?? slug}" — ${sold} signed up so far.`
+              `🎟 ${name ?? email} signed up for "${item?.name ?? slug}" — ${seatsSold ?? "?"} signed up so far.`
             );
           } catch (err) {
             console.error("[class-signup] telegram notice failed", err);

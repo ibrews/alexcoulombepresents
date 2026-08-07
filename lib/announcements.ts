@@ -47,11 +47,24 @@ export const announcements: Announcement[] = [
     // cutoff, so keep the banner up through Aug 5.
     end: "2026-08-05",
   },
-  // Deliberately LAST and starting Aug 6: its window overlaps the free-class
-  // banner above, and first-match-in-order means the dated live event keeps
-  // priority while it's still ahead. This one then takes over the otherwise
-  // empty stretch after Aug 5. No price in the copy — launch-week pricing
-  // lives in lib/commerce/products.ts and can move without touching this.
+  // Placed ahead of drainspotting-launch (order = priority) so the real
+  // calendar — 8 dated, bookable Wednesday classes — takes over the banner
+  // the moment it ships, through the last class in the run (Sep 30). No
+  // price in the copy since it varies per class; the calendar itself has
+  // the real numbers.
+  {
+    id: "wed-calendar-launch",
+    text: "New classes available for sign-up — book any Wednesday session, code UE5 for 50% off",
+    href: "/training#calendar",
+    cta: "See the calendar",
+    start: "2026-08-07",
+    end: "2026-09-30",
+  },
+  // Deliberately starting Aug 6: its window overlaps the free-class banner
+  // above, and first-match-in-order means the dated live event keeps
+  // priority while it's still ahead. Superseded by wed-calendar-launch
+  // above from Aug 7 on. No price in the copy — launch-week pricing lives
+  // in lib/commerce/products.ts and can move without touching this.
   {
     id: "drainspotting-launch",
     text: "Drainspotting is out — find out what actually drained your Mac's battery",

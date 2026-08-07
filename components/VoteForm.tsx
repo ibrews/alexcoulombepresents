@@ -1,9 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { VOTE_TOPICS, MAX_TOPICS_PER_VOTE, type VoteTopic } from "@/lib/vote";
+import {
+  VOTE_TOPICS,
+  MAX_TOPICS_PER_VOTE,
+  isOtherTopic,
+  otherTopicLabel,
+  sanitizeOtherTopic,
+  encodeOtherTopic,
+  type VoteTopic,
+} from "@/lib/vote";
 
-type Counts = Partial<Record<VoteTopic, number>>;
+// Keyed by any topic string — a known VOTE_TOPICS slug OR a write-in's
+// "other:…" encoded string. Write-ins that pick up a vote show up here too,
+// which is what lets them render as their own bar below alongside the fixed
+// topics instead of being silently dropped.
+type Counts = Record<string, number>;
 
 type VoteResponse = {
   ok: boolean;
@@ -14,16 +26,27 @@ type VoteResponse = {
 
 function toCounts(rows: { topic: string; count: number }[] | undefined): Counts {
   const out: Counts = {};
-  for (const r of rows ?? []) {
-    if (r.topic in VOTE_TOPICS) out[r.topic as VoteTopic] = r.count;
-  }
+  for (const r of rows ?? []) out[r.topic] = r.count;
   return out;
+}
+
+function topicLabel(topic: string): string {
+  if (topic in VOTE_TOPICS) return VOTE_TOPICS[topic as VoteTopic];
+  if (isOtherTopic(topic)) return otherTopicLabel(topic);
+  return topic;
 }
 
 function Results({ counts, total }: { counts: Counts; total: number }) {
   const max = Math.max(1, ...Object.values(counts).map((n) => n ?? 0));
-  const topicList = Object.entries(VOTE_TOPICS) as [VoteTopic, string][];
-  const sorted = [...topicList].sort(([a], [b]) => (counts[b] ?? 0) - (counts[a] ?? 0));
+  // Every fixed topic always shows (even at 0 votes, so the full menu is
+  // visible) plus any write-in that's picked up at least one vote.
+  const allTopics = [
+    ...Object.keys(VOTE_TOPICS),
+    ...Object.keys(counts).filter((t) => !(t in VOTE_TOPICS)),
+  ];
+  const sorted = allTopics
+    .map((slug): [string, string] => [slug, topicLabel(slug)])
+    .sort(([a], [b]) => (counts[b] ?? 0) - (counts[a] ?? 0));
 
   return (
     <div className="glass rounded-2xl p-6">
@@ -73,6 +96,8 @@ function Results({ counts, total }: { counts: Counts; total: number }) {
 
 export default function VoteForm() {
   const [selected, setSelected] = useState<VoteTopic[]>([]);
+  const [otherSelected, setOtherSelected] = useState(false);
+  const [otherText, setOtherText] = useState("");
   const [email, setEmail] = useState("");
   const [subscribe, setSubscribe] = useState(true);
   const [honeypot, setHoneypot] = useState("");
@@ -101,18 +126,40 @@ export default function VoteForm() {
     };
   }, [sent]);
 
+  const pickedCount = selected.length + (otherSelected ? 1 : 0);
+
   function toggleTopic(slug: VoteTopic) {
     setSelected((prev) => {
       if (prev.includes(slug)) return prev.filter((s) => s !== slug);
-      if (prev.length >= MAX_TOPICS_PER_VOTE) return prev;
+      if (prev.length + (otherSelected ? 1 : 0) >= MAX_TOPICS_PER_VOTE) return prev;
       return [...prev, slug];
+    });
+  }
+
+  function toggleOther() {
+    setOtherSelected((prev) => {
+      if (prev) {
+        setOtherText("");
+        return false;
+      }
+      if (pickedCount >= MAX_TOPICS_PER_VOTE) return prev;
+      return true;
     });
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (selected.length === 0) {
+    const topics: string[] = [...selected];
+    if (otherSelected) {
+      const sanitized = sanitizeOtherTopic(otherText);
+      if (!sanitized) {
+        setError("Type your topic, or unselect Other.");
+        return;
+      }
+      topics.push(encodeOtherTopic(sanitized));
+    }
+    if (topics.length === 0) {
       setError("Pick at least one topic.");
       return;
     }
@@ -121,7 +168,7 @@ export default function VoteForm() {
       const res = await fetch("/api/vote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, topics: selected, subscribe, honeypot, human }),
+        body: JSON.stringify({ email, topics, subscribe, honeypot, human }),
       });
       const data: VoteResponse = await res.json();
       if (!res.ok || !data.ok) {
@@ -166,7 +213,7 @@ export default function VoteForm() {
           <div className="grid gap-3 sm:grid-cols-2">
             {(Object.entries(VOTE_TOPICS) as [VoteTopic, string][]).map(([slug, label]) => {
               const isSelected = selected.includes(slug);
-              const disabled = !isSelected && selected.length >= MAX_TOPICS_PER_VOTE;
+              const disabled = !isSelected && pickedCount >= MAX_TOPICS_PER_VOTE;
               return (
                 <button
                   type="button"
@@ -189,7 +236,42 @@ export default function VoteForm() {
                 </button>
               );
             })}
+            {(() => {
+              const disabled = !otherSelected && pickedCount >= MAX_TOPICS_PER_VOTE;
+              return (
+                <button
+                  type="button"
+                  disabled={disabled}
+                  onClick={toggleOther}
+                  aria-pressed={otherSelected}
+                  className={`rounded-2xl border p-4 text-left text-sm font-semibold transition-all ${
+                    otherSelected
+                      ? "border-grape bg-grape/10 text-snow"
+                      : disabled
+                        ? "border-line text-mist/40 cursor-not-allowed opacity-50"
+                        : "glass border-line text-mist hover:border-grape/50 hover:text-snow"
+                  }`}
+                >
+                  <span className="flex items-center justify-between gap-2">
+                    Other — write it in
+                    {otherSelected && <span className="text-grape">✓</span>}
+                  </span>
+                </button>
+              );
+            })()}
           </div>
+          {otherSelected && (
+            <input
+              className={field}
+              type="text"
+              placeholder="What should Alex teach? (e.g. Niagara VFX)"
+              value={otherText}
+              onChange={(e) => setOtherText(e.target.value)}
+              maxLength={60}
+              aria-label="Your write-in topic"
+              autoFocus
+            />
+          )}
         </div>
 
         {/* Honeypot — invisible to humans, bots fill it in */}
@@ -235,7 +317,7 @@ export default function VoteForm() {
           </label>
           <button
             type="submit"
-            disabled={submitting || selected.length === 0}
+            disabled={submitting || pickedCount === 0}
             className="rounded-full bg-snow px-6 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? "Casting vote…" : "Cast my vote →"}

@@ -68,12 +68,6 @@ export type StoreItem = {
   // undersold (see the class-checkin cron). Only meaningful alongside
   // sessionDateISO.
   minEnrollment?: number;
-  // The regular (non-introductory) tier price this item is discounted off
-  // of, for the /training calendar's own "was $X" display. Deliberately NOT
-  // `compareAt` — that field's store-page renderer hardcodes an "any group
-  // class" suffix written for the class-voucher item specifically, which
-  // would misrender here.
-  regularPriceCents?: number;
 };
 
 export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
@@ -88,17 +82,23 @@ const INTRO_SESSION_CENTS = 9900;
 const INTERMEDIATE_SESSION_CENTS = 15000;
 const ADVANCED_SESSION_CENTS = 20000; // "Expert" tier
 
-// ── Aug–Sep 2026 Wednesday calendar — introductory pricing for this run ────
-// Each is a real dated session (11a ET), sold at ~50% off the regular tier
-// price above. `minEnrollment: 5` + `sessionDateISO` feed the class-checkin
-// cron (lib/commerce/classCheckin.ts): if fewer than 5 are signed up by the
+// ── Aug–Sep 2026 Wednesday calendar ─────────────────────────────────────────
+// Each is a real dated session (11a ET) at the standard tier price — the 50%
+// intro discount for this run is a Stripe promo code ("UE5", 50% off once;
+// see lib/commerce/vouchers.ts's header comment for why this lives as a real
+// Stripe coupon+promotion_code rather than a lower priceCents: the price a
+// customer sees pre-checkout should match what a receipt/refund actually
+// references, and a stackable promo code degrades safely (worst case: it just
+// doesn't apply) where a silently-discounted priceCents cannot expire on its
+// own. `minEnrollment: 5` + `sessionDateISO` feed the class-checkin cron
+// (lib/commerce/classCheckin.ts): if fewer than 5 are signed up by the
 // Tuesday before, Alex gets a Telegram go/no-go prompt instead of the class
 // running silently undersold. Recordings are included for every buyer
 // regardless of live attendance. Dates/topics subject to change — if Alex
 // reschedules, buyers can swap to another class anytime or get a refund
 // (manual for now, same as any other refund request).
-const introducing = (regularCents: number) =>
-  `Introductory pricing for this run — normally ${formatPrice(regularCents)}. Runs with 5+ signed up; ` +
+const UE5_PROMO_NOTE =
+  "Use code UE5 at checkout for 50% off this 8-week run. Runs with 5+ signed up; " +
   "under that by the Tuesday before, everyone gets a coupon worth 110% of what they paid or a full refund, their choice. " +
   "Student or between jobs? Email for a sliding-scale seat — no questions asked.";
 
@@ -107,7 +107,6 @@ function wednesdayCalendarItem(input: {
   name: string;
   blurb: string;
   priceCents: number;
-  regularCents: number;
   sessionDateISO: string; // 11a ET start
 }): StoreItem {
   return {
@@ -115,8 +114,7 @@ function wednesdayCalendarItem(input: {
     name: input.name,
     kind: "course",
     priceCents: input.priceCents,
-    regularPriceCents: input.regularCents,
-    priceNote: introducing(input.regularCents),
+    priceNote: UE5_PROMO_NOTE,
     blurb: input.blurb,
     delivery:
       "Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.",
@@ -136,64 +134,56 @@ export const wednesdayCalendar: StoreItem[] = [
     slug: "wed-2026-08-12-intro-vr",
     name: "Intro to VR in Unreal 5.8",
     blurb: "Build your first VR pawn in 5.8 — comfort, locomotion, and interaction basics for Quest and Vision Pro.",
-    priceCents: 5000,
-    regularCents: INTRO_SESSION_CENTS,
+    priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-08-12T15:00:00Z",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-08-19-intermediate-vr",
     name: "Intermediate VR in Unreal 5.8",
     blurb: "Past the basics: hand tracking, comfort-safe teleport vs. smooth locomotion, and performance budgets that actually hold on-device.",
-    priceCents: 7500,
-    regularCents: INTERMEDIATE_SESSION_CENTS,
+    priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-08-19T15:00:00Z",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-08-26-intro-metahumans",
     name: "Intro to MetaHumans in Unreal 5.8",
     blurb: "Create and import a MetaHuman, rig it into your project, and get it looking right under your lighting.",
-    priceCents: 5000,
-    regularCents: INTRO_SESSION_CENTS,
+    priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-08-26T15:00:00Z",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-02-mocap",
     name: "Mocap in Unreal 5.8",
     blurb: "Get motion capture data onto a MetaHuman or custom rig — retargeting, cleanup, and the gotchas that eat a first attempt.",
-    priceCents: 7500,
-    regularCents: INTERMEDIATE_SESSION_CENTS,
+    priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-09-02T15:00:00Z",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-09-intro-pcg",
     name: "Intro to PCG (Procedural Content Generation)",
     blurb: "Scatter a believable environment with the PCG framework instead of placing every mesh by hand.",
-    priceCents: 5000,
-    regularCents: INTRO_SESSION_CENTS,
+    priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-09T15:00:00Z",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-16-unity-to-unreal",
     name: "Unity to Unreal",
     blurb: "For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors.",
-    priceCents: 5000,
-    regularCents: INTRO_SESSION_CENTS,
+    priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-16T15:00:00Z",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-23-usd-glb-export",
     name: "Exporting from Unreal Engine to OpenUSD to GLB",
     blurb: "A real cross-platform export pipeline: Unreal scenes out through OpenUSD and down to GLB without losing the parts that matter.",
-    priceCents: 7500,
-    regularCents: INTERMEDIATE_SESSION_CENTS,
+    priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-09-23T15:00:00Z",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-30-avp-masterclass-1",
     name: "Apple Vision Pro Unreal Engine Masterclass — Part 1",
     blurb: "The deep dive: shipping real Unreal content to Vision Pro — the full pipeline, not the demo-day version.",
-    priceCents: 10000,
-    regularCents: ADVANCED_SESSION_CENTS,
+    priceCents: ADVANCED_SESSION_CENTS,
     sessionDateISO: "2026-09-30T15:00:00Z",
   }),
 ];

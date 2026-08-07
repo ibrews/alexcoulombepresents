@@ -128,10 +128,38 @@ export async function sendOrderEmails(input: {
   slug: string;
   amountCents: number;
   sessionId: string;
+  // Only set for dated Wednesday-calendar items (lib/store.ts). When present
+  // and seatsSold is still under minEnrollment, the buyer email gets an
+  // under-minimum warning + a one-tap share link — the same coupon/refund
+  // policy the class-checkin cron actually enforces the Tuesday before
+  // (see app/api/telegram/webhook.ts), stated up front instead of as a
+  // surprise if the class doesn't fill.
+  seatsSold?: number;
+  minEnrollment?: number;
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const dollars = (input.amountCents / 100).toFixed(2);
   const first = input.name?.split(" ")[0];
+
+  const underMinimum =
+    input.seatsSold !== undefined && input.minEnrollment !== undefined && input.seatsSold < input.minEnrollment;
+
+  const shareText = `I just signed up to learn "${input.itemName}" with @alexctraining — join me!`;
+  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(
+    "https://www.alexcoulombepresents.com/training#calendar"
+  )}`;
+
+  const underMinimumNote = underMinimum
+    ? [
+        "",
+        `NOTE: only ${input.seatsSold} of the ${input.minEnrollment} minimum have signed up for this one so far, ` +
+          "so it's possible it may not be taught. If that happens, you'll get a coupon worth 110% of what you paid " +
+          "(good toward any future class) or a full refund — your choice, no back-and-forth needed.",
+        "",
+        "Spread the word to your friends to get them to sign up too — one tap:",
+        shareUrl,
+      ]
+    : [];
 
   const __body = [
       `${first ? `Hey ${first}` : "Hey"} — thanks! Your order is confirmed.`,
@@ -139,6 +167,7 @@ export async function sendOrderEmails(input: {
       `  ${input.itemName} — $${dollars}`,
       "",
       `What happens next: ${input.itemDelivery}`,
+      ...underMinimumNote,
       "",
       "Just reply to this email for anything — booking, questions, scheduling.",
       "It goes straight to Alex.",
