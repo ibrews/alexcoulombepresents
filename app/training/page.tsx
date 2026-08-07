@@ -139,6 +139,70 @@ export default function Training() {
 
       <TrainingCalendar />
 
+      {/* Credentials / badges */}
+      <Reveal>
+        <div className="glass mt-10 rounded-3xl px-6 py-10 text-center md:px-10">
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">
+            Certified by Epic Games
+          </p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
+            Authorized, and re-authorized <span className="grad-text">every year.</span>
+          </h2>
+
+          {/* Headline credentials */}
+          <div className="mt-9 flex flex-wrap items-end justify-center gap-x-12 gap-y-8">
+            {[
+              {
+                src: "authorized-instructor",
+                alt: "Unreal Engine Authorized Instructor",
+                href: "https://credential.unrealengine.com/ae75c735-f7c6-4fc5-a633-f400ec2efd4b#acc.Mpe8GrAh",
+              },
+              {
+                src: "authorized-training-center",
+                alt: "Unreal Engine Authorized Training Center",
+                href: "https://credential.unrealengine.com/2e350d0f-ee6d-4239-a596-975ff749d550#acc.H86EwZ9F",
+              },
+            ].map((b) => (
+              <a
+                key={b.src}
+                href={b.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-transform hover:scale-[1.04]"
+                title={`Verify: ${b.alt}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/badges/${b.src}.png`}
+                  alt={b.alt}
+                  className="h-36 w-auto select-none md:h-44"
+                />
+              </a>
+            ))}
+          </div>
+
+          {/* Yearly partner tiers */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-9 gap-y-7">
+            {[
+              "instructor-partner-2024",
+              "instructor-partner-2025",
+              "instructor-partner-2026",
+              "training-partner-2024",
+              "training-partner-2025",
+              "training-partner-2026",
+            ].map((src) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={src}
+                src={`/badges/${src}.png`}
+                alt={src.replace(/-/g, " ")}
+                className="h-20 w-auto select-none md:h-24"
+              />
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
       {/* ── The poll — what to actually teach and how to sell it ── */}
       <Reveal delay={40}>
         <section id="poll" className="glow-card mt-10 scroll-mt-28 max-w-3xl rounded-3xl border border-grape/40 p-6 md:p-10">
@@ -233,70 +297,6 @@ export default function Training() {
             <p className="mt-2 text-sm leading-relaxed text-mist">
               Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
             </p>
-          </div>
-        </div>
-      </Reveal>
-
-      {/* Credentials / badges */}
-      <Reveal>
-        <div className="glass mt-12 rounded-3xl px-6 py-10 text-center md:px-10">
-          <p className="font-mono text-xs uppercase tracking-widest text-amber">
-            Certified by Epic Games
-          </p>
-          <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
-            Authorized, and re-authorized <span className="grad-text">every year.</span>
-          </h2>
-
-          {/* Headline credentials */}
-          <div className="mt-9 flex flex-wrap items-end justify-center gap-x-12 gap-y-8">
-            {[
-              {
-                src: "authorized-instructor",
-                alt: "Unreal Engine Authorized Instructor",
-                href: "https://credential.unrealengine.com/ae75c735-f7c6-4fc5-a633-f400ec2efd4b#acc.Mpe8GrAh",
-              },
-              {
-                src: "authorized-training-center",
-                alt: "Unreal Engine Authorized Training Center",
-                href: "https://credential.unrealengine.com/2e350d0f-ee6d-4239-a596-975ff749d550#acc.H86EwZ9F",
-              },
-            ].map((b) => (
-              <a
-                key={b.src}
-                href={b.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-transform hover:scale-[1.04]"
-                title={`Verify: ${b.alt}`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`/badges/${b.src}.png`}
-                  alt={b.alt}
-                  className="h-36 w-auto select-none md:h-44"
-                />
-              </a>
-            ))}
-          </div>
-
-          {/* Yearly partner tiers */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-9 gap-y-7">
-            {[
-              "instructor-partner-2024",
-              "instructor-partner-2025",
-              "instructor-partner-2026",
-              "training-partner-2024",
-              "training-partner-2025",
-              "training-partner-2026",
-            ].map((src) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={src}
-                src={`/badges/${src}.png`}
-                alt={src.replace(/-/g, " ")}
-                className="h-20 w-auto select-none md:h-24"
-              />
-            ))}
           </div>
         </div>
       </Reveal>

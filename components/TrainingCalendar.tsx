@@ -2,13 +2,12 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import BuyButton from "@/components/BuyButton";
 import { wednesdayCalendar, officeHoursDropIn, formatPrice, isPurchasable } from "@/lib/store";
-import { getSeatsSold } from "@/lib/commerce/seats";
 
 // How many "TBD via voting" placeholder Wednesdays to show after the named
 // 8-week run — the full back half of 2026 exists too, but listing all of it
 // would dwarf the real, bookable calendar above it. The remainder is exactly
 // what /vote is for.
-const TBD_SLOTS_SHOWN = 4;
+const TBD_SLOTS_SHOWN = 3;
 
 function formatSessionDate(iso: string): { weekday: string; date: string; time: string } {
   const d = new Date(iso);
@@ -35,12 +34,7 @@ function upcomingTbdWednesdays(afterISO: string, count: number): string[] {
   return out;
 }
 
-export default async function TrainingCalendar() {
-  const seatCounts = await Promise.all(
-    wednesdayCalendar.map(async (item) => [item.slug, await getSeatsSold(item.slug)] as const)
-  );
-  const seatsBySlug = new Map(seatCounts);
-
+export default function TrainingCalendar() {
   const lastDated = wednesdayCalendar[wednesdayCalendar.length - 1]?.sessionDateISO;
   const tbdDates = lastDated ? upcomingTbdWednesdays(lastDated, TBD_SLOTS_SHOWN) : [];
 
@@ -53,7 +47,8 @@ export default async function TrainingCalendar() {
         </h2>
         <p className="mt-3 max-w-3xl leading-relaxed text-mist">
           Live, 11a ET, two hours — every session includes the recording, even if you can&apos;t make it
-          live. Introductory pricing for this run. After it, what&apos;s taught next is decided by{" "}
+          live. Use code <strong className="text-snow">UE5</strong> at checkout for 50% off this
+          introductory run. After it, what&apos;s taught next is decided by{" "}
           <Link href="/vote" className="text-snow underline decoration-teal/50 hover:decoration-teal">
             vote
           </Link>{" "}
@@ -75,9 +70,7 @@ export default async function TrainingCalendar() {
 
           {wednesdayCalendar.map((item) => {
             const { weekday, date, time } = formatSessionDate(item.sessionDateISO!);
-            const sold = seatsBySlug.get(item.slug) ?? 0;
             const purchasable = isPurchasable(item);
-            const underMin = item.minEnrollment !== undefined && sold < item.minEnrollment;
             return (
               <div
                 key={item.slug}
@@ -90,15 +83,7 @@ export default async function TrainingCalendar() {
                 <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{item.blurb}</p>
                 {purchasable ? (
                   <>
-                    <div className="mt-3">
-                      <p className="text-lg font-bold text-snow">{formatPrice(item.priceCents)}</p>
-                      <p className="font-mono text-[11px] text-teal">Code UE5 → 50% off</p>
-                    </div>
-                    {underMin && (
-                      <p className="mt-1 font-mono text-[11px] text-amber">
-                        {sold} of {item.minEnrollment} minimum signed up
-                      </p>
-                    )}
+                    <p className="mt-3 text-lg font-bold text-snow">{formatPrice(item.priceCents)}</p>
                     <div className="mt-4">
                       <BuyButton slug={item.slug} label="Book this class →" itemName={item.name} />
                     </div>
