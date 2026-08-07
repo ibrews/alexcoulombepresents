@@ -42,7 +42,7 @@ export const digitalProducts: DigitalProduct[] = [
       "Reads your Mac's own power log and explains exactly what drained your battery, which app blocked sleep, and what woke it overnight. Local-only, completely private, no data sharing.",
     majorVersion: 1,
     updatesWindowDays: 365,
-    r2Prefix: "drainspotting/1.0.0/Drainspotting-1.0.0.dmg",
+    r2Prefix: "drainspotting/1.0.1/Drainspotting-1.0.1.dmg",
   },
   // UnRealityKit Bridge intentionally NOT listed here yet — per Alex
   // (2026-07-16) it isn't a product yet. lib/store.ts's "coming soon" /
