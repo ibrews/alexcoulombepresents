@@ -66,6 +66,8 @@ export default function Training() {
           curriculums come from those lessons merged with nearly a decade of real client work from
           Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now
           AI-driven workflows. You&apos;ll learn methodologies you won&apos;t find anywhere else.
+          Expect special guest instructors too — specialists from Agile Lens and beyond, brought in
+          whenever a topic calls for someone who lives it every day.
         </p>
       </Reveal>
 
@@ -137,8 +139,6 @@ export default function Training() {
         </div>
       </Reveal>
 
-      <TrainingCalendar />
-
       {/* Credentials / badges */}
       <Reveal>
         <div className="glass mt-10 rounded-3xl px-6 py-10 text-center md:px-10">
@@ -202,6 +202,8 @@ export default function Training() {
           </div>
         </div>
       </Reveal>
+
+      <TrainingCalendar />
 
       {/* ── The poll — what to actually teach and how to sell it ── */}
       <Reveal delay={40}>
