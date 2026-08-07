@@ -87,7 +87,7 @@ function Results({ counts, total }: { counts: Counts; total: number }) {
       {sorted.length > 0 && (counts[sorted[0][0]] ?? 0) > 0 && (
         <p className="mt-5 text-sm text-mist">
           Right now <span className="font-bold text-snow">{sorted[0][1]}</span> is winning — the
-          most-requested topic becomes the September cohort.
+          most-requested topic gets taught next, once the current calendar wraps.
         </p>
       )}
     </div>
@@ -288,17 +288,24 @@ export default function VoteForm() {
         <input
           className={field}
           type="email"
-          required
-          placeholder="you@example.com"
+          placeholder="you@example.com (optional)"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          aria-label="Your email"
+          aria-label="Your email (optional)"
         />
+        <p className="-mt-3 text-xs text-mist">
+          Not required to vote — only needed for member vote weight or announcements.
+        </p>
 
-        <label className="flex cursor-pointer items-center gap-2.5 select-none">
+        <label
+          className={`flex items-center gap-2.5 select-none ${
+            email.trim() ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+          }`}
+        >
           <input
             type="checkbox"
-            checked={subscribe}
+            checked={subscribe && Boolean(email.trim())}
+            disabled={!email.trim()}
             onChange={(e) => setSubscribe(e.target.checked)}
             className="h-4 w-4 accent-teal"
           />

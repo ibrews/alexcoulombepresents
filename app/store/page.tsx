@@ -150,14 +150,16 @@ export default async function Store() {
                         ))}
                       </p>
                     )}
-                    <p className="mt-1 text-lg font-bold text-snow">
-                      {formatPrice(price)}
-                      {item.compareAt && (
-                        <span className="ml-2 font-mono text-xs font-normal text-amber">
-                          any group class
-                        </span>
-                      )}
-                    </p>
+                    {!item.hidePrice && (
+                      <p className="mt-1 text-lg font-bold text-snow">
+                        {formatPrice(price)}
+                        {item.compareAt && (
+                          <span className="ml-2 font-mono text-xs font-normal text-amber">
+                            any group class
+                          </span>
+                        )}
+                      </p>
+                    )}
                     {item.priceNote && (
                       <p className="mt-1 text-xs leading-relaxed text-mist">{item.priceNote}</p>
                     )}

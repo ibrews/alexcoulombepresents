@@ -43,6 +43,11 @@ export type StoreItem = {
   // this item. Defaults to true; set false on premium items (e.g. the private
   // 1:1) that shouldn't be discountable and aren't voucher-eligible.
   allowPromoCodes?: boolean;
+  // When true, no page on the site renders this item's numeric price — the
+  // buyer only sees it on the real Stripe Checkout page (which always shows
+  // the line-item amount; that's Stripe's UI, not ours, so it can't be
+  // hidden there too). Checkout still charges priceCents exactly as normal.
+  hidePrice?: boolean;
   blurb: string;
   delivery: string; // what the buyer receives, in plain words
   fulfillment: "email-manual" | "github-invite" | "download-link" | "booking";
@@ -190,21 +195,43 @@ export const wednesdayCalendar: StoreItem[] = [
 
 // Standing Friday drop-in office hours — not date-pinned like the Wednesday
 // calendar (booking a specific Friday works like the existing single-session
-// items: buyer replies with which date after checkout).
+// items: buyer replies with which date after checkout). Same two-hour format
+// and $100 rate as the rest of the open-enrollment calendar — office hours
+// isn't a discounted afterthought, it's a regular session.
 export const officeHoursDropIn: StoreItem = {
   slug: "office-hours-dropin",
   name: "Live office hours — drop-in seat",
   kind: "course",
-  priceCents: 5000,
+  priceCents: 10000,
   priceNote: "Every Friday, 1p ET. Book any upcoming date after checkout — no minimum headcount, this one always runs.",
-  blurb: "A live hour with Alex — bring your broken Blueprint, your pipeline question, your career fork. Small group, open floor.",
+  blurb: "Two live hours with Alex — bring your broken Blueprint, your pipeline question, your career fork. Small group, open floor.",
   delivery: "Order confirmation lands right away; reply with which Friday works and Alex sends the Zoom link.",
   fulfillment: "email-manual",
+};
+
+// Not part of the open-enrollment calendar — a lower-commitment on-ramp to
+// private time than the two-hour private-1on1 below. Price is deliberately
+// not shown anywhere on-site (see StoreItem.hidePrice); Stripe Checkout
+// still shows and charges it normally. Excluded from promo codes for the
+// same reason private-1on1 is: private time isn't the group-class discount.
+export const consultationDropIn: StoreItem = {
+  slug: "consultation-1hr",
+  name: "1-hour consultation with Alex",
+  kind: "course",
+  priceCents: 20000,
+  hidePrice: true,
+  priceNote: "One hour, entirely on your agenda — price shown at checkout.",
+  blurb:
+    "One focused hour, one-on-one, on whatever you need — a project review, a stuck pipeline, career advice, scoping a build. Live over video with screen share.",
+  delivery: "An order confirmation lands right away; reply with your availability and Alex books your session, usually same day.",
+  fulfillment: "booking",
+  allowPromoCodes: false,
 };
 
 export const storeItems: StoreItem[] = [
   ...wednesdayCalendar,
   officeHoursDropIn,
+  consultationDropIn,
   {
     slug: "class-voucher",
     name: "Any-class voucher — founding batch",

@@ -124,7 +124,7 @@ async function ensureVotesTable() {
   await sql()`
     CREATE TABLE IF NOT EXISTS course_votes (
       id           BIGSERIAL PRIMARY KEY,
-      email        TEXT NOT NULL UNIQUE,
+      email        TEXT UNIQUE,
       topics       TEXT[] NOT NULL,
       subscribed   BOOLEAN NOT NULL DEFAULT false,
       created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -137,17 +137,26 @@ async function ensureVotesTable() {
   // semantics topics/subscribed already have (an upgrade/downgrade after
   // voting takes effect next time that email votes again, not retroactively).
   await sql()`ALTER TABLE course_votes ADD COLUMN IF NOT EXISTS weight INTEGER NOT NULL DEFAULT 1`;
+  // Email used to be required — it's now optional so anyone can vote without
+  // handing over an address. Postgres treats every NULL as distinct under a
+  // UNIQUE constraint, so this can't break existing rows and doesn't need a
+  // backfill; it just means anonymous votes never collide with each other.
+  await sql()`ALTER TABLE course_votes ALTER COLUMN email DROP NOT NULL`;
   _votesEnsured = true;
 }
 
 export async function recordVote(input: {
-  email: string;
+  email: string | null;
   topics: string[];
   subscribed: boolean;
   weight: number;
 }) {
   await ensureVotesTable();
   const { email, topics, subscribed, weight } = input;
+  // No email → ON CONFLICT (email) never matches (NULL isn't equal to NULL
+  // in a unique constraint), so this always inserts a fresh row instead of
+  // upserting — anonymous votes just can't be deduped or re-edited, which is
+  // the expected tradeoff of not asking for an identity.
   await sql()`
     INSERT INTO course_votes (email, topics, subscribed, weight)
     VALUES (${email}, ${topics}, ${subscribed}, ${weight})
@@ -173,9 +182,11 @@ export async function getVoteCounts(): Promise<{ topic: string; count: number }[
   return rows as { topic: string; count: number }[];
 }
 
-// Total number of PEOPLE who have voted (distinct emails, unweighted) — for
-// an honest "N votes so far" line. The per-topic bars above are weighted;
-// this deliberately isn't, so it still reads as a real headcount.
+// Total number of ballots cast (rows, unweighted) — for an honest "N votes
+// so far" line. The per-topic bars above are weighted; this deliberately
+// isn't, so it still reads as a real headcount. Email being optional means
+// this is no longer exactly "distinct people" (an anonymous voter could
+// submit more than once), but it's still an honest count of real votes.
 export async function getVoteTotalVoters(): Promise<number> {
   await ensureVotesTable();
   const rows = await sql()`SELECT COUNT(*)::int AS count FROM course_votes`;

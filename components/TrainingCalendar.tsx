@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import BuyButton from "@/components/BuyButton";
-import { wednesdayCalendar, officeHoursDropIn, formatPrice, isPurchasable } from "@/lib/store";
+import { wednesdayCalendar, officeHoursDropIn, consultationDropIn, formatPrice, isPurchasable } from "@/lib/store";
 
 // How many "TBD via voting" placeholder Wednesdays to show after the named
 // 8-week run — the full back half of 2026 exists too, but listing all of it
@@ -47,8 +47,14 @@ export default function TrainingCalendar() {
         </h2>
         <p className="mt-3 max-w-3xl leading-relaxed text-mist">
           Live, 11a ET, two hours — every session includes the recording, even if you can&apos;t make it
-          live. Use code <strong className="text-snow">UE5</strong> at checkout for 50% off this
-          introductory run. After it, what&apos;s taught next is decided by{" "}
+          live.
+        </p>
+        <p className="mt-3 max-w-3xl rounded-xl border border-teal/40 bg-teal/10 px-4 py-3 text-sm font-bold text-snow">
+          Prices below are shown before the discount — enter code <span className="text-teal">UE5</span> at
+          checkout for 50% off this introductory run.
+        </p>
+        <p className="mt-3 max-w-3xl leading-relaxed text-mist">
+          After this run, what&apos;s taught next is decided by{" "}
           <Link href="/vote" className="text-snow underline decoration-teal/50 hover:decoration-teal">
             vote
           </Link>{" "}
@@ -65,6 +71,23 @@ export default function TrainingCalendar() {
             <p className="mt-1 text-[11px] leading-relaxed text-mist">{officeHoursDropIn.priceNote}</p>
             <div className="mt-4">
               <BuyButton slug={officeHoursDropIn.slug} label="Book a Friday →" itemName={officeHoursDropIn.name} />
+            </div>
+          </div>
+
+          {/* Pinned 1-hour consultation card — standing, not date-locked.
+              Price is deliberately not shown here (see StoreItem.hidePrice);
+              it's the real amount on the Stripe Checkout page that follows. */}
+          <div className="glass flex w-[85vw] shrink-0 snap-start flex-col rounded-2xl border border-grape/30 p-5 sm:w-auto">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-grape">Book anytime</p>
+            <h3 className="mt-2 font-bold leading-snug">{consultationDropIn.name}</h3>
+            <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{consultationDropIn.blurb}</p>
+            <p className="mt-3 text-xs leading-relaxed text-mist">{consultationDropIn.priceNote}</p>
+            <div className="mt-4">
+              <BuyButton
+                slug={consultationDropIn.slug}
+                label="Book a consultation →"
+                itemName={consultationDropIn.name}
+              />
             </div>
           </div>
 

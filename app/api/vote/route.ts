@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => null);
     if (!body) return NextResponse.json({ error: "Bad request." }, { status: 400 });
 
-    const { email, topics, subscribe, honeypot, human } = body;
+    const { topics, subscribe, honeypot, human } = body;
 
     // Silently succeed for honeypot hits — bots shouldn't know they were caught.
     if (honeypot) return NextResponse.json({ ok: true });
@@ -28,9 +28,11 @@ export async function POST(req: NextRequest) {
     if (!human) {
       return NextResponse.json({ error: "Please confirm you're not a robot." }, { status: 400 });
     }
-    if (!email || typeof email !== "string") {
-      return NextResponse.json({ error: "Email is required." }, { status: 400 });
-    }
+    // Email is optional — voting shouldn't require handing over an address.
+    // It's used to weight the vote by membership tier and to opt in to
+    // announcements; without it the vote just counts at the normal (1x)
+    // weight and skips the announcements signup below.
+    const email: string | null = typeof body.email === "string" && body.email.trim() ? body.email.trim() : null;
     if (
       !Array.isArray(topics) ||
       topics.length === 0 ||
@@ -62,18 +64,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const subscribed = Boolean(subscribe);
+    // Anonymous votes (no email) can't be tied to a membership tier, so they
+    // just get the normal 1x weight — same fallback as a lookup failure
+    // (DB hiccup, unrecognized email) for a real one.
+    const weight = email ? voteWeightForTier(await memberTierForEmail(email).catch(() => null)) : 1;
 
-    // Members' votes count for more, scaled to tier — a lookup failure
-    // (DB hiccup, unrecognized email) falls back to weight 1, same as a
-    // non-member, rather than blocking the vote entirely.
-    const weight = voteWeightForTier(await memberTierForEmail(email).catch(() => null));
-
-    await recordVote({ email, topics: cleanedTopics, subscribed, weight });
+    await recordVote({ email, topics: cleanedTopics, subscribed: Boolean(subscribe), weight });
 
     // Opting in to announcements piggybacks on the site's existing signup
-    // storage/notification path, filed under the "unreal" list.
-    if (subscribed) {
+    // storage/notification path, filed under the "unreal" list — obviously
+    // only possible with an actual address to send them to.
+    if (subscribe && email) {
       try {
         await recordSignup({ email, message: `Voted: ${cleanedTopics.join(", ")}`, list: "unreal" });
       } catch (dbErr) {
