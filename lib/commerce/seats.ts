@@ -37,6 +37,11 @@ async function ensureTable() {
       created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `;
+  // Free-text answer from a required Stripe Checkout custom_field (e.g. "which
+  // Friday would you like?" on office-hours bookings) — captures a structured
+  // detail the buyer supplied at checkout instead of relying on a reply-email
+  // round-trip. Null for every item that doesn't ask a custom field.
+  await db`ALTER TABLE catalog_orders ADD COLUMN IF NOT EXISTS note TEXT`;
   await db`CREATE INDEX IF NOT EXISTS catalog_orders_slug_idx ON catalog_orders (slug)`;
   await db`CREATE INDEX IF NOT EXISTS catalog_orders_pi_idx ON catalog_orders (payment_intent_id)`;
   _ensured = true;
@@ -50,6 +55,7 @@ export type CatalogOrderRow = {
   email: string | null;
   name: string | null;
   amount_cents: number | null;
+  note: string | null;
   refunded: boolean;
   created_at: string;
 };
@@ -65,11 +71,12 @@ export async function recordCatalogOrder(input: {
   email?: string | null;
   name?: string | null;
   amountCents?: number | null;
+  note?: string | null;
 }): Promise<void> {
   await ensureTable();
   await sql()`
-    INSERT INTO catalog_orders (stripe_session_id, payment_intent_id, slug, email, name, amount_cents)
-    VALUES (${input.stripeSessionId}, ${input.paymentIntentId ?? null}, ${input.slug ?? null}, ${input.email ?? null}, ${input.name ?? null}, ${input.amountCents ?? null})
+    INSERT INTO catalog_orders (stripe_session_id, payment_intent_id, slug, email, name, amount_cents, note)
+    VALUES (${input.stripeSessionId}, ${input.paymentIntentId ?? null}, ${input.slug ?? null}, ${input.email ?? null}, ${input.name ?? null}, ${input.amountCents ?? null}, ${input.note ?? null})
     ON CONFLICT (stripe_session_id) DO NOTHING
   `;
 }

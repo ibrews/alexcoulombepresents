@@ -136,6 +136,17 @@ export async function sendOrderEmails(input: {
   // surprise if the class doesn't fill.
   seatsSold?: number;
   minEnrollment?: number;
+  // A required Stripe Checkout custom_field answer (e.g. office hours' "which
+  // Friday would you like?") — undefined for items that don't ask one.
+  bookingNote?: string;
+  // StoreItem.schedulingUrl (e.g. the consultation's Zoom Scheduler link) —
+  // when set, the buyer books their own real slot instead of waiting on a
+  // reply-email round-trip.
+  schedulingUrl?: string;
+  // StoreItem.zoomRegistrationUrl — a dated class's real Zoom "registration
+  // required" link. Zoom handles confirmation/reminders/calendar invites
+  // once the buyer registers, instead of Alex emailing the link manually.
+  zoomRegistrationUrl?: string;
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const dollars = (input.amountCents / 100).toFixed(2);
@@ -165,8 +176,11 @@ export async function sendOrderEmails(input: {
       `${first ? `Hey ${first}` : "Hey"} — thanks! Your order is confirmed.`,
       "",
       `  ${input.itemName} — $${dollars}`,
+      ...(input.bookingNote ? ["", `You told us: ${input.bookingNote}`] : []),
       "",
       `What happens next: ${input.itemDelivery}`,
+      ...(input.schedulingUrl ? ["", `Book your time here: ${input.schedulingUrl}`] : []),
+      ...(input.zoomRegistrationUrl ? ["", `Register for the Zoom session here: ${input.zoomRegistrationUrl}`] : []),
       ...underMinimumNote,
       "",
       "Just reply to this email for anything — booking, questions, scheduling.",
@@ -189,6 +203,7 @@ export async function sendOrderEmails(input: {
       `Item: ${input.itemName} (${input.slug})`,
       `Buyer: ${input.name ?? "—"} <${input.email}>`,
       `Amount: $${dollars}`,
+      ...(input.bookingNote ? [`Booking note: ${input.bookingNote}`] : []),
       `Stripe session: ${input.sessionId}`,
       "",
       "Buyer got the confirmation email; complete the manual fulfillment",

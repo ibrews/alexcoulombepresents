@@ -7,7 +7,7 @@ import { wednesdayCalendar, officeHoursDropIn, consultationDropIn, formatPrice, 
 // 8-week run — the full back half of 2026 exists too, but listing all of it
 // would dwarf the real, bookable calendar above it. The remainder is exactly
 // what /vote is for.
-const TBD_SLOTS_SHOWN = 3;
+const TBD_SLOTS_SHOWN = 2;
 
 function formatSessionDate(iso: string): { weekday: string; date: string; time: string } {
   const d = new Date(iso);
@@ -46,8 +46,8 @@ export default function TrainingCalendar() {
           Book any class, <span className="grad-text">right now.</span>
         </h2>
         <p className="mt-3 max-w-3xl leading-relaxed text-mist">
-          Live, 11a ET, two hours — every session includes the recording, even if you can&apos;t make it
-          live.
+          Live, 11a ET, two hours. Can&apos;t make it live? The price already includes all class
+          material and a full recording of the session — nothing extra to buy.
         </p>
         <p className="mt-3 max-w-3xl rounded-xl border border-teal/40 bg-teal/10 px-4 py-3 text-sm font-bold text-snow">
           Prices below are shown before the discount — enter code <span className="text-teal">UE5</span> at
@@ -58,7 +58,10 @@ export default function TrainingCalendar() {
           <Link href="/vote" className="text-snow underline decoration-teal/50 hover:decoration-teal">
             vote
           </Link>{" "}
-          — members&apos; votes count for more, scaled to their tier.
+          — members&apos; votes count for more, scaled to their tier.{" "}
+          <Link href="/members" className="text-snow underline decoration-teal/50 hover:decoration-teal">
+            Become a member!
+          </Link>
         </p>
 
         <div className="mt-8 -mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">

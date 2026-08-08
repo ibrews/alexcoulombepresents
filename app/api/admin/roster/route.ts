@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
         email: string | null;
         name: string | null;
         amount_cents: number | null;
+        note: string | null;
         created_at: string;
         refunded: boolean;
       }>
@@ -41,6 +42,7 @@ export async function GET(req: NextRequest) {
         email: o.email,
         name: o.name,
         amount_cents: o.amount_cents,
+        note: o.note,
         created_at: o.created_at,
         refunded: o.refunded,
       });

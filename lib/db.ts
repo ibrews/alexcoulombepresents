@@ -219,15 +219,19 @@ async function ensureTrainingSurveyTable() {
 export async function recordTrainingSurveyResponse(input: {
   email: string | null;
   engagement: string[];
-  topics: string[];
   aiStance: string;
   skillLevel: string;
 }) {
   await ensureTrainingSurveyTable();
-  const { email, engagement, topics, aiStance, skillLevel } = input;
+  const { email, engagement, aiStance, skillLevel } = input;
+  // `topics` is no longer asked on this form — /vote is the one place that
+  // decides topics now (see the poll/vote reconciliation this column's
+  // NOT NULL constraint predates). Always insert empty so the column stays
+  // satisfied without a migration; historical topic tallies below are frozen
+  // at whatever existed before this change, not actively misleading, just inert.
   await sql()`
     INSERT INTO training_survey (email, engagement, topics, ai_stance, skill_level)
-    VALUES (${email}, ${engagement}, ${topics}, ${aiStance}, ${skillLevel})
+    VALUES (${email}, ${engagement}, ${[]}, ${aiStance}, ${skillLevel})
   `;
 }
 

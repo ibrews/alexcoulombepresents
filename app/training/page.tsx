@@ -49,26 +49,29 @@ export default function Training() {
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
           Learn Unreal from someone who <span className="grad-text">ships with it every day.</span>
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
-          Alex is a top-rated <strong className="text-snow">Epic Games Authorized Instructor</strong>{" "}
-          running <strong className="text-snow">Manhattan&apos;s first Unreal Authorized Training
-          Center</strong>, in association with{" "}
-          <a
-            href="https://agilelens.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-snow underline decoration-teal/50 hover:decoration-teal"
-          >
-            Agile Lens
-          </a>
-          . He has developed or co-developed 50+
-          courses and taught 300+ courses on behalf of Epic Games to their key partners. Our
-          curriculums come from those lessons merged with nearly a decade of real client work from
-          Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now
-          AI-driven workflows. You&apos;ll learn methodologies you won&apos;t find anywhere else.
-          Expect special guest instructors too — specialists from Agile Lens and beyond, brought in
-          whenever a topic calls for someone who lives it every day.
-        </p>
+        <div className="mt-6 grid items-center gap-8 lg:grid-cols-[1.3fr_1fr]">
+          <p className="max-w-2xl text-lg leading-relaxed text-mist">
+            Alex is a top-rated <strong className="text-snow">Epic Games Authorized Instructor</strong>{" "}
+            running <strong className="text-snow">Manhattan&apos;s first Unreal Authorized Training
+            Center</strong>, in association with{" "}
+            <a
+              href="https://agilelens.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-snow underline decoration-teal/50 hover:decoration-teal"
+            >
+              Agile Lens
+            </a>
+            . He has developed or co-developed 50+
+            courses and taught 300+ courses on behalf of Epic Games to their key partners. Our
+            curriculums come from those lessons merged with nearly a decade of real client work from
+            Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now
+            AI-driven workflows. You&apos;ll learn methodologies you won&apos;t find anywhere else.
+            Expect special guest instructors too — specialists from Agile Lens and beyond, brought in
+            whenever a topic calls for someone who lives it every day.
+          </p>
+          <LiteVideo id="FW6xfFzF0_o" title="Watch: Alex Coulombe teaching Unreal Engine" />
+        </div>
       </Reveal>
 
       <Reveal delay={80}>
@@ -208,13 +211,17 @@ export default function Training() {
       {/* ── The poll — what to actually teach and how to sell it ── */}
       <Reveal delay={40}>
         <section id="poll" className="glow-card mt-10 scroll-mt-28 max-w-3xl rounded-3xl border border-grape/40 p-6 md:p-10">
-          <p className="font-mono text-xs uppercase tracking-widest text-grape">4 quick questions</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-grape">3 quick questions</p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">
-            What do you want to learn?
+            Help shape the program.
           </h2>
           <p className="mt-3 leading-relaxed text-mist">
-            The next eight weeks are already on the calendar above — this poll decides what comes
-            after. Answer honestly, and vote as a member for extra weight.
+            This is about the program, not the syllabus: how you&apos;d rather pay for classes,
+            how much AI you want woven in, and your skill level — it shapes pricing, format, and
+            the AI-vs-Unreal balance. Looking to vote on a specific topic instead?{" "}
+            <Link href="/vote" className="text-snow underline decoration-grape/50 hover:decoration-grape">
+              That&apos;s what /vote is for →
+            </Link>
           </p>
           <div className="mt-8">
             <TrainingSurveyForm />

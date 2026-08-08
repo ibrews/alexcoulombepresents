@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { storeItems, STORE_LIVE, effectivePriceCents, isPurchasable } from "@/lib/store";
+import { storeItems, STORE_LIVE, effectivePriceCents, isPurchasable, officeHoursDropIn } from "@/lib/store";
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 import { getSeatsSold } from "@/lib/commerce/seats";
@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
       }
     }
     const priceCents = effectivePriceCents(item)!;
-    body = new URLSearchParams({
+    const params: Record<string, string> = {
       mode: "payment",
       success_url: `${site}/store/success?item=${item.slug}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site}/store`,
@@ -163,7 +163,19 @@ export async function POST(req: NextRequest) {
       "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup
       // Promo codes (vouchers, NEWSLETTER20) — off for premium items (private 1:1).
       allow_promotion_codes: String(item.allowPromoCodes !== false),
-    });
+    };
+    // Office hours isn't date-pinned like the Wednesday calendar — the buyer
+    // has to tell us which Friday. Required custom field so the answer lands
+    // in the Stripe session itself (readable in the webhook below) instead of
+    // relying on a reply-email round-trip.
+    if (item.slug === officeHoursDropIn.slug) {
+      params["custom_fields[0][key]"] = "preferred_friday";
+      params["custom_fields[0][label][type]"] = "custom";
+      params["custom_fields[0][label][custom]"] = "Which Friday would you like?";
+      params["custom_fields[0][type]"] = "text";
+      params["custom_fields[0][optional]"] = "false";
+    }
+    body = new URLSearchParams(params);
   }
 
   const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {

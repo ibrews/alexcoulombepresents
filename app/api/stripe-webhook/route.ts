@@ -64,6 +64,15 @@ function membershipDeps(): MembershipBillingDeps {
   };
 }
 
+// Pulls one Stripe Checkout custom_field's text answer off a session by key —
+// shared by the donation "comment" field and any per-slug required field
+// (e.g. office hours' "preferred_friday").
+function customFieldText(session: { custom_fields?: unknown }, key: string): string | undefined {
+  return (session.custom_fields as Array<{ key: string; text?: { value?: string } }> | undefined)?.find(
+    (f) => f.key === key
+  )?.text?.value;
+}
+
 function verifyStripeSignature(payload: string, header: string | null, secret: string): boolean {
   if (!header) return false;
   const parts = Object.fromEntries(header.split(",").map((p) => p.split("=") as [string, string]));
@@ -99,6 +108,9 @@ export async function POST(req: NextRequest) {
     const fulfillment = session.metadata?.fulfillment as string | undefined;
     const email = session.customer_details?.email as string | undefined;
     const name = session.customer_details?.name as string | undefined;
+    // Office hours' required "which Friday?" custom field (see checkout
+    // route) — undefined for every other item, which is fine, it's optional.
+    const preferredFriday = customFieldText(session, "preferred_friday");
 
     // ── Seat/order tracking (lib/commerce/seats.ts) — a real ledger backing
     // seat-count scarcity + the admin roster, covering every checkout kind
@@ -112,15 +124,14 @@ export async function POST(req: NextRequest) {
         email: email ?? null,
         name: name ?? null,
         amountCents: session.amount_total ?? null,
+        note: preferredFriday ?? null,
       });
     } catch (err) {
       console.error("[seats] order record failed", err);
     }
 
     if (kind === "donation") {
-      const comment = (session.custom_fields as Array<{ key: string; text?: { value?: string } }> | undefined)?.find(
-        (f) => f.key === "comment"
-      )?.text?.value;
+      const comment = customFieldText(session, "comment");
       try {
         await sendDonationNotification({
           amountCents: session.amount_total ?? 0,
@@ -220,6 +231,9 @@ export async function POST(req: NextRequest) {
           sessionId: session.id,
           seatsSold,
           minEnrollment: item?.minEnrollment,
+          bookingNote: preferredFriday,
+          schedulingUrl: item?.schedulingUrl,
+          zoomRegistrationUrl: item?.zoomRegistrationUrl,
         });
         await recordCheckoutSession({
           stripeEventId: event.id,

@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import {
   ENGAGEMENT_OPTIONS,
-  TOPIC_OPTIONS,
   AI_STANCE_OPTIONS,
   SKILL_LEVEL_OPTIONS,
   type EngagementOption,
-  type TopicOption,
   type AiStanceOption,
   type SkillLevelOption,
 } from "@/lib/trainingSurvey";
@@ -17,7 +15,6 @@ type Counts = Record<string, number>;
 type SurveyResponse = {
   ok: boolean;
   engagement?: { option: string; count: number }[];
-  topics?: { option: string; count: number }[];
   aiStance?: { option: string; count: number }[];
   skillLevel?: { option: string; count: number }[];
   total?: number;
@@ -30,8 +27,8 @@ function toCounts(rows: { option: string; count: number }[] | undefined): Counts
   return out;
 }
 
-type AllCounts = { engagement: Counts; topics: Counts; aiStance: Counts; skillLevel: Counts };
-const EMPTY_COUNTS: AllCounts = { engagement: {}, topics: {}, aiStance: {}, skillLevel: {} };
+type AllCounts = { engagement: Counts; aiStance: Counts; skillLevel: Counts };
+const EMPTY_COUNTS: AllCounts = { engagement: {}, aiStance: {}, skillLevel: {} };
 
 function ResultsBlock({
   title,
@@ -154,7 +151,6 @@ function SingleSelect<T extends string>({
 
 export default function TrainingSurveyForm() {
   const [engagement, setEngagement] = useState<EngagementOption[]>([]);
-  const [topics, setTopics] = useState<TopicOption[]>([]);
   const [aiStance, setAiStance] = useState<AiStanceOption | null>(null);
   const [skillLevel, setSkillLevel] = useState<SkillLevelOption | null>(null);
   const [email, setEmail] = useState("");
@@ -175,7 +171,6 @@ export default function TrainingSurveyForm() {
         if (cancelled || !data.ok) return;
         setCounts({
           engagement: toCounts(data.engagement),
-          topics: toCounts(data.topics),
           aiStance: toCounts(data.aiStance),
           skillLevel: toCounts(data.skillLevel),
         });
@@ -192,13 +187,13 @@ export default function TrainingSurveyForm() {
     setter((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]));
   }
 
-  const complete = engagement.length > 0 && topics.length > 0 && aiStance !== null && skillLevel !== null;
+  const complete = engagement.length > 0 && aiStance !== null && skillLevel !== null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     if (!complete) {
-      setError("Please answer all four questions.");
+      setError("Please answer all three questions.");
       return;
     }
     setSubmitting(true);
@@ -206,7 +201,7 @@ export default function TrainingSurveyForm() {
       const res = await fetch("/api/training-survey", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, engagement, topics, aiStance, skillLevel, honeypot, human }),
+        body: JSON.stringify({ email, engagement, aiStance, skillLevel, honeypot, human }),
       });
       const data: SurveyResponse = await res.json();
       if (!res.ok || !data.ok) {
@@ -214,7 +209,6 @@ export default function TrainingSurveyForm() {
       } else {
         setCounts({
           engagement: toCounts(data.engagement),
-          topics: toCounts(data.topics),
           aiStance: toCounts(data.aiStance),
           skillLevel: toCounts(data.skillLevel),
         });
@@ -241,12 +235,14 @@ export default function TrainingSurveyForm() {
         </div>
         <div className="glass grid gap-8 rounded-2xl p-6 sm:grid-cols-2">
           <ResultsBlock title="How you'd engage" options={ENGAGEMENT_OPTIONS} counts={counts.engagement} />
-          <ResultsBlock title="Topics wanted" options={TOPIC_OPTIONS} counts={counts.topics} />
           <ResultsBlock title="Learning AI" options={AI_STANCE_OPTIONS} counts={counts.aiStance} />
           <ResultsBlock title="Skill level" options={SKILL_LEVEL_OPTIONS} counts={counts.skillLevel} />
         </div>
         <p className="text-center font-mono text-xs text-mist">
-          {total} response{total === 1 ? "" : "s"} so far
+          {total} response{total === 1 ? "" : "s"} so far — want to vote on a specific topic too?{" "}
+          <a href="/vote" className="text-snow underline decoration-teal/50 hover:decoration-teal">
+            Vote here →
+          </a>
         </p>
       </div>
     );
@@ -264,20 +260,12 @@ export default function TrainingSurveyForm() {
         </div>
 
         <div>
-          <p className="mb-3 font-bold">
-            2. What topics are you most eager to learn right now?{" "}
-            <span className="font-normal text-mist">— select all that apply</span>
-          </p>
-          <MultiSelect options={TOPIC_OPTIONS} selected={topics} onToggle={(s) => toggle(setTopics, s)} />
-        </div>
-
-        <div>
-          <p className="mb-3 font-bold">3. How are you feeling about learning AI?</p>
+          <p className="mb-3 font-bold">2. How are you feeling about learning AI?</p>
           <SingleSelect options={AI_STANCE_OPTIONS} selected={aiStance} onSelect={setAiStance} />
         </div>
 
         <div>
-          <p className="mb-3 font-bold">4. As an Unreal Engine user, would you consider yourself:</p>
+          <p className="mb-3 font-bold">3. As an Unreal Engine user, would you consider yourself:</p>
           <SingleSelect options={SKILL_LEVEL_OPTIONS} selected={skillLevel} onSelect={setSkillLevel} />
         </div>
 
@@ -341,7 +329,6 @@ export default function TrainingSurveyForm() {
             Live results · {total} response{total === 1 ? "" : "s"} so far
           </p>
           <ResultsBlock title="How you'd engage" options={ENGAGEMENT_OPTIONS} counts={counts.engagement} />
-          <ResultsBlock title="Topics wanted" options={TOPIC_OPTIONS} counts={counts.topics} />
           <ResultsBlock title="Learning AI" options={AI_STANCE_OPTIONS} counts={counts.aiStance} />
           <ResultsBlock title="Skill level" options={SKILL_LEVEL_OPTIONS} counts={counts.skillLevel} />
         </div>

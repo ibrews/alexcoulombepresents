@@ -73,6 +73,18 @@ export type StoreItem = {
   // undersold (see the class-checkin cron). Only meaningful alongside
   // sessionDateISO.
   minEnrollment?: number;
+  // A real self-serve scheduling link (Zoom Scheduler event type, Zoom
+  // registration-required meeting, etc.) — when set, the buyer picks a real
+  // slot/registers themselves instead of waiting on a manual reply-email
+  // round-trip. Surfaced in the fulfillment email in place of item.delivery's
+  // "Alex will follow up" framing.
+  schedulingUrl?: string;
+  // Real Zoom "registration required" meeting link for a dated class —
+  // Zoom handles confirmation/reminders/calendar invites automatically once
+  // the buyer registers. Set per wednesdayCalendar item once its meeting
+  // exists; surfaced in the fulfillment email in place of "Alex emails the
+  // Zoom link before class."
+  zoomRegistrationUrl?: string;
 };
 
 export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
@@ -83,7 +95,7 @@ export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
 // intro/intermediate/expert. The Aug–Sep 2026 Wednesday calendar below sells
 // at roughly half these as introductory pricing for that run specifically —
 // these constants are what it's "off of", not what it charges.
-const INTRO_SESSION_CENTS = 9900;
+const INTRO_SESSION_CENTS = 10000;
 const INTERMEDIATE_SESSION_CENTS = 15000;
 const ADVANCED_SESSION_CENTS = 20000; // "Expert" tier
 
@@ -113,6 +125,7 @@ function wednesdayCalendarItem(input: {
   blurb: string;
   priceCents: number;
   sessionDateISO: string; // 11a ET start
+  zoomRegistrationUrl?: string;
 }): StoreItem {
   return {
     slug: input.slug,
@@ -121,11 +134,13 @@ function wednesdayCalendarItem(input: {
     priceCents: input.priceCents,
     priceNote: UE5_PROMO_NOTE,
     blurb: input.blurb,
-    delivery:
-      "Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.",
+    delivery: input.zoomRegistrationUrl
+      ? "Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live."
+      : "Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.",
     fulfillment: "email-manual",
     sessionDateISO: input.sessionDateISO,
     minEnrollment: 5,
+    zoomRegistrationUrl: input.zoomRegistrationUrl,
     saleWindow: {
       closesAtISO: input.sessionDateISO,
       closedNote: "This session has already happened — the next one's on the calendar above.",
@@ -138,58 +153,78 @@ export const wednesdayCalendar: StoreItem[] = [
   wednesdayCalendarItem({
     slug: "wed-2026-08-12-intro-vr",
     name: "Intro to VR in Unreal 5.8",
-    blurb: "Build your first VR pawn in 5.8 — comfort, locomotion, and interaction basics for Quest and Vision Pro.",
+    blurb:
+      "Build your first VR experience! Headset optional (we've got a killer custom emulator!). OpenXR for the win. All the basics and your burning questions all answered.",
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-08-12T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/Nn4mW45KRKeDkokoTk4o0A",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-08-19-intermediate-vr",
-    name: "Intermediate VR in Unreal 5.8",
-    blurb: "Past the basics: hand tracking, comfort-safe teleport vs. smooth locomotion, and performance budgets that actually hold on-device.",
+    name: "Intermediate XR in Unreal 5.8",
+    blurb:
+      "Beyond the basics: hand tracking, comfort options, various locomotion, fidelity and performance budgets. A dash of mixed reality at the end.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-08-19T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/2rQ9e2yxSu68RM8Otdm-RA",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-08-26-intro-metahumans",
     name: "Intro to MetaHumans in Unreal 5.8",
-    blurb: "Create and import a MetaHuman, rig it into your project, and get it looking right under your lighting.",
+    blurb:
+      "Create MetaHumans the new way: from in editor, and even from external face and body meshes. Realistic and stylized. Let's make 'em move and try the new toon shading while we're at it.",
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-08-26T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/IzjAamgLQTibb6xeFARbBQ",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-02-mocap",
     name: "Mocap in Unreal 5.8",
-    blurb: "Get motion capture data onto a MetaHuman or custom rig — retargeting, cleanup, and the gotchas that eat a first attempt.",
+    blurb:
+      "Various ways to capture face and body motion capture data onto a MetaHuman or custom rig. Clean it, reuse it, ship it.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-09-02T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/Peidz5xgTV6qQa2zT2kOxw",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-09-intro-pcg",
-    name: "Intro to PCG (Procedural Content Generation)",
-    blurb: "Scatter a believable environment with the PCG framework instead of placing every mesh by hand.",
+    name: "Intro to PCG (Procedural Content Generation) & AI",
+    blurb:
+      "Scatter a believable environment with the PCG framework instead of placing every mesh by hand. Even more powerful with MCP tools.",
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-09T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/12r37RLTSZiBavbpsCDHFQ",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-16-unity-to-unreal",
     name: "Unity to Unreal",
-    blurb: "For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors.",
+    blurb:
+      "Thinking of making the switch? The concepts that map over, the ones that don't, and why your Prefabs are now Blueprints. Led by Whitt Sellers.",
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-16T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/C2MxUYbAQyKMSY2HzsumCg",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-23-usd-glb-export",
-    name: "Exporting from Unreal Engine to OpenUSD to GLB",
-    blurb: "A real cross-platform export pipeline: Unreal scenes out through OpenUSD and down to GLB without losing the parts that matter.",
+    name: "Exporting UE5 to OpenUSD to GLB",
+    blurb:
+      "A real cross-platform export pipeline: Unreal scenes out through OpenUSD and GLB without losing what matters. Then we'll see what they look like in Godot and ThreeJS.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-09-23T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/ggxLvryiSFKKtA1Xp9enoQ",
   }),
+  // Was "Apple Vision Pro Unreal Engine Masterclass — Part 1" (advanced/$200
+  // tier), blurb: "The deep dive: shipping real Unreal content to Vision Pro
+  // — the full pipeline, not the demo-day version." Alex asked to save that
+  // topic for a future session and swap this slot for Intro to AR instead —
+  // reuse the name/blurb/tier above if that masterclass gets scheduled later.
   wednesdayCalendarItem({
-    slug: "wed-2026-09-30-avp-masterclass-1",
-    name: "Apple Vision Pro Unreal Engine Masterclass — Part 1",
-    blurb: "The deep dive: shipping real Unreal content to Vision Pro — the full pipeline, not the demo-day version.",
-    priceCents: ADVANCED_SESSION_CENTS,
+    slug: "wed-2026-09-30-intro-ar",
+    name: "Intro to AR",
+    blurb: "Android and iOS, ARCore & ARKit, plane detection, light estimation, markers & more. Led by Yu-Jun Yeh.",
+    priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-30T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/XnHIYeiPTxCvS15x4aLNWw",
   }),
 ];
 
@@ -205,7 +240,7 @@ export const officeHoursDropIn: StoreItem = {
   priceCents: 10000,
   priceNote: "Every Friday, 1p ET. Book any upcoming date after checkout — no minimum headcount, this one always runs.",
   blurb: "Two live hours with Alex — bring your broken Blueprint, your pipeline question, your career fork. Small group, open floor.",
-  delivery: "Order confirmation lands right away; reply with which Friday works and Alex sends the Zoom link.",
+  delivery: "Tell us which Friday at checkout; order confirmation lands right away and Alex sends the Zoom link for that date.",
   fulfillment: "email-manual",
 };
 
@@ -223,9 +258,10 @@ export const consultationDropIn: StoreItem = {
   priceNote: "One hour, entirely on your agenda — price shown at checkout.",
   blurb:
     "One focused hour, one-on-one, on whatever you need — a project review, a stuck pipeline, career advice, scoping a build. Live over video with screen share.",
-  delivery: "An order confirmation lands right away; reply with your availability and Alex books your session, usually same day.",
+  delivery: "Pick a real open slot yourself on Alex's Zoom Scheduler — order confirmation lands right away, and the Zoom link comes straight from your booking.",
   fulfillment: "booking",
   allowPromoCodes: false,
+  schedulingUrl: "https://scheduler.zoom.us/alex-coulombe/1-hour-consultation",
 };
 
 export const storeItems: StoreItem[] = [
@@ -289,15 +325,15 @@ export const storeItems: StoreItem[] = [
     slug: "unreal-foundations-cohort",
     name: "Unreal Foundations — August cohort",
     kind: "course-bundle",
-    priceCents: 24900,
+    priceCents: 25000,
     priceNote:
-      "Early-bird through July 29 — $299 after. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+      "Early-bird through July 29 — $300 after. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     capacity: 25,
     blurb:
       "Zero to Environment in four live Wednesday classes: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Recordings and project files included.",
     delivery: "You get an order confirmation right away; Alex emails your Zoom links, calendar invites, and project files before the first class.",
     fulfillment: "email-manual",
-    earlyBird: { untilISO: "2026-07-30T04:00:00Z", regularPriceCents: 29900 }, // Jul 29 EOD ET
+    earlyBird: { untilISO: "2026-07-30T04:00:00Z", regularPriceCents: 30000 }, // Jul 29 EOD ET
     saleWindow: {
       // Paused, not deleted: the Aug 5 plan changed to a free session +
       // /training#poll to decide what this cohort actually becomes. Move
@@ -313,7 +349,7 @@ export const storeItems: StoreItem[] = [
     slug: "ue-curriculum-bundle",
     name: "Unreal Engine curriculum bundle",
     kind: "course-bundle",
-    priceCents: 89900,
+    priceCents: 90000,
     blurb: "The full track: all eleven classes, scheduled at your pace, with homework review between sessions.",
     delivery: "An order confirmation lands right away; Alex then reaches out to schedule all 11 sessions at your pace and share class materials + project files.",
     fulfillment: "booking",

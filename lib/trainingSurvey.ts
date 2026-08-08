@@ -11,17 +11,9 @@ export const ENGAGEMENT_OPTIONS = {
 
 export type EngagementOption = keyof typeof ENGAGEMENT_OPTIONS;
 
-export const TOPIC_OPTIONS = {
-  "5.8-features": "5.8 new features",
-  "xr-spatial": "XR / Spatial Computing",
-  archviz: "Archviz",
-  metahumans: "MetaHumans",
-  mocap: "Motion capture pipelines",
-  exporting: "Exporting out of Unreal (RealityKit, WebGPU, RenderMan…)",
-  "unity-to-unreal": "Unity → Unreal",
-} as const;
-
-export type TopicOption = keyof typeof TOPIC_OPTIONS;
+// Topic selection used to live here too (question 2), but it duplicated
+// /vote's weighted topic voting — removed in favor of pointing to /vote,
+// which is the one place topics are actually decided now.
 
 export const AI_STANCE_OPTIONS = {
   "only-if-relevant": "Only when directly relevant to Unreal",
@@ -41,9 +33,6 @@ export type SkillLevelOption = keyof typeof SKILL_LEVEL_OPTIONS;
 
 export function isEngagementOption(v: unknown): v is EngagementOption {
   return typeof v === "string" && v in ENGAGEMENT_OPTIONS;
-}
-export function isTopicOption(v: unknown): v is TopicOption {
-  return typeof v === "string" && v in TOPIC_OPTIONS;
 }
 export function isAiStanceOption(v: unknown): v is AiStanceOption {
   return typeof v === "string" && v in AI_STANCE_OPTIONS;
