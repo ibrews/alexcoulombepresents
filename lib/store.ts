@@ -287,25 +287,33 @@ export const storeItems: StoreItem[] = [
     fulfillment: "email-manual",
   },
   {
+    // NOT one of the 8 dated Wednesday-calendar classes above — this is any
+    // topic from the 50+ full teaching catalog (/training#catalog),
+    // scheduled around the buyer instead of on the public Wednesday date.
+    // Keep the name/blurb explicit about that distinction; the two flows
+    // look identical price-wise ($100/$200, same delivery mechanics) and
+    // sit right next to each other in the storeItems list, so it's an easy
+    // mix-up otherwise.
     slug: "ue-class-single",
-    name: "Unreal Engine class — intro session",
+    name: "Any intro-tier class — pick your own time",
     kind: "course",
     priceCents: INTRO_SESSION_CENTS,
     priceNote:
-      "A core/foundational track. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
-    blurb: "One live two-hour session on a foundational Unreal track — the essentials, in a small open-enrollment group.",
-    delivery: "An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
+      "Not the Wednesday calendar above — pick any foundational topic from the full 50+ class catalog and Alex schedules it around you. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    blurb: "One live two-hour session on any foundational track from the full teaching catalog — the essentials, scheduled on your calendar, not a fixed public date.",
+    delivery: "An order confirmation lands in your inbox right away; reply with which topic (from the catalog) and your availability, and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
     fulfillment: "booking",
   },
   {
+    // See the ue-class-single comment above — same distinction, advanced tier.
     slug: "ue-class-advanced",
-    name: "Unreal Engine class — advanced session",
+    name: "Any advanced-tier class — pick your own time",
     kind: "course",
     priceCents: ADVANCED_SESSION_CENTS,
     priceNote:
-      "A specialized/advanced track. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
-    blurb: "One live two-hour session on an advanced or specialized track — Lumen/Nanite deep dives, virtual production, AI for Unreal, Vision Pro, or MetaHumans. Open enrollment, small group.",
-    delivery: "An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
+      "Not the Wednesday calendar above — pick any advanced topic from the full 50+ class catalog and Alex schedules it around you. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+    blurb: "One live two-hour session on any advanced or specialized track from the full teaching catalog — Lumen/Nanite deep dives, virtual production, AI for Unreal, Vision Pro, or MetaHumans — scheduled on your calendar, not a fixed public date.",
+    delivery: "An order confirmation lands in your inbox right away; reply with which topic (from the catalog) and your availability, and Alex schedules your session (usually same day). Sessions run live over video with screen share.",
     fulfillment: "booking",
   },
   {

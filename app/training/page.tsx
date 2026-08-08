@@ -313,17 +313,21 @@ export default function Training() {
       {/* Curriculum */}
       <div className="mt-20">
         <Reveal>
-          <h2 className="text-3xl font-bold tracking-tight">The curriculum</h2>
+          <p className="font-mono text-xs uppercase tracking-widest text-grape">
+            Not the Wednesday calendar — book individually, on your schedule
+          </p>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight">The curriculum</h2>
           <p className="mt-3 text-mist">
-            Twelve tracks. Every one books as a live two-hour session — intro tracks and specialized
-            deep-dives, priced separately. Take one, take them all, or bundle them for your team
-            above. Pricing shows at checkout in the{" "}
+            Twelve tracks, separate from the public Wednesday cohort above. Every one books as its
+            own live two-hour session — intro tracks and specialized deep-dives, priced separately —
+            scheduled around you instead of on a fixed public date. Inquire below, or bundle them for
+            your team above. Pricing shows at checkout in the{" "}
             <Link href="/store" className="text-snow underline decoration-teal/50 hover:decoration-teal">
               store
             </Link>
-            . Not sure what&apos;s next?{" "}
+            . Want a topic added to the public Wednesday run instead?{" "}
             <Link href="/vote" className="text-snow underline decoration-teal/50 hover:decoration-teal">
-              Vote on the September cohort →
+              Vote on what&apos;s next →
             </Link>
           </p>
         </Reveal>
@@ -346,7 +350,7 @@ export default function Training() {
                       : "border-grape/40 text-grape hover:border-grape"
                   }`}
                 >
-                  {c.tier === "intro" ? "Book intro session →" : "Book advanced session →"}
+                  {c.tier === "intro" ? "Inquire about this intro session →" : "Inquire about this advanced session →"}
                 </Link>
               </div>
             </Reveal>
@@ -358,7 +362,7 @@ export default function Training() {
       <div id="catalog" className="mt-20 scroll-mt-28">
         <Reveal>
           <p className="font-mono text-xs uppercase tracking-widest text-teal">
-            The full teaching catalog
+            The full teaching catalog · book individually, on your schedule
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">
             50+ classes, <span className="grad-text">ready to run.</span>
@@ -366,8 +370,9 @@ export default function Training() {
           <p className="mt-3 max-w-3xl leading-relaxed text-mist">
             Every class below has been taught live — most many times over — as two-hour,
             instructor-led sessions on behalf of Epic Games to their key partner studios, broadcast
-            teams, and enterprises. Book any of them as an open-enrollment session, or point at a
-            column and say &quot;that one, for my whole team.&quot;
+            teams, and enterprises. These aren&apos;t on the public Wednesday calendar above — inquire
+            about any of them as a one-off open-enrollment session scheduled around you, or point at
+            a column and say &quot;that one, for my whole team.&quot;
           </p>
         </Reveal>
         <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
@@ -393,7 +398,7 @@ export default function Training() {
               href="/store"
               className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
             >
-              Book a session in the store →
+              Inquire about booking a class →
             </Link>
             <a
               href="#teams"
@@ -599,26 +604,34 @@ export default function Training() {
         </div>
       </Reveal>
 
-      {/* Members-only tools */}
+      {/* Membership — the strongest promotion of it on the page */}
       <Reveal>
-        <section className="glass mt-16 rounded-3xl p-8 md:p-12">
-          <p className="font-mono text-xs uppercase tracking-widest text-teal">
-            Members only · shipping today
-          </p>
+        <section className="glow-card mt-16 rounded-3xl border border-grape/40 p-8 md:p-12">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="font-mono text-xs uppercase tracking-widest text-grape">
+              Membership · shipping today
+            </p>
+            <span className="rounded-full bg-grape px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+              Best deal!
+            </span>
+          </div>
           <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
-            Exclusive tools, only for members.
+            Members save — <span className="grad-text">and get more.</span>
           </h2>
           <p className="mt-4 max-w-3xl leading-relaxed text-mist">
-            Membership includes hands-on access to real internal tools Alex builds for production
+            Starter is $99/mo for 3 live-class credits — cheaper than buying a single class à la
+            carte — plus every class recording, member pricing sitewide, and a vote that counts for
+            more. On top of that: hands-on access to real internal tools Alex builds for production
             work — xrsim (test any OpenXR Android app on a Mac, no headset), Forage (an AI-first
-            scout for the Unreal asset packs you already own), and Constellation (your own notes
-            as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they&apos;re ready.
+            scout for the Unreal asset packs you already own), and Constellation (your own notes as
+            a walk-in 3D star map on Vision Pro) are shipping today, with more landing as
+            they&apos;re ready.
           </p>
           <Link
             href="/members"
-            className="mt-6 inline-block rounded-full border border-line px-6 py-3 font-semibold transition-colors hover:border-teal/60"
+            className="mt-6 inline-block rounded-full bg-grape px-6 py-3 font-semibold text-[#0a0a12] transition-transform hover:scale-[1.03]"
           >
-            See what&apos;s included →
+            See tiers & join →
           </Link>
         </section>
       </Reveal>

@@ -8,6 +8,7 @@ import { storeItems, formatPrice, effectivePriceCents, isPurchasable } from "@/l
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { renderBreaks } from "@/components/Lines";
 import { getRemaining } from "@/lib/commerce/seats";
+import { MEMBERSHIP_LIVE, MEMBERSHIP_TIERS } from "@/lib/commerce/membership";
 
 export const metadata: Metadata = {
   title: "Work With Alex — Courses, Skills & Templates",
@@ -247,28 +248,39 @@ export default async function Store() {
         ))}
       </div>
 
-      {/* Membership — coming soon */}
+      {/* Membership */}
       <Reveal>
-        <div className="glass mt-14 rounded-3xl border border-teal/30 p-8 md:p-10">
+        <div className="glow-card mt-14 rounded-3xl border border-grape/40 p-8 md:p-10">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-2xl">
-              <p className="inline-block rounded-full border border-amber/50 bg-amber/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber">
-                Coming soon
-              </p>
-              <h2 className="mt-3 text-xl font-bold tracking-tight md:text-2xl">
-                The membership: every recording, member pricing, early access.
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="font-mono text-xs uppercase tracking-widest text-grape">Membership</p>
+                {MEMBERSHIP_LIVE && (
+                  <span className="rounded-full bg-grape px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+                    Best deal!
+                  </span>
+                )}
+              </div>
+              <h2 className="mt-2 text-xl font-bold tracking-tight md:text-2xl">
+                {MEMBERSHIP_LIVE
+                  ? "3 classes a month for less than the price of one."
+                  : "The membership: every recording, member pricing, early access."}
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-mist">
-                One subscription for the whole class-recording library, standing discounts on
-                everything here, first seats on Lab launches, and monthly office hours with Alex.
-                Founding waitlist is open — members hear the price first and get the founding rate.
+                {MEMBERSHIP_LIVE
+                  ? `Starter is ${MEMBERSHIP_TIERS[0].priceLabel} for ${MEMBERSHIP_TIERS[0].tagline.toLowerCase()} — plus every class recording, member pricing on everything here, and a vote that counts for more. Cancel anytime.`
+                  : "One subscription for the whole class-recording library, standing discounts on everything here, first seats on Lab launches, and monthly office hours with Alex. Founding waitlist is open — members hear the price first and get the founding rate."}
               </p>
             </div>
             <Link
               href="/members"
-              className="rounded-full border border-teal/60 px-6 py-3 font-semibold text-snow transition-colors hover:bg-teal/10"
+              className={
+                MEMBERSHIP_LIVE
+                  ? "rounded-full bg-grape px-6 py-3 font-semibold text-[#0a0a12] transition-transform hover:scale-[1.03]"
+                  : "rounded-full border border-teal/60 px-6 py-3 font-semibold text-snow transition-colors hover:bg-teal/10"
+              }
             >
-              Join the founding waitlist →
+              {MEMBERSHIP_LIVE ? "See tiers & join →" : "Join the founding waitlist →"}
             </Link>
           </div>
         </div>

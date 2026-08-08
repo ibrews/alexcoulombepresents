@@ -58,11 +58,21 @@ export default function TrainingCalendar() {
           <Link href="/vote" className="text-snow underline decoration-teal/50 hover:decoration-teal">
             vote
           </Link>{" "}
-          — members&apos; votes count for more, scaled to their tier.{" "}
-          <Link href="/members" className="text-snow underline decoration-teal/50 hover:decoration-teal">
-            Become a member!
-          </Link>
+          — members&apos; votes count for more, scaled to their tier.
         </p>
+        <Link
+          href="/members"
+          className="mt-3 flex max-w-3xl flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-grape/40 bg-grape/10 px-4 py-3 text-sm transition-colors hover:border-grape/70 hover:bg-grape/15"
+        >
+          <span className="rounded-full bg-grape px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+            Best deal!
+          </span>
+          <span className="font-bold text-snow">Become a member!</span>
+          <span className="text-mist">
+            3 classes a month for $99 — that&apos;s less than the price of one class à la carte, plus
+            every recording and a bigger vote →
+          </span>
+        </Link>
 
         <div className="mt-8 -mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">
           {/* Pinned Friday office-hours card — standing, not date-locked. */}

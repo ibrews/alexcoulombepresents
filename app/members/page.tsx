@@ -62,6 +62,17 @@ export default async function Members({
             ? "$99–$299/mo — cancel anytime."
             : "Pricing lands with the launch — waitlist members hear first and get the founding rate."}
         </p>
+        {MEMBERSHIP_LIVE && (
+          <p className="mt-4 inline-flex max-w-xl flex-wrap items-center gap-x-2.5 gap-y-1 rounded-xl border border-grape/40 bg-grape/10 px-4 py-3 text-sm">
+            <span className="rounded-full bg-grape px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+              Best deal!
+            </span>
+            <span className="text-mist">
+              Starter is <span className="font-bold text-snow">$99/mo for 3 classes</span> — that&apos;s
+              less than the price of one, à la carte.
+            </span>
+          </p>
+        )}
       </Reveal>
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,12 +152,17 @@ export default async function Members({
                   <div
                     key={tier.id}
                     className={`glass flex h-full flex-col rounded-2xl p-7 ${
-                      i === 1 ? "border-teal/50" : "border-line"
+                      i === 1 ? "border-teal/50" : i === 0 ? "border-grape/50" : "border-line"
                     }`}
                   >
                     {i === 1 && (
                       <span className="self-start rounded-full bg-teal px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
                         Most popular
+                      </span>
+                    )}
+                    {i === 0 && (
+                      <span className="self-start rounded-full bg-grape px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+                        Best deal!
                       </span>
                     )}
                     <h3 className="mt-3 font-bold">{tier.name}</h3>
