@@ -290,15 +290,17 @@ export default function Training() {
           <div className="glass rounded-2xl p-6">
             <p className="font-mono text-xs text-teal">FORMAT</p>
             <p className="mt-2 text-sm leading-relaxed text-mist">
-              Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team
-              training for entire studios.
+              Live and interactive over Zoom, two hours — follow along, not a watch-along webinar.
+              Reference files go out before class when a session needs them, and every session is
+              recorded for you. À la carte or as curriculum bundles; solo deep-dives or team training
+              for entire studios.
             </p>
           </div>
           <div className="glass rounded-2xl p-6">
             <p className="font-mono text-xs text-grape">SCHEDULE</p>
             <p className="mt-2 text-sm leading-relaxed text-mist">
-              Intro classes typically start on the first Monday of the month at 1pm ET, with additional
-              sessions throughout the week.
+              Live classes run every Wednesday at 11a ET, plus office hours every Friday at 1p ET —
+              see the full calendar above.
             </p>
           </div>
           <div className="glass rounded-2xl p-6">

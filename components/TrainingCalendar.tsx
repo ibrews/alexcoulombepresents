@@ -46,8 +46,10 @@ export default function TrainingCalendar() {
           Book any class, <span className="grad-text">right now.</span>
         </h2>
         <p className="mt-3 max-w-3xl leading-relaxed text-mist">
-          Live, 11a ET, two hours. Can&apos;t make it live? The price already includes all class
-          material and a full recording of the session — nothing extra to buy.
+          Live and interactive over Zoom, 11a ET, two hours — follow along, ask questions, this
+          isn&apos;t a webinar. Some sessions include reference files sent before class. Can&apos;t
+          make it live? The price already includes all class material and a full recording of the
+          session — nothing extra to buy.
         </p>
         <p className="mt-3 max-w-3xl rounded-xl border border-teal/40 bg-teal/10 px-4 py-3 text-sm font-bold text-snow">
           Prices below are shown before the discount — enter code <span className="text-teal">UE5</span> at
