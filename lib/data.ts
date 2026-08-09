@@ -1052,6 +1052,47 @@ export const products: Product[] = [
     accent: "blue",
   },
   {
+    slug: "xrsim",
+    name: "xrsim",
+    internal: true,
+    status: "Private — the headset-free test harness behind Agile Lens' VR work",
+    tagline: "A simulator for VR apps: boot the build, script the headset, assert on what the app actually believes — no headset, no human in the room.",
+    pitch:
+      "iPhone developers have had the Simulator for fifteen years — boot the app on your Mac, script it, test it in CI, never pick up a phone. VR never got that. Every change means packaging, side-loading, strapping on a headset, and walking around a room to see if it worked. xrsim is the missing piece: it stands up a scripted virtual headset and hand controllers, walks them through a build on a real path, and reads back what the app is actually thinking — all headless, repeatable, and drivable by an AI agent.",
+    sections: [
+      {
+        heading: "A scripted headset, driven from a file",
+        body: "A trajectory is just JSON: at t=0 the head is here, by t=4 it's drifted there, at t=8 the controller pinches. xrsim plays it back into a running VR build as if a person were wearing the headset — smooth interpolated motion, real controller input — so the same 'walk up to the thing and look at it' test runs identically every time instead of depending on how you happened to move that day.",
+      },
+      {
+        heading: "Read the app's mind, not just its pixels",
+        body: "The hard part of testing VR isn't sending input — it's knowing whether the app got it right. xrsim opens a live channel into the running build so a test can ask it questions: did you lock onto the marker? what world position do you think the headset is at? how confident are you? The app answers over the wire, and the test asserts on the answer. Pixels lie; internal state doesn't.",
+      },
+      {
+        heading: "Proven on the hardest thing first",
+        body: "The first real target was co-location — the problem of making a virtual world line up with the physical room to within a couple of centimeters, normally impossible to test without a headset and a tape measure. xrsim ran the whole loop headless: a simulated headset walked a path in front of the app's virtual markers, the app detected them, solved its position, and locked on — and the test asserted the answer was right to 0.4 cm. One command, exit code zero, nobody in the room.",
+      },
+      {
+        heading: "Built for the agent era",
+        body: "Every capability is one command with a clean pass/fail, so an AI build agent can close its own loop: change the code, run the trajectory, read the assert, fix what broke — the same edit-test-repeat cycle a web developer takes for granted, finally available for spatial apps. It runs on a plain workstation with no headset attached, which means it runs in the background, overnight, at whatever scale the work needs.",
+      },
+      {
+        heading: "The frontier",
+        body: "Streamed PC-VR testing is a daily driver now. Next is simulating true standalone on-device builds — the app running as it would on the headset's own chip — and modeling each device's real performance envelope, so a test can fail not just on 'wrong answer' but on 'too slow for a Quest.' That's the part nobody has cracked yet.",
+      },
+    ],
+    bullets: [
+      "Scripted virtual headset + controllers played back from a JSON trajectory",
+      "Live introspection channel — assert on the app's actual internal state, not screenshots",
+      "One-command, pass/fail runs an AI agent can drive in its own edit-test loop",
+      "Runs fully headless on a plain workstation — no headset, background, overnight, at scale",
+      "First proof: headless co-location verified to 0.4 cm accuracy, start to finish",
+      "Frontier: standalone on-device simulation + per-device performance-envelope modeling",
+    ],
+    links: [],
+    accent: "teal",
+  },
+  {
     slug: "roomscanpro",
     name: "RoomScanPro",
     status: "Private — Agile Lens internal, exploring wider release",
