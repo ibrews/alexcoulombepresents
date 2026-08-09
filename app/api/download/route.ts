@@ -21,6 +21,15 @@ export async function GET(req: NextRequest) {
 
   const product = findDigitalProduct(sku);
   if (!product) return NextResponse.json({ error: "Unknown product" }, { status: 404 });
+  if (!product.r2Prefix) {
+    // npm-distributed products (npmPackage set) have no file to download — /account renders an
+    // install command instead of a Download button for these, so a real UI click never reaches
+    // this branch; it's here so a stale link/bookmark fails with a clear message, not a crash.
+    return NextResponse.json(
+      { error: `${product.name} is distributed via npm, not a download — see your account page.` },
+      { status: 400 }
+    );
+  }
 
   const url = await presignDownloadUrl(product.r2Prefix);
   return NextResponse.redirect(url);

@@ -15,7 +15,13 @@ export type DigitalProduct = {
   blurb: string;
   majorVersion: number;
   updatesWindowDays: number; // entitlement's updates_until = purchase + N days
-  r2Prefix: string; // e.g. "mh-godot-pipeline/1.0.0/mh-godot-pipeline-1.0.0.zip"
+  /** Exactly one of r2Prefix / npmPackage is set — they're two different
+   * fulfillment shapes, not two optional extras on the same one. r2Prefix:
+   * "download a file" (e.g. "mh-godot-pipeline/1.0.0/mh-godot-pipeline-1.0.0.zip").
+   * npmPackage: "install a CLI" (e.g. "xrsim") — /account and /api/download
+   * both branch on which one is present to show the right instructions. */
+  r2Prefix?: string;
+  npmPackage?: string;
 };
 
 export const DIGITAL_LIVE = process.env.NEXT_PUBLIC_DIGITAL_STORE_LIVE === "1";
@@ -43,6 +49,21 @@ export const digitalProducts: DigitalProduct[] = [
     majorVersion: 1,
     updatesWindowDays: 365,
     r2Prefix: "drainspotting/1.0.2/Drainspotting-1.0.2.dmg",
+  },
+  {
+    sku: "xrsim",
+    name: "xrsim",
+    tier: "indie",
+    kind: "CLI",
+    priceCents: 9900, // TODO(alex): set real launch price
+    blurb:
+      "Test VR apps without a headset — drive a live simulated cockpit or run a real standalone Android APK on a local GPU-accelerated emulator. Scriptable, agent-drivable, verified end-to-end. Free for active members.",
+    majorVersion: 1,
+    updatesWindowDays: 36_500, // ~100 years: a paid xrsim license is meant to never expire. xrsim's own CLI
+    // license check (github.com/ibrews/xrsim) doesn't actually look at updates_until for a "paid"-tier
+    // key at all (any validly-signed paid key = permanent access) — this field is set generously long
+    // mainly so it reads correctly here on /account ("updates until <date>") rather than gating anything.
+    npmPackage: "xrsim",
   },
   // UnRealityKit Bridge intentionally NOT listed here yet — per Alex
   // (2026-07-16) it isn't a product yet. lib/store.ts's "coming soon" /

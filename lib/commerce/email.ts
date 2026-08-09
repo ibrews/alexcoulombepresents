@@ -40,6 +40,7 @@ export async function sendFulfillmentEmail(input: {
   const product = findDigitalProduct(input.sku);
   const resend = new Resend(process.env.RESEND_API_KEY);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
+  const isNpm = !!product?.npmPackage;
 
   const __body = [
       `Thanks for buying ${product?.name ?? input.sku}!`,
@@ -47,17 +48,29 @@ export async function sendFulfillmentEmail(input: {
       `Your license key:`,
       input.licenseKey,
       "",
-      `Access your download and account here (link expires in 30 minutes):`,
-      input.magicLinkUrl,
-      "",
-      `If that link expires, request a new one any time at ${siteUrl}/account.`,
+      ...(isNpm
+        ? [
+            `Install it:`,
+            `  npm install -g ${product!.npmPackage}`,
+            `  ${product!.npmPackage} license activate ${input.licenseKey}`,
+            "",
+            `Your account (this key, in case you need it again) is at ${siteUrl}/account — request a sign-in link there any time.`,
+          ]
+        : [
+            `Access your download and account here (link expires in 30 minutes):`,
+            input.magicLinkUrl,
+            "",
+            `If that link expires, request a new one any time at ${siteUrl}/account.`,
+          ]),
       "",
       `Questions? Reply to this email or write info@alexcoulombepresents.com.`,
     ].join("\n");
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
-    subject: `Your ${product?.name ?? input.sku} license + download`,
+    subject: isNpm
+      ? `Your ${product?.name ?? input.sku} license key`
+      : `Your ${product?.name ?? input.sku} license + download`,
     text: __body,
     html: brandedHtml(__body),
   });

@@ -224,10 +224,10 @@ export default async function Store() {
 
       {/* Instant-download pipelines & apps — license key + R2 delivery on checkout */}
       <Reveal>
-        <h2 className="mt-16 text-2xl font-bold">Pipelines &amp; apps — instant delivery</h2>
+        <h2 className="mt-16 text-2xl font-bold">Pipelines, apps &amp; tools — instant delivery</h2>
         <p className="mt-2 max-w-2xl text-sm text-mist">
-          Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link
-          all work at checkout.
+          Buy, get a license key by email in seconds (plus a download link for anything not
+          installed via npm). Apple Pay, cards, and Link all work at checkout.
         </p>
       </Reveal>
       <div className="mt-6 grid gap-5 md:grid-cols-2">

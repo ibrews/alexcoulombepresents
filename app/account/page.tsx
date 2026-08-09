@@ -151,17 +151,26 @@ export default async function Account({
                   {e.status}
                 </span>
               </div>
-              {e.status === "active" && (
-                <a
-                  href={`/api/download?sku=${e.sku}`}
-                  className="mt-4 inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
-                >
-                  Download →
-                </a>
+              {e.status === "active" && product?.npmPackage ? (
+                <div className="mt-4">
+                  <p className="text-xs text-mist">Install:</p>
+                  <CopyableCode value={`npm install -g ${product.npmPackage}`} />
+                </div>
+              ) : (
+                e.status === "active" && (
+                  <a
+                    href={`/api/download?sku=${e.sku}`}
+                    className="mt-4 inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+                  >
+                    Download →
+                  </a>
+                )
               )}
               {e.key_text && (
                 <div className="mt-4">
-                  <p className="text-xs text-mist">License key:</p>
+                  <p className="text-xs text-mist">
+                    License key{product?.npmPackage ? ` — activate with \`${product.npmPackage} license activate <key>\`` : ""}:
+                  </p>
                   <CopyableCode value={e.key_text} />
                 </div>
               )}
