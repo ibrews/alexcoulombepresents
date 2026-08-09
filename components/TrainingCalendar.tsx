@@ -67,7 +67,7 @@ export default function TrainingCalendar() {
           className="mt-3 flex max-w-3xl flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-grape/40 bg-grape/10 px-4 py-3 text-sm transition-colors hover:border-grape/70 hover:bg-grape/15"
         >
           <span className="rounded-full bg-grape px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
-            Best deal!
+            Cheapest way in!
           </span>
           <span className="font-bold text-snow">Become a member!</span>
           <span className="text-mist">

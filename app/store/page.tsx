@@ -257,7 +257,7 @@ export default async function Store() {
                 <p className="font-mono text-xs uppercase tracking-widest text-grape">Membership</p>
                 {MEMBERSHIP_LIVE && (
                   <span className="rounded-full bg-grape px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
-                    Best deal!
+                    Cheapest way in!
                   </span>
                 )}
               </div>

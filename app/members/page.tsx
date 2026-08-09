@@ -65,7 +65,7 @@ export default async function Members({
         {MEMBERSHIP_LIVE && (
           <p className="mt-4 inline-flex max-w-xl flex-wrap items-center gap-x-2.5 gap-y-1 rounded-xl border border-grape/40 bg-grape/10 px-4 py-3 text-sm">
             <span className="rounded-full bg-grape px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
-              Best deal!
+              Cheapest way in!
             </span>
             <span className="text-mist">
               Starter is <span className="font-bold text-snow">$99/mo for 3 classes</span> — that&apos;s
@@ -85,6 +85,27 @@ export default async function Members({
           </Reveal>
         ))}
       </div>
+
+      <Reveal>
+        <div className="glass mt-6 grid gap-4 rounded-2xl p-6 sm:grid-cols-2">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">Ask your employer</p>
+            <p className="mt-2 text-sm leading-relaxed text-mist">
+              Many companies cover professional development and continuing education — worth checking
+              your training budget before this comes out of your own pocket.
+            </p>
+          </div>
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">Possibly a write-off</p>
+            <p className="mt-2 text-sm leading-relaxed text-mist">
+              If you&apos;re self-employed or run a business, classes like these can often be deducted
+              as an ordinary business expense that maintains job-related skills. W-2 employees generally
+              can&apos;t deduct unreimbursed education costs on federal returns, though a few states
+              still allow it. Not tax advice — check with your accountant.
+            </p>
+          </div>
+        </div>
+      </Reveal>
 
       {member ? (
         <Reveal>
@@ -152,17 +173,22 @@ export default async function Members({
                   <div
                     key={tier.id}
                     className={`glass flex h-full flex-col rounded-2xl p-7 ${
-                      i === 1 ? "border-teal/50" : i === 0 ? "border-grape/50" : "border-line"
+                      i === 1 ? "border-teal/50" : i === 0 ? "border-grape/50" : "border-amber/50"
                     }`}
                   >
                     {i === 1 && (
                       <span className="self-start rounded-full bg-teal px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
-                        Most popular
+                        Best deal!
                       </span>
                     )}
                     {i === 0 && (
                       <span className="self-start rounded-full bg-grape px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
-                        Best deal!
+                        Most popular!
+                      </span>
+                    )}
+                    {i === 2 && (
+                      <span className="self-start rounded-full bg-amber px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+                        Premier access!
                       </span>
                     )}
                     <h3 className="mt-3 font-bold">{tier.name}</h3>

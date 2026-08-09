@@ -614,7 +614,7 @@ export default function Training() {
               Membership · shipping today
             </p>
             <span className="rounded-full bg-grape px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
-              Best deal!
+              Cheapest way in!
             </span>
           </div>
           <h2 className="mt-3 text-2xl font-bold tracking-tight md:text-3xl">
