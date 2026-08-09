@@ -17,6 +17,7 @@ export const LISTS = {
   "team-training": "Team / studio training",
   "receipt-reconciler": "Receipt Reconciler",
   "legacy-interest": "Old training interest form (imported)",
+  "aug5-free-class": "Aug 5 free class registrants (imported from Zoom)",
 } as const;
 
 // Human-readable "why you're receiving this" line per list, used as the
@@ -39,6 +40,7 @@ export const LIST_REASON: Record<ListSlug, string> = {
   "team-training": "you inquired about team or studio training",
   "receipt-reconciler": "you asked to be notified when Receipt Reconciler goes on sale",
   "legacy-interest": "you filled out an earlier interest form about learning Unreal Engine",
+  "aug5-free-class": "you registered for the free Aug 5 Unreal Engine class",
 };
 
 export type ListSlug = keyof typeof LISTS;
