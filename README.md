@@ -242,3 +242,7 @@ ghost (about/links), ember (training/videos), nebula (repos/lab).
 ---
 
 Built by [Alex Coulombe](https://github.com/ibrews) — with an AI co-pilot, naturally.
+
+## Support
+
+If you like seeing this kind of thing get built and shared, [donations are always welcome](https://www.alexcoulombepresents.com/support) — they buy hardware, render time, and the freedom to keep giving most of this away.
