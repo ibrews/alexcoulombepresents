@@ -133,7 +133,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <Reveal>
         <div id="waitlist" className="glass mt-8 scroll-mt-24 rounded-3xl p-8 text-center md:p-10">
-          {product.internal ? (
+          {product.internal && product.links.length === 0 ? (
             <>
               <h2 className="text-xl font-bold">This one&apos;s internal.</h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-mist">
@@ -152,6 +152,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   get in touch
                 </Link>{" "}
                 about custom work.
+              </p>
+            </>
+          ) : product.internal ? (
+            // internal, but with a real link — e.g. a CLI published to npm whose source repo
+            // isn't public yet. "No public release planned" would be actively false here (the
+            // link below IS the public release); "in active development, join the waitlist"
+            // (the branch below) doesn't fit either, since there's nothing to wait for.
+            <>
+              <h2 className="text-xl font-bold">Try it now.</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+                {product.name} is available today — see the link below. The source repository
+                itself isn&apos;t public yet.
               </p>
             </>
           ) : (

@@ -17,11 +17,11 @@ export const labTools: LabTool[] = [
   {
     slug: "xrsim",
     name: "xrsim",
-    tagline: "Test any OpenXR Android APK locally — no headset required.",
+    tagline: "Test VR apps without a headset — streamed PC-VR or standalone Android APK, both locally.",
     description:
-      "xrsim is a local, GPU-accelerated PICO Emulator harness for running OpenXR Android APKs on a Mac without a headset. It has been verified end-to-end against a real shipped Godot VR game. This is working internal tooling today, not a concept or a preview.",
+      "xrsim is an agent- and human-drivable CLI harness for headless VR testing: drive a live simulated headset from the terminal or a browser cockpit (WASD + mouse-look, no headset attached), or run a real standalone OpenXR Android APK on a local GPU-accelerated emulator. Verified end-to-end against a real shipped Godot VR game. Working tooling today, not a concept or a preview.",
     accessNote:
-      "Private repo — email info@alexcoulombepresents.com with your GitHub username after joining and you'll be added as a collaborator within a day.",
+      "Public — install directly with `npm install -g xrsim`, no request needed. The source repo itself is still private; email info@alexcoulombepresents.com with your GitHub username if you'd like to browse the code.",
     status: "shipping",
   },
   {

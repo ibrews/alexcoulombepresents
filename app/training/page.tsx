@@ -624,7 +624,7 @@ export default function Training() {
             Starter is $99/mo for 3 live-class credits — cheaper than buying a single class à la
             carte — plus every class recording, member pricing sitewide, and a vote that counts for
             more. On top of that: hands-on access to real internal tools Alex builds for production
-            work — xrsim (test any OpenXR Android app on a Mac, no headset), Forage (an AI-first
+            work — xrsim (test VR apps without a headset), Forage (an AI-first
             scout for the Unreal asset packs you already own), and Constellation (your own notes as
             a walk-in 3D star map on Vision Pro) are shipping today, with more landing as
             they&apos;re ready.

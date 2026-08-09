@@ -1055,7 +1055,7 @@ export const products: Product[] = [
     slug: "xrsim",
     name: "xrsim",
     internal: true,
-    status: "Private — the headset-free test harness behind Agile Lens' VR work",
+    status: "Public CLI, private source — install with npm, the repo itself isn't open yet",
     tagline: "A simulator for VR apps: boot the build, script the headset, assert on what the app actually believes — no headset, no human in the room.",
     pitch:
       "iPhone developers have had the Simulator for fifteen years — boot the app on your Mac, script it, test it in CI, never pick up a phone. VR never got that. Every change means packaging, side-loading, strapping on a headset, and walking around a room to see if it worked. xrsim is the missing piece: it stands up a scripted virtual headset and hand controllers, walks them through a build on a real path, and reads back what the app is actually thinking — all headless, repeatable, and drivable by an AI agent.",
@@ -1078,7 +1078,7 @@ export const products: Product[] = [
       },
       {
         heading: "The frontier",
-        body: "Streamed PC-VR testing is a daily driver now. Next is simulating true standalone on-device builds — the app running as it would on the headset's own chip — and modeling each device's real performance envelope, so a test can fail not just on 'wrong answer' but on 'too slow for a Quest.' That's the part nobody has cracked yet.",
+        body: "Streamed PC-VR testing is a daily driver now, and standalone on-device simulation shipped too — a real GPU-accelerated Android emulator runs an actual standalone OpenXR APK locally, no streaming pipeline at all, verified end-to-end against a shipped Godot VR game. Current frontier: modeling each device's real performance envelope, so a demo throttled to a Quest 1's frame budget visibly runs choppier than one throttled to a Quest 3 — a test can fail not just on 'wrong answer' but on 'too slow for this headset.'",
       },
     ],
     bullets: [
@@ -1087,9 +1087,10 @@ export const products: Product[] = [
       "One-command, pass/fail runs an AI agent can drive in its own edit-test loop",
       "Runs fully headless on a plain workstation — no headset, background, overnight, at scale",
       "First proof: headless co-location verified to 0.4 cm accuracy, start to finish",
-      "Frontier: standalone on-device simulation + per-device performance-envelope modeling",
+      "Standalone on-device: a real GPU-accelerated Android emulator runs actual OpenXR APKs, no streaming pipeline",
+      "Per-device performance envelope: throttle a demo to a chosen headset's real frame budget",
     ],
-    links: [],
+    links: [{ label: "npm install -g xrsim", url: "https://www.npmjs.com/package/xrsim" }],
     accent: "teal",
   },
   {
