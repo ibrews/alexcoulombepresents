@@ -176,7 +176,11 @@ export default async function Account({
               )}
               <p className="mt-3 text-xs text-mist">
                 v{e.major_version}
-                {e.updates_until ? ` · updates until ${new Date(e.updates_until).toLocaleDateString()}` : ""}
+                {e.tier === "member"
+                  ? " · membership perk — refreshes automatically while you're an active member"
+                  : e.updates_until
+                    ? ` · updates until ${new Date(e.updates_until).toLocaleDateString()}`
+                    : ""}
               </p>
             </div>
           );

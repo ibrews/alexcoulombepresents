@@ -3,6 +3,8 @@
 import { sql, ensureCommerceSchema } from "./schema";
 import { issueLicenseKey } from "./license";
 import { findDigitalProduct } from "./products";
+import { MEMBERSHIP_SKU } from "./membership";
+import type { MemberLicenseTarget } from "./memberLicensing";
 
 export async function findOrCreateCustomer(email: string, name?: string | null): Promise<number> {
   await ensureCommerceSchema();
@@ -201,4 +203,67 @@ export async function entitlementsForCustomer(customerId: number): Promise<Entit
     ORDER BY e.created_at DESC
   `) as EntitlementRow[];
   return rows;
+}
+
+// ── Member-perk product licensing (real DB side of lib/commerce/memberLicensing.ts) ─
+
+// Every customer with a currently-active membership entitlement — the
+// candidate list for a member-perk product license refresh (e.g. xrsim).
+export async function activeMembersForLicensing(): Promise<MemberLicenseTarget[]> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT c.id AS customer_id, c.email
+    FROM entitlements e
+    JOIN customers c ON c.id = e.customer_id
+    WHERE e.sku = ${MEMBERSHIP_SKU}
+      AND e.status = 'active'
+      AND (e.updates_until IS NULL OR e.updates_until > now())
+  `) as { customer_id: number; email: string }[];
+  return rows.map((r) => ({ customerId: r.customer_id, email: r.email }));
+}
+
+// Upserts the (customer, sku) member-tier entitlement to `updatesUntil` and
+// stores a freshly-signed key as this customer's current one — any prior
+// member-tier key for this entitlement is revoked first, so /account's
+// key_text join (entitlementsForCustomer above) never returns more than one
+// live key per entitlement. Relies on
+// entitlements_one_member_license_per_customer_sku (schema.ts) — at most one
+// tier='member' row per (customer_id, sku) — so this is a real upsert, not a
+// check-then-insert (safe against a cron retry or a second concurrent run
+// landing on the same customer).
+export async function grantOrRefreshMemberLicense(
+  customerId: number,
+  email: string,
+  sku: string,
+  majorVersion: number,
+  updatesUntil: Date
+): Promise<void> {
+  await ensureCommerceSchema();
+  const db = sql();
+
+  const entRows = (await db`
+    INSERT INTO entitlements (customer_id, sku, tier, status, major_version, updates_until)
+    VALUES (${customerId}, ${sku}, 'member', 'active', ${majorVersion}, ${updatesUntil.toISOString()})
+    ON CONFLICT (customer_id, sku) WHERE tier = 'member'
+    DO UPDATE SET
+      status = 'active',
+      revoked_at = NULL,
+      major_version = EXCLUDED.major_version,
+      updates_until = EXCLUDED.updates_until
+    RETURNING id
+  `) as { id: number }[];
+  const entitlementId = entRows[0].id;
+
+  const licenseKey = issueLicenseKey({
+    sku,
+    tier: "member",
+    seats: 1,
+    licensee_email: email,
+    major_version: majorVersion,
+    updates_until: updatesUntil.toISOString(),
+    issued_at: new Date().toISOString(),
+  });
+
+  await db`UPDATE license_keys SET revoked = true WHERE entitlement_id = ${entitlementId} AND revoked = false`;
+  await db`INSERT INTO license_keys (entitlement_id, key_text) VALUES (${entitlementId}, ${licenseKey})`;
 }

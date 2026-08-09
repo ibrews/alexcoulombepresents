@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/class-checkin",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/xrsim-member-licenses",
+      "schedule": "0 14 * * *"
     }
   ]
 }

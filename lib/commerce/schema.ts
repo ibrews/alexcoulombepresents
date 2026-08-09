@@ -76,6 +76,20 @@ export async function ensureCommerceSchema() {
       WHERE sku = 'membership'
   `;
 
+  // Partial unique index: at most one tier='member' row per (customer_id,
+  // sku) — mirrors entitlements_one_membership_per_customer above, but
+  // scoped to member-perk product licenses (e.g. xrsim, see
+  // lib/commerce/memberLicensing.ts) instead of the membership sku itself. A
+  // customer can still separately hold a purchased (tier != 'member') row
+  // for the same sku — this only constrains the auto-issued member-perk row,
+  // so the daily refresh cron's ON CONFLICT target is a real upsert instead
+  // of a check-then-insert race.
+  await db`
+    CREATE UNIQUE INDEX IF NOT EXISTS entitlements_one_member_license_per_customer_sku
+      ON entitlements (customer_id, sku)
+      WHERE tier = 'member'
+  `;
+
   await db`
     CREATE TABLE IF NOT EXISTS license_keys (
       id             BIGSERIAL PRIMARY KEY,
