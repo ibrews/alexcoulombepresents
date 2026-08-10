@@ -85,7 +85,15 @@ async function main() {
   }
 
   const campaign = arg("campaign") ?? path.basename(bodyPath).replace(/\.[a-z]+$/i, "");
-  const bodyMarkdown = readFileSync(bodyPath, "utf8");
+  // A content/newsletters/*.md file (the natural, obvious --body to point at
+  // for a real send) opens with a `key: value` frontmatter block terminated
+  // by a `---` line — see lib/newsletters.ts. Without stripping it, that
+  // header goes out as literal visible text at the top of the email. Strip
+  // it the same way the archive-page reader does; a body with no frontmatter
+  // (no leading `---`-terminated block) passes through unchanged.
+  const rawBody = readFileSync(bodyPath, "utf8");
+  const frontmatterMatch = rawBody.match(/^[a-zA-Z][\w-]*:.*\n(?:[a-zA-Z][\w-]*:.*\n)*---\n/);
+  const bodyMarkdown = frontmatterMatch ? rawBody.slice(frontmatterMatch[0].length) : rawBody;
 
   if (testTo) {
     console.log(`Test send → ${testTo} (subject gets a [TEST] prefix; real list not touched)`);
