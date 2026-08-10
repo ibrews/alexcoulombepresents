@@ -105,6 +105,8 @@ export type MembershipEventResult =
       newMember?: boolean;
       email?: string;
       name?: string | null;
+      tier?: MembershipTierId;
+      amountCents?: number;
     };
 
 // Finds which configured tier (if any) an invoice's membership line or a
@@ -233,6 +235,8 @@ export async function handleMembershipEvent(
       newMember: isNew,
       email,
       name,
+      tier,
+      amountCents: invoice.amount_paid ?? 0,
     };
   }
 

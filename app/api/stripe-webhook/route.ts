@@ -14,6 +14,7 @@ import {
   sendFulfillmentEmail,
   sendOrderEmails,
   sendMembershipWelcomeEmail,
+  sendMembershipOwnerNotification,
 } from "@/lib/commerce/email";
 import { storeItems, wednesdayCalendar } from "@/lib/store";
 import { createVoucherCode } from "@/lib/commerce/vouchers";
@@ -289,7 +290,22 @@ export async function POST(req: NextRequest) {
             const magicToken = await issueMagicLink(customerId);
             const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
             const magicLinkUrl = `${site}/api/account/verify?token=${magicToken}`;
-            await sendMembershipWelcomeEmail({ email: result.email, name: result.name, magicLinkUrl });
+            if (result.tier) {
+              await sendMembershipWelcomeEmail({
+                email: result.email,
+                name: result.name,
+                magicLinkUrl,
+                tier: result.tier,
+              });
+              await sendMembershipOwnerNotification({
+                email: result.email,
+                name: result.name,
+                tier: result.tier,
+                amountCents: result.amountCents ?? 0,
+              });
+            } else {
+              console.error("[membership] welcome email skipped — no tier on result");
+            }
           } catch (err) {
             console.error("[membership] welcome email failed", err);
           }

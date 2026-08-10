@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { findDigitalProduct } from "./products";
+import { MEMBERSHIP_TIERS, membershipTier, type MembershipTierId } from "./membership";
 
 // Renders our plain-text email bodies as simple branded HTML: white card,
 // auto-linked URLs, and the ACP logo in the footer. Every sender passes the
@@ -234,20 +235,25 @@ export async function sendOrderEmails(input: {
 
 // Fires once per member — the first invoice.paid for a brand-new membership
 // signup, never on renewal invoices (see app/api/stripe-webhook/route.ts).
+// Tier-specific: pulls the actual benefit list from MEMBERSHIP_TIERS rather
+// than a hardcoded description, so it can't drift out of sync with what
+// /members advertises for whichever tier the buyer actually paid for.
 export async function sendMembershipWelcomeEmail(input: {
   email: string;
   name?: string | null;
   magicLinkUrl: string;
+  tier: MembershipTierId;
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const first = input.name?.split(" ")[0];
+  const tier = membershipTier(input.tier);
+  const benefits = tier?.benefits ?? MEMBERSHIP_TIERS[0].benefits;
+  const tierName = tier?.name ?? input.tier;
   const __body = [
       `${first ? `Hey ${first}` : "Hey"} — you're a member! Welcome in.`,
       "",
-      "Here's what's live for you right now:",
-      "  • 2 live-class credits every billing cycle — book any open class and the credit is honored, no code needed",
-      "  • The full class-recording library, including sessions you didn't attend",
-      "  • Member pricing on everything in the store",
+      `Your tier: ${tierName}. Here's what's live for you right now:`,
+      ...benefits.map((b) => `  • ${b}`),
       "",
       "Sign in here to see your account (link expires in 30 minutes):",
       input.magicLinkUrl,
@@ -263,7 +269,7 @@ export async function sendMembershipWelcomeEmail(input: {
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
     replyTo: "info@alexcoulombepresents.com",
-    subject: "You're a member — welcome in",
+    subject: `You're a member — welcome in (${tierName})`,
     text: __body,
     html: brandedHtml(__body),
   });
@@ -271,6 +277,34 @@ export async function sendMembershipWelcomeEmail(input: {
     console.error("Resend membership welcome email error:", error);
     throw new Error("Failed to send membership welcome email");
   }
+}
+
+// Owner alert for a new membership signup — mirrors the "FULFILL:" owner
+// alert one-time purchases already get via sendOrderEmails (see checkout.
+// session.completed handling in app/api/stripe-webhook/route.ts). Membership
+// needs no manual fulfillment step, so this is informational only: it's the
+// only way Alex finds out someone subscribed short of checking Stripe.
+export async function sendMembershipOwnerNotification(input: {
+  email: string;
+  name?: string | null;
+  tier: MembershipTierId;
+  amountCents: number;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const tier = membershipTier(input.tier);
+  const dollars = (input.amountCents / 100).toFixed(2);
+  const __body = [
+      `New member: ${input.name ?? "—"} <${input.email}>`,
+      `Tier: ${tier?.name ?? input.tier} — $${dollars}/mo`,
+    ].join("\n");
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    to: "info@alexcoulombepresents.com",
+    subject: `New member: ${tier?.name ?? input.tier} — ${input.name ?? input.email}`,
+    text: __body,
+    html: brandedHtml(__body),
+  });
+  if (error) console.error("membership owner notification failed:", error);
 }
 
 export async function sendVoucherEmail(input: {
