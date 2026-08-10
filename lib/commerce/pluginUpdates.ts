@@ -43,8 +43,8 @@ export const PLUGIN_UPDATES: Record<PluginProduct, PluginUpdateInfo> = {
     min_ue: "4.27",
   },
   URKPreviewer: {
-    latest: "1.0.0",
-    released: "2026-08-06",
+    latest: "0.1.0",
+    released: "2026-08-09",
     notes_url: "https://www.alexcoulombepresents.com/plugins/urkpreviewer/releases",
     min_ue: "5.7",
   },
