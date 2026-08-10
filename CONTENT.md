@@ -98,75 +98,78 @@
 **On the page**
 
 - `[training.1]` ▸ Learn Unreal from someone who ships with it every day.
-- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens . He has developed or co-developed 50+ courses and taught 300+ courses on behalf of Epic Games to their key partners. Our curriculums come from those lessons merged with nearly a decade of real client work from Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else.
+- `[training.2]` ▸ Alex is a top-rated Epic Games Authorized Instructor running Manhattan's first Unreal Authorized Training Center, in association with Agile Lens . He has developed or co-developed 50+ courses and taught 300+ courses on behalf of Epic Games to their key partners. Our curriculums come from those lessons merged with nearly a decade of real client work from Agile Lens in Unreal: photoreal archviz, live stage shows, multiplayer VR, and now AI-driven workflows. You'll learn methodologies you won't find anywhere else. Expect special guest instructors too — specialists from Agile Lens and beyond, brought in whenever a topic calls for someone who lives it every day.
 - `[training.3]` ▸ FREE CLASS · WEDNESDAY, AUGUST 5 · 11A ET
 - `[training.4]` ▸ LIVE CLASSES · WEDNESDAYS 11A ET · OFFICE HOURS FRIDAYS 1P ET
 - `[training.5]` ▸ Live Unreal class — free, and we're deciding what comes next together
 - `[training.6]` ▸ Live Unreal classes — and you decide what they cover
 - `[training.7]` ▸ One live session, no cost, no catch: a tour of what Alex knows in Unreal, a look at what's new in 5.8, and an open Q&A. From here on it's a standing weekly rhythm — a live class every Wednesday at 11a ET, plus office hours every Friday at 1p ET. What the paid weeks actually cover is exactly what the poll below decides.
-- `[training.8]` ▸ The free kickoff session has happened, and the rhythm it started continues: a live class every Wednesday at 11a ET, plus office hours every Friday at 1p ET. What those weeks actually cover is exactly what the poll below decides — answer it and you'll hear the moment the next dates and pricing are set.
+- `[training.8]` ▸ The free kickoff session has happened, and the rhythm it started continues: a live class every Wednesday at 11a ET, plus office hours every Friday at 1p ET. The next eight Wednesdays are on the calendar below at introductory pricing — book any of them right now. After that run, what gets taught is exactly what the poll decides.
 - `[training.9]` ▸ Reserve a free seat →
 - `[training.10]` ▸ Help decide what's next →
-- `[training.11]` ▸ 4 quick questions
-- `[training.12]` ▸ What do you want to learn?
-- `[training.13]` ▸ Answer honestly — this data will be used to set the curriculum for everything in the coming weeks.
-- `[training.14]` ▸ Company & studio training · bundled curricula
-- `[training.15]` ▸ Represent a team? This is the fast lane.
-- `[training.16]` ▸ Custom multi-week curricula assembled from the 50+ ready-to-teach classes below — the same live, hands-on training delivered on behalf of Epic Games to their key partner studios, broadcast graphics teams, and enterprises. Live over Zoom or on-site, cloud workstations available for every learner, Q&A sessions woven between modules. Pricing varies with team size, class count, and scheduling — tell us what your team needs and you'll have a scoped quote fast.
-- `[training.17]` ▸ or email info@alexcoulombepresents.com
-- `[training.18]` ▸ FORMAT
-- `[training.19]` ▸ Live, two-hour classes — à la carte or as curriculum bundles. Solo VIP deep-dives or team training for entire studios.
-- `[training.20]` ▸ SCHEDULE
-- `[training.21]` ▸ Intro classes typically start on the first Monday of the month at 1pm ET, with additional sessions throughout the week.
-- `[training.22]` ▸ CREDENTIALS
-- `[training.23]` ▸ Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
-- `[training.24]` ▸ Certified by Epic Games
-- `[training.25]` ▸ Authorized, and re-authorized every year.
-- `[training.26]` ▸ The curriculum
-- `[training.27]` ▸ Twelve tracks. Every one books as a live two-hour session — intro tracks and specialized deep-dives, priced separately. Take one, take them all, or bundle them for your team above. Pricing shows at checkout in the store . Not sure what's next? Vote on the September cohort →
-- `[training.28]` ▸ New
-- `[training.29]` ▸ The full teaching catalog
-- `[training.30]` ▸ 50+ classes, ready to run.
-- `[training.31]` ▸ Every class below has been taught live — most many times over — as two-hour, instructor-led sessions on behalf of Epic Games to their key partner studios, broadcast teams, and enterprises. Book any of them as an open-enrollment session, or point at a column and say "that one, for my whole team."
-- `[training.32]` ▸ Book a session in the store →
-- `[training.33]` ▸ Bundle these for your team →
-- `[training.34]` ▸ Try the teaching first
-- `[training.35]` ▸ All
-- `[training.36]` ▸ talks on YouTube →
-- `[training.37]` ▸ From the Epic Games archives
-- `[training.38]` ▸ Courses built for Epic Games.
-- `[training.39]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
-- `[training.40]` ▸ AI training · its own track
-- `[training.41]` ▸ Learn AI workflows, Unreal optional.
-- `[training.42]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
-- `[training.43]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
-- `[training.44]` ▸ AI classes are coming
-- `[training.45]` ▸ Watch the full talk →
-- `[training.46]` ▸ Learn AI
-- `[training.47]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
-- `[training.48]` ▸ Learn Unreal
-- `[training.49]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
-- `[training.50]` ▸ Why learn here and not from an on-demand video course?
-- `[training.51]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
-- `[training.52]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
-- `[training.53]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
-- `[training.54]` ▸ Book a class — instant checkout →
-- `[training.55]` ▸ Team / studio training
-- `[training.56]` ▸ Members only · shipping today
-- `[training.57]` ▸ Exclusive tools, only for members.
-- `[training.58]` ▸ Membership includes hands-on access to real internal tools Alex builds for production work — xrsim (test any OpenXR Android app on a Mac, no headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
-- `[training.59]` ▸ See what's included →
-- `[training.60]` ▸ Unreal NYC
-- `[training.61]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
-- `[training.62]` ▸ agilelens.com/unrealnyc ↗
-- `[training.63]` ▸ Epic community page ↗
-- `[training.64]` ▸ Free stuff first
-- `[training.65]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
-- `[training.66]` ▸ Podcast on all platforms ↗
-- `[training.67]` ▸ Request a team quote →
-- `[training.68]` ▸ Alex will follow up with a scoped quote — usually within a day.
-- `[training.69]` ▸ Tell me when this runs →
-- `[training.70]` ▸ You'll hear when this class is scheduled.
+- `[training.11]` ▸ See the calendar →
+- `[training.12]` ▸ Certified by Epic Games
+- `[training.13]` ▸ Authorized, and re-authorized every year.
+- `[training.14]` ▸ 3 quick questions
+- `[training.15]` ▸ Help shape the program.
+- `[training.16]` ▸ This is about the program, not the syllabus: how you'd rather pay for classes, how much AI you want woven in, and your skill level — it shapes pricing, format, and the AI-vs-Unreal balance. Looking to vote on a specific topic instead? That's what /vote is for →
+- `[training.17]` ▸ Company & studio training · bundled curricula
+- `[training.18]` ▸ Represent a team? This is the fast lane.
+- `[training.19]` ▸ Custom multi-week curricula assembled from the 50+ ready-to-teach classes below — the same live, hands-on training delivered on behalf of Epic Games to their key partner studios, broadcast graphics teams, and enterprises. Live over Zoom or on-site, cloud workstations available for every learner, Q&A sessions woven between modules. Pricing varies with team size, class count, and scheduling — tell us what your team needs and you'll have a scoped quote fast.
+- `[training.20]` ▸ or email info@alexcoulombepresents.com
+- `[training.21]` ▸ FORMAT
+- `[training.22]` ▸ Live and interactive over Zoom, two hours — follow along, not a watch-along webinar. Reference files go out before class when a session needs them, and every session is recorded for you. À la carte or as curriculum bundles; solo deep-dives or team training for entire studios.
+- `[training.23]` ▸ SCHEDULE
+- `[training.24]` ▸ Live classes run every Wednesday at 11a ET, plus office hours every Friday at 1p ET — see the full calendar above.
+- `[training.25]` ▸ CREDENTIALS
+- `[training.26]` ▸ Unreal Authorized Instructor + Authorized Training Center — certified by Epic Games.
+- `[training.27]` ▸ Not the Wednesday calendar — book individually, on your schedule
+- `[training.28]` ▸ The curriculum
+- `[training.29]` ▸ Twelve tracks, separate from the public Wednesday cohort above. Every one books as its own live two-hour session — intro tracks and specialized deep-dives, priced separately — scheduled around you instead of on a fixed public date. Inquire below, or bundle them for your team above. Pricing shows at checkout in the store . Want a topic added to the public Wednesday run instead? Vote on what's next →
+- `[training.30]` ▸ New
+- `[training.31]` ▸ The full teaching catalog · book individually, on your schedule
+- `[training.32]` ▸ 50+ classes, ready to run.
+- `[training.33]` ▸ Every class below has been taught live — most many times over — as two-hour, instructor-led sessions on behalf of Epic Games to their key partner studios, broadcast teams, and enterprises. These aren't on the public Wednesday calendar above — inquire about any of them as a one-off open-enrollment session scheduled around you, or point at a column and say "that one, for my whole team."
+- `[training.34]` ▸ Inquire about booking a class →
+- `[training.35]` ▸ Bundle these for your team →
+- `[training.36]` ▸ Try the teaching first
+- `[training.37]` ▸ All
+- `[training.38]` ▸ talks on YouTube →
+- `[training.39]` ▸ From the Epic Games archives
+- `[training.40]` ▸ Courses built for Epic Games.
+- `[training.41]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
+- `[training.42]` ▸ AI training · its own track
+- `[training.43]` ▸ Learn AI workflows, Unreal optional.
+- `[training.44]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
+- `[training.45]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
+- `[training.46]` ▸ AI classes are coming
+- `[training.47]` ▸ Watch the full talk →
+- `[training.48]` ▸ Learn AI
+- `[training.49]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
+- `[training.50]` ▸ Learn Unreal
+- `[training.51]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
+- `[training.52]` ▸ Why learn here and not from an on-demand video course?
+- `[training.53]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
+- `[training.54]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
+- `[training.55]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
+- `[training.56]` ▸ Book a class — instant checkout →
+- `[training.57]` ▸ Team / studio training
+- `[training.58]` ▸ Membership · shipping today
+- `[training.59]` ▸ Cheapest way in!
+- `[training.60]` ▸ Members save — and get more.
+- `[training.61]` ▸ Starter is $99/mo for 3 live-class credits — cheaper than buying a single class à la carte — plus every class recording, member pricing sitewide, and a vote that counts for more. On top of that: hands-on access to real internal tools Alex builds for production work — xrsim (test VR apps without a headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
+- `[training.62]` ▸ See tiers & join →
+- `[training.63]` ▸ Unreal NYC
+- `[training.64]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
+- `[training.65]` ▸ agilelens.com/unrealnyc ↗
+- `[training.66]` ▸ Epic community page ↗
+- `[training.67]` ▸ Free stuff first
+- `[training.68]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
+- `[training.69]` ▸ Podcast on all platforms ↗
+- `[training.70]` ▸ Request a team quote →
+- `[training.71]` ▸ Alex will follow up with a scoped quote — usually within a day.
+- `[training.72]` ▸ Tell me when this runs →
+- `[training.73]` ▸ You'll hear when this class is scheduled.
 
 ---
 
@@ -273,10 +276,12 @@
 - `[lab-slug.3]` ▸ See it in use
 - `[lab-slug.4]` ▸ This one's internal.
 - `[lab-slug.5]` ▸ is Agile Lens tooling with no public release planned — it's here because it powers the client work. Curious what it powers? Browse the Agile Lens portfolio or get in touch about custom work.
-- `[lab-slug.6]` ▸ Want in early?
-- `[lab-slug.7]` ▸ is in active development. Early-access spots, pilot projects, and collaborations are all on the table.
-- `[lab-slug.8]` ▸ Also in the lab
-- `[lab-slug.9]` ▸ Join the waitlist →
+- `[lab-slug.6]` ▸ Try it now.
+- `[lab-slug.7]` ▸ is available today — install it below, free to explore with a 14-day trial. Free for active members after that; everyone else buys a license once, no subscription. The source repository itself isn't public yet.
+- `[lab-slug.8]` ▸ Want in early?
+- `[lab-slug.9]` ▸ is in active development. Early-access spots, pilot projects, and collaborations are all on the table.
+- `[lab-slug.10]` ▸ Also in the lab
+- `[lab-slug.11]` ▸ Join the waitlist →
 
 ---
 
@@ -301,20 +306,18 @@
 - `[store.9]` ▸ Capafy →
 - `[store.10]` ▸ You get:
 - `[store.11]` ▸ Get it on Capafy →
-- `[store.12]` ▸ Pipelines & apps — instant delivery
-- `[store.13]` ▸ Buy, get a license key and download link by email in seconds. Apple Pay, cards, and Link all work at checkout.
-- `[store.14]` ▸ Coming soon
-- `[store.15]` ▸ The membership: every recording, member pricing, early access.
-- `[store.16]` ▸ One subscription for the whole class-recording library, standing discounts on everything here, first seats on Lab launches, and monthly office hours with Alex. Founding waitlist is open — members hear the price first and get the founding rate.
-- `[store.17]` ▸ Join the founding waitlist →
-- `[store.18]` ▸ Not sure where to start?
-- `[store.19]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
-- `[store.20]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
-- `[store.21]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — that's Agile Lens territory (browse the portfolio). Email info@alexcoulombepresents.com or use the contact form .
-- `[store.22]` ▸ Join the list for the next one →
-- `[store.23]` ▸ You'll hear the moment the next one's scheduled.
-- `[store.24]` ▸ Sold out — join the waitlist →
-- `[store.25]` ▸ Buy →
+- `[store.12]` ▸ Pipelines, apps & tools — instant delivery
+- `[store.13]` ▸ Buy, get a license key by email in seconds (plus a download link for anything not installed via npm). Apple Pay, cards, and Link all work at checkout.
+- `[store.14]` ▸ Membership
+- `[store.15]` ▸ Cheapest way in!
+- `[store.16]` ▸ Not sure where to start?
+- `[store.17]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
+- `[store.18]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
+- `[store.19]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — that's Agile Lens territory (browse the portfolio). Email info@alexcoulombepresents.com or use the contact form .
+- `[store.20]` ▸ Join the list for the next one →
+- `[store.21]` ▸ You'll hear the moment the next one's scheduled.
+- `[store.22]` ▸ Sold out — join the waitlist →
+- `[store.23]` ▸ Buy →
 
 ---
 
@@ -440,7 +443,7 @@
 - `[data.courses.11.blurb]` ▸ For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors.
 - `[data.courses.11.tier]` ▸ intro
 
-### repos  (27 entries — add or remove whole entries)
+### repos  (28 entries — add or remove whole entries)
 
 - `[data.repos.blueprint-auto-layout.name]` ▸ Blueprint Auto Layout
 - `[data.repos.blueprint-auto-layout.tagline]` ▸ Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.
@@ -573,6 +576,16 @@
   - Fixes UE 5.6.1 / 5.7 / 5.8 on macOS 26 without rebuilding the engine
   - 30-line dylib shim — auditable in one screenful
   - Saved countless Mac Unreal devs from a multi-hour source build
+- `[data.repos.unreal-custodian.name]` ▸ Unreal Custodian
+- `[data.repos.unreal-custodian.tagline]` ▸ Reclaim the build caches your Unreal projects quietly hoard — without touching anything you authored.
+- `[data.repos.unreal-custodian.story]` ▸ A few years of Unreal projects on one machine means tens or hundreds of gigabytes of pure rebuild artifacts — Intermediate, Binaries, DerivedDataCache, cooked content, staged builds. The Windows box this was tested against held 539 projects, 14 engines, and 2.0 TB of reclaimable cache with 17 GB of headroom left. Custodian finds all of it and tells you exactly what goes, what shrinks, and what it will not touch, before it touches anything. Content, Config, and the .uproject always survive.
+
+  **list: highlights** (5 items — add or remove lines freely)
+  - Standalone Mac and Windows app, or the same thing from the terminal — no Python required either way
+  - Disk pressure is the trigger, age is the ranking — no naive '14 days untouched, delete it' rule
+  - Freshness measured twice, because mtimes lie: filesystem times plus Unreal's rotated editor logs
+  - Trash and Recycle Bin by default; --permanent only when you're actually out of room
+  - clean is a dry run unless you pass --apply, and report has no destructive flag at all
 - `[data.repos.apple-platform-skills.name]` ▸ apple-platform-skills
 - `[data.repos.apple-platform-skills.tagline]` ▸ Claude Code skills for Apple platform development — visionOS SharePlay, SpriteKit, GameKit.
 - `[data.repos.apple-platform-skills.story]` ▸ Install once (`npx skills add ibrews/apple-platform-skills`) and your AI assistant knows the traps before it falls in them: the GroupSession `session.join()` trap, spatial Persona lifecycle, SpriteKit's physics bitmask UInt32 overflow, GameKit multiplayer handshakes. Written from real shipped-app scar tissue, not docs paraphrase.
@@ -722,7 +735,7 @@
   - Install via git clone into ~/.claude/skills/usage-audit, or copy SKILL.md directly
   - Scriptable to run monthly as a standing self-audit
 
-### products  (13 entries — add or remove whole entries)
+### products  (14 entries — add or remove whole entries)
 
 - `[data.products.video-qa-workbench.name]` ▸ Video QA Workbench
 - `[data.products.video-qa-workbench.tagline]` ▸ Stop scrubbing for proof. Review the whole render with evidence.
@@ -745,6 +758,7 @@
   - Team camera and pacing preferences never masquerade as objective defects
   - Local feedback/dispositions designed for controlled improvement, not private-media leakage
   - Design-partner pilot: 10–20 revisions, a technical reviewer, and an honest baseline
+- `[data.products.video-qa-workbench.guide.label]` ▸ Read the beta field guide
 - `[data.products.forage.name]` ▸ Forage
 - `[data.products.forage.tagline]` ▸ Fab's best friend. An AI-first scout and installer for the Unreal Engine packs you already own.
 - `[data.products.forage.pitch]` ▸ You've bought hundreds of asset packs over years of Fab and Marketplace sales — and you can't remember what's in any of them. Forage takes a creative intent like "amazing castle with horses running around the gates" and matches it against your owned library: the 2–3 best-fit packs, the hero assets inside them, and which project versions are dead weight you can prune. Then it installs them.
@@ -966,6 +980,36 @@
   - 3D mesh viewer for room scans streamed live from RoomScanPro
   - Projective-texture atlas sharpens over time — solves occlusion, not capped by mesh density
   - Supports every Agile Lens multiplayer app: LaserTag, WhoAmI, RoomScanPro, and a separate theatre-rehearsal tool
+- `[data.products.xrsim.name]` ▸ xrsim
+- `[data.products.xrsim.tagline]` ▸ A simulator for VR apps: boot the build, script the headset, assert on what the app actually believes — no headset, no human in the room.
+- `[data.products.xrsim.pitch]` ▸ iPhone developers have had the Simulator for fifteen years — boot the app on your Mac, script it, test it in CI, never pick up a phone. VR never got that. Every change means packaging, side-loading, strapping on a headset, and walking around a room to see if it worked. xrsim is the missing piece: it stands up a scripted virtual headset and hand controllers, walks them through a build on a real path, and reads back what the app is actually thinking — all headless, repeatable, and drivable by an AI agent.
+- `[data.products.xrsim.sections.0.heading]` ▸ A scripted headset, driven from a file
+- `[data.products.xrsim.sections.0.body]` ▸ A trajectory is just JSON: at t=0 the head is here, by t=4 it's drifted there, at t=8 the controller pinches. xrsim plays it back into a running VR build as if a person were wearing the headset — smooth interpolated motion, real controller input — so the same 'walk up to the thing and look at it' test runs identically every time instead of depending on how you happened to move that day.
+- `[data.products.xrsim.sections.1.heading]` ▸ Read the app's mind, not just its pixels
+- `[data.products.xrsim.sections.1.body]` ▸ The hard part of testing VR isn't sending input — it's knowing whether the app got it right. xrsim opens a live channel into the running build so a test can ask it questions: did you lock onto the marker? what world position do you think the headset is at? how confident are you? The app answers over the wire, and the test asserts on the answer. Pixels lie; internal state doesn't.
+- `[data.products.xrsim.sections.2.heading]` ▸ Proven on the hardest thing first
+- `[data.products.xrsim.sections.2.body]` ▸ The first real target was co-location — the problem of making a virtual world line up with the physical room to within a couple of centimeters, normally impossible to test without a headset and a tape measure. xrsim ran the whole loop headless: a simulated headset walked a path in front of the app's virtual markers, the app detected them, solved its position, and locked on — and the test asserted the answer was right to 0.4 cm. One command, exit code zero, nobody in the room.
+- `[data.products.xrsim.sections.3.heading]` ▸ Built for the agent era
+- `[data.products.xrsim.sections.3.body]` ▸ Every capability is one command with a clean pass/fail, so an AI build agent can close its own loop: change the code, run the trajectory, read the assert, fix what broke — the same edit-test-repeat cycle a web developer takes for granted, finally available for spatial apps. It runs on a plain workstation with no headset attached, which means it runs in the background, overnight, at whatever scale the work needs.
+- `[data.products.xrsim.sections.4.heading]` ▸ The frontier
+- `[data.products.xrsim.sections.4.body]` ▸ Streamed PC-VR testing is a daily driver now, and standalone on-device simulation shipped too — a real GPU-accelerated Android emulator runs an actual standalone OpenXR APK locally, no streaming pipeline at all, verified end-to-end against a shipped Godot VR game. Current frontier: modeling each device's real performance envelope, so a demo throttled to a Quest 1's frame budget visibly runs choppier than one throttled to a Quest 3 — a test can fail not just on 'wrong answer' but on 'too slow for this headset.'
+
+  **list: bullets** (8 items — add or remove lines freely)
+  - Scripted virtual headset + controllers played back from a JSON trajectory
+  - Live introspection channel — assert on the app's actual internal state, not screenshots
+  - One-command, pass/fail runs an AI agent can drive in its own edit-test loop
+  - Runs fully headless on a plain workstation — no headset, background, overnight, at scale
+  - First proof: headless co-location verified to 0.4 cm accuracy, start to finish
+  - Standalone on-device: a real GPU-accelerated Android emulator runs actual OpenXR APKs, no streaming pipeline
+  - Per-device performance envelope: throttle a demo to a chosen headset's real frame budget
+  - Free forever to explore (help + the built-in demo cockpit, no account needed); a 14-day trial covers pointing it at a real app, then it's free for active members or a one-time purchase — see the store link below
+- `[data.products.xrsim.heroImage.src]` ▸ /lab/xrsim/cockpit.png
+- `[data.products.xrsim.heroImage.alt]` ▸ xrsim's browser cockpit showing a live simulated headset — pose, controller state, session panel, and driving controls
+- `[data.products.xrsim.screenshots.0.src]` ▸ /lab/xrsim/fleet-dashboard.png
+- `[data.products.xrsim.screenshots.0.alt]` ▸ xrsim's fleet dashboard showing two simulated headsets running side by side
+- `[data.products.xrsim.screenshots.0.caption]` ▸ `xrsim fleet ui` — every simulated headset on the machine in one dashboard, for running (or teaching) more than one at a time.
+- `[data.products.xrsim.links.0.label]` ▸ npm install -g xrsim
+- `[data.products.xrsim.links.1.label]` ▸ Get a license →
 - `[data.products.roomscanpro.name]` ▸ RoomScanPro
 - `[data.products.roomscanpro.tagline]` ▸ Collaborative room scanning and real-world measurement for Apple Vision Pro and iPhone.
 - `[data.products.roomscanpro.pitch]` ▸ Before XR, Alex trained as an architect — and a tool that scans a real room, measures it precisely, and hands back an exportable 3D model is the most direct descendant of that on this whole site. Multiple people scan the same room together over SharePlay, mesh data streams live between every device, and the result is measurable and exportable, not just a pretty capture.
@@ -1193,21 +1237,92 @@
 ## Store catalog  ·  `lib/store.ts`
 <sub>Prices are placeholders until the store goes live; edit names, blurbs, and delivery text here.</sub>
 
-### storeItems  (12 entries — add or remove whole entries)
+### storeItems  (22 entries — add or remove whole entries)
 
+- `[store.storeItems.wed-2026-08-12-intro-vr.name]` ▸ Intro to VR in Unreal 5.8
+- `[store.storeItems.wed-2026-08-12-intro-vr.blurb]` ▸ Build your first VR experience! Headset optional (we've got a killer custom emulator!). OpenXR for the win. All the basics and your burning questions all answered.
+- `[store.storeItems.wed-2026-08-12-intro-vr.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-08-12-intro-vr.sessionDateISO]` ▸ 2026-08-12T15:00:00Z
+- `[store.storeItems.wed-2026-08-12-intro-vr.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/Nn4mW45KRKeDkokoTk4o0A
+- `[store.storeItems.wed-2026-08-12-intro-vr.saleWindow.closesAtISO]` ▸ 2026-08-12T15:00:00Z
+- `[store.storeItems.wed-2026-08-12-intro-vr.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-08-12-intro-vr.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.name]` ▸ Intermediate XR in Unreal 5.8
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.blurb]` ▸ Beyond the basics: hand tracking, comfort options, various locomotion, fidelity and performance budgets. A dash of mixed reality at the end.
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.sessionDateISO]` ▸ 2026-08-19T15:00:00Z
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/2rQ9e2yxSu68RM8Otdm-RA
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.saleWindow.closesAtISO]` ▸ 2026-08-19T15:00:00Z
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.name]` ▸ Intro to MetaHumans in Unreal 5.8
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.blurb]` ▸ Create MetaHumans the new way: from in editor, and even from external face and body meshes. Realistic and stylized. Let's make 'em move and try the new toon shading while we're at it.
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.sessionDateISO]` ▸ 2026-08-26T15:00:00Z
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/IzjAamgLQTibb6xeFARbBQ
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.saleWindow.closesAtISO]` ▸ 2026-08-26T15:00:00Z
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-09-02-mocap.name]` ▸ Mocap in Unreal 5.8
+- `[store.storeItems.wed-2026-09-02-mocap.blurb]` ▸ Various ways to capture face and body motion capture data onto a MetaHuman or custom rig. Clean it, reuse it, ship it.
+- `[store.storeItems.wed-2026-09-02-mocap.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-09-02-mocap.sessionDateISO]` ▸ 2026-09-02T15:00:00Z
+- `[store.storeItems.wed-2026-09-02-mocap.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/Peidz5xgTV6qQa2zT2kOxw
+- `[store.storeItems.wed-2026-09-02-mocap.saleWindow.closesAtISO]` ▸ 2026-09-02T15:00:00Z
+- `[store.storeItems.wed-2026-09-02-mocap.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-09-02-mocap.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-09-09-intro-pcg.name]` ▸ Intro to PCG (Procedural Content Generation) & AI
+- `[store.storeItems.wed-2026-09-09-intro-pcg.blurb]` ▸ Scatter a believable environment with the PCG framework instead of placing every mesh by hand. Even more powerful with MCP tools.
+- `[store.storeItems.wed-2026-09-09-intro-pcg.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-09-09-intro-pcg.sessionDateISO]` ▸ 2026-09-09T15:00:00Z
+- `[store.storeItems.wed-2026-09-09-intro-pcg.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/12r37RLTSZiBavbpsCDHFQ
+- `[store.storeItems.wed-2026-09-09-intro-pcg.saleWindow.closesAtISO]` ▸ 2026-09-09T15:00:00Z
+- `[store.storeItems.wed-2026-09-09-intro-pcg.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-09-09-intro-pcg.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.name]` ▸ Unity to Unreal
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.blurb]` ▸ Thinking of making the switch? The concepts that map over, the ones that don't, and why your Prefabs are now Blueprints. Led by Whitt Sellers.
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.sessionDateISO]` ▸ 2026-09-16T15:00:00Z
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/C2MxUYbAQyKMSY2HzsumCg
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.saleWindow.closesAtISO]` ▸ 2026-09-16T15:00:00Z
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.name]` ▸ Exporting UE5 to OpenUSD to GLB
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.blurb]` ▸ A real cross-platform export pipeline: Unreal scenes out through OpenUSD and GLB without losing what matters. Then we'll see what they look like in Godot and ThreeJS.
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.sessionDateISO]` ▸ 2026-09-23T15:00:00Z
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/ggxLvryiSFKKtA1Xp9enoQ
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closesAtISO]` ▸ 2026-09-23T15:00:00Z
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-09-30-intro-ar.name]` ▸ Intro to AR
+- `[store.storeItems.wed-2026-09-30-intro-ar.blurb]` ▸ Android and iOS, ARCore & ARKit, plane detection, light estimation, markers & more. Led by Yu-Jun Yeh.
+- `[store.storeItems.wed-2026-09-30-intro-ar.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-09-30-intro-ar.sessionDateISO]` ▸ 2026-09-30T15:00:00Z
+- `[store.storeItems.wed-2026-09-30-intro-ar.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/XnHIYeiPTxCvS15x4aLNWw
+- `[store.storeItems.wed-2026-09-30-intro-ar.saleWindow.closesAtISO]` ▸ 2026-09-30T15:00:00Z
+- `[store.storeItems.wed-2026-09-30-intro-ar.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-09-30-intro-ar.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.office-hours-dropin.name]` ▸ Live office hours — drop-in seat
+- `[store.storeItems.office-hours-dropin.blurb]` ▸ Two live hours with Alex — bring your broken Blueprint, your pipeline question, your career fork. Small group, open floor.
+- `[store.storeItems.office-hours-dropin.delivery]` ▸ Tell us which Friday at checkout; order confirmation lands right away and Alex sends the Zoom link for that date.
+- `[store.storeItems.consultation-1hr.name]` ▸ 1-hour consultation with Alex
+- `[store.storeItems.consultation-1hr.blurb]` ▸ One focused hour, one-on-one, on whatever you need — a project review, a stuck pipeline, career advice, scoping a build. Live over video with screen share.
+- `[store.storeItems.consultation-1hr.delivery]` ▸ Pick a real open slot yourself on Alex's Zoom Scheduler — order confirmation lands right away, and the Zoom link comes straight from your booking.
+- `[store.storeItems.consultation-1hr.schedulingUrl]` ▸ https://scheduler.zoom.us/alex-coulombe/1-hour-consultation
 - `[store.storeItems.class-voucher.name]` ▸ Any-class voucher — founding batch
 
   **list: compareAt** (2 items)
-  - Intro session $99
+  - Intro session $100
   - Advanced session $200
 - `[store.storeItems.class-voucher.blurb]` ▸ One voucher = one seat in any open-enrollment class, intro or advanced, whenever you're ready. Buy now, redeem for anything on the calendar — this month or next year. Never expires, and you can gift it.
 - `[store.storeItems.class-voucher.delivery]` ▸ A unique voucher code by email, instantly. Enter it at checkout for any open-enrollment class and it comes out to $0 — no expiration, transferable, zero back-and-forth.
-- `[store.storeItems.ue-class-single.name]` ▸ Unreal Engine class — intro session
-- `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session on a foundational Unreal track — the essentials, in a small open-enrollment group.
-- `[store.storeItems.ue-class-single.delivery]` ▸ An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.
-- `[store.storeItems.ue-class-advanced.name]` ▸ Unreal Engine class — advanced session
-- `[store.storeItems.ue-class-advanced.blurb]` ▸ One live two-hour session on an advanced or specialized track — Lumen/Nanite deep dives, virtual production, AI for Unreal, Vision Pro, or MetaHumans. Open enrollment, small group.
-- `[store.storeItems.ue-class-advanced.delivery]` ▸ An order confirmation lands in your inbox right away; reply with your availability and Alex schedules your session (usually same day). Sessions run live over video with screen share.
+- `[store.storeItems.ue-class-single.name]` ▸ Any intro-tier class — pick your own time
+- `[store.storeItems.ue-class-single.blurb]` ▸ One live two-hour session on any foundational track from the full teaching catalog — the essentials, scheduled on your calendar, not a fixed public date.
+- `[store.storeItems.ue-class-single.delivery]` ▸ An order confirmation lands in your inbox right away; reply with which topic (from the catalog) and your availability, and Alex schedules your session (usually same day). Sessions run live over video with screen share.
+- `[store.storeItems.ue-class-advanced.name]` ▸ Any advanced-tier class — pick your own time
+- `[store.storeItems.ue-class-advanced.blurb]` ▸ One live two-hour session on any advanced or specialized track from the full teaching catalog — Lumen/Nanite deep dives, virtual production, AI for Unreal, Vision Pro, or MetaHumans — scheduled on your calendar, not a fixed public date.
+- `[store.storeItems.ue-class-advanced.delivery]` ▸ An order confirmation lands in your inbox right away; reply with which topic (from the catalog) and your availability, and Alex schedules your session (usually same day). Sessions run live over video with screen share.
 - `[store.storeItems.private-1on1.name]` ▸ Private 1:1 session
 - `[store.storeItems.private-1on1.blurb]` ▸ Two focused hours one-on-one, entirely on your agenda: your project, your pipeline, the exact thing you're stuck on. Live over video with screen share.
 - `[store.storeItems.private-1on1.delivery]` ▸ An order confirmation lands right away; reply with your availability and Alex books your session, usually same day.

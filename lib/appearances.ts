@@ -1001,7 +1001,7 @@ export const appearances: Appearance[] = [
   {
     slug: "pmre-2026-keynote",
     role: "Keynote Speaker",
-    title: "Keynote", // TODO(alex): swap in your actual talk title/topic
+    title: "Architect to XR-chitect: The Best Career Advice I Ever Ignored",
     org: "PMRE 2026 — Photo + Media for Real Estate Conference",
     date: "Nov 17–19, 2026",
     endsISO: "2026-11-20T06:00:00Z",

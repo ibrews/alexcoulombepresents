@@ -286,6 +286,26 @@ export const repos: Repo[] = [
     wiki: "https://github.com/ibrews/unreal-mac-getstats-fix/wiki",
   },
   {
+    slug: "unreal-custodian",
+    name: "Unreal Custodian",
+    tagline: "Reclaim the build caches your Unreal projects quietly hoard — without touching anything you authored.",
+    category: "Unreal Engine",
+    stars: 34,
+    language: "Python",
+    story:
+      "A few years of Unreal projects on one machine means tens or hundreds of gigabytes of pure rebuild artifacts — Intermediate, Binaries, DerivedDataCache, cooked content, staged builds. The Windows box this was tested against held 539 projects, 14 engines, and 2.0 TB of reclaimable cache with 17 GB of headroom left. Custodian finds all of it and tells you exactly what goes, what shrinks, and what it will not touch, before it touches anything. Content, Config, and the .uproject always survive.",
+    highlights: [
+      "Standalone Mac and Windows app, or the same thing from the terminal — no Python required either way",
+      "Disk pressure is the trigger, age is the ranking — no naive '14 days untouched, delete it' rule",
+      "Freshness measured twice, because mtimes lie: filesystem times plus Unreal's rotated editor logs",
+      "Trash and Recycle Bin by default; --permanent only when you're actually out of room",
+      "clean is a dry run unless you pass --apply, and report has no destructive flag at all",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/unreal-custodian",
+    wiki: "https://github.com/ibrews/unreal-custodian/wiki",
+  },
+  {
     slug: "apple-platform-skills",
     name: "apple-platform-skills",
     tagline: "Claude Code skills for Apple platform development — visionOS SharePlay, SpriteKit, GameKit.",
