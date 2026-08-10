@@ -18,6 +18,9 @@
  * --reason    optional. Overrides lib/lists.ts LIST_REASON for --list.
  * --broad     optional. Adds the "future newsletters will be more tailored"
  *             footer line — use for a send to the consolidated list.
+ * --test      optional email address. Sends ONLY to that address (subject
+ *             gets a [TEST] prefix) instead of the real list — for
+ *             proofing content/images before the real send.
  * --dry-run   optional. Print recipient count + addresses, send nothing.
  *
  * Every email gets the attribution footer, a one-click unsubscribe link
@@ -60,6 +63,7 @@ async function main() {
   const reason = arg("reason") ?? (isListSlug(list) ? LIST_REASON[list] : undefined);
   const broad = process.argv.includes("--broad");
   const dryRun = process.argv.includes("--dry-run");
+  const testTo = arg("test");
 
   if (!list || !subject || !bodyPath) {
     console.error(
@@ -74,6 +78,30 @@ async function main() {
 
   const campaign = arg("campaign") ?? path.basename(bodyPath).replace(/\.[a-z]+$/i, "");
   const bodyMarkdown = readFileSync(bodyPath, "utf8");
+
+  if (testTo) {
+    console.log(`Test send → ${testTo} (subject gets a [TEST] prefix; real list not touched)`);
+    if (dryRun) {
+      console.log("\n[dry run] nothing sent.");
+      return;
+    }
+    const result = await sendCampaign({
+      campaign,
+      subject,
+      bodyMarkdown,
+      list,
+      reason,
+      broad,
+      testTo: [testTo],
+      onProgress: (sent, total) => console.log(`  sent ${sent}/${total}`),
+    });
+    console.log(`Done. ${result.sent}/${result.recipients} sent.`);
+    if (result.errors.length) {
+      console.error("Errors:", result.errors.join("; "));
+      process.exit(1);
+    }
+    return;
+  }
 
   const emails = await listRecipients(list);
   console.log(`List "${list}": ${emails.length} recipient(s). Campaign: "${campaign}"`);
