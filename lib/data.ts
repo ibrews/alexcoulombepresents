@@ -1089,8 +1089,24 @@ export const products: Product[] = [
       "First proof: headless co-location verified to 0.4 cm accuracy, start to finish",
       "Standalone on-device: a real GPU-accelerated Android emulator runs actual OpenXR APKs, no streaming pipeline",
       "Per-device performance envelope: throttle a demo to a chosen headset's real frame budget",
+      "Free forever to explore (help + the built-in demo cockpit, no account needed); a 14-day trial covers pointing it at a real app, then it's free for active members or a one-time purchase — see the store link below",
     ],
-    links: [{ label: "npm install -g xrsim", url: "https://www.npmjs.com/package/xrsim" }],
+    screenshots: [
+      {
+        src: "/lab/xrsim/cockpit.png",
+        alt: "xrsim's browser cockpit showing a live simulated headset — pose, controller state, session panel, and driving controls",
+        caption: "The cockpit — opens automatically from `xrsim demo`. Live pose, controller state, and driving controls, no headset attached.",
+      },
+      {
+        src: "/lab/xrsim/fleet-dashboard.png",
+        alt: "xrsim's fleet dashboard showing two simulated headsets running side by side",
+        caption: "`xrsim fleet ui` — every simulated headset on the machine in one dashboard, for running (or teaching) more than one at a time.",
+      },
+    ],
+    links: [
+      { label: "npm install -g xrsim", url: "https://www.npmjs.com/package/xrsim" },
+      { label: "Get a license →", url: "/store#xrsim" },
+    ],
     accent: "teal",
   },
   {

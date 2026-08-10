@@ -162,8 +162,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <>
               <h2 className="text-xl font-bold">Try it now.</h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-mist">
-                {product.name} is available today — see the link below. The source repository
-                itself isn&apos;t public yet.
+                {product.name} is available today — install it below, free to explore with a
+                14-day trial. Free for active members after that;{" "}
+                <a
+                  href="/store#xrsim"
+                  className="text-teal hover:underline"
+                >
+                  everyone else
+                </a>{" "}
+                buys a license once, no subscription. The source repository itself isn&apos;t
+                public yet.
               </p>
             </>
           ) : (
