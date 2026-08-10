@@ -55,7 +55,7 @@ export const digitalProducts: DigitalProduct[] = [
     name: "xrsim",
     tier: "indie",
     kind: "CLI",
-    priceCents: 9900, // TODO(alex): set real launch price
+    priceCents: 2000, // launch price, set 2026-08-10 (was a 9900 placeholder)
     blurb:
       "Test VR apps without a headset — drive a live simulated cockpit or run a real standalone Android APK on a local GPU-accelerated emulator. Scriptable, agent-drivable, verified end-to-end. Free for active members.",
     majorVersion: 1,
