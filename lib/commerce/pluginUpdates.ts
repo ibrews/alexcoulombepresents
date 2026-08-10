@@ -25,8 +25,8 @@ export const PLUGIN_UPDATES: Record<PluginProduct, PluginUpdateInfo> = {
     min_ue: "5.6",
   },
   SceneAudit: {
-    latest: "1.0.0",
-    released: "2026-08-06",
+    latest: "0.1.0",
+    released: "2026-08-10",
     notes_url: "https://www.alexcoulombepresents.com/plugins/sceneaudit/releases",
     min_ue: "5.6",
   },
