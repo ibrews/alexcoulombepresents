@@ -21,6 +21,13 @@
  * --test      optional email address. Sends ONLY to that address (subject
  *             gets a [TEST] prefix) instead of the real list — for
  *             proofing content/images before the real send.
+ * --emails    optional path to a newline-separated file of addresses. Sends
+ *             a REAL (tracked, non-test) campaign to exactly those addresses
+ *             instead of the full --list — for splitting a large list across
+ *             a free-tier daily send cap, or completing a partial send.
+ *             Addresses must already be on --list (used for reason/campaign
+ *             context); a stray address not on the list is skipped with a
+ *             warning rather than emailing someone who never signed up.
  * --dry-run   optional. Print recipient count + addresses, send nothing.
  *
  * Every email gets the attribution footer, a one-click unsubscribe link
@@ -64,6 +71,7 @@ async function main() {
   const broad = process.argv.includes("--broad");
   const dryRun = process.argv.includes("--dry-run");
   const testTo = arg("test");
+  const emailsFile = arg("emails");
 
   if (!list || !subject || !bodyPath) {
     console.error(
@@ -103,8 +111,25 @@ async function main() {
     return;
   }
 
-  const emails = await listRecipients(list);
-  console.log(`List "${list}": ${emails.length} recipient(s). Campaign: "${campaign}"`);
+  const listEmails = await listRecipients(list);
+
+  let onlyTo;
+  if (emailsFile) {
+    const requested = readFileSync(emailsFile, "utf8")
+      .split("\n")
+      .map((l) => l.trim().toLowerCase())
+      .filter(Boolean);
+    const listSet = new Set(listEmails.map((e) => e.toLowerCase()));
+    onlyTo = requested.filter((e) => listSet.has(e));
+    const skipped = requested.filter((e) => !listSet.has(e));
+    if (skipped.length) {
+      console.log(`Skipping ${skipped.length} address(es) not on list "${list}":`);
+      skipped.forEach((e) => console.log("  " + e));
+    }
+  }
+
+  const emails = onlyTo ?? listEmails;
+  console.log(`List "${list}"${onlyTo ? ` (restricted to ${onlyTo.length} of ${listEmails.length})` : ""}: ${emails.length} recipient(s). Campaign: "${campaign}"`);
   if (dryRun) {
     emails.forEach((e) => console.log("  " + e));
     console.log("\n[dry run] nothing sent.");
@@ -122,6 +147,7 @@ async function main() {
     list,
     reason,
     broad,
+    onlyTo,
     onProgress: (sent, total) => console.log(`  sent ${sent}/${total}`),
   });
   console.log(`Done. ${result.sent}/${result.recipients} sent.`);
