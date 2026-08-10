@@ -586,6 +586,11 @@ export type Product = {
   accent: string; // tailwind-friendly hue token
   video?: string; // primary / featured YouTube id
   videos?: { id: string; title: string }[]; // additional updates, newest first
+  // A big, prominent image right under the tagline — for products with no
+  // video but a real screenshot worth leading with. A real capture, not a
+  // mockup. Falls back to nothing (not the smaller `screenshots` gallery
+  // below) if unset.
+  heroImage?: { src: string; alt: string };
   // Real product screenshots (not mockups — see the "Coming to the editor"
   // preview cards in-app for aspirational/not-yet-wired surfaces, which stay
   // out of this list). Paths are under /public.
@@ -1091,12 +1096,11 @@ export const products: Product[] = [
       "Per-device performance envelope: throttle a demo to a chosen headset's real frame budget",
       "Free forever to explore (help + the built-in demo cockpit, no account needed); a 14-day trial covers pointing it at a real app, then it's free for active members or a one-time purchase — see the store link below",
     ],
+    heroImage: {
+      src: "/lab/xrsim/cockpit.png",
+      alt: "xrsim's browser cockpit showing a live simulated headset — pose, controller state, session panel, and driving controls",
+    },
     screenshots: [
-      {
-        src: "/lab/xrsim/cockpit.png",
-        alt: "xrsim's browser cockpit showing a live simulated headset — pose, controller state, session panel, and driving controls",
-        caption: "The cockpit — opens automatically from `xrsim demo`. Live pose, controller state, and driving controls, no headset attached.",
-      },
       {
         src: "/lab/xrsim/fleet-dashboard.png",
         alt: "xrsim's fleet dashboard showing two simulated headsets running side by side",

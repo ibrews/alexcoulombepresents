@@ -57,6 +57,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <p className={`mt-5 text-xl leading-relaxed md:text-2xl ${accent}`}>{renderBreaks(product.tagline)}</p>
       </Reveal>
 
+      {product.heroImage && (
+        <Reveal>
+          <div className="mt-8 overflow-hidden rounded-3xl border border-line">
+            <Image
+              src={product.heroImage.src}
+              alt={product.heroImage.alt}
+              width={1440}
+              height={900}
+              unoptimized
+              priority
+              className="w-full"
+            />
+          </div>
+        </Reveal>
+      )}
+
       <Reveal>
         <p className="mt-8 text-lg leading-relaxed text-mist">{renderBreaks(product.pitch)}</p>
       </Reveal>
