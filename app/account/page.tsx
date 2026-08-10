@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { customerFromSession } from "@/lib/commerce/tokens";
 import { entitlementsForCustomer, getCustomer } from "@/lib/commerce/entitlements";
+import { dedupeEntitlementsBySku } from "@/lib/commerce/entitlementDisplay";
 import { findDigitalProduct } from "@/lib/commerce/products";
 import { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU } from "@/lib/commerce/membership";
 import LoginForm from "./LoginForm";
@@ -46,8 +47,8 @@ export default async function Account({
   const creditsAvailable = entitlements.filter(
     (e) => e.sku === BOOKING_CREDIT_SKU && e.status === "active" && notLapsed(e.updates_until)
   ).length;
-  const purchases = entitlements.filter(
-    (e) => e.sku !== MEMBERSHIP_SKU && e.sku !== BOOKING_CREDIT_SKU
+  const purchases = dedupeEntitlementsBySku(
+    entitlements.filter((e) => e.sku !== MEMBERSHIP_SKU && e.sku !== BOOKING_CREDIT_SKU)
   );
 
   return (
