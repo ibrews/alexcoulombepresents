@@ -1,4 +1,4 @@
-title: Aug 5 recording + your next class is Wednesday
+title: Aug 5 recording + VR for 5.8 this Wednesday
 date: 2026-08-09
 subject: Aug 5 recording + VR for 5.8 this Wednesday
 preheader: Missed the free class? Here's the recording — and the next one is already on the calendar.
