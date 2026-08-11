@@ -18,6 +18,11 @@ export type Repo = {
   videos?: { id: string; title: string }[]; // additional updates, newest first
   nativeVideo?: { src: string; poster: string }; // self-hosted mp4 fallback when there's no YouTube upload
   devlog?: { url: string; teaser: string }; // link to a dedicated devlog subpage
+  // Shows a live "N reclaimed since launch"-style counter on the repo page,
+  // backed by app/api/unreal-custodian/space-saved (tool_stats in lib/db.ts).
+  // Specific to this one repo/route for now -- generalize the route if a
+  // second tool wants the same pattern, rather than guessing its shape now.
+  spaceSavedTally?: boolean;
 };
 
 export const repos: Repo[] = [
@@ -304,6 +309,7 @@ export const repos: Repo[] = [
     links: [],
     github: "https://github.com/ibrews/unreal-custodian",
     wiki: "https://github.com/ibrews/unreal-custodian/wiki",
+    spaceSavedTally: true,
   },
   {
     slug: "apple-platform-skills",

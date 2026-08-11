@@ -518,3 +518,56 @@ export async function listTips(account: string): Promise<TipQueueRow[]> {
   `;
   return rows as TipQueueRow[];
 }
+
+// ── Tool stats — a generic "running total since inception" counter ─────────
+// First user: Unreal Custodian's anonymous opt-in "bytes reclaimed" tally
+// (tool="unreal-custodian", metric="bytes_reclaimed"). Kept generic (tool +
+// metric, not a bytes-specific column) on purpose — several other ibrews
+// tools follow the same shape of desktop app + this site as its public face,
+// and "how many X has this tool done since launch" is a pattern worth
+// reusing rather than a one-off table per tool.
+
+let _toolStatsEnsured = false;
+
+async function ensureToolStatsTable() {
+  if (_toolStatsEnsured) return;
+  await sql()`
+    CREATE TABLE IF NOT EXISTS tool_stats (
+      tool       TEXT NOT NULL,
+      metric     TEXT NOT NULL,
+      value      BIGINT NOT NULL DEFAULT 0,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (tool, metric)
+    )
+  `;
+  _toolStatsEnsured = true;
+}
+
+// Atomic increment (INSERT ... ON CONFLICT DO UPDATE with an arithmetic SET,
+// not a read-then-write) so concurrent reports from many machines can never
+// clobber each other. Returns the new total.
+export async function incrementToolStat(
+  tool: string,
+  metric: string,
+  amount: number
+): Promise<number> {
+  await ensureToolStatsTable();
+  const rows = await sql()`
+    INSERT INTO tool_stats (tool, metric, value, updated_at)
+    VALUES (${tool}, ${metric}, ${amount}, now())
+    ON CONFLICT (tool, metric) DO UPDATE
+      SET value = tool_stats.value + EXCLUDED.value,
+          updated_at = now()
+    RETURNING value
+  `;
+  return Number((rows as { value: number | string }[])[0].value);
+}
+
+export async function getToolStat(tool: string, metric: string): Promise<number> {
+  await ensureToolStatsTable();
+  const rows = await sql()`
+    SELECT value FROM tool_stats WHERE tool = ${tool} AND metric = ${metric}
+  `;
+  const row = (rows as { value: number | string }[])[0];
+  return row ? Number(row.value) : 0;
+}
