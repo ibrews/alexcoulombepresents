@@ -131,5 +131,41 @@ export async function ensureCommerceSchema() {
     )
   `;
 
+  // ── /book — request-then-confirm-then-pay appointments ───────────────────
+  // status: requested → confirmed → paid, or declined/expired/cancelled.
+  // Payment happens only after a confirmation, so a row can sit unpaid
+  // indefinitely; hold_expires_at is what stops a confirmed-but-unpaid slot
+  // from being blocked forever.
+  await db`
+    CREATE TABLE IF NOT EXISTS bookings (
+      id              BIGSERIAL PRIMARY KEY,
+      brand           TEXT NOT NULL DEFAULT 'acp',
+      token           TEXT NOT NULL UNIQUE,
+      slot_start      TIMESTAMPTZ NOT NULL,
+      slot_end        TIMESTAMPTZ NOT NULL,
+      name            TEXT NOT NULL,
+      email           TEXT NOT NULL,
+      note            TEXT,
+      status          TEXT NOT NULL DEFAULT 'requested',
+      price_cents     INTEGER NOT NULL,
+      hold_expires_at TIMESTAMPTZ,
+      stripe_session_id TEXT,
+      confirmed_at    TIMESTAMPTZ,
+      declined_at     TIMESTAMPTZ,
+      paid_at         TIMESTAMPTZ,
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
+  // The real double-booking guard. Two people can hit "request" on the same
+  // slot in the same second; a check-then-insert loses that race, so the
+  // constraint lives in the database and the insert is allowed to fail.
+  // Partial, so declined/expired/cancelled rows free the slot back up.
+  await db`
+    CREATE UNIQUE INDEX IF NOT EXISTS bookings_one_live_per_slot
+      ON bookings (slot_start)
+      WHERE status IN ('requested', 'confirmed', 'paid')
+  `;
+
   _ensured = true;
 }

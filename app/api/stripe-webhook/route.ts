@@ -12,6 +12,8 @@ import {
 } from "@/lib/commerce/entitlements";
 import { MEMBER_LICENSE_WINDOW_DAYS } from "@/lib/commerce/memberLicensing";
 import { decideRefund } from "@/lib/commerce/refunds";
+import { markBookingPaid } from "@/lib/booking/config";
+import { sendBookingPaidEmail } from "@/lib/booking/email";
 import { findDigitalProduct } from "@/lib/commerce/products";
 import {
   sendDonationNotification,
@@ -173,7 +175,28 @@ export async function POST(req: NextRequest) {
       console.error("[seats] order record failed", err);
     }
 
-    if (kind === "donation") {
+    if (kind === "booking") {
+      // /book appointments (lib/booking). The slot was already held at
+      // confirmation time, so this only flips it to paid and tells them.
+      const bookingToken = session.metadata?.booking_token as string | undefined;
+      if (bookingToken) {
+        try {
+          const paid = await markBookingPaid(bookingToken, session.id);
+          if (paid) {
+            await sendBookingPaidEmail(paid);
+            console.log(`[booking] paid → ${paid.email} for ${paid.slot_start}`);
+          } else {
+            // Already paid — a webhook retry or a dashboard resend.
+            console.log(`[booking] ${bookingToken} already marked paid, skipping`);
+          }
+        } catch (err) {
+          console.error("[booking] payment fulfillment failed", err);
+          // 500 so Stripe retries: markBookingPaid is idempotent, so the
+          // retry converges instead of double-sending.
+          return NextResponse.json({ error: "Booking fulfillment failed" }, { status: 500 });
+        }
+      }
+    } else if (kind === "donation") {
       const comment = customFieldText(session, "comment");
       try {
         await sendDonationNotification({
