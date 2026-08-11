@@ -47,7 +47,7 @@ export default function SpaceSavedTally() {
         {formatGB(stats.totalBytes)} GB
       </span>
       <span className="text-mist">
-        saved from {formatCount(stats.totalReports)} reported projects!
+        saved globally from {formatCount(stats.totalReports)} reported projects!
       </span>
     </div>
   );
