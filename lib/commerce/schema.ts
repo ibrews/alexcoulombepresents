@@ -158,14 +158,29 @@ export async function ensureCommerceSchema() {
   `;
 
   // The real double-booking guard. Two people can hit "request" on the same
-  // slot in the same second; a check-then-insert loses that race, so the
+  // time in the same second; a check-then-insert loses that race, so the
   // constraint lives in the database and the insert is allowed to fail.
-  // Partial, so declined/expired/cancelled rows free the slot back up.
+  //
+  // This is an OVERLAP exclusion, not a unique index on slot_start. Once
+  // bookings can be 1, 2, or 3 hours long, "same start time" stops being the
+  // same question as "conflicts": a 3-hour booking at 13:00 and a 1-hour
+  // booking at 14:00 have different starts and collide completely. A unique
+  // index would have waved that straight through.
+  //
+  // Partial, so declined/expired/cancelled rows free their time back up.
   await db`
-    CREATE UNIQUE INDEX IF NOT EXISTS bookings_one_live_per_slot
-      ON bookings (slot_start)
-      WHERE status IN ('requested', 'confirmed', 'paid')
+    DO $$
+    BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'bookings_no_overlap') THEN
+        ALTER TABLE bookings ADD CONSTRAINT bookings_no_overlap
+          EXCLUDE USING gist (tstzrange(slot_start, slot_end) WITH &&)
+          WHERE (status IN ('requested', 'confirmed', 'paid'));
+      END IF;
+    END $$;
   `;
+  // Superseded by the exclusion constraint above — it only ever caught the
+  // identical-start case.
+  await db`DROP INDEX IF EXISTS bookings_one_live_per_slot`;
 
   _ensured = true;
 }

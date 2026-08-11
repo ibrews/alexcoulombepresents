@@ -6,8 +6,8 @@ import {
   takenSlots,
   expireStaleHolds,
   BOOKING_TIMEZONE,
-  BOOKING_PRICE_CENTS,
-  BOOKING_DURATION_MINUTES,
+  BOOKING_DURATIONS,
+  durationForHours,
 } from "@/lib/booking/config";
 
 // Open slots for /book.
@@ -20,7 +20,12 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: Request) {
+  // Which block length to price and fit. Longer blocks have fewer valid start
+  // times, so the slot list genuinely differs per duration.
+  const hoursParam = Number(new URL(req.url).searchParams.get("hours") ?? "1");
+  const duration = durationForHours(hoursParam) ?? BOOKING_DURATIONS[0];
+
   const now = new Date();
   const horizonEnd = new Date(now.getTime() + bookingConfig.horizonDays * 24 * 60 * 60 * 1000);
 
@@ -51,11 +56,17 @@ export async function GET() {
     );
   }
 
-  const slots = generateSlots(bookingConfig, busy, taken, now);
+  const slots = generateSlots(bookingConfig, busy, taken, now, duration.minutes);
   return NextResponse.json({
     timeZone: BOOKING_TIMEZONE,
-    priceCents: BOOKING_PRICE_CENTS,
-    durationMinutes: BOOKING_DURATION_MINUTES,
+    priceCents: duration.priceCents,
+    durationMinutes: duration.minutes,
+    hours: duration.hours,
+    durations: BOOKING_DURATIONS.map((d) => ({
+      hours: d.hours,
+      label: d.label,
+      priceCents: d.priceCents,
+    })),
     slots: slots.map((s) => ({
       start: s.start.toISOString(),
       end: s.end.toISOString(),

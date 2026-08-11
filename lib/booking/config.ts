@@ -7,23 +7,47 @@ import { busyIntervalsFromIcs, type Interval } from "./ics";
 import { type BookingConfig } from "./availability";
 
 export const BOOKING_TIMEZONE = "America/New_York";
-export const BOOKING_PRICE_CENTS = 20000; // matches consultationDropIn in lib/store.ts
-export const BOOKING_DURATION_MINUTES = 60;
-/** How long a confirmed slot stays held before the requester loses it. Long
+/** How long a confirmed block stays held before the requester loses it. Long
  * enough to survive a night's sleep and a timezone, short enough that a flake
- * doesn't block a slot for a week. */
+ * doesn't block a whole afternoon for a week. */
 export const HOLD_HOURS = 48;
 
-// Offered windows, local to BOOKING_TIMEZONE. Wednesdays are deliberately
-// absent: that's the weekly class slot (lib/store.ts's wednesdayCalendar).
+/**
+ * Bookable block lengths and what they cost.
+ *
+ * These are RESERVED blocks, not metered time: the whole block is held and
+ * charged whether or not it all gets used, which is what makes the longer
+ * options a discount rather than a risk to carry. The booking page says so in
+ * those words — see app/book/page.tsx.
+ */
+export const BOOKING_DURATIONS = [
+  { hours: 1, minutes: 60, priceCents: 30000, label: "1 hour" },
+  { hours: 2, minutes: 120, priceCents: 50000, label: "2 hours" },
+  { hours: 3, minutes: 180, priceCents: 60000, label: "3 hours" },
+] as const;
+
+export type BookingDuration = (typeof BOOKING_DURATIONS)[number];
+
+export function durationForHours(hours: number): BookingDuration | undefined {
+  return BOOKING_DURATIONS.find((d) => d.hours === hours);
+}
+
+// Offered windows, local to BOOKING_TIMEZONE.
+//   Wednesday — the weekly class slot (lib/store.ts's wednesdayCalendar).
+//   Friday    — office hours (lib/store.ts's officeHoursDropIn, whose Stripe
+//               custom field literally asks "Which Friday would you like?").
+// Both are deliberately absent. They're committed time that would otherwise
+// never appear as busy on a calendar feed until each session is scheduled,
+// so leaving them out of the template is the only reliable way to reserve
+// them. Longer blocks need a window long enough to hold them: with 13:00–17:00
+// the 3-hour option can only start at 13:00 or 14:00, which is intended.
 export const bookingConfig: BookingConfig = {
   timeZone: BOOKING_TIMEZONE,
-  slotMinutes: BOOKING_DURATION_MINUTES,
+  slotMinutes: 60, // the start-time grid, not the booking length
   weeklyHours: {
     1: [{ from: "13:00", to: "17:00" }], // Mon
     2: [{ from: "13:00", to: "17:00" }], // Tue
     4: [{ from: "13:00", to: "17:00" }], // Thu
-    5: [{ from: "10:00", to: "16:00" }], // Fri
   },
   minNoticeHours: 24,
   horizonDays: 21,
@@ -44,18 +68,33 @@ export type BookingRow = {
   stripe_session_id: string | null;
 };
 
+/** Every configured calendar feed. Zoom Scheduler pools several calendars to
+ * decide availability, and so must this — a free-looking slot on one account
+ * is worthless if another account is booked. BOOKING_ICS_URLS takes a
+ * comma-separated list; BOOKING_ICS_URL stays supported as the single-feed
+ * spelling. */
+function icsUrls(): string[] {
+  const many = process.env.BOOKING_ICS_URLS;
+  const one = process.env.BOOKING_ICS_URL;
+  const raw = many ?? one ?? "";
+  return raw
+    .split(/[,\n]/)
+    .map((u) => u.trim())
+    .filter(Boolean);
+}
+
 /**
- * Fetches the calendar's busy blocks. Returns null — not an empty array — on
- * any failure, so callers can tell "the calendar says you're free" apart from
+ * Fetches busy blocks from every configured calendar. Returns null — not an
+ * empty array — on any failure, so callers can tell "you're free" apart from
  * "the calendar is unreachable". Treating a fetch failure as an empty busy
- * list would offer every slot in the working week during an outage.
+ * list would offer the whole working week during an outage.
  */
 export async function fetchBusyIntervals(
   windowStart: Date,
   windowEnd: Date
 ): Promise<Interval[] | null> {
-  const url = process.env.BOOKING_ICS_URL;
-  if (!url) {
+  const urls = icsUrls();
+  if (urls.length === 0) {
     // No feed configured. Normally that's a hard stop — offering the full
     // working week with no idea what's already committed is how you take a
     // request for a slot you're teaching in. The exception is explicit:
@@ -69,22 +108,33 @@ export async function fetchBusyIntervals(
     }
     return null;
   }
-  try {
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(6000),
-      // Google serves these with long cache headers; we still want the
-      // freshest copy the CDN will give us.
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      console.error(`[booking] ICS fetch failed: HTTP ${res.status}`);
-      return null;
-    }
-    return busyIntervalsFromIcs(await res.text(), windowStart, windowEnd, BOOKING_TIMEZONE);
-  } catch (err) {
-    console.error("[booking] ICS fetch failed", err);
-    return null;
-  }
+  // ALL feeds must succeed. A partial read is the dangerous case: if the
+  // agilelens calendar fails but the other two return, the merged list looks
+  // like a perfectly normal set of busy blocks with a whole account's
+  // commitments silently missing. Better to say "can't read the calendar"
+  // than to offer time that one of three calendars already owns.
+  const results = await Promise.all(
+    urls.map(async (url) => {
+      try {
+        const res = await fetch(url, {
+          signal: AbortSignal.timeout(6000),
+          // Google serves these with long cache headers; we still want the
+          // freshest copy the CDN will give us.
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          console.error(`[booking] ICS fetch failed: HTTP ${res.status}`);
+          return null;
+        }
+        return busyIntervalsFromIcs(await res.text(), windowStart, windowEnd, BOOKING_TIMEZONE);
+      } catch (err) {
+        console.error("[booking] ICS fetch failed", err);
+        return null;
+      }
+    })
+  );
+  if (results.some((r) => r === null)) return null;
+  return results.flat() as Interval[];
 }
 
 /** Slots already claimed by a live booking. Authoritative — unlike the
@@ -94,7 +144,9 @@ export async function takenSlots(from: Date, to: Date): Promise<Interval[]> {
   const rows = (await sql()`
     SELECT slot_start, slot_end FROM bookings
     WHERE status IN ('requested', 'confirmed', 'paid')
-      AND slot_start >= ${from.toISOString()} AND slot_start <= ${to.toISOString()}
+      -- slot_end > from, not slot_start >= from: a 3-hour block that began an
+      -- hour ago still owns the next two, and filtering on start would miss it.
+      AND slot_end > ${from.toISOString()} AND slot_start <= ${to.toISOString()}
   `) as { slot_start: string; slot_end: string }[];
   return rows.map((r) => ({ start: new Date(r.slot_start), end: new Date(r.slot_end) }));
 }
@@ -105,6 +157,7 @@ export async function createBookingRequest(input: {
   name: string;
   email: string;
   note?: string | null;
+  priceCents: number;
 }): Promise<BookingRow | null> {
   await ensureCommerceSchema();
   const token = crypto.randomBytes(24).toString("base64url");
@@ -112,15 +165,16 @@ export async function createBookingRequest(input: {
     const rows = (await sql()`
       INSERT INTO bookings (token, slot_start, slot_end, name, email, note, price_cents)
       VALUES (${token}, ${input.slotStart.toISOString()}, ${input.slotEnd.toISOString()},
-              ${input.name}, ${input.email}, ${input.note ?? null}, ${BOOKING_PRICE_CENTS})
+              ${input.name}, ${input.email}, ${input.note ?? null}, ${input.priceCents})
       RETURNING *
     `) as BookingRow[];
     return rows[0] ?? null;
   } catch (err) {
-    // bookings_one_live_per_slot — someone else claimed this slot first.
-    // Returning null (rather than throwing) lets the route answer 409 with a
-    // "pick another time" message instead of a 500.
-    if (String((err as { message?: string }).message ?? "").includes("bookings_one_live_per_slot")) {
+    // bookings_no_overlap — the exclusion constraint rejected this because
+    // the block collides with a live booking. Returning null (rather than
+    // throwing) lets the route answer 409 with "pick another time" instead
+    // of a 500.
+    if (String((err as { message?: string }).message ?? "").includes("bookings_no_overlap")) {
       return null;
     }
     throw err;

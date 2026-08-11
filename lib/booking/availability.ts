@@ -55,13 +55,20 @@ export function generateSlots(
   config: BookingConfig,
   busy: Interval[],
   taken: Interval[],
-  now: Date
+  now: Date,
+  // How long the booking actually is. Defaults to one grid step, so callers
+  // that only ever wanted a single-length slot are unaffected. A longer
+  // booking still starts on the same grid — it just has to FIT, which is why
+  // the fit check below tests start+duration against the window end rather
+  // than assuming one step.
+  durationMinutes: number = config.slotMinutes
 ): Slot[] {
   const slots: Slot[] = [];
   const earliest = new Date(now.getTime() + config.minNoticeHours * 60 * 60 * 1000);
   const latest = new Date(now.getTime() + config.horizonDays * 24 * 60 * 60 * 1000);
   const bufferMs = config.bufferMinutes * 60 * 1000;
-  const slotMs = config.slotMinutes * 60 * 1000;
+  const slotMs = durationMinutes * 60 * 1000;
+  const stepMs = config.slotMinutes * 60 * 1000;
 
   const paddedBusy = busy.map((b) => ({
     start: new Date(b.start.getTime() - bufferMs),
@@ -97,7 +104,7 @@ export function generateSlots(
         config.timeZone
       );
 
-      for (let t = windowStart.getTime(); t + slotMs <= windowEnd.getTime(); t += slotMs) {
+      for (let t = windowStart.getTime(); t + slotMs <= windowEnd.getTime(); t += stepMs) {
         const slot = { start: new Date(t), end: new Date(t + slotMs) };
         if (slot.start < earliest || slot.start > latest) continue;
         if (paddedBusy.some((b) => overlaps(slot, b))) continue;

@@ -195,3 +195,47 @@ test("winter slots hold their local wall-clock time across DST", () => {
   // 9:00 ET in January is 14:00Z, not 13:00Z.
   assert.equal(slots[0].start.toISOString(), "2026-01-06T14:00:00.000Z");
 });
+
+// ── multi-hour blocks ───────────────────────────────────────────────────────
+// Longer blocks start on the same hourly grid but must FIT inside the window,
+// which is a different question from "is this start time free".
+
+test("a 3-hour block only starts where three hours actually fit", () => {
+  // 09:00–12:00 window = exactly one 3-hour block, starting at 09:00.
+  const starts = generateSlots(CONFIG, [], [], NOW, 180).map((s) => s.start.toISOString());
+  assert.ok(starts.includes("2026-08-11T13:00:00.000Z")); // 9am ET
+  assert.ok(!starts.includes("2026-08-11T14:00:00.000Z")); // 10am would run past noon
+  assert.ok(!starts.includes("2026-08-11T15:00:00.000Z"));
+});
+
+test("a 2-hour block still steps hourly, it just needs two hours of room", () => {
+  const starts = generateSlots(CONFIG, [], [], NOW, 120).map((s) => s.start.toISOString());
+  assert.ok(starts.includes("2026-08-11T13:00:00.000Z")); // 9–11
+  assert.ok(starts.includes("2026-08-11T14:00:00.000Z")); // 10–12
+  assert.ok(!starts.includes("2026-08-11T15:00:00.000Z")); // 11–1 overruns
+});
+
+test("the slot END is the requested duration, not the grid step", () => {
+  const [first] = generateSlots(CONFIG, [], [], NOW, 180);
+  assert.equal(first.end.getTime() - first.start.getTime(), 180 * 60 * 1000);
+});
+
+test("a busy block mid-window blocks every long slot that spans it", () => {
+  // Busy 10–11am ET. A 3-hour block at 9am spans it, so nothing fits that day.
+  const busy = [{ start: new Date("2026-08-11T14:00:00Z"), end: new Date("2026-08-11T15:00:00Z") }];
+  const sameDay = generateSlots(CONFIG, busy, [], NOW, 180)
+    .map((s) => s.start.toISOString())
+    .filter((s) => s.startsWith("2026-08-11"));
+  assert.deepEqual(sameDay, []);
+});
+
+test("an existing long booking blocks overlapping starts, not just its own", () => {
+  // Someone holds 9–12. A 1-hour slot at 10 or 11 must not be offered, even
+  // though neither shares its start time — the bug a unique-index-on-start
+  // guard would have let through.
+  const taken = [{ start: new Date("2026-08-11T13:00:00Z"), end: new Date("2026-08-11T16:00:00Z") }];
+  const sameDay = generateSlots(CONFIG, [], taken, NOW, 60)
+    .map((s) => s.start.toISOString())
+    .filter((s) => s.startsWith("2026-08-11"));
+  assert.deepEqual(sameDay, []);
+});

@@ -6,7 +6,7 @@ import {
   createBookingRequest,
   fetchBusyIntervals,
   takenSlots,
-  BOOKING_DURATION_MINUTES,
+  durationForHours,
 } from "@/lib/booking/config";
 import { sendBookingRequestAck, sendBookingOwnerRequest } from "@/lib/booking/email";
 
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: RATE_LIMITED_MESSAGE }, { status: 429 });
   }
 
-  let payload: { start?: string; name?: string; email?: string; note?: string };
+  let payload: { start?: string; name?: string; email?: string; note?: string; hours?: number };
   try {
     payload = await req.json();
   } catch {
@@ -39,6 +39,11 @@ export async function POST(req: NextRequest) {
   if ((payload.note?.length ?? 0) > 2000) {
     return NextResponse.json({ error: "That note is a bit long — trim it down?" }, { status: 400 });
   }
+  // Price comes from the server-side table keyed by duration, never from the
+  // request body — otherwise a client could post its own priceCents and book
+  // three hours for a dollar.
+  const duration = durationForHours(Number(payload.hours ?? 1));
+  if (!duration) return NextResponse.json({ error: "Pick how long you need." }, { status: 400 });
 
   // Re-derive availability server-side. The slot list the browser rendered
   // may be minutes old, and a client can post any timestamp it likes — so the
@@ -52,7 +57,7 @@ export async function POST(req: NextRequest) {
       { status: 503 }
     );
   }
-  const open = generateSlots(bookingConfig, busy, taken, now);
+  const open = generateSlots(bookingConfig, busy, taken, now, duration.minutes);
   if (!open.some((s) => s.start.getTime() === start.getTime())) {
     return NextResponse.json(
       { error: "That time just went — pick another and it'll go straight through." },
@@ -62,10 +67,11 @@ export async function POST(req: NextRequest) {
 
   const booking = await createBookingRequest({
     slotStart: start,
-    slotEnd: new Date(start.getTime() + BOOKING_DURATION_MINUTES * 60 * 1000),
+    slotEnd: new Date(start.getTime() + duration.minutes * 60 * 1000),
     name,
     email,
     note: payload.note?.trim() || null,
+    priceCents: duration.priceCents,
   });
   // null means the unique index rejected it — someone claimed this slot in the
   // moment between the availability check above and the insert.
