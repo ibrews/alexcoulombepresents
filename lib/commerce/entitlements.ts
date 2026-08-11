@@ -241,6 +241,21 @@ export async function grantOrRefreshMemberLicense(
   await ensureCommerceSchema();
   const db = sql();
 
+  // Sign BEFORE touching the database. issueLicenseKey throws when
+  // LICENSE_SIGNING_PRIVATE_KEY is missing or malformed, and when that
+  // happened after the entitlement insert it left a member entitlement with
+  // no key attached at all — observed live 2026-08-11, a keyless xrsim row
+  // for a real member. Signing first makes the failure a clean no-op.
+  const licenseKey = issueLicenseKey({
+    sku,
+    tier: "member",
+    seats: 1,
+    licensee_email: email,
+    major_version: majorVersion,
+    updates_until: updatesUntil.toISOString(),
+    issued_at: new Date().toISOString(),
+  });
+
   const entRows = (await db`
     INSERT INTO entitlements (customer_id, sku, tier, status, major_version, updates_until)
     VALUES (${customerId}, ${sku}, 'member', 'active', ${majorVersion}, ${updatesUntil.toISOString()})
@@ -254,16 +269,13 @@ export async function grantOrRefreshMemberLicense(
   `) as { id: number }[];
   const entitlementId = entRows[0].id;
 
-  const licenseKey = issueLicenseKey({
-    sku,
-    tier: "member",
-    seats: 1,
-    licensee_email: email,
-    major_version: majorVersion,
-    updates_until: updatesUntil.toISOString(),
-    issued_at: new Date().toISOString(),
-  });
-
-  await db`UPDATE license_keys SET revoked = true WHERE entitlement_id = ${entitlementId} AND revoked = false`;
-  await db`INSERT INTO license_keys (entitlement_id, key_text) VALUES (${entitlementId}, ${licenseKey})`;
+  // Revoke-then-insert as one transaction: separately, a failure between them
+  // leaves the entitlement with every key revoked and no replacement, which
+  // reads to the member as "my license vanished". The entitlementsForCustomer
+  // join also assumes at most one live key per entitlement, so these two must
+  // never be observable half-applied.
+  await db.transaction([
+    db`UPDATE license_keys SET revoked = true WHERE entitlement_id = ${entitlementId} AND revoked = false`,
+    db`INSERT INTO license_keys (entitlement_id, key_text) VALUES (${entitlementId}, ${licenseKey})`,
+  ]);
 }
