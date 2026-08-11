@@ -203,9 +203,11 @@ export async function memberTierForEmail(email: string): Promise<MembershipTierI
 // of each other for the same signup, and two concurrent webhook requests
 // both seeing "no row yet" would otherwise both insert (confirmed happening
 // in rehearsal before this fix — duplicate membership rows for one signup).
-// Returns isNew=true when this customer had no membership row at all (first
-// signup) — the caller uses that to decide whether to send the welcome email
-// (renewals and reactivations from a lapsed state don't get a new one).
+// Returns isNew=true when this INSERT created the row. NOTE: that is NOT the
+// same question as "is this a brand-new member" — customer.subscription.
+// updated and invoice.paid both call this for one signup, and whichever loses
+// the race sees isNew=false. Gate the welcome email on claimMembershipWelcome
+// below, never on isNew.
 // `tier` is written on every call, including renewals — an upgrade/downgrade
 // shows up as a new Stripe price on the next invoice.paid/subscription.updated,
 // and the member's row should reflect whichever price is actually current,
@@ -231,6 +233,29 @@ export async function grantOrExtendMembership(
     RETURNING (xmax = 0) AS inserted
   `) as { inserted: boolean }[];
   return { isNew: rows[0]?.inserted ?? true };
+}
+
+// Atomically claims the right to send this member's welcome email, returning
+// true to exactly one caller ever (per membership row). The UPDATE's
+// `welcomed_at IS NULL` predicate is evaluated under Postgres row locking, so
+// concurrent webhook deliveries — the whole reason the old isNew flag failed —
+// serialize here instead of racing: the loser's UPDATE matches zero rows.
+//
+// Why this exists (2026-08-11): Stripe fires customer.subscription.updated
+// (status → active) and invoice.paid within milliseconds and in no guaranteed
+// order. Both branches call grantOrExtendMembership; whichever ran second got
+// isNew=false, and the welcome email was gated on invoice.paid's isNew. In
+// practice the subscription event won every time, so NO membership signup ever
+// sent its welcome email or owner alert — confirmed against both real
+// subscribers on record (no magic_links row was ever issued for either).
+export async function claimMembershipWelcome(customerId: number): Promise<boolean> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    UPDATE entitlements SET welcomed_at = now()
+    WHERE customer_id = ${customerId} AND sku = ${MEMBERSHIP_SKU} AND welcomed_at IS NULL
+    RETURNING id
+  `) as { id: string }[];
+  return rows.length > 0;
 }
 
 // Tops the cycle's credits up to `count` instead of blindly inserting, keyed

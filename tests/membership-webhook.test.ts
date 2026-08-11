@@ -48,6 +48,7 @@ function fakeDeps(overrides: Partial<MembershipBillingDeps> = {}) {
       name: "Mem Ber",
     }),
     grantOrExtendMembership: record("grantOrExtendMembership", { isNew: true }),
+    claimMembershipWelcome: record("claimMembershipWelcome", true),
     mintBookingCredits: record("mintBookingCredits", STARTER_CREDITS_PER_CYCLE),
     revokeMembership: record("revokeMembership", 3),
     checkoutSessionProcessed: record("checkoutSessionProcessed", false),
@@ -134,11 +135,39 @@ test("invoice.paid grants membership, mints credits, records + links the order",
 
 test("invoice.paid on a renewal (existing member) does not set newMember", async () => {
   const { deps } = fakeDeps({
-    grantOrExtendMembership: () => Promise.resolve({ isNew: false }),
+    claimMembershipWelcome: () => Promise.resolve(false),
   });
   const result = await handleMembershipEvent(invoicePaid(), deps);
   assert.equal(result.handled, true);
   assert.equal(result.handled && result.newMember, false);
+});
+
+// Regression — the bug that suppressed EVERY membership welcome email until
+// 2026-08-11. Stripe fires customer.subscription.updated (→ active) and
+// invoice.paid milliseconds apart with no ordering guarantee; both call
+// grantOrExtendMembership. When the subscription event lands first it INSERTs
+// the row, so invoice.paid's upsert reports isNew=false — and the welcome
+// email, which used to be gated on that flag, silently never sent. Both real
+// subscribers on record hit this (neither was ever issued a magic link).
+// newMember must track the atomic welcome claim, never the insert race.
+test("invoice.paid still welcomes when subscription.updated already created the row (isNew=false)", async () => {
+  const { deps } = fakeDeps({
+    grantOrExtendMembership: () => Promise.resolve({ isNew: false }),
+    claimMembershipWelcome: () => Promise.resolve(true),
+  });
+  const result = await handleMembershipEvent(invoicePaid(), deps);
+  assert.equal(result.handled, true);
+  assert.equal(result.handled && result.newMember, true);
+  assert.equal(result.handled && result.email, "member@example.com");
+});
+
+test("the welcome claim is taken after the grant, so the row exists to claim", async () => {
+  const { deps, calls } = fakeDeps();
+  await handleMembershipEvent(invoicePaid(), deps);
+  const grantAt = calls.findIndex((c) => c.fn === "grantOrExtendMembership");
+  const claimAt = calls.findIndex((c) => c.fn === "claimMembershipWelcome");
+  assert.ok(grantAt !== -1 && claimAt !== -1);
+  assert.ok(grantAt < claimAt, "grant must precede the welcome claim");
 });
 
 test("invoice.paid dedupes on an already-processed event (check before work)", async () => {

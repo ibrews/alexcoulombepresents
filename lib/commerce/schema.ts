@@ -76,6 +76,16 @@ export async function ensureCommerceSchema() {
       WHERE sku = 'membership'
   `;
 
+  // Marks the moment a membership row's welcome email was claimed for sending
+  // (lib/commerce/membership.ts's claimMembershipWelcome). It exists because
+  // "is this a brand-new member?" CANNOT be inferred from whether the grant
+  // INSERTed vs UPDATEd: the unique index above deliberately turns whichever
+  // of customer.subscription.updated / invoice.paid arrives second into an
+  // UPDATE, and Stripe guarantees no ordering between them. Keying the
+  // welcome off a dedicated, atomically-claimed column makes it fire exactly
+  // once per member no matter which event wins the race.
+  await db`ALTER TABLE entitlements ADD COLUMN IF NOT EXISTS welcomed_at TIMESTAMPTZ`;
+
   // Partial unique index: at most one tier='member' row per (customer_id,
   // sku) — mirrors entitlements_one_membership_per_customer above, but
   // scoped to member-perk product licenses (e.g. xrsim, see

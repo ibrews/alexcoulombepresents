@@ -8,7 +8,10 @@ import {
   findOrCreateCustomer,
   setStripeCustomerId,
   customerIdForStripeCustomer,
+  grantOrRefreshMemberLicense,
 } from "@/lib/commerce/entitlements";
+import { MEMBER_LICENSE_WINDOW_DAYS } from "@/lib/commerce/memberLicensing";
+import { findDigitalProduct } from "@/lib/commerce/products";
 import {
   sendDonationNotification,
   sendFulfillmentEmail,
@@ -29,6 +32,7 @@ import {
 } from "@/lib/commerce/membershipBilling";
 import {
   grantOrExtendMembership,
+  claimMembershipWelcome,
   mintBookingCredits,
   revokeMembership,
   linkMembershipCycleToOrder,
@@ -57,6 +61,10 @@ import {
 // granting/extending correctly. Never remove an entry unless you've
 // confirmed zero active subscriptions still reference it (Stripe dashboard →
 // that price → Subscriptions count).
+// The member-perk product auto-licensed on membership payment (mirrors
+// /api/cron/xrsim-member-licenses' constant).
+const XRSIM_SKU = "xrsim";
+
 const LEGACY_MEMBERSHIP_PRICE_IDS: Record<MembershipTierId, string[]> = {
   starter: ["price_1U1fifDALxplFYNoASHbs3Sg"],
   unlimited: ["price_1U1fjUDALxplFYNoDJ5gOq0e"], // Lynne Heller's active subscription
@@ -88,6 +96,7 @@ function membershipDeps(): MembershipBillingDeps {
     customerIdForStripeCustomer,
     fetchStripeCustomer,
     grantOrExtendMembership,
+    claimMembershipWelcome,
     mintBookingCredits,
     revokeMembership,
     checkoutSessionProcessed,
@@ -312,6 +321,41 @@ export async function POST(req: NextRequest) {
       if (result.handled) {
         console.log(`[membership] ${event.type} → ${result.action}`);
         if (result.deduped) return NextResponse.json({ received: true, deduped: true });
+
+        // Provision the member-perk xrsim license immediately, rather than
+        // leaving a new member unlicensed until the next daily cron run
+        // (/api/cron/xrsim-member-licenses, 14:00 UTC). That batch-only
+        // provisioning meant someone who subscribed after 14:00 UTC couldn't
+        // download or run xrsim until the following day — which for a member
+        // who joined the evening before an 11:00 ET Wednesday class left them
+        // a one-hour margin, and no way to set up the night before.
+        // Runs on every invoice.paid, not just first-ever grants: it's the
+        // same idempotent upsert-and-resign the cron performs, so a renewal
+        // simply refreshes the key early and the cron's 14-day rolling window
+        // continues unchanged. Best-effort — never fail an already-paid
+        // invoice over the perk license; the cron is still the safety net.
+        if (event.type === "invoice.paid" && result.email) {
+          try {
+            const product = findDigitalProduct(XRSIM_SKU);
+            if (product) {
+              const customerId = await findOrCreateCustomer(result.email, result.name);
+              const updatesUntil = new Date(
+                Date.now() + MEMBER_LICENSE_WINDOW_DAYS * 24 * 60 * 60 * 1000
+              );
+              await grantOrRefreshMemberLicense(
+                customerId,
+                result.email,
+                XRSIM_SKU,
+                product.majorVersion,
+                updatesUntil
+              );
+              console.log(`[membership] xrsim member license provisioned → ${result.email}`);
+            }
+          } catch (err) {
+            console.error("[membership] xrsim license provisioning failed", err);
+          }
+        }
+
         // First-ever grant only — never fires on renewal invoices. A hiccup
         // here must not fail the webhook: the grant already succeeded, and a
         // 500 would make Stripe retry the (already-applied) grant forever.

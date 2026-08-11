@@ -85,6 +85,10 @@ export type MembershipBillingDeps = {
   customerIdForStripeCustomer(stripeCustomerId: string): Promise<number | null>;
   fetchStripeCustomer(stripeCustomerId: string): Promise<{ email: string | null; name: string | null } | null>;
   grantOrExtendMembership(customerId: number, paidThrough: Date, tier: MembershipTierId): Promise<{ isNew: boolean }>;
+  // Returns true to exactly one caller per member, ever — see
+  // lib/commerce/membership.ts. This, NOT grantOrExtendMembership's isNew, is
+  // what decides whether the welcome email sends.
+  claimMembershipWelcome(customerId: number): Promise<boolean>;
   mintBookingCredits(customerId: number, count: number, expiresAt: Date): Promise<number>;
   revokeMembership(customerId: number): Promise<number>;
   checkoutSessionProcessed(stripeEventId: string, stripeSessionId: string): Promise<boolean>;
@@ -106,9 +110,12 @@ export type MembershipEventResult =
       handled: true;
       action: string;
       deduped?: boolean;
-      // Only set on invoice.paid for a first-ever membership grant — the
-      // webhook route uses this to fire the welcome email exactly once per
-      // member, never on renewal invoices.
+      // Set on invoice.paid when THIS delivery won the atomic welcome claim
+      // (deps.claimMembershipWelcome) — the webhook route uses it to fire the
+      // welcome email exactly once per member, never on renewal invoices.
+      // Deliberately not derived from grantOrExtendMembership's isNew: the
+      // concurrent customer.subscription.updated event routinely wins that
+      // insert, which silently suppressed every welcome email until 2026-08-11.
       newMember?: boolean;
       email?: string;
       name?: string | null;
@@ -218,7 +225,10 @@ export async function handleMembershipEvent(
       await deps.setStripeCustomerId(customerId, invoice.customer);
     }
 
-    const { isNew } = await deps.grantOrExtendMembership(customerId, paidThrough, tier);
+    await deps.grantOrExtendMembership(customerId, paidThrough, tier);
+    // Claimed AFTER the grant, so the row is guaranteed to exist for the
+    // UPDATE to match — and only ever true once per member.
+    const isNew = await deps.claimMembershipWelcome(customerId);
     // "unlimited"/"insider" skip credit minting entirely — they never redeem
     // against the pooled-credit system, see hasUnlimitedBooking.
     const credits = tier === "starter" ? STARTER_CREDITS_PER_CYCLE : 0;

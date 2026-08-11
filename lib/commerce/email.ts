@@ -238,6 +238,16 @@ export async function sendOrderEmails(input: {
 // Tier-specific: pulls the actual benefit list from MEMBERSHIP_TIERS rather
 // than a hardcoded description, so it can't drift out of sync with what
 // /members advertises for whichever tier the buyer actually paid for.
+// Insider's "Gumroad course library, bundled in (redemption codes by email
+// after joining)" benefit — the redemption half of that promise, which had no
+// implementation at all until 2026-08-11 (the benefit was advertised on
+// /members and simply never delivered). Deliberately lives here in this
+// server-only module rather than on MEMBERSHIP_TIERS: that array is rendered
+// by the public /members page, so a code parked on it would ship in the client
+// bundle and hand a $299/mo perk to anyone who opened devtools.
+const INSIDER_GUMROAD_CODE = "VVVIP";
+const INSIDER_GUMROAD_URL = "https://ibrews.gumroad.com";
+
 export async function sendMembershipWelcomeEmail(input: {
   email: string;
   name?: string | null;
@@ -249,11 +259,24 @@ export async function sendMembershipWelcomeEmail(input: {
   const tier = membershipTier(input.tier);
   const benefits = tier?.benefits ?? MEMBERSHIP_TIERS[0].benefits;
   const tierName = tier?.name ?? input.tier;
+  const gumroad =
+    input.tier === "insider"
+      ? [
+          "",
+          "Your Gumroad course library — use this code at checkout and everything",
+          "comes out free:",
+          "",
+          `    ${INSIDER_GUMROAD_CODE}`,
+          "",
+          `Browse the catalog at ${INSIDER_GUMROAD_URL} and apply the code to anything you want.`,
+        ]
+      : [];
   const __body = [
       `${first ? `Hey ${first}` : "Hey"} — you're a member! Welcome in.`,
       "",
       `Your tier: ${tierName}. Here's what's live for you right now:`,
       ...benefits.map((b) => `  • ${b}`),
+      ...gumroad,
       "",
       "Sign in here to see your account (link expires in 30 minutes):",
       input.magicLinkUrl,
