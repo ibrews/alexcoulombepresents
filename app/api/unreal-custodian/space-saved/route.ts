@@ -3,7 +3,8 @@ import { incrementToolStat, getToolStat } from "@/lib/db";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 
 const TOOL = "unreal-custodian";
-const METRIC = "bytes_reclaimed";
+const BYTES_METRIC = "bytes_reclaimed";
+const REPORTS_METRIC = "reports_count";
 
 // One legitimate `clean --apply` run could plausibly reclaim a genuinely
 // huge amount (the README's own example machine had 2 TB reclaimable) --
@@ -26,8 +27,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "bytes must be a positive number." }, { status: 400 });
     }
     const clamped = Math.min(Math.floor(bytes), MAX_BYTES_PER_REPORT);
-    const total = await incrementToolStat(TOOL, METRIC, clamped);
-    return NextResponse.json({ ok: true, totalBytes: total });
+    // Two independent rows, not one transaction -- a rare split where one
+    // increments and the other doesn't is an acceptable edge case for a fun
+    // public counter, not something worth the complexity of a real
+    // multi-statement transaction over.
+    const [totalBytes, totalReports] = await Promise.all([
+      incrementToolStat(TOOL, BYTES_METRIC, clamped),
+      incrementToolStat(TOOL, REPORTS_METRIC, 1),
+    ]);
+    return NextResponse.json({ ok: true, totalBytes, totalReports });
   } catch (err) {
     console.error("unreal-custodian space-saved POST error:", err);
     return NextResponse.json({ error: "Couldn't record that. Try again later." }, { status: 500 });
@@ -49,10 +57,14 @@ export async function OPTIONS() {
 
 export async function GET() {
   try {
-    const total = await getToolStat(TOOL, METRIC);
+    const [totalBytes, totalReports] = await Promise.all([
+      getToolStat(TOOL, BYTES_METRIC),
+      getToolStat(TOOL, REPORTS_METRIC),
+    ]);
     return NextResponse.json(
-      { ok: true, totalBytes: total },
-      // Polled by a live widget -- must not freeze on a stale cached number.
+      { ok: true, totalBytes, totalReports },
+      // Polled by a live widget (and fetched on every app launch) -- must
+      // not freeze on a stale cached number.
       { headers: { ...READ_CORS, "Cache-Control": "no-store" } }
     );
   } catch (err) {
