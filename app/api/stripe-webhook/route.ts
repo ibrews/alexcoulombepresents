@@ -22,7 +22,11 @@ import { sendVoucherEmail } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
 import { recordCatalogOrder, markCatalogOrdersRefunded, getSeatsSold } from "@/lib/commerce/seats";
 import { sendTelegramNotice } from "@/lib/telegram";
-import { handleMembershipEvent, type MembershipBillingDeps } from "@/lib/commerce/membershipBilling";
+import {
+  handleMembershipEvent,
+  type MembershipBillingDeps,
+  type MembershipTierId,
+} from "@/lib/commerce/membershipBilling";
 import {
   grantOrExtendMembership,
   mintBookingCredits,
@@ -42,16 +46,43 @@ import {
 // (price_... of the membership subscription price) — until it's set, the
 // subscription/invoice branches ignore every event.
 
+// 2026-08-10: all three tiers originally shared one Stripe Product ("ACP
+// Membership") with four Prices attached — which meant Checkout showed that
+// shared product's name/description regardless of which tier a buyer picked
+// (the bug behind Lynne Heller's Aug 10 Unlimited signup confusion). Split
+// into one dedicated Product per tier so Checkout shows the right name.
+// Pre-split subscribers stay on their original Price forever (Stripe doesn't
+// migrate existing subscriptions when you swap what a new Checkout points
+// at) — these must stay recognized here so their renewal invoices keep
+// granting/extending correctly. Never remove an entry unless you've
+// confirmed zero active subscriptions still reference it (Stripe dashboard →
+// that price → Subscriptions count).
+const LEGACY_MEMBERSHIP_PRICE_IDS: Record<MembershipTierId, string[]> = {
+  starter: ["price_1U1fifDALxplFYNoASHbs3Sg"],
+  unlimited: ["price_1U1fjUDALxplFYNoDJ5gOq0e"], // Lynne Heller's active subscription
+  insider: ["price_1U1fk5DALxplFYNowUUbzkqi"],
+};
+
 // Live wiring for the membership branches (logic + tests live in
 // lib/commerce/membershipBilling.ts). Assembled per-request so env reads
-// stay lazy.
+// stay lazy. priceIds[tier][0] is the CURRENT price — the one new checkouts
+// use (see lib/commerce/membership.ts's priceEnvVar) — with legacy prices
+// appended after it purely for renewal recognition.
 function membershipDeps(): MembershipBillingDeps {
+  const current: Partial<Record<MembershipTierId, string>> = {
+    starter: process.env.STRIPE_MEMBERSHIP_PRICE_ID_STARTER,
+    unlimited: process.env.STRIPE_MEMBERSHIP_PRICE_ID_UNLIMITED,
+    insider: process.env.STRIPE_MEMBERSHIP_PRICE_ID_INSIDER,
+  };
+  const membershipPriceIds: Partial<Record<MembershipTierId, string[]>> = {};
+  (Object.keys(LEGACY_MEMBERSHIP_PRICE_IDS) as MembershipTierId[]).forEach((tier) => {
+    const currentId = current[tier];
+    const legacy = LEGACY_MEMBERSHIP_PRICE_IDS[tier];
+    membershipPriceIds[tier] = currentId && !legacy.includes(currentId) ? [currentId, ...legacy] : legacy;
+  });
+
   return {
-    membershipPriceIds: {
-      starter: process.env.STRIPE_MEMBERSHIP_PRICE_ID_STARTER,
-      unlimited: process.env.STRIPE_MEMBERSHIP_PRICE_ID_UNLIMITED,
-      insider: process.env.STRIPE_MEMBERSHIP_PRICE_ID_INSIDER,
-    },
+    membershipPriceIds,
     findOrCreateCustomer,
     setStripeCustomerId,
     customerIdForStripeCustomer,

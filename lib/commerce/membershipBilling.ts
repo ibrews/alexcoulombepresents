@@ -68,11 +68,18 @@ export type StripeEvent = {
 };
 
 export type MembershipBillingDeps = {
-  // One Stripe Price id per tier (STRIPE_MEMBERSHIP_PRICE_ID_STARTER/
-  // _UNLIMITED/_INSIDER) — undefined for any tier Alex hasn't created in
-  // Stripe yet; events referencing a not-yet-configured tier's price simply
-  // never match (same no-op behavior the single-price version had).
-  membershipPriceIds: Partial<Record<MembershipTierId, string>>;
+  // Every valid Stripe Price id for each tier — plural because a tier can
+  // have moved products/prices over time (e.g. the 2026-08-10 split from one
+  // shared "ACP Membership" product to a dedicated product per tier) while
+  // pre-existing subscribers stay on their original Price forever. All of
+  // them must keep resolving to the same tier so an old subscriber's
+  // renewal invoice still grants/extends correctly — only NEW checkouts
+  // (app/api/checkout/route.ts) need the single "current" price id, which
+  // is priceIds[tier][0] by convention. Empty/missing for any tier Alex
+  // hasn't created in Stripe yet; events referencing a not-yet-configured
+  // tier's price simply never match (same no-op behavior the single-price
+  // version had).
+  membershipPriceIds: Partial<Record<MembershipTierId, string[]>>;
   findOrCreateCustomer(email: string, name?: string | null): Promise<number>;
   setStripeCustomerId(customerId: number, stripeCustomerId: string): Promise<void>;
   customerIdForStripeCustomer(stripeCustomerId: string): Promise<number | null>;
@@ -113,19 +120,19 @@ export type MembershipEventResult =
 // subscription's item matches — a customer is only ever on one tier's price
 // at a time, so first match wins.
 function tierForPriceId(
-  priceIds: Partial<Record<MembershipTierId, string>>,
+  priceIds: Partial<Record<MembershipTierId, string[]>>,
   priceId: string | null | undefined
 ): MembershipTierId | null {
   if (!priceId) return null;
-  const entry = (Object.entries(priceIds) as [MembershipTierId, string | undefined][]).find(
-    ([, id]) => id === priceId
+  const entry = (Object.entries(priceIds) as [MembershipTierId, string[] | undefined][]).find(([, ids]) =>
+    ids?.includes(priceId)
   );
   return entry?.[0] ?? null;
 }
 
 function membershipInvoiceLine(
   invoice: StripeInvoice,
-  priceIds: Partial<Record<MembershipTierId, string>>
+  priceIds: Partial<Record<MembershipTierId, string[]>>
 ): { line: StripeInvoiceLine; tier: MembershipTierId } | undefined {
   for (const line of invoice.lines?.data ?? []) {
     const tier = tierForPriceId(priceIds, line.price?.id ?? line.pricing?.price_details?.price);
@@ -136,7 +143,7 @@ function membershipInvoiceLine(
 
 function subscriptionTier(
   sub: StripeSubscription,
-  priceIds: Partial<Record<MembershipTierId, string>>
+  priceIds: Partial<Record<MembershipTierId, string[]>>
 ): MembershipTierId | null {
   for (const item of sub.items?.data ?? []) {
     const tier = tierForPriceId(priceIds, item.price?.id);
@@ -175,7 +182,7 @@ export async function handleMembershipEvent(
   deps: MembershipBillingDeps
 ): Promise<MembershipEventResult> {
   const priceIds = deps.membershipPriceIds;
-  const anyPriceConfigured = Object.values(priceIds).some(Boolean);
+  const anyPriceConfigured = Object.values(priceIds).some((ids) => ids && ids.length > 0);
 
   if (event.type === "invoice.paid") {
     if (!anyPriceConfigured) return { handled: false, reason: "no STRIPE_MEMBERSHIP_PRICE_ID_* set" };

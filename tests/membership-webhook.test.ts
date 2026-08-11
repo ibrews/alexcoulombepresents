@@ -35,7 +35,11 @@ function fakeDeps(overrides: Partial<MembershipBillingDeps> = {}) {
       return Promise.resolve(result);
     };
   const deps: MembershipBillingDeps = {
-    membershipPriceIds: { starter: STARTER_PRICE_ID, unlimited: UNLIMITED_PRICE_ID, insider: INSIDER_PRICE_ID },
+    membershipPriceIds: {
+      starter: [STARTER_PRICE_ID],
+      unlimited: [UNLIMITED_PRICE_ID],
+      insider: [INSIDER_PRICE_ID],
+    },
     findOrCreateCustomer: record("findOrCreateCustomer", 42),
     setStripeCustomerId: record("setStripeCustomerId", undefined),
     customerIdForStripeCustomer: record("customerIdForStripeCustomer", 42),
