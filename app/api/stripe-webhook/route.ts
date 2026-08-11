@@ -399,7 +399,26 @@ export async function POST(req: NextRequest) {
   if (event.type === "charge.refunded") {
     const charge = event.data.object;
     const paymentIntentId = charge.payment_intent as string | undefined;
-    if (paymentIntentId) {
+    // Stripe fires charge.refunded for PARTIAL refunds too, and this branch
+    // used to revoke on any of them. A goodwill partial refund therefore
+    // silently destroyed paid access: Lynne Heller was refunded 50% on
+    // 2026-08-10 for a missed discount code and her active Unlimited
+    // membership was revoked 5 minutes later — she kept paying and lost the
+    // benefits. `charge.refunded` (the boolean on the charge object) is true
+    // only once the charge is FULLY refunded; amount_refunded >= amount is
+    // the same test, kept as a fallback for older API shapes that omit it.
+    const fullyRefunded =
+      charge.refunded === true ||
+      (typeof charge.amount_refunded === "number" &&
+        typeof charge.amount === "number" &&
+        charge.amount_refunded >= charge.amount);
+    if (paymentIntentId && !fullyRefunded) {
+      console.log(
+        `[refund] partial refund on ${paymentIntentId} — entitlements left intact ` +
+          `(${charge.amount_refunded} of ${charge.amount} refunded)`
+      );
+    }
+    if (paymentIntentId && fullyRefunded) {
       try {
         const revoked = await revokeEntitlementsForPaymentIntent(paymentIntentId);
         console.log(`[refund] revoked ${revoked} entitlement(s) for payment_intent ${paymentIntentId}`);

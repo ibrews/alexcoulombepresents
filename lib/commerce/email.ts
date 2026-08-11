@@ -4,6 +4,10 @@ import { Resend } from "resend";
 import { findDigitalProduct } from "./products";
 import { MEMBERSHIP_TIERS, membershipTier, type MembershipTierId } from "./membership";
 
+// Where owner copies/alerts go. Also the from/reply-to address, so this is
+// the one place to change if the support address ever moves.
+const OWNER_EMAIL = "info@alexcoulombepresents.com";
+
 // Renders our plain-text email bodies as simple branded HTML: white card,
 // auto-linked URLs, and the ACP logo in the footer. Every sender passes the
 // same string as both `text` (fallback) and `html` via this helper, so the
@@ -69,6 +73,11 @@ export async function sendFulfillmentEmail(input: {
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
+    // Digital purchases had no owner alert at all (unlike sendOrderEmails'
+    // "FULFILL:" mail), so a license sale was invisible short of checking
+    // Stripe. Nothing to fulfill by hand here — this is purely so every
+    // purchase shows up in Alex's inbox.
+    bcc: OWNER_EMAIL,
     subject: isNpm
       ? `Your ${product?.name ?? input.sku} license key`
       : `Your ${product?.name ?? input.sku} license + download`,
@@ -291,6 +300,11 @@ export async function sendMembershipWelcomeEmail(input: {
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
+    // Alex gets a copy of every welcome as it goes out, so "did this member
+    // actually receive anything?" is answerable from his own inbox rather
+    // than from Resend's dashboard — the question that took a customer
+    // complaint to surface when these silently stopped sending.
+    bcc: OWNER_EMAIL,
     replyTo: "info@alexcoulombepresents.com",
     subject: `You're a member — welcome in (${tierName})`,
     text: __body,
@@ -358,6 +372,8 @@ export async function sendVoucherEmail(input: {
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
+    // Same gap as the fulfillment mail: a $250 voucher sale alerted nobody.
+    bcc: OWNER_EMAIL,
     replyTo: "info@alexcoulombepresents.com",
     subject: `Your class voucher: ${input.code}`,
     text: __body,
