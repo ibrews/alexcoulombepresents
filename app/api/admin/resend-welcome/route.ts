@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { customerByEmail } from "@/lib/commerce/entitlements";
+import { customerByEmail, grantOrRefreshMemberLicense } from "@/lib/commerce/entitlements";
+import { MEMBER_LICENSE_WINDOW_DAYS } from "@/lib/commerce/memberLicensing";
+import { findDigitalProduct } from "@/lib/commerce/products";
 import { memberTierForCustomer, claimMembershipWelcome } from "@/lib/commerce/membership";
 import { sendMembershipWelcomeEmail, sendMembershipOwnerNotification } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
@@ -24,6 +26,8 @@ import { issueMagicLink } from "@/lib/commerce/tokens";
 //
 // Without `force` this is safe to re-run: the atomic claim makes a second call
 // a no-op rather than a duplicate email.
+
+const XRSIM_SKU = "xrsim";
 
 function adminKeyValid(provided: string | null): boolean {
   const expected = process.env.ADMIN_KEY;
@@ -68,6 +72,28 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Provision the member-perk xrsim license too, matching what invoice.paid
+  // now does live. A member recovered here predates that wiring, so without
+  // this they'd stay unlicensed until the next daily cron — the exact gap
+  // that makes this endpoint necessary in the first place. Best-effort: the
+  // welcome email is the thing being recovered and must still send.
+  let xrsimLicensed = false;
+  try {
+    const product = findDigitalProduct(XRSIM_SKU);
+    if (product) {
+      await grantOrRefreshMemberLicense(
+        customer.id,
+        email,
+        XRSIM_SKU,
+        product.majorVersion,
+        new Date(Date.now() + MEMBER_LICENSE_WINDOW_DAYS * 24 * 60 * 60 * 1000)
+      );
+      xrsimLicensed = true;
+    }
+  } catch (err) {
+    console.error("[resend-welcome] xrsim license provisioning failed", err);
+  }
+
   const magicToken = await issueMagicLink(customer.id);
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
 
@@ -84,5 +110,5 @@ export async function POST(req: NextRequest) {
     amountCents: 0, // recovery send — the real charge already alerted via Stripe
   });
 
-  return NextResponse.json({ sent: true, email, tier, forced: !claimed });
+  return NextResponse.json({ sent: true, email, tier, forced: !claimed, xrsimLicensed });
 }
