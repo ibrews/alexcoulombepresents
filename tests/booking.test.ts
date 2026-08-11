@@ -8,6 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { busyIntervalsFromIcs, parseIcsDate, zonedWallTimeToUtc } from "../lib/booking/ics.ts";
 import { generateSlots, formatSlot, type BookingConfig } from "../lib/booking/availability.ts";
+import { BOOKING_DURATIONS, priceFor } from "../lib/booking/pricing.ts";
 
 const ET = "America/New_York";
 
@@ -238,4 +239,33 @@ test("an existing long booking blocks overlapping starts, not just its own", () 
     .map((s) => s.start.toISOString())
     .filter((s) => s.startsWith("2026-08-11"));
   assert.deepEqual(sameDay, []);
+});
+
+// ── rates ───────────────────────────────────────────────────────────────────
+// Pricing is resolved server-side from these tables. A client posting its own
+// priceCents must never be able to influence what Stripe charges.
+
+test("the reduced rate is exactly half of standard at every duration", () => {
+  for (const d of BOOKING_DURATIONS) {
+    assert.equal(priceFor(d, "reduced"), d.priceCents / 2);
+    assert.equal(priceFor(d, "standard"), d.priceCents);
+  }
+});
+
+test("an unknown rate falls back to standard, never to free", () => {
+  const oneHour = BOOKING_DURATIONS[0];
+  assert.equal(priceFor(oneHour, "nonsense"), oneHour.priceCents);
+  assert.equal(priceFor(oneHour, ""), oneHour.priceCents);
+});
+
+test("published prices are the agreed numbers", () => {
+  // Guards against an accidental edit to the table: 1h/$300, 2h/$500, 3h/$600.
+  assert.deepEqual(
+    BOOKING_DURATIONS.map((d) => [d.hours, d.priceCents]),
+    [
+      [1, 30000],
+      [2, 50000],
+      [3, 60000],
+    ]
+  );
 });

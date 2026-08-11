@@ -157,6 +157,12 @@ export async function ensureCommerceSchema() {
     )
   `;
 
+  // Which rate the requester claimed (lib/booking/config.ts's BOOKING_RATES).
+  // Stored rather than derived, because price_cents alone can't distinguish a
+  // reduced-rate 2-hour block from a standard 1-hour one at the same price —
+  // and the owner alert needs to say which claim was made.
+  await db`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS rate TEXT NOT NULL DEFAULT 'standard'`;
+
   // The real double-booking guard. Two people can hit "request" on the same
   // time in the same second; a check-then-insert loses that race, so the
   // constraint lives in the database and the insert is allowed to fail.

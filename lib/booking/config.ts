@@ -5,32 +5,23 @@ import crypto from "node:crypto";
 import { sql, ensureCommerceSchema } from "@/lib/commerce/schema";
 import { busyIntervalsFromIcs, type Interval } from "./ics";
 import { type BookingConfig } from "./availability";
+// Durations/rates/pricing live in the pure module so they stay unit-testable;
+// re-exported here so existing importers of config.ts keep working.
+export {
+  BOOKING_DURATIONS,
+  BOOKING_RATES,
+  durationForHours,
+  rateById,
+  priceFor,
+  type BookingDuration,
+  type BookingRateId,
+} from "./pricing";
 
 export const BOOKING_TIMEZONE = "America/New_York";
 /** How long a confirmed block stays held before the requester loses it. Long
  * enough to survive a night's sleep and a timezone, short enough that a flake
  * doesn't block a whole afternoon for a week. */
 export const HOLD_HOURS = 48;
-
-/**
- * Bookable block lengths and what they cost.
- *
- * These are RESERVED blocks, not metered time: the whole block is held and
- * charged whether or not it all gets used, which is what makes the longer
- * options a discount rather than a risk to carry. The booking page says so in
- * those words — see app/book/page.tsx.
- */
-export const BOOKING_DURATIONS = [
-  { hours: 1, minutes: 60, priceCents: 30000, label: "1 hour" },
-  { hours: 2, minutes: 120, priceCents: 50000, label: "2 hours" },
-  { hours: 3, minutes: 180, priceCents: 60000, label: "3 hours" },
-] as const;
-
-export type BookingDuration = (typeof BOOKING_DURATIONS)[number];
-
-export function durationForHours(hours: number): BookingDuration | undefined {
-  return BOOKING_DURATIONS.find((d) => d.hours === hours);
-}
 
 // Offered windows, local to BOOKING_TIMEZONE.
 //   Wednesday — the weekly class slot (lib/store.ts's wednesdayCalendar).
@@ -64,6 +55,7 @@ export type BookingRow = {
   note: string | null;
   status: string;
   price_cents: number;
+  rate: string;
   hold_expires_at: string | null;
   stripe_session_id: string | null;
 };
@@ -158,14 +150,15 @@ export async function createBookingRequest(input: {
   email: string;
   note?: string | null;
   priceCents: number;
+  rate: string;
 }): Promise<BookingRow | null> {
   await ensureCommerceSchema();
   const token = crypto.randomBytes(24).toString("base64url");
   try {
     const rows = (await sql()`
-      INSERT INTO bookings (token, slot_start, slot_end, name, email, note, price_cents)
+      INSERT INTO bookings (token, slot_start, slot_end, name, email, note, price_cents, rate)
       VALUES (${token}, ${input.slotStart.toISOString()}, ${input.slotEnd.toISOString()},
-              ${input.name}, ${input.email}, ${input.note ?? null}, ${input.priceCents})
+              ${input.name}, ${input.email}, ${input.note ?? null}, ${input.priceCents}, ${input.rate})
       RETURNING *
     `) as BookingRow[];
     return rows[0] ?? null;
@@ -190,12 +183,20 @@ export async function bookingByToken(token: string): Promise<BookingRow | null> 
 /** Confirms a requested booking and starts its payment hold. Idempotent: a
  * second confirm is a no-op that still returns the row, so a double-clicked
  * email link can't extend the hold or re-send the email twice. */
-export async function confirmBooking(token: string): Promise<{ row: BookingRow | null; changed: boolean }> {
+export async function confirmBooking(
+  token: string,
+  // When set, overrides the requester's claimed rate — the "they're not
+  // really a student" path. Applied inside the same UPDATE as the status
+  // change so a confirmed booking can never be left at the wrong price.
+  repriceTo?: { priceCents: number; rate: string }
+): Promise<{ row: BookingRow | null; changed: boolean }> {
   await ensureCommerceSchema();
   const holdUntil = new Date(Date.now() + HOLD_HOURS * 60 * 60 * 1000);
   const rows = (await sql()`
     UPDATE bookings
-    SET status = 'confirmed', confirmed_at = now(), hold_expires_at = ${holdUntil.toISOString()}
+    SET status = 'confirmed', confirmed_at = now(), hold_expires_at = ${holdUntil.toISOString()},
+        price_cents = COALESCE(${repriceTo?.priceCents ?? null}, price_cents),
+        rate = COALESCE(${repriceTo?.rate ?? null}, rate)
     WHERE token = ${token} AND status = 'requested'
     RETURNING *
   `) as BookingRow[];
@@ -243,7 +244,9 @@ export async function expireStaleHolds(): Promise<number> {
 // HMACs scoped to one booking and one action, so a leaked link can do exactly
 // one thing to one booking and nothing else.
 
-export function bookingActionSignature(token: string, action: "confirm" | "decline"): string {
+export type BookingAction = "confirm" | "decline" | "confirm_standard";
+
+export function bookingActionSignature(token: string, action: BookingAction): string {
   const secret = process.env.AUTH_SECRET;
   if (!secret) throw new Error("AUTH_SECRET is not set");
   return crypto.createHmac("sha256", secret).update(`booking:${action}:${token}`).digest("hex");
@@ -251,7 +254,7 @@ export function bookingActionSignature(token: string, action: "confirm" | "decli
 
 export function bookingActionSignatureValid(
   token: string,
-  action: "confirm" | "decline",
+  action: BookingAction,
   provided: string | null
 ): boolean {
   if (!provided) return false;

@@ -4,6 +4,9 @@ import {
   confirmBooking,
   declineBooking,
   bookingByToken,
+  durationForHours,
+  priceFor,
+  type BookingAction,
 } from "@/lib/booking/config";
 import { sendBookingConfirmedEmail, sendBookingDeclinedEmail } from "@/lib/booking/email";
 import { formatSlot } from "@/lib/booking/availability";
@@ -38,7 +41,9 @@ export async function GET(req: NextRequest) {
   const token = params.get("token");
   const action = params.get("action");
 
-  if (!token || (action !== "confirm" && action !== "decline")) {
+  const isAction = (v: string | null): v is BookingAction =>
+    v === "confirm" || v === "decline" || v === "confirm_standard";
+  if (!token || !isAction(action)) {
     return page("Bad link", "That link is missing something. Check the email again.", false);
   }
   if (!bookingActionSignatureValid(token, action, params.get("sig"))) {
@@ -50,8 +55,19 @@ export async function GET(req: NextRequest) {
 
   const when = formatSlot(new Date(existing.slot_start), BOOKING_TIMEZONE);
 
-  if (action === "confirm") {
-    const { row, changed } = await confirmBooking(token);
+  if (action === "confirm" || action === "confirm_standard") {
+    // confirm_standard overrides a self-declared reduced rate. Recomputed
+    // from the block's real length rather than trusting the stored price, so
+    // it lands on the true standard rate whatever was claimed.
+    let reprice: { priceCents: number; rate: string } | undefined;
+    if (action === "confirm_standard") {
+      const hours = Math.round(
+        (new Date(existing.slot_end).getTime() - new Date(existing.slot_start).getTime()) / 3_600_000
+      );
+      const duration = durationForHours(hours);
+      if (duration) reprice = { priceCents: priceFor(duration, "standard"), rate: "standard" };
+    }
+    const { row, changed } = await confirmBooking(token, reprice);
     if (!row) return page("Not found", "No booking matches that link.", false);
     if (!changed) {
       return page(
@@ -69,7 +85,10 @@ export async function GET(req: NextRequest) {
         false
       );
     }
-    return page("Confirmed", `${row.name} has been emailed a payment link for ${when}. The slot is held until they pay.`);
+    return page(
+      "Confirmed",
+      `${row.name} has been emailed a payment link for ${when} at $${(row.price_cents / 100).toFixed(0)}. The slot is held until they pay.`
+    );
   }
 
   const { row, changed } = await declineBooking(token);

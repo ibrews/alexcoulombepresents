@@ -67,6 +67,12 @@ export default function Book() {
             that&apos;s three hours — which is exactly why the longer blocks cost less per hour.
           </p>
           <p className="mt-3">
+            <strong className="text-snow">Students and freelancers pay half</strong> — $150, $250,
+            or $300. It&apos;s an honor-system question on the form, not a document upload. Alex
+            sees which rate you picked before anything is charged, so if it&apos;s a stretch
+            he&apos;ll just say so rather than quietly billing you full price.
+          </p>
+          <p className="mt-3">
             Need to move it? Reply to your confirmation email and Alex will do what he can. Life
             happens.
           </p>

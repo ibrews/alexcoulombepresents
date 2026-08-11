@@ -7,6 +7,8 @@ import {
   fetchBusyIntervals,
   takenSlots,
   durationForHours,
+  rateById,
+  priceFor,
 } from "@/lib/booking/config";
 import { sendBookingRequestAck, sendBookingOwnerRequest } from "@/lib/booking/email";
 
@@ -18,7 +20,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: RATE_LIMITED_MESSAGE }, { status: 429 });
   }
 
-  let payload: { start?: string; name?: string; email?: string; note?: string; hours?: number };
+  let payload: {
+    start?: string;
+    name?: string;
+    email?: string;
+    note?: string;
+    hours?: number;
+    rate?: string;
+  };
   try {
     payload = await req.json();
   } catch {
@@ -44,6 +53,8 @@ export async function POST(req: NextRequest) {
   // three hours for a dollar.
   const duration = durationForHours(Number(payload.hours ?? 1));
   if (!duration) return NextResponse.json({ error: "Pick how long you need." }, { status: 400 });
+  const rate = rateById(payload.rate ?? "standard");
+  if (!rate) return NextResponse.json({ error: "Unknown rate." }, { status: 400 });
 
   // Re-derive availability server-side. The slot list the browser rendered
   // may be minutes old, and a client can post any timestamp it likes — so the
@@ -71,7 +82,8 @@ export async function POST(req: NextRequest) {
     name,
     email,
     note: payload.note?.trim() || null,
-    priceCents: duration.priceCents,
+    priceCents: priceFor(duration, rate.id),
+    rate: rate.id,
   });
   // null means the unique index rejected it — someone claimed this slot in the
   // moment between the availability check above and the insert.

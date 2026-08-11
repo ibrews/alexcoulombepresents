@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 
 type Slot = { start: string; end: string; label: string; day: string; time: string };
-type Duration = { hours: number; label: string; priceCents: number };
+type Duration = { hours: number; label: string; priceCents: number; standardPriceCents: number };
+type Rate = { id: string; label: string; note: string | null };
 type SlotsResponse = {
   slots: Slot[];
   timeZone: string;
   priceCents: number;
   durationMinutes: number;
   hours: number;
+  rate: string;
   durations: Duration[];
+  rates: Rate[];
 };
 
 const dollars = (cents: number) => `$${(cents / 100).toFixed(0)}`;
@@ -18,6 +21,7 @@ const dollars = (cents: number) => `$${(cents / 100).toFixed(0)}`;
 export default function BookingPicker() {
   const [data, setData] = useState<SlotsResponse | null>(null);
   const [hours, setHours] = useState(1);
+  const [rate, setRate] = useState("standard");
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -32,7 +36,7 @@ export default function BookingPicker() {
   useEffect(() => {
     let cancelled = false;
     setSelected(null);
-    fetch(`/api/book/slots?hours=${hours}`)
+    fetch(`/api/book/slots?hours=${hours}&rate=${rate}`)
       .then(async (res) => {
         const body = await res.json();
         if (cancelled) return;
@@ -46,7 +50,7 @@ export default function BookingPicker() {
     return () => {
       cancelled = true;
     };
-  }, [hours]);
+  }, [hours, rate]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,7 +61,7 @@ export default function BookingPicker() {
       const res = await fetch("/api/book/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ start: selected, name, email, note, hours }),
+        body: JSON.stringify({ start: selected, name, email, note, hours, rate }),
       });
       const body = await res.json();
       if (!res.ok) {
@@ -66,7 +70,7 @@ export default function BookingPicker() {
         // what's actually left instead of retrying into the same 409.
         if (res.status === 409) {
           setSelected(null);
-          fetch(`/api/book/slots?hours=${hours}`)
+          fetch(`/api/book/slots?hours=${hours}&rate=${rate}`)
             .then((r) => r.json())
             .then((b) => b.slots && setData(b))
             .catch(() => {});
@@ -123,7 +127,14 @@ export default function BookingPicker() {
                 }`}
               >
                 <span className="block text-sm font-semibold">{d.label}</span>
-                <span className="block text-xs opacity-80">{dollars(d.priceCents)}</span>
+                <span className="block text-xs opacity-80">
+                  {d.priceCents !== d.standardPriceCents && (
+                    <span className="mr-1 line-through opacity-60">
+                      {dollars(d.standardPriceCents)}
+                    </span>
+                  )}
+                  {dollars(d.priceCents)}
+                </span>
               </button>
             );
           })}
@@ -133,7 +144,38 @@ export default function BookingPicker() {
 
       <fieldset>
         <legend className="text-sm font-semibold uppercase tracking-wide text-mist">
-          2. Pick a start time
+          2. Which rate applies to you?
+        </legend>
+        <p className="mt-1 text-sm text-mist/70">
+          Students and freelancers pay half. It&apos;s an honor-system question — nothing to
+          upload, and Alex sees your answer before anything is charged.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {(data?.rates ?? []).map((r) => {
+            const on = r.id === rate;
+            return (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => setRate(r.id)}
+                aria-pressed={on}
+                className={`rounded-xl border px-4 py-3 text-left transition ${
+                  on
+                    ? "border-teal bg-teal/20 text-snow"
+                    : "border-white/15 bg-white/5 text-mist hover:border-teal/50 hover:text-snow"
+                }`}
+              >
+                <span className="block text-sm font-semibold">{r.label}</span>
+                {r.note && <span className="block text-xs opacity-80">{r.note}</span>}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend className="text-sm font-semibold uppercase tracking-wide text-mist">
+          3. Pick a start time
         </legend>
         {data && (
           <p className="mt-1 text-sm text-mist/70">All times {data.timeZone.replace("_", " ")}.</p>
@@ -199,7 +241,7 @@ export default function BookingPicker() {
 
       <fieldset className="space-y-4">
         <legend className="text-sm font-semibold uppercase tracking-wide text-mist">
-          3. Who are you?
+          4. Who are you?
         </legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">

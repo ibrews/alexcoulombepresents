@@ -7,7 +7,10 @@ import {
   expireStaleHolds,
   BOOKING_TIMEZONE,
   BOOKING_DURATIONS,
+  BOOKING_RATES,
   durationForHours,
+  rateById,
+  priceFor,
 } from "@/lib/booking/config";
 
 // Open slots for /book.
@@ -25,6 +28,7 @@ export async function GET(req: Request) {
   // times, so the slot list genuinely differs per duration.
   const hoursParam = Number(new URL(req.url).searchParams.get("hours") ?? "1");
   const duration = durationForHours(hoursParam) ?? BOOKING_DURATIONS[0];
+  const rate = rateById(new URL(req.url).searchParams.get("rate") ?? "standard") ?? BOOKING_RATES[0];
 
   const now = new Date();
   const horizonEnd = new Date(now.getTime() + bookingConfig.horizonDays * 24 * 60 * 60 * 1000);
@@ -59,14 +63,19 @@ export async function GET(req: Request) {
   const slots = generateSlots(bookingConfig, busy, taken, now, duration.minutes);
   return NextResponse.json({
     timeZone: BOOKING_TIMEZONE,
-    priceCents: duration.priceCents,
+    priceCents: priceFor(duration, rate.id),
     durationMinutes: duration.minutes,
     hours: duration.hours,
+    rate: rate.id,
+    // Every price at every rate, so the picker can show the full grid without
+    // a round-trip per combination.
     durations: BOOKING_DURATIONS.map((d) => ({
       hours: d.hours,
       label: d.label,
-      priceCents: d.priceCents,
+      priceCents: priceFor(d, rate.id),
+      standardPriceCents: d.priceCents,
     })),
+    rates: BOOKING_RATES.map((r) => ({ id: r.id, label: r.label, note: "note" in r ? r.note : null })),
     slots: slots.map((s) => ({
       start: s.start.toISOString(),
       end: s.end.toISOString(),
