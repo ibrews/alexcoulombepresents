@@ -23,6 +23,18 @@ export type Repo = {
   // Specific to this one repo/route for now -- generalize the route if a
   // second tool wants the same pattern, rather than guessing its shape now.
   spaceSavedTally?: boolean;
+  // Real reactions pulled from the wild (X, mostly) -- always linked back to
+  // the source post so a claim on this page is one click from verifiable.
+  // `image` is optional: only set it when the poster actually attached a
+  // screenshot worth reproducing, never a stand-in.
+  testimonials?: {
+    quote: string;
+    author: string;
+    handle: string; // no leading @
+    url: string;
+    date: string;
+    image?: string;
+  }[];
 };
 
 export const repos: Repo[] = [
@@ -310,6 +322,23 @@ export const repos: Repo[] = [
     github: "https://github.com/ibrews/unreal-custodian",
     wiki: "https://github.com/ibrews/unreal-custodian/wiki",
     spaceSavedTally: true,
+    testimonials: [
+      {
+        quote: "550 gb on main box, 1.2 tb on server. Thank you so much🙏🫡",
+        author: "Supersane_Games",
+        handle: "SupersaneG",
+        url: "https://x.com/SupersaneG/status/2086959483373179070",
+        date: "Aug 10, 2026",
+      },
+      {
+        quote: "Thanks for the 92.4 gig 🫡",
+        author: "Graham Rust",
+        handle: "GrhmRst",
+        url: "https://x.com/GrhmRst/status/2086611827471896927",
+        date: "Aug 9, 2026",
+        image: "/unreal-custodian/testimonial-grhmrst.jpg",
+      },
+    ],
   },
   {
     slug: "apple-platform-skills",

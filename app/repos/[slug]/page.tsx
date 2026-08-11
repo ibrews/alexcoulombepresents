@@ -10,6 +10,7 @@ import VideoUpdates from "@/components/VideoUpdates";
 import WikiContent from "@/components/WikiContent";
 import CtaRow from "@/components/CtaRow";
 import SpaceSavedTally from "@/components/SpaceSavedTally";
+import Testimonials from "@/components/Testimonials";
 import { repos } from "@/lib/data";
 import { renderBreaks, plainText } from "@/components/Lines";
 
@@ -126,6 +127,10 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
           </ul>
         </div>
       </Reveal>
+
+      {repo.testimonials && repo.testimonials.length > 0 && (
+        <Testimonials testimonials={repo.testimonials} />
+      )}
 
       {repo.wiki && <WikiContent githubUrl={repo.github} />}
 
