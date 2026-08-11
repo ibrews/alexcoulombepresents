@@ -258,6 +258,22 @@ export async function claimMembershipWelcome(customerId: number): Promise<boolea
   return rows.length > 0;
 }
 
+// Hands the welcome claim back after a failed send, so the member can still
+// be welcomed later. Without this, a transient Resend error would burn the
+// one-shot claim and that member would never get a welcome email — silently,
+// which is precisely the failure mode claimMembershipWelcome exists to end.
+// Nothing retries the webhook (the welcome block deliberately swallows its
+// errors so an already-applied grant isn't retried forever), so the recovery
+// path is POST /api/admin/resend-welcome, which this makes work without
+// needing `force`.
+export async function releaseMembershipWelcome(customerId: number): Promise<void> {
+  await ensureCommerceSchema();
+  await sql()`
+    UPDATE entitlements SET welcomed_at = NULL
+    WHERE customer_id = ${customerId} AND sku = ${MEMBERSHIP_SKU}
+  `;
+}
+
 // Tops the cycle's credits up to `count` instead of blindly inserting, keyed
 // on the cycle's expiry — so a webhook retry after a mid-flight failure never
 // double-mints. Counts every status (a credit redeemed mid-retry still counts

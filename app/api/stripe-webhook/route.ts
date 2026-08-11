@@ -11,6 +11,7 @@ import {
   grantOrRefreshMemberLicense,
 } from "@/lib/commerce/entitlements";
 import { MEMBER_LICENSE_WINDOW_DAYS } from "@/lib/commerce/memberLicensing";
+import { decideRefund } from "@/lib/commerce/refunds";
 import { findDigitalProduct } from "@/lib/commerce/products";
 import {
   sendDonationNotification,
@@ -33,6 +34,7 @@ import {
 import {
   grantOrExtendMembership,
   claimMembershipWelcome,
+  releaseMembershipWelcome,
   mintBookingCredits,
   revokeMembership,
   linkMembershipCycleToOrder,
@@ -380,9 +382,19 @@ export async function POST(req: NextRequest) {
               });
             } else {
               console.error("[membership] welcome email skipped — no tier on result");
+              await releaseMembershipWelcome(await findOrCreateCustomer(result.email, result.name));
             }
           } catch (err) {
             console.error("[membership] welcome email failed", err);
+            // Hand the one-shot claim back so this member can still be
+            // welcomed via /api/admin/resend-welcome. Nothing retries this
+            // block, so without the release a transient Resend blip would
+            // mean no welcome email, ever, silently.
+            try {
+              await releaseMembershipWelcome(await findOrCreateCustomer(result.email, result.name));
+            } catch (releaseErr) {
+              console.error("[membership] welcome claim release failed", releaseErr);
+            }
           }
         }
       } else {
@@ -399,26 +411,23 @@ export async function POST(req: NextRequest) {
   if (event.type === "charge.refunded") {
     const charge = event.data.object;
     const paymentIntentId = charge.payment_intent as string | undefined;
-    // Stripe fires charge.refunded for PARTIAL refunds too, and this branch
-    // used to revoke on any of them. A goodwill partial refund therefore
-    // silently destroyed paid access: Lynne Heller was refunded 50% on
-    // 2026-08-10 for a missed discount code and her active Unlimited
-    // membership was revoked 5 minutes later — she kept paying and lost the
-    // benefits. `charge.refunded` (the boolean on the charge object) is true
-    // only once the charge is FULLY refunded; amount_refunded >= amount is
-    // the same test, kept as a fallback for older API shapes that omit it.
-    const fullyRefunded =
-      charge.refunded === true ||
-      (typeof charge.amount_refunded === "number" &&
-        typeof charge.amount === "number" &&
-        charge.amount_refunded >= charge.amount);
-    if (paymentIntentId && !fullyRefunded) {
+    // Only a FULL refund revokes — see lib/commerce/refunds.ts for why, and
+    // for the partial-refund incident that prompted splitting this out.
+    const decision = decideRefund(charge);
+    if (!decision.revoke) {
       console.log(
-        `[refund] partial refund on ${paymentIntentId} — entitlements left intact ` +
-          `(${charge.amount_refunded} of ${charge.amount} refunded)`
+        `[refund] ${decision.reason} on ${paymentIntentId ?? "(no payment_intent)"} — ` +
+          `entitlements and seat left intact (${decision.amountRefunded} of ${decision.amount} refunded)`
       );
     }
-    if (paymentIntentId && fullyRefunded) {
+    if (decision.reason === "indeterminate") {
+      // Should be unreachable: Stripe always sends `refunded`. If this fires,
+      // the payload shape changed and the fallback needs revisiting.
+      console.error("[refund] indeterminate charge shape — not revoking; check the Stripe payload", {
+        paymentIntentId,
+      });
+    }
+    if (paymentIntentId && decision.revoke) {
       try {
         const revoked = await revokeEntitlementsForPaymentIntent(paymentIntentId);
         console.log(`[refund] revoked ${revoked} entitlement(s) for payment_intent ${paymentIntentId}`);
