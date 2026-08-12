@@ -57,6 +57,7 @@ export const pressMentions: PressMention[] = [
     title: "HTC's Vive Tracker Has Brought Out The Best In VR Innovation",
     date: "2017",
     dateISO: "2017-06-15T00:00:00Z",
+    url: "https://www.uploadvr.com/vive-tracker-vr-innovation/",
   },
   {
     slug: "ibm-thinkleaders-2017",
@@ -142,6 +143,7 @@ export const pressMentions: PressMention[] = [
     title: "Judge",
     date: "2018",
     dateISO: "2018-06-15T00:00:00Z",
+    url: "https://3dawards.chaos.com/contests/8-3d-awards-2018/judges",
   },
   {
     slug: "that-bim-girl-2018",

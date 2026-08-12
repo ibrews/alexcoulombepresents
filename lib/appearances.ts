@@ -133,6 +133,7 @@ export const appearances: Appearance[] = [
     date: "2017",
     endsISO: "2017-06-30T00:00:00Z",
     location: "New York, NY",
+    url: "https://www.facebook.com/jumpintovrfest/videos/alex-coulombe-of-agile-lens/1752864321672970/",
   },
   {
     slug: "tcg-petting-zoo-2017",
@@ -208,6 +209,7 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-06-30T00:00:00Z",
     location: "Venice, Italy",
+    url: "https://youtu.be/XdUOaEQakE8",
   },
   {
     slug: "propelify-2018",
@@ -217,6 +219,7 @@ export const appearances: Appearance[] = [
     date: "2018",
     endsISO: "2018-09-30T00:00:00Z",
     location: "Hoboken, NJ",
+    url: "https://web.archive.org/web/20210806033627/https://propelify.com/festival18/",
   },
   {
     slug: "vrara-webinar-2018",
@@ -245,6 +248,7 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-11-30T00:00:00Z",
     location: "New York, NY",
+    url: "https://namt.org/events/fall-conference-2019/#agenda",
   },
   {
     slug: "state-of-art-adx-2019",
@@ -254,6 +258,7 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-06-30T00:00:00Z",
     location: "Mogliano Veneto, Italy",
+    url: "http://web.archive.org/web/20190918225620/https://www.stateofartacademy.com/academy-days-x/",
   },
   {
     slug: "nyc-media-lab-summit-2019",
@@ -272,6 +277,7 @@ export const appearances: Appearance[] = [
     date: "2019",
     endsISO: "2019-09-15T00:00:00Z",
     location: "Venice, Italy",
+    url: "https://realtimeconference.com/june-2020-immersive-storytelling-panel-discussion/",
   },
   {
     slug: "3ds-new-york-2019",
@@ -367,6 +373,7 @@ export const appearances: Appearance[] = [
     date: "Jun 5, 2020",
     endsISO: "2020-06-05T23:00:00Z",
     location: "Virtual",
+    url: "https://youtu.be/JT0JwnLYfmY",
   },
   {
     slug: "realtime-conference-2020-multiuser",
@@ -376,6 +383,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-04-26T00:00:00Z",
     location: "Virtual",
+    url: "https://youtu.be/zcrLQT9KBBU",
   },
   {
     slug: "5th-wall-forum-2020",
@@ -385,6 +393,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual",
+    url: "https://www.brendanabradley.com/futurestages/2020/12/1/5th-wall-forum-reveal-virtual-conference",
   },
   {
     slug: "nxtbld-inside-out-2020",
@@ -450,6 +459,7 @@ export const appearances: Appearance[] = [
     date: "2020",
     endsISO: "2020-06-30T00:00:00Z",
     location: "Virtual",
+    url: "https://www.tyausa.org/wp-content/uploads/2020/04/Virtual-Conference-Press-Release-FINAL-2.pdf",
   },
   {
     slug: "cpd-vr-dubai-2020",
@@ -766,6 +776,7 @@ export const appearances: Appearance[] = [
     date: "2022",
     endsISO: "2022-03-25T00:00:00Z",
     location: "San Francisco, CA",
+    url: "https://schedule.gdconf.com/session/future-realities-summit-up-close-virtual-the-power-of-live-vr-actors/884641",
   },
   {
     slug: "usitt-2022",
@@ -803,6 +814,7 @@ export const appearances: Appearance[] = [
     date: "Mar 2023",
     endsISO: "2023-03-15T00:00:00Z",
     location: "Austin, TX",
+    url: "https://schedule.sxsw.com/2023/events/PP129926",
   },
   {
     slug: "nvidia-vcr-2023",
@@ -812,6 +824,7 @@ export const appearances: Appearance[] = [
     date: "Feb 2023",
     endsISO: "2023-02-28T00:00:00Z",
     location: "Virtual",
+    url: "https://www.linkedin.com/posts/alexcoulombe_nvidia-vcr-easily-record-and-playback-your-activity-7028396545557299200-2iQI",
   },
   {
     slug: "nyvr-2023",
@@ -831,6 +844,7 @@ export const appearances: Appearance[] = [
     date: "Jul 2023",
     endsISO: "2023-07-15T00:00:00Z",
     location: "Toronto, Canada",
+    url: "https://conference.virtualreality.to/schedule-vrto-2023/",
   },
   {
     slug: "digital-fashion-week-2023",
@@ -849,6 +863,7 @@ export const appearances: Appearance[] = [
     date: "Oct 2023",
     endsISO: "2023-10-15T00:00:00Z",
     location: "Seattle, WA",
+    url: "https://www.youtube.com/watch?v=6la2yieiCG0",
   },
   {
     slug: "ubc-guest-speaker-2023",
@@ -876,6 +891,7 @@ export const appearances: Appearance[] = [
     date: "Jan 2024",
     endsISO: "2024-01-31T00:00:00Z",
     location: "Chicago, IL",
+    url: "https://worldsinplay.com/past-events-1",
   },
   {
     slug: "unreal-fest-gold-coast-2024",
@@ -894,6 +910,7 @@ export const appearances: Appearance[] = [
     date: "Jun 18–20, 2024",
     endsISO: "2024-06-20T23:00:00Z",
     location: "Prague, Czech Republic",
+    url: "https://www.youtube.com/watch?v=m0T8euG9Rh8",
   },
   {
     slug: "svvr-connect-2024",
@@ -942,6 +959,7 @@ export const appearances: Appearance[] = [
     date: "2025",
     endsISO: "2025-10-15T00:00:00Z",
     location: "London, UK / Virtual",
+    url: "https://www.raindanceimmersive.com/2025-a-christmas-carol/",
   },
   {
     slug: "siggraph-2025-paper",
@@ -951,6 +969,7 @@ export const appearances: Appearance[] = [
     date: "Aug 2025",
     endsISO: "2025-08-15T00:00:00Z",
     location: "Vancouver, Canada",
+    url: "https://dl.acm.org/doi/10.1145/3721244.3742445",
   },
   {
     slug: "unreal-fest-orlando-2025",
@@ -960,6 +979,7 @@ export const appearances: Appearance[] = [
     date: "2025",
     endsISO: "2025-09-30T00:00:00Z",
     location: "Orlando, FL",
+    url: "https://www.youtube.com/watch?v=Gy6_v9jr-5w",
   },
   {
     slug: "unreal-fest-stockholm-2025",
@@ -969,6 +989,7 @@ export const appearances: Appearance[] = [
     date: "2025",
     endsISO: "2025-11-15T00:00:00Z",
     location: "Stockholm, Sweden",
+    url: "https://www.youtube.com/watch?v=M1J25jJ79U8",
   },
   {
     slug: "harvardxr-2026-keynote",
@@ -978,6 +999,7 @@ export const appearances: Appearance[] = [
     date: "Apr 17, 2026",
     endsISO: "2026-04-17T23:00:00Z",
     location: "Cambridge, MA (Harvard University)",
+    url: "https://www.harvardxr.com/2026/program-2026",
   },
   {
     slug: "fmx-2026",
@@ -987,6 +1009,7 @@ export const appearances: Appearance[] = [
     date: "Thu May 7, 2026",
     endsISO: "2026-05-07T22:00:00Z",
     location: "Stuttgart, Germany",
+    url: "https://fmx.de/en/news/latest-news/news-06-05-2026",
   },
   {
     slug: "nxt-bld-2026",
@@ -996,7 +1019,7 @@ export const appearances: Appearance[] = [
     date: "May 13, 2026",
     endsISO: "2026-05-13T22:00:00Z",
     location: "QEII Centre, London",
-    url: "https://nxtbld.com/",
+    url: "https://nxtaec.com/video/productizing-xr-for-architecture-alex-coulombe-yu-jun-yeh-agile-lens/",
   },
   {
     slug: "pmre-2026-keynote",
@@ -1006,7 +1029,7 @@ export const appearances: Appearance[] = [
     date: "Nov 17–19, 2026",
     endsISO: "2026-11-20T06:00:00Z",
     location: "Palms Casino Resort, Las Vegas",
-    url: "https://www.pmreconference.com/",
+    url: "https://pmreconference.com/agenda",
   },
   {
     slug: "worlds-in-action-hack-la",
