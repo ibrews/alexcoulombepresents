@@ -47,8 +47,8 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   {
     id: "starter",
     name: "Starter",
-    priceLabel: "$99/mo",
-    priceCents: 9900,
+    priceLabel: "$200/mo",
+    priceCents: 20000,
     priceEnvVar: "STRIPE_MEMBERSHIP_PRICE_ID_STARTER",
     voteWeight: 2,
     monthlyCredits: 3,
@@ -63,8 +63,8 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   {
     id: "unlimited",
     name: "Unlimited",
-    priceLabel: "$149/mo",
-    priceCents: 14900,
+    priceLabel: "$350/mo",
+    priceCents: 35000,
     priceEnvVar: "STRIPE_MEMBERSHIP_PRICE_ID_UNLIMITED",
     voteWeight: 4,
     monthlyCredits: "unlimited",
@@ -79,8 +79,8 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   {
     id: "insider",
     name: "Insider",
-    priceLabel: "$299/mo",
-    priceCents: 29900,
+    priceLabel: "$500/mo",
+    priceCents: 50000,
     priceEnvVar: "STRIPE_MEMBERSHIP_PRICE_ID_INSIDER",
     voteWeight: 10,
     monthlyCredits: "unlimited",

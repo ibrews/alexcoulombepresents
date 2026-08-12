@@ -70,9 +70,10 @@ import {
 const XRSIM_SKU = "xrsim";
 
 const LEGACY_MEMBERSHIP_PRICE_IDS: Record<MembershipTierId, string[]> = {
-  starter: ["price_1U1fifDALxplFYNoASHbs3Sg"],
-  unlimited: ["price_1U1fjUDALxplFYNoDJ5gOq0e"], // Lynne Heller's active subscription
-  insider: ["price_1U1fk5DALxplFYNowUUbzkqi"],
+  starter: ["price_1U1fifDALxplFYNoASHbs3Sg", "price_1U360MDALxplFYNoHV1vTOYk"],
+  unlimited: ["price_1U1fjUDALxplFYNoDJ5gOq0e", "price_1U362gDALxplFYNoYhKjt94Q"], // Lynne Heller's active subscription
+  // price_1U364pDALxplFYNobtfMb3mO: Jan Solarski's active subscription (2026-08-12 price increase)
+  insider: ["price_1U1fk5DALxplFYNowUUbzkqi", "price_1U364pDALxplFYNobtfMb3mO"],
 };
 
 // Live wiring for the membership branches (logic + tests live in
