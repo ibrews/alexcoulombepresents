@@ -28,6 +28,7 @@ import { sendVoucherEmail } from "@/lib/commerce/email";
 import { issueMagicLink } from "@/lib/commerce/tokens";
 import { recordCatalogOrder, markCatalogOrdersRefunded, getSeatsSold } from "@/lib/commerce/seats";
 import { sendTelegramNotice } from "@/lib/telegram";
+import { addZoomRegistrant } from "@/lib/zoom";
 import {
   handleMembershipEvent,
   type MembershipBillingDeps,
@@ -312,6 +313,18 @@ export async function POST(req: NextRequest) {
           amountCents: session.amount_total ?? 0,
         });
         console.log(`[fulfill] ${fulfillment ?? "manual"} confirmation sent → ${email} for ${slug}`);
+
+        // Auto-register the buyer on the real Zoom meeting when one's on
+        // file (lib/zoom.ts) — awaited (a fire-and-forget promise risks the
+        // serverless function terminating before the fetch completes), but
+        // addZoomRegistrant swallows its own errors and returns a boolean,
+        // so it can never fail an already-charged purchase. Buyer still
+        // gets zoomRegistrationUrl in the email above either way, so a
+        // Zoom-side hiccup just means they fall back to registering
+        // themselves, same as today.
+        if (item?.zoomMeetingId) {
+          await addZoomRegistrant(item.zoomMeetingId, { email, name });
+        }
 
         // Dated Wednesday-calendar classes only (not every catalog item —
         // the running-total framing only makes sense where there's a

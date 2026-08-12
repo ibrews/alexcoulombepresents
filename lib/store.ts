@@ -85,6 +85,14 @@ export type StoreItem = {
   // exists; surfaced in the fulfillment email in place of "Alex emails the
   // Zoom link before class."
   zoomRegistrationUrl?: string;
+  // The real numeric Zoom meeting ID behind zoomRegistrationUrl — a
+  // registration URL's token doesn't decode to this, so it's a separate
+  // field, only set when the meeting was created via
+  // scripts/zoom/create-class-meeting.mjs (which prints both). When set,
+  // the buyer is auto-registered on purchase (app/api/stripe-webhook) in
+  // addition to receiving the link — belt-and-suspenders, since the
+  // auto-registration is best-effort and must never block a real purchase.
+  zoomMeetingId?: string;
 };
 
 export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
@@ -126,6 +134,7 @@ function wednesdayCalendarItem(input: {
   priceCents: number;
   sessionDateISO: string; // 11a ET start
   zoomRegistrationUrl?: string;
+  zoomMeetingId?: string;
 }): StoreItem {
   return {
     slug: input.slug,
@@ -141,6 +150,7 @@ function wednesdayCalendarItem(input: {
     sessionDateISO: input.sessionDateISO,
     minEnrollment: 5,
     zoomRegistrationUrl: input.zoomRegistrationUrl,
+    zoomMeetingId: input.zoomMeetingId,
     saleWindow: {
       closesAtISO: input.sessionDateISO,
       closedNote: "This session has already happened — the next one's on the calendar above.",

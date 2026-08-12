@@ -188,5 +188,18 @@ export async function ensureCommerceSchema() {
   // identical-start case.
   await db`DROP INDEX IF EXISTS bookings_one_live_per_slot`;
 
+  // Zoom auto-invite (lib/zoom.ts) — office hours gets a fresh Zoom meeting
+  // every Friday (Alex's call, 2026-08-12: simpler than one standing
+  // recurring meeting to manage), so its meeting ID can't live in code the
+  // way a dated class's can (lib/store.ts's zoomMeetingId) — it changes
+  // weekly without a deploy. One row, upserted by purpose each week.
+  await db`
+    CREATE TABLE IF NOT EXISTS zoom_meetings (
+      purpose      TEXT PRIMARY KEY,
+      meeting_id   TEXT NOT NULL,
+      updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+
   _ensured = true;
 }
