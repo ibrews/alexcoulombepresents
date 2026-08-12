@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { bookingByToken, BOOKING_TIMEZONE } from "@/lib/booking/config";
+import { bookingByToken, BOOKING_TIMEZONE, bookingHours, hoursAdjective } from "@/lib/booking/config";
 import { formatSlot } from "@/lib/booking/availability";
 
 // The payment link from the confirmation email.
@@ -56,7 +56,13 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ token: stri
     "line_items[0][quantity]": "1",
     "line_items[0][price_data][currency]": "usd",
     "line_items[0][price_data][unit_amount]": String(booking.price_cents),
-    "line_items[0][price_data][product_data][name]": "1-hour consultation with Alex",
+    // Was a literal "1-hour consultation with Alex" for every booking
+    // regardless of what was actually paid for — a 3-hour client saw the
+    // same product name as a 1-hour one on the Stripe payment page. Derived
+    // from the booking's own timestamps via the shared bookingHours(), the
+    // same function the confirmation email and the reprice link use, so this
+    // can't drift from either of them again.
+    "line_items[0][price_data][product_data][name]": `${hoursAdjective(bookingHours(booking.slot_start, booking.slot_end))} consultation with Alex`,
     "line_items[0][price_data][product_data][description]": when,
     // The webhook keys off these to mark the right booking paid.
     "metadata[kind]": "booking",

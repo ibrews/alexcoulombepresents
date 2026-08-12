@@ -6,6 +6,7 @@ import {
   bookingByToken,
   durationForHours,
   priceFor,
+  bookingHours,
   type BookingAction,
 } from "@/lib/booking/config";
 import { sendBookingConfirmedEmail, sendBookingDeclinedEmail } from "@/lib/booking/email";
@@ -61,9 +62,7 @@ export async function GET(req: NextRequest) {
     // it lands on the true standard rate whatever was claimed.
     let reprice: { priceCents: number; rate: string } | undefined;
     if (action === "confirm_standard") {
-      const hours = Math.round(
-        (new Date(existing.slot_end).getTime() - new Date(existing.slot_start).getTime()) / 3_600_000
-      );
+      const hours = bookingHours(existing.slot_start, existing.slot_end);
       const duration = durationForHours(hours);
       if (duration) reprice = { priceCents: priceFor(duration, "standard"), rate: "standard" };
     }

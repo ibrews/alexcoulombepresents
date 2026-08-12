@@ -7,8 +7,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { busyIntervalsFromIcs, parseIcsDate, zonedWallTimeToUtc } from "../lib/booking/ics.ts";
-import { generateSlots, formatSlot, type BookingConfig } from "../lib/booking/availability.ts";
-import { BOOKING_DURATIONS, priceFor } from "../lib/booking/pricing.ts";
+import {
+  generateSlots,
+  formatSlot,
+  offsetMinutes,
+  formatGmtOffset,
+  zoneLabel,
+  type BookingConfig,
+} from "../lib/booking/availability.ts";
+import { BOOKING_DURATIONS, priceFor, bookingHours, hoursAdjective } from "../lib/booking/pricing.ts";
 
 const ET = "America/New_York";
 
@@ -268,4 +275,86 @@ test("published prices are the agreed numbers", () => {
       [3, 60000],
     ]
   );
+});
+
+// ── bookingHours / hoursAdjective ────────────────────────────────────────────
+// Regression coverage for the bug this session found: the Stripe payment page
+// hardcoded "1-hour consultation with Alex" for every booking regardless of
+// its real length, because duration was computed inline in two OTHER places
+// (the confirmation email, the reprice link) and never in this third one.
+
+test("bookingHours reads a booking's real length from its own timestamps", () => {
+  assert.equal(bookingHours("2026-08-17T17:00:00.000Z", "2026-08-17T18:00:00.000Z"), 1);
+  assert.equal(bookingHours("2026-08-17T17:00:00.000Z", "2026-08-17T19:00:00.000Z"), 2);
+  assert.equal(bookingHours("2026-08-17T17:00:00.000Z", "2026-08-17T20:00:00.000Z"), 3);
+});
+
+test("hoursAdjective stays singular \"hour\" regardless of count (a three-hour flight, not a three-hours flight)", () => {
+  assert.equal(hoursAdjective(1), "1-hour");
+  assert.equal(hoursAdjective(2), "2-hour");
+  assert.equal(hoursAdjective(3), "3-hour");
+});
+
+test("the Stripe product name is derived from the real booking length, not hardcoded", () => {
+  // Simulates what app/book/pay/[token]/route.ts now builds — the exact
+  // regression: a 3-hour booking used to produce "1-hour consultation".
+  const name = (start: string, end: string) => `${hoursAdjective(bookingHours(start, end))} consultation with Alex`;
+  assert.equal(name("2026-08-17T17:00:00.000Z", "2026-08-17T18:00:00.000Z"), "1-hour consultation with Alex");
+  assert.equal(name("2026-08-17T17:00:00.000Z", "2026-08-17T20:00:00.000Z"), "3-hour consultation with Alex");
+});
+
+// ── zoneLabel / offsetMinutes ────────────────────────────────────────────────
+// Backs the "show the +/- to GMT explicitly" request. Real DST transitions
+// are the part worth pinning: a hardcoded offset is correct half the year and
+// silently wrong the other half.
+
+test("offsetMinutes: New York is -240 in EDT (summer), -300 in EST (winter)", () => {
+  assert.equal(offsetMinutes(new Date("2026-08-12T12:00:00Z"), "America/New_York"), -240);
+  assert.equal(offsetMinutes(new Date("2026-01-12T12:00:00Z"), "America/New_York"), -300);
+});
+
+test("offsetMinutes: Tokyo has no DST — always +540", () => {
+  assert.equal(offsetMinutes(new Date("2026-08-12T12:00:00Z"), "Asia/Tokyo"), 540);
+  assert.equal(offsetMinutes(new Date("2026-01-12T12:00:00Z"), "Asia/Tokyo"), 540);
+});
+
+test("offsetMinutes: a half-hour zone (India) is exact, not rounded away", () => {
+  assert.equal(offsetMinutes(new Date("2026-08-12T12:00:00Z"), "Asia/Kolkata"), 330);
+});
+
+test("formatGmtOffset always signs, and only shows minutes when non-zero", () => {
+  assert.equal(formatGmtOffset(540), "GMT+9");
+  assert.equal(formatGmtOffset(-240), "GMT-4");
+  assert.equal(formatGmtOffset(330), "GMT+5:30");
+  assert.equal(formatGmtOffset(0), "GMT+0");
+});
+
+test("zoneLabel: New York shows the abbreviation AND flips it correctly across DST", () => {
+  assert.equal(zoneLabel(new Date("2026-08-12T12:00:00Z"), "America/New_York"), "EDT (GMT-4)");
+  assert.equal(zoneLabel(new Date("2026-01-12T12:00:00Z"), "America/New_York"), "EST (GMT-5)");
+});
+
+// Whether Intl exposes a distinct abbreviation ("JST", "BST") alongside the
+// offset is runtime ICU data, not something zoneLabel controls — Node's
+// bundled ICU gives full North American abbreviations but falls back to a
+// bare offset for some other zones, where a browser typically would not.
+// What the code IS responsible for, and what these pin: the offset is always
+// present and correct, and it's never shown twice.
+test("zoneLabel: London flips between BST and GMT across the same window this feature is used in", () => {
+  const summer = zoneLabel(new Date("2026-08-12T12:00:00Z"), "Europe/London");
+  assert.ok(summer.includes("GMT+1"), `expected GMT+1 in "${summer}"`);
+  const winter = zoneLabel(new Date("2026-01-12T12:00:00Z"), "Europe/London");
+  assert.ok(winter.includes("GMT+0"), `expected GMT+0 in "${winter}"`);
+});
+
+test("zoneLabel: Tokyo, requested explicitly as an example in this session", () => {
+  const label = zoneLabel(new Date("2026-08-12T12:00:00Z"), "Asia/Tokyo");
+  assert.ok(label.includes("GMT+9"), `expected GMT+9 in "${label}"`);
+  assert.ok(!/\(.*\(/.test(label), "must not double-wrap the offset");
+});
+
+test("zoneLabel: a fixed-offset zone with no distinct abbreviation shows the offset once, not doubled", () => {
+  const label = zoneLabel(new Date("2026-08-12T12:00:00Z"), "Asia/Kolkata");
+  assert.equal(label, "GMT+5:30");
+  assert.ok(!label.includes("(("), "must not double-wrap the offset");
 });

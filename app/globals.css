@@ -233,3 +233,13 @@ body {
 .hxr-stage .stage-walker { transform-origin: center bottom; }
 .hxr-stage .hxr-anim { transform-box: fill-box; transform-origin: center bottom; }
 .hxr-stage .headset-block { transform-origin: center; }
+
+/* Indeterminate progress bar (BookingPicker) — used whenever we're waiting on
+   something with genuinely unknown duration (a calendar fetch that may need
+   retries, an email send) rather than a real percentage we'd have to fake. */
+.progress-indeterminate { position: relative; overflow: hidden; height: 6px; border-radius: 999px; background: rgba(255,255,255,.08); }
+.progress-indeterminate::after { content: ""; position: absolute; inset: 0; width: 40%; border-radius: 999px; background: linear-gradient(90deg, transparent, rgba(45,212,191,.9), transparent); animation: progressSlide 1.3s ease-in-out infinite; }
+@keyframes progressSlide { 0% { left: -40%; } 100% { left: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .progress-indeterminate::after { animation: none; left: 0; width: 100%; opacity: .5; }
+}

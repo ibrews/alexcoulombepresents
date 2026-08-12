@@ -9,6 +9,7 @@ import {
   HOLD_HOURS,
   bookingActionSignature,
   rateById,
+  bookingHours,
   type BookingRow,
 } from "./config";
 
@@ -40,13 +41,12 @@ function siteUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.alexcoulombepresents.com";
 }
 
-/** "2 hours" — derived from the row, never assumed. These emails were written
- * when every booking was exactly an hour and said so literally, which would
- * have told a 3-hour client they'd booked one. */
+/** "2 hours" — derived from the row via the shared bookingHours(), never
+ * assumed. These emails were written when every booking was exactly an hour
+ * and said so literally, which would have told a 3-hour client they'd
+ * booked one. */
 function lengthLabel(booking: BookingRow): string {
-  const hours = Math.round(
-    (new Date(booking.slot_end).getTime() - new Date(booking.slot_start).getTime()) / 3_600_000
-  );
+  const hours = bookingHours(booking.slot_start, booking.slot_end);
   return hours === 1 ? "1 hour" : `${hours} hours`;
 }
 

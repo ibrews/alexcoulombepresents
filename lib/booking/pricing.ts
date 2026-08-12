@@ -25,6 +25,28 @@ export function durationForHours(hours: number): BookingDuration | undefined {
 }
 
 /**
+ * A booking's real length, derived from its own timestamps rather than
+ * trusted as a separately-stored field.
+ *
+ * This exists because it used to be computed inline, separately, in the
+ * confirm route and the email module — and a THIRD spot (the Stripe payment
+ * page) never computed it at all and hardcoded "1-hour consultation with
+ * Alex" for every booking regardless of length. Two duplicated copies plus
+ * one missing copy is exactly the shape that produces this bug: one
+ * authoritative function, used everywhere a length is needed.
+ */
+export function bookingHours(slotStartIso: string, slotEndIso: string): number {
+  return Math.round((new Date(slotEndIso).getTime() - new Date(slotStartIso).getTime()) / 3_600_000);
+}
+
+/** "3-hour" — the adjectival form ("a three-hour flight" stays singular
+ * "hour" regardless of count), for copy that reads as a description rather
+ * than a quantity ("3 hours"/durationForHours(...).label). */
+export function hoursAdjective(hours: number): string {
+  return `${hours}-hour`;
+}
+
+/**
  * Who's paying, and what multiplier applies.
  *
  * Self-declared on the request form and deliberately NOT verified in code —

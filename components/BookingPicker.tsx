@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatSlotDay, formatSlotTime, zoneLabel } from "@/lib/booking/availability";
 
-type Slot = { start: string; end: string; label: string; day: string; time: string };
+type Slot = { start: string; end: string };
 type Duration = {
   hours: number;
   label: string;
@@ -19,6 +20,45 @@ type SlotsResponse = {
 };
 
 const dollars = (cents: number) => `$${(cents / 100).toFixed(0)}`;
+// Matches lib/booking/config.ts's BOOKING_TIMEZONE. Not imported from there —
+// that module reaches for the database and server-only env, which has no
+// business in a client bundle for the sake of one string literal. The API
+// response's own `timeZone` field carries the authoritative value; this is
+// only the pre-fetch default so the page has something sane to render before
+// that response (and the viewer-zone detection right after mount) land.
+const BOOKING_TIMEZONE_ID = "America/New_York";
+const BOOKING_ZONE_LABEL = "Eastern (New York)";
+
+// Neither wait below has a knowable duration to show as a real percentage —
+// the calendar fetch can retry a slow feed for up to ~20s, and the request
+// step sends two emails before it answers. A bar with a fabricated
+// percentage would just be lying faster or slower than reality; this instead
+// shows honest, escalating status text next to an indeterminate bar, so
+// "still working" is visible without pretending to know how long it'll be.
+function useElapsedStage(active: boolean, stages: Array<{ afterMs: number; text: string }>): string {
+  const [ms, setMs] = useState(0);
+  useEffect(() => {
+    if (!active) {
+      setMs(0);
+      return;
+    }
+    const start = Date.now();
+    const id = setInterval(() => setMs(Date.now() - start), 250);
+    return () => clearInterval(id);
+  }, [active]);
+  let text = stages[0]?.text ?? "";
+  for (const stage of stages) if (ms >= stage.afterMs) text = stage.text;
+  return text;
+}
+
+function ProgressBar({ label }: { label: string }) {
+  return (
+    <div role="status" aria-live="polite" className="space-y-2">
+      <div className="progress-indeterminate" />
+      <p className="text-sm text-mist">{label}</p>
+    </div>
+  );
+}
 
 export default function BookingPicker() {
   // One fetch, once, on mount — every duration's slot list and every rate's
@@ -38,6 +78,32 @@ export default function BookingPicker() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  // Defaults to New York (server-rendered, so this never mismatches what the
+  // server sent — Date/Intl calls that depend on the visitor's own clock or
+  // locale can't run during SSR) and is swapped to the visitor's own zone
+  // right after mount, via the one browser API that can answer "what zone is
+  // this person actually in" with no permission prompt and no guessing from
+  // IP geolocation.
+  const [viewerZone, setViewerZone] = useState(BOOKING_TIMEZONE_ID);
+  // "auto" covers both the pre-detection default AND the post-mount
+  // auto-detected zone — neither was a choice the visitor made. Only
+  // clicking one of the two override controls below sets "manual", and that
+  // distinction is what the status line reports; without it, picking Tokyo
+  // by hand would still read "detected from your device", which is simply
+  // false.
+  const [zoneSource, setZoneSource] = useState<"auto" | "manual">("auto");
+  const [zoneInput, setZoneInput] = useState("");
+  const [zoneError, setZoneError] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (detected) setViewerZone(detected);
+    } catch {
+      // Detection failing just means we stay on New York — never block the page over it.
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -63,6 +129,49 @@ export default function BookingPicker() {
   useEffect(() => {
     setSelected(null);
   }, [hours]);
+
+  const loadingStage = useElapsedStage(!data && !loadError, [
+    { afterMs: 0, text: "Checking Alex's calendar…" },
+    { afterMs: 3000, text: "Still checking — one calendar can be a little slow…" },
+    { afterMs: 9000, text: "Almost there…" },
+  ]);
+  const submitStage = useElapsedStage(submitting, [
+    { afterMs: 0, text: "Sending your request…" },
+    { afterMs: 2500, text: "Still sending — please don't refresh the page…" },
+    { afterMs: 7000, text: "Almost done — please don't refresh…" },
+  ]);
+
+  // A real safeguard, not just a suggestion: while the request is in flight,
+  // an accidental refresh or tab close would abandon a request that may have
+  // already partly succeeded server-side (the request row can be written
+  // before both confirmation emails finish sending). The browser's built-in
+  // "leave site?" prompt only needs to survive for the few seconds this is
+  // true, and it clears itself the moment submit() finishes either way.
+  useEffect(() => {
+    if (!submitting) return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [submitting]);
+
+  function applyZoneInput() {
+    const candidate = zoneInput.trim();
+    if (!candidate) return;
+    try {
+      // Throws on anything Intl doesn't recognize as a real IANA zone —
+      // the only validation that matters, since there's no fixed list to
+      // check against.
+      Intl.DateTimeFormat(undefined, { timeZone: candidate });
+      setViewerZone(candidate);
+      setZoneSource("manual");
+      setZoneError(null);
+      setZoneInput("");
+    } catch {
+      setZoneError(`"${candidate}" isn't a time zone I recognize — try a format like "Europe/London" or "Asia/Tokyo".`);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -112,7 +221,23 @@ export default function BookingPicker() {
 
   const durations = data?.durations ?? [];
   const active = durations.find((d) => d.hours === hours);
-  const slots = data?.slotsByHours?.[hours] ?? [];
+  const rawSlots = data?.slotsByHours?.[hours] ?? [];
+  const now = new Date();
+  const viewerLabel = zoneLabel(now, viewerZone);
+  const viewerIsNewYork = viewerZone === BOOKING_TIMEZONE_ID;
+
+  // Every slot's day/time re-rendered in whichever zone the visitor picked —
+  // computed here, client-side, from the raw instant the server sent. The
+  // server only ever thinks in America/New_York (that's where the business
+  // hours and the calendar live); which zone a VISITOR wants to read those
+  // times in is display-only, so it never needs another network round-trip.
+  const grouped = rawSlots.reduce<Record<string, { start: string; time: string }[]>>((acc, slot) => {
+    const start = new Date(slot.start);
+    const day = formatSlotDay(start, viewerZone);
+    const time = formatSlotTime(start, viewerZone);
+    (acc[day] ??= []).push({ start: slot.start, time });
+    return acc;
+  }, {});
 
   return (
     <form onSubmit={submit} className="space-y-8">
@@ -186,9 +311,52 @@ export default function BookingPicker() {
         <legend className="text-sm font-semibold uppercase tracking-wide text-mist">
           3. Pick a start time
         </legend>
-        {data && (
-          <p className="mt-1 text-sm text-mist/70">All times {data.timeZone.replace("_", " ")}.</p>
-        )}
+
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-mist/70">
+          <span>
+            Showing times in <strong className="text-snow">{viewerZone}</strong> — {viewerLabel}
+            {zoneSource === "manual"
+              ? " — your choice."
+              : viewerIsNewYork
+                ? " — Alex's own zone."
+                : " — detected from your device."}
+          </span>
+          {!viewerIsNewYork && (
+            <button
+              type="button"
+              onClick={() => {
+                setViewerZone(BOOKING_TIMEZONE_ID);
+                setZoneSource("manual");
+              }}
+              className="text-teal hover:underline"
+            >
+              Show {BOOKING_ZONE_LABEL} instead
+            </button>
+          )}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <input
+            type="text"
+            value={zoneInput}
+            onChange={(e) => setZoneInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                applyZoneInput();
+              }
+            }}
+            placeholder="Or type a time zone, e.g. Europe/London"
+            className="w-64 max-w-full rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-snow outline-none focus:border-teal"
+          />
+          <button
+            type="button"
+            onClick={applyZoneInput}
+            className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-mist hover:border-teal/50 hover:text-snow"
+          >
+            Use this zone
+          </button>
+        </div>
+        {zoneError && <p className="mt-1 text-sm text-rose-300">{zoneError}</p>}
 
         {loadError && (
           <div className="mt-4 rounded-2xl border border-rose-400/40 bg-rose-400/10 p-5 text-snow">
@@ -197,9 +365,13 @@ export default function BookingPicker() {
           </div>
         )}
 
-        {!loadError && !data && <p className="mt-4 text-mist">Loading open times…</p>}
+        {!loadError && !data && (
+          <div className="mt-4">
+            <ProgressBar label={loadingStage} />
+          </div>
+        )}
 
-        {!loadError && data && slots.length === 0 && (
+        {!loadError && data && rawSlots.length === 0 && (
           <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-snow">
             <strong>Nothing open at that length in the next few weeks.</strong>
             <p className="mt-2 leading-relaxed text-mist">
@@ -212,14 +384,9 @@ export default function BookingPicker() {
           </div>
         )}
 
-        {!loadError && data && slots.length > 0 && (
+        {!loadError && data && rawSlots.length > 0 && (
           <div className="mt-4 space-y-5">
-            {Object.entries(
-              slots.reduce<Record<string, Slot[]>>((acc, slot) => {
-                (acc[slot.day] ??= []).push(slot);
-                return acc;
-              }, {})
-            ).map(([day, daySlots]) => (
+            {Object.entries(grouped).map(([day, daySlots]) => (
               <div key={day}>
                 <p className="font-mono text-xs text-teal">{day}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -286,20 +453,26 @@ export default function BookingPicker() {
 
       {submitError && <p className="text-sm text-rose-300">{submitError}</p>}
 
-      <div className="flex flex-wrap items-center gap-4">
-        <button
-          type="submit"
-          disabled={!selected || submitting}
-          className="rounded-xl bg-teal px-5 py-3 font-semibold text-ink transition disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {submitting ? "Sending…" : "Request this time"}
-        </button>
-        <p className="text-sm text-mist">
-          {active
-            ? `Nothing is charged now — ${dollars(active.prices[rate] ?? active.standardPriceCents)} is due only after Alex confirms he can help.`
-            : "Nothing is charged now — payment is only due after Alex confirms he can help."}
-        </p>
-      </div>
+      {submitting ? (
+        <div className="rounded-xl border border-teal/30 bg-teal/[0.06] p-4">
+          <ProgressBar label={submitStage} />
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            type="submit"
+            disabled={!selected}
+            className="rounded-xl bg-teal px-5 py-3 font-semibold text-ink transition disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Request this time
+          </button>
+          <p className="text-sm text-mist">
+            {active
+              ? `Nothing is charged now — ${dollars(active.prices[rate] ?? active.standardPriceCents)} is due only after Alex confirms he can help.`
+              : "Nothing is charged now — payment is only due after Alex confirms he can help."}
+          </p>
+        </div>
+      )}
     </form>
   );
 }

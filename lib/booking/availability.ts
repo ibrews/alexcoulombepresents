@@ -155,3 +155,55 @@ export function formatSlotTime(start: Date, timeZone: string): string {
     minute: "2-digit",
   }).format(start);
 }
+
+/**
+ * Minutes a zone's wall clock sits ahead of UTC at a given instant — positive
+ * east of Greenwich (Tokyo: +540), negative west (New York in summer: -240).
+ * Reuses wallClockPartsInZone rather than a separate offset calculation, so
+ * there's exactly one place that converts a zone's wall time to an instant.
+ */
+export function offsetMinutes(at: Date, timeZone: string): number {
+  const utcInstant = Date.UTC(
+    at.getUTCFullYear(),
+    at.getUTCMonth(),
+    at.getUTCDate(),
+    at.getUTCHours(),
+    at.getUTCMinutes()
+  );
+  const parts = wallClockPartsInZone(at, timeZone);
+  const zonedAsIfUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute);
+  return Math.round((zonedAsIfUtc - utcInstant) / 60_000);
+}
+
+/** "GMT+9" / "GMT-4" / "GMT-4:30" — the offset half of a zone label. Always
+ * shows a sign, since "GMT9" reads as a typo and this is meant to answer "how
+ * far from GMT" at a glance, per Alex's ask to state the +/- explicitly
+ * rather than relying on a bare zone abbreviation. */
+export function formatGmtOffset(minutes: number): string {
+  const sign = minutes >= 0 ? "+" : "-";
+  const abs = Math.abs(minutes);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  return `GMT${sign}${h}${m ? ":" + String(m).padStart(2, "0") : ""}`;
+}
+
+/**
+ * "EDT (GMT-4)" / "JST (GMT+9)" / "GMT+5:30" — a zone's short name plus its
+ * explicit UTC offset, so a reader who doesn't know what "EDT" means still
+ * knows exactly how far it is from GMT. Falls back to the offset alone when
+ * Intl has no distinct abbreviation for the zone (fixed-offset zones like
+ * Asia/Kolkata report their offset as the "short" name too).
+ */
+export function zoneLabel(at: Date, timeZone: string): string {
+  const offset = formatGmtOffset(offsetMinutes(at, timeZone));
+  let short: string;
+  try {
+    short =
+      new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "short" })
+        .formatToParts(at)
+        .find((p) => p.type === "timeZoneName")?.value ?? offset;
+  } catch {
+    short = offset;
+  }
+  return short === offset || /^(GMT|UTC)/.test(short) ? offset : `${short} (${offset})`;
+}

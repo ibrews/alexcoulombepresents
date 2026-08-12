@@ -13,6 +13,8 @@ export {
   durationForHours,
   rateById,
   priceFor,
+  bookingHours,
+  hoursAdjective,
   type BookingDuration,
   type BookingRateId,
 } from "./pricing";
