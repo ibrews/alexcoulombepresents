@@ -2,8 +2,7 @@
 //
 // It turns a handful of dots into a navigable knowledge graph: each link node
 // drifts with the ambient field until you point at it, then it LOCKS in place
-// while a shockwave shoves the surrounding dots outward and a clearance
-// bubble holds them back so the tooltip stays readable.
+// while soft ripples lap outward through the surrounding dots.
 //
 // Deliberately framework-free and canvas-agnostic: the host component owns the
 // particle array, the RAF loop and the DOM hit-targets, and calls
@@ -15,12 +14,12 @@
 //     tests/link-nodes.test.ts: a 40px displacement is ~75% recovered at
 //     200ms and settled by 300ms, and a node travelling 166px/s is arrested
 //     inside 7px. Fast enough to read as "grabbed", slow enough to see.
-//   · The push is TWO effects, and it needs both to read as physical: a
-//     travelling impulse ring (you can see it leave the node) plus a
-//     sustained, eased-in clearance field (the hole persists while you hover
-//     and closes when you leave).
-//   · Impulses are expressed in the host's per-frame velocity units and
-//     scaled by dt*60, so a 120Hz display feels the same as a 60Hz one.
+//   · The ripples are DISPLACEMENTS, not forces, and that distinction is the
+//     whole reason they read as water rather than an explosion. See the long
+//     note on applyDisplacement() — the force-based first version measured a
+//     1500px shove and left a permanent crater around every link.
+//   · Nothing accumulates: peak sway is ~9-16px and every dot returns to
+//     exactly where the ambient field had it. A crater is not representable.
 
 import type { HeroLink } from "@/lib/heroLinks";
 
@@ -59,7 +58,7 @@ export type LinkNodeRuntime = {
   phase: number;
 };
 
-type Wave = { x: number; y: number; t: number };
+type Wave = { x: number; y: number; t: number; amp: number };
 
 // ── Tuning ──────────────────────────────────────────────────
 const WANDER_AMP = 26;       // px of idle drift around home
@@ -73,14 +72,16 @@ const POINTER_HOLD = 62;     // inside this the dodge fades so nodes stay catcha
 const ACT_IN = 15;           // activation ease-in rate (per second)
 const ACT_OUT = 7;
 
-const WAVE_SPEED = 690;      // px/s the impulse ring travels outward
-const WAVE_BAND = 96;        // px thickness of the ring
-const WAVE_DECAY = 2.3;      // amplitude e-folding rate
-const WAVE_IMPULSE = 2.9;    // per-frame velocity added at the ring's crest
-const WAVE_NODE_FACTOR = 0.3; // other link nodes are "heavier" than dust
+// Ripples are DISPLACEMENTS in px, not forces — see applyDisplacement().
+const WAVE_SPEED = 300;      // px/s the crest travels outward — slow, lapping
+const WAVE_DECAY = 0.85;     // amplitude e-folding rate
+const RIPPLE_AMP = 7;        // px of sway at the crest of the first ripple
+const RIPPLE_SIGMA = 64;     // px half-width of the crest
+const RIPPLE_PERIOD = 1.25;  // seconds between ripples while a node is held
+const RIPPLE_REPEAT_AMP = 0.62; // later ripples are softer than the first
 
-const CLEAR_R = 132;         // sustained bubble radius around a locked node
-const CLEAR_F = 0.62;
+const BULGE_AMP = 9;         // px the dots ease outward under a held node
+const BULGE_SIGMA = 70;
 
 const NODE_R = 3.1;          // core dot radius (ambient dots are 0.6–2.2)
 const BAND_PAD = 40;         // breathing room at a band's ends
@@ -94,6 +95,12 @@ const NAV_CLEAR = 40;
 export class LinkNodeLayer {
   nodes: LinkNodeRuntime[] = [];
   private waves: Wave[] = [];
+  private rippleClock = 0;
+  /** Whether any offset is currently applied, so idle frames can early-out. */
+  private displacing = false;
+  // Per-particle displacement currently applied, so it can be undone exactly.
+  // Weak so a reseeded particle array does not pin the old one in memory.
+  private offsets = new WeakMap<FieldParticle, { ox: number; oy: number }>();
   private t = 0;
   private activeIndex: number | null = null;
   private w = 0;
@@ -212,7 +219,10 @@ export class LinkNodeLayer {
     if (!n) return;
     n.lockX = n.x;
     n.lockY = n.y;
-    if (!this.reduced) this.waves.push({ x: n.x, y: n.y, t: 0 });
+    if (!this.reduced) {
+      this.rippleClock = 0;
+      this.waves.push({ x: n.x, y: n.y, t: 0, amp: 1 });
+    }
   }
 
   /**
@@ -226,63 +236,115 @@ export class LinkNodeLayer {
     this.t += step;
 
     if (!this.reduced) {
-      this.advanceWaves(step, frame, particles);
-      this.applyClearance(frame, particles);
+      this.advanceWaves(step);
+      this.applyDisplacement(particles);
     }
     this.integrateNodes(step, pointer);
   }
 
-  private advanceWaves(step: number, frame: number, particles: FieldParticle[]) {
+  private advanceWaves(step: number) {
     const maxR = Math.hypot(this.w, this.h);
     for (let i = this.waves.length - 1; i >= 0; i--) {
       const wave = this.waves[i];
       wave.t += step;
-      const ring = wave.t * WAVE_SPEED;
-      const amp = Math.exp(-wave.t * WAVE_DECAY);
-      if (amp < 0.03 || ring - WAVE_BAND > maxR) {
+      if (
+        Math.exp(-wave.t * WAVE_DECAY) < 0.04 ||
+        wave.t * WAVE_SPEED - RIPPLE_SIGMA * 2 > maxR
+      ) {
         this.waves.splice(i, 1);
-        continue;
       }
-      for (const p of particles) {
-        const dx = p.x - wave.x;
-        const dy = p.y - wave.y;
-        const d = Math.hypot(dx, dy) || 1;
-        const off = Math.abs(d - ring);
-        if (off > WAVE_BAND) continue;
-        const f = amp * (1 - off / WAVE_BAND) * WAVE_IMPULSE * frame;
-        p.vx += (dx / d) * f;
-        p.vy += (dy / d) * f;
+    }
+    // Lapping, not a single bang: while a node is held, keep sending soft
+    // ripples out at a slow, regular cadence.
+    if (this.activeIndex !== null) {
+      this.rippleClock += step;
+      if (this.rippleClock >= RIPPLE_PERIOD) {
+        this.rippleClock = 0;
+        const n = this.nodes[this.activeIndex];
+        if (n) this.waves.push({ x: n.x, y: n.y, t: 0, amp: RIPPLE_REPEAT_AMP });
       }
-      // Other link nodes get shoved too, but they carry more mass.
-      for (const n of this.nodes) {
-        const dx = n.x - wave.x;
-        const dy = n.y - wave.y;
-        const d = Math.hypot(dx, dy);
-        if (d < 1) continue;
-        const off = Math.abs(d - ring);
-        if (off > WAVE_BAND) continue;
-        const f = amp * (1 - off / WAVE_BAND) * WAVE_IMPULSE * WAVE_NODE_FACTOR * frame * 60;
-        n.vx += (dx / d) * f;
-        n.vy += (dy / d) * f;
-      }
+    } else {
+      this.rippleClock = 0;
     }
   }
 
-  /** Holds a readable hole open around the locked node for as long as it's held. */
-  private applyClearance(frame: number, particles: FieldParticle[]) {
-    for (const n of this.nodes) {
-      if (n.act < 0.01) continue;
-      const R = CLEAR_R * n.act;
+  /**
+   * A reversible DISPLACEMENT field, not a force.
+   *
+   * The first version added velocity — a travelling impulse plus a sustained
+   * clearance push — and it was violently wrong: measured, it flung dots
+   * 1500px, right off the hero and through the wrap-around, leaving a
+   * permanent crater around every link. The reason is structural, not a bad
+   * constant. Ambient dots have no home to spring back to, and the host damps
+   * them at 0.985/frame (a ~66-frame time constant), so ANY sustained force
+   * integrates into a long glide that never comes back.
+   *
+   * So nothing here touches velocity. Each frame the previous offset is
+   * subtracted, a new one is computed from the particle's own undisturbed
+   * position, and that is applied. Dots ease out as a ripple passes and ease
+   * exactly back behind it — undulation, and a crater is not representable.
+   */
+  private applyDisplacement(particles: FieldParticle[]) {
+    const live = this.nodes.filter((n) => n.act > 0.01);
+    // Idle is the common case by far — nobody is hovering anything most of the
+    // time. Once the last offset has been unwound there is nothing to do, so
+    // don't walk the whole particle array on every frame forever.
+    if (live.length === 0 && this.waves.length === 0) {
+      if (!this.displacing) return;
+      this.displacing = false;
       for (const p of particles) {
+        const prev = this.offsets.get(p);
+        if (!prev) continue;
+        p.x -= prev.ox;
+        p.y -= prev.oy;
+        this.offsets.delete(p);
+      }
+      return;
+    }
+    this.displacing = true;
+
+    for (const p of particles) {
+      const prev = this.offsets.get(p);
+      if (prev) {
+        p.x -= prev.ox;
+        p.y -= prev.oy;
+      }
+
+      let ox = 0;
+      let oy = 0;
+
+      // A soft bulge under the held node, so it reads as having presence.
+      for (const n of live) {
         const dx = p.x - n.x;
         const dy = p.y - n.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 > R * R || d2 === 0) continue;
-        const d = Math.sqrt(d2);
-        const t = 1 - d / R;
-        const f = t * t * CLEAR_F * n.act * frame;
-        p.vx += (dx / d) * f;
-        p.vy += (dy / d) * f;
+        const d = Math.hypot(dx, dy);
+        if (d < 0.001 || d > BULGE_SIGMA * 2.5) continue;
+        const g = Math.exp(-(d * d) / (BULGE_SIGMA * BULGE_SIGMA));
+        const push = BULGE_AMP * n.act * g;
+        ox += (dx / d) * push;
+        oy += (dy / d) * push;
+      }
+
+      // Ripples: a gentle crest that travels outward and passes by.
+      for (const wave of this.waves) {
+        const dx = p.x - wave.x;
+        const dy = p.y - wave.y;
+        const d = Math.hypot(dx, dy);
+        if (d < 0.001) continue;
+        const off = d - wave.t * WAVE_SPEED;
+        if (Math.abs(off) > RIPPLE_SIGMA * 2.5) continue;
+        const g = Math.exp(-(off * off) / (RIPPLE_SIGMA * RIPPLE_SIGMA));
+        const push = RIPPLE_AMP * wave.amp * Math.exp(-wave.t * WAVE_DECAY) * g;
+        ox += (dx / d) * push;
+        oy += (dy / d) * push;
+      }
+
+      if (ox !== 0 || oy !== 0) {
+        p.x += ox;
+        p.y += oy;
+        this.offsets.set(p, { ox, oy });
+      } else if (prev) {
+        this.offsets.delete(p);
       }
     }
   }
@@ -350,14 +412,15 @@ export class LinkNodeLayer {
   /** Draw edges, wavefronts and nodes. Call after the ambient field is drawn. */
   draw(ctx: CanvasRenderingContext2D) {
 
-    // Travelling wavefronts — faint, but they make the push legible.
+    // Travelling crests. Barely there on purpose — the dots' own sway is the
+    // effect; this only hints at what is moving them.
     for (const wave of this.waves) {
       const ring = wave.t * WAVE_SPEED;
-      const amp = Math.exp(-wave.t * WAVE_DECAY);
+      const amp = Math.exp(-wave.t * WAVE_DECAY) * wave.amp;
       ctx.beginPath();
       ctx.arc(wave.x, wave.y, ring, 0, Math.PI * 2);
-      ctx.strokeStyle = `hsla(174, 90%, 72%, ${amp * 0.16})`;
-      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = `hsla(174, 90%, 72%, ${amp * 0.07})`;
+      ctx.lineWidth = 1;
       ctx.stroke();
     }
 

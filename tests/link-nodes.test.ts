@@ -143,75 +143,98 @@ test("the lock spring arrives quickly — it is a settle, not a snap or a crawl"
   );
 });
 
-test("activation fires one travelling wave that pushes particles outward", () => {
+test("ripples sway dots by a few px — a lap, not a shove", () => {
   const layer = makeLayer();
   const node = layer.nodes[0];
-  // Well outside the clearance bubble, so only the wave can reach it.
-  const p: FieldParticle = { x: node.x + 400, y: node.y, vx: 0, vy: 0 };
+  // Frozen probes: no ambient drift, so any movement is the layer's doing.
+  const probes = [40, 80, 140, 220, 320].map((r) => ({
+    p: { x: node.x + r, y: node.y, vx: 0, vy: 0 } as FieldParticle,
+    base: node.x + r,
+  }));
+  const peak = probes.map(() => 0);
 
   layer.setActive(0);
-  run(layer, 0.35, [p]); // ring is at ~240px — hasn't arrived yet
-  assert.ok(p.vx < 0.01, `particle should be untouched before the ring arrives, vx=${p.vx}`);
+  for (let i = 0; i < 240; i++) {
+    layer.update(1 / 60, probes.map((q) => q.p), FAR);
+    probes.forEach((q, j) => {
+      peak[j] = Math.max(peak[j], Math.abs(q.p.x - q.base));
+    });
+  }
 
-  run(layer, 0.35, [p]); // ring sweeps past ~400px
-  assert.ok(p.vx > 0.5, `particle should be shoved outward by the ring, vx=${p.vx.toFixed(3)}`);
-  assert.ok(p.x > node.x + 400, "and should have moved away from the node");
+  assert.ok(Math.max(...peak) > 3, `dots should visibly sway, peak=${Math.max(...peak).toFixed(1)}`);
+  // The regression that matters. The force-based first version measured a
+  // 1500px shove here and left a permanent crater around every link.
+  assert.ok(
+    Math.max(...peak) < 25,
+    `sway must stay gentle, peak=${Math.max(...peak).toFixed(1)}px`
+  );
 });
 
-test("the wave is transient — it decays and stops acting", () => {
+test("the layer never injects velocity into the ambient field", () => {
   const layer = makeLayer();
   const node = layer.nodes[0];
-  const p: FieldParticle = { x: node.x + 400, y: node.y, vx: 0, vy: 0 };
+  const ps: FieldParticle[] = [30, 90, 200].map((r) => ({ x: node.x + r, y: node.y, vx: 0, vy: 0 }));
 
   layer.setActive(0);
-  run(layer, 3, [p]);
-  const restX = p.x;
-  p.vx = 0;
-  p.vy = 0;
-  run(layer, 2, [p]);
-  assert.ok(Math.abs(p.x - restX) < 0.5, "no residual impulse once the wave has died");
+  run(layer, 3, ps);
+  // Displacement, not force: velocity is the ambient sim's business alone.
+  for (const p of ps) {
+    assert.equal(p.vx, 0, "no vx imparted");
+    assert.equal(p.vy, 0, "no vy imparted");
+  }
 });
 
-test("re-activating the same node does not re-fire; a different node does", () => {
+test("every dot returns exactly to where the ambient field had it", () => {
   const layer = makeLayer();
-  const probe = () => ({ x: layer.nodes[0].x + 300, y: layer.nodes[0].y, vx: 0, vy: 0 });
+  const node = layer.nodes[0];
+  const ps: FieldParticle[] = [35, 75, 150, 260].map((r) => ({ x: node.x + r, y: node.y, vx: 0, vy: 0 }));
+  const base = ps.map((p) => p.x);
 
   layer.setActive(0);
-  layer.setActive(0); // idempotent
-  const p1 = probe();
-  run(layer, 0.6, [p1]);
-  const single = p1.vx;
+  run(layer, 3, ps);
+  assert.ok(Math.abs(ps[0].x - base[0]) > 1, "should be displaced while held");
 
-  const layer2 = makeLayer();
-  layer2.setActive(0);
-  layer2.setActive(null);
-  layer2.setActive(0); // genuine re-entry: two waves
-  const p2 = { x: layer2.nodes[0].x + 300, y: layer2.nodes[0].y, vx: 0, vy: 0 };
-  run(layer2, 0.6, [p2]);
-  assert.ok(p2.vx > single * 1.5, "a fresh activation should stack another wave");
+  layer.setActive(null);
+  run(layer, 3, ps);
+  ps.forEach((p, i) => {
+    assert.ok(
+      Math.abs(p.x - base[i]) < 1e-9,
+      `dot ${i} must land back exactly, off by ${(p.x - base[i]).toFixed(4)}`
+    );
+  });
 });
 
-test("the clearance bubble holds dots out while locked, and releases them after", () => {
+test("ripples keep lapping while a node is held", () => {
+  const layer = makeLayer();
+  const node = layer.nodes[0];
+  const p: FieldParticle = { x: node.x + 260, y: node.y, vx: 0, vy: 0 };
+  const base = p.x;
+
+  layer.setActive(0);
+  const series: number[] = [];
+  for (let i = 0; i < 420; i++) {
+    layer.update(1 / 60, [p], FAR);
+    series.push(p.x - base);
+  }
+
+  // Count separate crests: a single activation bang would show exactly one.
+  let crests = 0;
+  for (let i = 1; i < series.length - 1; i++) {
+    if (series[i] > 0.4 && series[i] >= series[i - 1] && series[i] > series[i + 1]) crests++;
+  }
+  assert.ok(crests >= 2, `expected repeated lapping, counted ${crests} crest(s)`);
+});
+
+test("a held node eases its neighbours outward, gently", () => {
   const layer = makeLayer();
   const node = layer.nodes[0];
   const p: FieldParticle = { x: node.x + 30, y: node.y, vx: 0, vy: 0 };
 
   layer.setActive(0);
-  run(layer, 1.2, [p]);
-  const held = p.x - node.x;
-  assert.ok(held > 100, `dot should be pushed clear of the label, gap=${held.toFixed(1)}px`);
-
-  layer.setActive(null);
   run(layer, 1.5, [p]);
-  assert.ok(layer.nodes[0].act < 0.01, "activation should have fully eased out");
-
-  // Measure the particle in absolute terms — the node itself keeps wandering,
-  // so a node-relative gap would move even with zero force on the particle.
-  const restX = p.x;
-  p.vx = 0;
-  p.vy = 0;
-  run(layer, 1, [p]);
-  assert.ok(Math.abs(p.x - restX) < 0.5, "no lingering push once released");
+  const gap = p.x - node.x - 30;
+  assert.ok(gap > 2, `should ease clear of the label, moved ${gap.toFixed(1)}px`);
+  assert.ok(gap < 20, `but only just — moved ${gap.toFixed(1)}px`);
 });
 
 test("reduced motion pins nodes to home, snaps activation, and fires no wave", () => {
@@ -225,8 +248,8 @@ test("reduced motion pins nodes to home, snaps activation, and fires no wave", (
   assert.equal(node.x, 360, "node stays exactly at home");
 
   run(layer, 2, [p]);
-  assert.equal(p.vx, 0, "no wave and no clearance force under reduced motion");
-  assert.equal(p.x, node.x + 200);
+  assert.equal(p.vx, 0, "no ripples at all under reduced motion");
+  assert.equal(p.x, node.x + 200, "and no displacement either");
 
   layer.setActive(null);
   run(layer, 1 / 60, [p]);
@@ -243,7 +266,7 @@ test("a long frame gap cannot explode the simulation", () => {
   layer.update(4, [p], FAR);
   assert.ok(Number.isFinite(node.x) && Number.isFinite(node.y));
   assert.ok(Math.hypot(node.vx, node.vy) < 500, "velocity stays sane after a huge dt");
-  assert.ok(Math.abs(p.vx) < 50, "particle impulse stays sane after a huge dt");
+  assert.ok(Math.abs(p.x - node.x - 50) < 40, "particle displacement stays sane after a huge dt");
 });
 
 test("snapToHomes places nodes outright, for the post-mount correction", () => {
