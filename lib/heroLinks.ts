@@ -1,23 +1,30 @@
-// The knowledge-graph link set for the hero constellation.
+// The hero constellation's link model: tiers, slots, and the per-visit draw.
 //
-// Every dot in the hero that is *bigger and haloed* is one of these — a real
-// destination on the site. The set is deliberately the top nav (7 entries,
-// see components/Nav.tsx) plus the six pages that lost their nav slot in
-// commit 5c19fd2 but are still first-class: Skills, Videos, Plugins, Links,
-// Newsletter, Support. The ⌘K palette (components/CommandPalette.tsx) remains
-// the exhaustive index; this is the hand-picked constellation.
+// This file is CLIENT-SAFE on purpose. The pool it draws from is assembled in
+// lib/heroLinkPool.ts, which reads the filesystem (newsletter and curriculum
+// markdown) and pulls in lib/appearances.ts — a thousand-line module nobody
+// wants in the browser bundle for a decorative hero. app/page.tsx builds the
+// pool on the server and hands it to FaceField as a prop.
+//
+// ── Slots vs links ───────────────────────────────────────────────────────
+// Position and content are deliberately separate. A SLOT is a hand-tuned spot
+// in the hero that is known to be clear of the nav, the headline and the
+// portrait (see the band note below). A LINK is somewhere on the site. Every
+// visit, links are drawn from the pool and dropped into the slots — so the
+// layout stays as carefully placed as when it was hand-authored, while the
+// contents change.
 //
 // ── Why bands and not x/y fractions ──────────────────────────────────────
-// The obvious encoding — a fractional (fx, fy) per node — was tried first and
+// The obvious encoding — a fractional (fx, fy) per slot — was tried first and
 // is wrong. The hero is `min-h-[92vh]`, so its height tracks the window while
-// the things a node must avoid do NOT: the fixed header is always 104px tall
-// and the portrait cutout is pinned to the bottom-right corner. A node at
+// the things a slot must avoid do NOT: the fixed header is always 104px tall
+// and the portrait cutout is pinned to the bottom-right corner. A slot at
 // fy 0.17 sits comfortably below the nav on a 900px-tall window (y 141) and
 // disappears *underneath* it on a 800px one (y 125, with a 44px hit-target
-// whose top edge lands at 103). Measured at 1024x800 all four top-band nodes
+// whose top edge lands at 103). Measured at 1024x800 all four top-band slots
 // collapsed onto a single line once clamped away from the header.
 //
-// So each node is anchored to an EDGE it actually cares about, in pixels,
+// So each slot is anchored to an EDGE it actually cares about, in pixels,
 // and only spread along the perpendicular axis as a fraction:
 //
 //   band "top"    y = navBottom + inset      x = `along` across the width
@@ -28,46 +35,136 @@
 // That holds at every size the constellation runs at, and it degrades in the
 // right direction: when the cutout is hidden the floor and right bands simply
 // reclaim the space it was occupying.
-//
-// Nodes wander ~26px around home and spring back (WANDER_AMP in
-// lib/linkNodes.ts), so the constellation stays recognizable between visits.
-// Insets leave room for that wander plus the hit-target's half-height.
 
 export type HeroBand = "top" | "right" | "left" | "floor";
 
-export type HeroLink = {
-  href: string;
-  label: string;
-  /** Shown under the label in the tooltip — the destination, in plain words. */
-  kicker: string;
+/** A hand-placed position in the hero. Carries no content. */
+export type HeroSlot = {
   band: HeroBand;
   /** 0–1 along the band's free axis (across for top/floor, down for left/right). */
   along: number;
   /** Distance in px from the edge this band is anchored to. */
   inset: number;
-  /** Matches the existing particle palette: 174 teal, 262 grape, 42 amber. */
-  hue: number;
 };
 
-export const heroLinks: HeroLink[] = [
-  // ── Strip under the nav ───────────────────────────────────
-  { href: "/about", label: "About", kicker: "Architect turned XR-chitect", band: "top", along: 0.11, inset: 49, hue: 42 },
-  { href: "/training", label: "Training", kicker: "Live Unreal & AI classes", band: "top", along: 0.3, inset: 41, hue: 174 },
-  { href: "/repos", label: "Open Source", kicker: "Public repos & tools", band: "top", along: 0.47, inset: 62, hue: 174 },
-  { href: "/lab", label: "The Lab", kicker: "What's still cooking", band: "top", along: 0.64, inset: 44, hue: 262 },
+/**
+ * How specific a destination is.
+ *   primary  — the seven top-nav pages
+ *   section  — the rest of the real sections (Skills, Videos, Newsletter…)
+ *   deep     — one particular thing on this site: a repo, a lab project, a
+ *              2015 meetup talk
+ *   external — somewhere the site sends you: a talk video, a press piece, a
+ *              GitHub repo. Opens in a new tab and is marked as leaving.
+ */
+export type HeroTier = "primary" | "section" | "deep" | "external";
 
-  // ── Right shoulder, above the portrait cutout ─────────────
-  { href: "/videos", label: "Videos", kicker: "YouTube & recorded sessions", band: "right", along: 0.08, inset: 101, hue: 262 },
-  { href: "/appearances", label: "Appearances", kicker: "Talks, panels, festivals", band: "right", along: 0.32, inset: 290, hue: 262 },
-  { href: "/store", label: "Store", kicker: "Courses, assets, downloads", band: "right", along: 0.64, inset: 201, hue: 42 },
+export type HeroLink = {
+  href: string;
+  label: string;
+  /** Shown under the label in the tooltip — what this is, in plain words. */
+  kicker: string;
+  tier: HeroTier;
+};
 
-  // ── Left margin ───────────────────────────────────────────
-  { href: "/plugins", label: "Plugins", kicker: "Licensed Unreal plugins", band: "left", along: 0.28, inset: 65, hue: 174 },
-  { href: "/links", label: "Links", kicker: "Everywhere else I am", band: "left", along: 0.62, inset: 58, hue: 174 },
+/** A link that has been dealt into a slot. This is what the canvas layer eats. */
+export type HeroNodeLink = HeroLink & HeroSlot & { hue: number };
 
-  // ── Floor, below the CTAs ─────────────────────────────────
-  { href: "/contact", label: "Contact", kicker: "Say hello", band: "floor", along: 0.07, inset: 83, hue: 42 },
-  { href: "/newsletter", label: "Newsletter", kicker: "Monthly dispatch", band: "floor", along: 0.34, inset: 46, hue: 42 },
-  { href: "/support", label: "Support the Lab", kicker: "Keep the experiments running", band: "floor", along: 0.55, inset: 83, hue: 42 },
-  { href: "/skills", label: "AI Skills", kicker: "Agent skills you can install", band: "floor", along: 0.78, inset: 138, hue: 174 },
+// Equal draw from every tier, every visit — so the mix always feels the same
+// even though the contents don't. Must sum to heroSlots.length.
+export const TIER_QUOTA: Record<HeroTier, number> = {
+  primary: 3,
+  section: 3,
+  deep: 3,
+  external: 3,
+};
+
+// Tier is legible at a glance in the existing palette, which makes the mix
+// readable rather than arbitrary: teal for the big rooms, grape for the
+// sections, amber for the deep cuts, sky for anything that leaves the site.
+export const TIER_HUE: Record<HeroTier, number> = {
+  primary: 174,
+  section: 262,
+  deep: 42,
+  external: 213,
+};
+
+/** Off-site links get a new tab and a marker; everything else routes normally. */
+export function isExternal(link: { href: string }): boolean {
+  return /^https?:\/\//.test(link.href);
+}
+
+// Twelve slots, hand-placed against the hero's measured layout. Insets leave
+// room for the ~26px idle wander (WANDER_AMP in lib/linkNodes.ts) plus the
+// hit-target's half-height, so a drifting node never reaches under the nav.
+export const heroSlots: HeroSlot[] = [
+  // Strip under the nav
+  { band: "top", along: 0.11, inset: 49 },
+  { band: "top", along: 0.3, inset: 41 },
+  { band: "top", along: 0.47, inset: 62 },
+  { band: "top", along: 0.64, inset: 44 },
+  // Right shoulder, above the portrait cutout
+  { band: "right", along: 0.08, inset: 101 },
+  { band: "right", along: 0.32, inset: 290 },
+  { band: "right", along: 0.64, inset: 201 },
+  // Left margin
+  { band: "left", along: 0.28, inset: 65 },
+  { band: "left", along: 0.62, inset: 58 },
+  // Floor, below the CTAs
+  { band: "floor", along: 0.07, inset: 83 },
+  { band: "floor", along: 0.34, inset: 46 },
+  { band: "floor", along: 0.55, inset: 83 },
 ];
+
+/** Fisher–Yates, on a copy, with an injectable source so tests are decidable. */
+function shuffled<T>(items: readonly T[], rand: () => number): T[] {
+  const out = items.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/**
+ * Deal one fresh constellation: `TIER_QUOTA` links from each tier, shuffled
+ * into `heroSlots`.
+ *
+ * Runs on the client at mount, never during render — the homepage is
+ * statically prerendered, so a draw made while rendering would either be
+ * baked identically into every visitor's HTML (no variety at all) or, if
+ * re-rolled on the client, produce a hydration mismatch.
+ *
+ * A tier that can't fill its quota (a nearly-empty site, a filtered pool)
+ * gives its remaining slots back rather than leaving them blank.
+ */
+export function dealHeroLinks(
+  pool: readonly HeroLink[],
+  rand: () => number = Math.random,
+  slots: readonly HeroSlot[] = heroSlots
+): HeroNodeLink[] {
+  const byTier = new Map<HeroTier, HeroLink[]>();
+  for (const link of pool) {
+    const bucket = byTier.get(link.tier);
+    if (bucket) bucket.push(link);
+    else byTier.set(link.tier, [link]);
+  }
+
+  const picked: HeroLink[] = [];
+  const leftovers: HeroLink[] = [];
+  for (const [tier, links] of byTier) {
+    const order = shuffled(links, rand);
+    const quota = TIER_QUOTA[tier] ?? 0;
+    picked.push(...order.slice(0, quota));
+    leftovers.push(...order.slice(quota));
+  }
+
+  // Backfill from whatever is left so the layout never shows a gap.
+  if (picked.length < slots.length) {
+    picked.push(...shuffled(leftovers, rand).slice(0, slots.length - picked.length));
+  }
+
+  // Shuffle again so a tier doesn't always land in the same corner.
+  return shuffled(picked, rand)
+    .slice(0, slots.length)
+    .map((link, i) => ({ ...link, ...slots[i], hue: TIER_HUE[link.tier] }));
+}

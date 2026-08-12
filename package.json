@@ -2,14 +2,15 @@
   "name": "alexcoulombepresents",
   "version": "1.0.0",
   "private": true,
-  "description": "Alex Coulombe Presents — Unreal Engine, Godot, visionOS, AI, and training. The personal site.",
+  "description": "Alex Coulombe Presents \u2014 Unreal Engine, Godot, visionOS, AI, and training. The personal site.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "node --test \"tests/**/*.test.ts\"",
-    "studio": "node scripts/newsletter-studio.mjs"
+    "studio": "node scripts/newsletter-studio.mjs",
+    "gen:hero-links": "node --experimental-strip-types scripts/gen-hero-links.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1081.0",

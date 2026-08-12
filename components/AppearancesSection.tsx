@@ -41,12 +41,16 @@ export function Card({ a, past }: { a: Appearance; past?: boolean }) {
     </>
   );
 
+  // id + scroll-mt: the hero constellation deep-links individual talks as
+  // /appearances#<slug>, and these cards are the only thing they can land on —
+  // there is no per-appearance route. scroll-mt clears the fixed header, which
+  // would otherwise cover the card the visitor was sent to.
   if (!a.url) {
-    return <div className={className}>{body}</div>;
+    return <div id={a.slug} className={`scroll-mt-32 ${className}`}>{body}</div>;
   }
 
   return (
-    <a href={a.url} target="_blank" rel="noopener noreferrer" className={className}>
+    <a id={a.slug} href={a.url} target="_blank" rel="noopener noreferrer" className={`scroll-mt-32 ${className}`}>
       {body}
     </a>
   );

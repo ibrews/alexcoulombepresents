@@ -21,7 +21,7 @@
 //   · Nothing accumulates: peak sway is ~9-16px and every dot returns to
 //     exactly where the ambient field had it. A crater is not representable.
 
-import type { HeroLink } from "@/lib/heroLinks";
+import type { HeroNodeLink } from "@/lib/heroLinks";
 
 /** Minimal shape this layer needs from the host's particle array. */
 export type FieldParticle = { x: number; y: number; vx: number; vy: number };
@@ -41,7 +41,7 @@ export type HeroBounds = {
 const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), Math.max(lo, hi));
 
 export type LinkNodeRuntime = {
-  link: HeroLink;
+  link: HeroNodeLink;
   /** Home position in px, recomputed on resize. */
   hx: number;
   hy: number;
@@ -106,11 +106,11 @@ export class LinkNodeLayer {
   private w = 0;
   private h = 0;
   private reduced: boolean;
-  private links: HeroLink[];
+  private links: HeroNodeLink[];
 
   // Explicit fields rather than TS parameter properties: `node --test` strips
   // types without transforming, and parameter properties are real emit.
-  constructor(links: HeroLink[], opts: { reduced?: boolean } = {}) {
+  constructor(links: HeroNodeLink[], opts: { reduced?: boolean } = {}) {
     this.links = links;
     this.reduced = opts.reduced ?? false;
   }
@@ -199,7 +199,7 @@ export class LinkNodeLayer {
   }
 
   /** The links currently on screen, in the same order as `nodes`. */
-  get visibleLinks(): HeroLink[] {
+  get visibleLinks(): HeroNodeLink[] {
     return this.nodes.map((n) => n.link);
   }
 

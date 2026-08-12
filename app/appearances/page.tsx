@@ -4,6 +4,7 @@ import Ethereal from "@/components/Ethereal";
 import Reveal from "@/components/Reveal";
 import { Card } from "@/components/AppearancesSection";
 import { PressCard } from "@/components/PressCard";
+import HashScroll from "@/components/HashScroll";
 import { appearances, type Appearance } from "@/lib/appearances";
 import { pressMentions } from "@/lib/press";
 import { CATEGORY_ORDER, CATEGORY_STYLE } from "@/lib/categories";
@@ -22,6 +23,10 @@ type TimelineItem =
 function Legend() {
   return (
     <div className="flex flex-wrap gap-x-5 gap-y-2">
+      {/* The hero constellation deep-links individual talks as
+          /appearances#<slug>. Reveal-animated cards don't reliably scroll
+          natively in the App Router — see the note in HashScroll. */}
+      <HashScroll />
       {CATEGORY_ORDER.map((c) => (
         <span key={c} className="flex items-center gap-2 font-mono text-xs text-mist">
           <span className={`h-2 w-2 rounded-full ${CATEGORY_STYLE[c].dot}`} aria-hidden="true" />

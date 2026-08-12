@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef } from "react";
 import { subscribeToHeroPulse } from "@/lib/heroPulse";
-import { heroLinks, type HeroLink } from "@/lib/heroLinks";
+import { dealHeroLinks, isExternal, type HeroLink, type HeroNodeLink } from "@/lib/heroLinks";
 import { LinkNodeLayer, type HeroBounds } from "@/lib/linkNodes";
 
 // Calibrated for the transparent head-and-shoulders cutout: the face sits in
@@ -50,7 +50,39 @@ const TOOLTIP_EDGE = 130;
 // during mount are stale. Re-check on this cadence and retarget if they moved.
 const BOUNDS_POLL_MS = 400;
 
-export default function FaceField({ density = 0.00016 }: { density?: number }) {
+/**
+ * The hit-targets are a mix now: most route inside the site, but the external
+ * tier points at talk videos, press pieces and GitHub. next/link would try to
+ * client-route an absolute URL, so those get a plain anchor with the usual
+ * new-tab safety. Both forward a ref, since the RAF loop drives their
+ * transforms directly.
+ */
+const LinkOrAnchor = forwardRef<
+  HTMLAnchorElement,
+  { href: string; external: boolean } & Omit<ComponentPropsWithoutRef<"a">, "href">
+>(function LinkOrAnchor({ href, external, children, ...rest }, ref) {
+  if (external) {
+    return (
+      <a ref={ref} href={href} target="_blank" rel="noopener noreferrer" {...rest}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link ref={ref} href={href} {...rest}>
+      {children}
+    </Link>
+  );
+});
+
+export default function FaceField({
+  density = 0.00016,
+  pool = [],
+}: {
+  density?: number;
+  /** Every destination the constellation may draw from — see lib/heroLinkPool.ts. */
+  pool?: HeroLink[];
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const anchorRefs = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -62,7 +94,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
   // `active` mirrors the layer's own activeIndex purely so React can render
   // the tooltip; the layer stays the source of truth for the physics.
   const [active, setActive] = useState<number | null>(null);
-  const [nodeLinks, setNodeLinks] = useState<HeroLink[]>([]);
+  const [nodeLinks, setNodeLinks] = useState<HeroNodeLink[]>([]);
   const [coarse, setCoarse] = useState(false);
   // Resolved once per activation from the node's LIVE position. Deriving it
   // from static link data instead was wrong: a right-band node sits high
@@ -105,7 +137,11 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
     let boundsKey = "";
     let particles: { x: number; y: number; vx: number; vy: number; r: number; hue: number }[] = [];
 
-    const layer = new LinkNodeLayer(heroLinks, { reduced });
+    // One draw per visit. Dealt here rather than during render: the homepage
+    // is statically prerendered, so a draw at render time would be baked
+    // identically into everyone's HTML — or, re-rolled on the client, would
+    // mismatch hydration. Mount is the first honest moment to roll dice.
+    const layer = new LinkNodeLayer(dealHeroLinks(pool), { reduced });
     layerRef.current = layer;
 
     const palette = [174, 262, 42];
@@ -363,7 +399,7 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
       layerRef.current = null;
       redrawRef.current = () => {};
     };
-  }, [density]);
+  }, [density, pool]);
 
   // With reduced motion there is no RAF loop, and the one-shot frame runs
   // before React has mounted the anchors — leaving every hit-target parked at
@@ -426,6 +462,9 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         {nodeLinks.map((link, i) => {
           const isActive = active === i;
+          // Off-site destinations open in a new tab and say so, so a hero dot
+          // is never a trapdoor out of the site.
+          const external = isExternal(link);
           const below = isActive && tip.below;
           const align =
             isActive && tip.align === "right"
@@ -434,9 +473,10 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
                 ? "left-1/2 -translate-x-4"
                 : "left-1/2 -translate-x-1/2";
           return (
-            <Link
+            <LinkOrAnchor
               key={link.href}
               href={link.href}
+              external={external}
               ref={(el) => {
                 anchorRefs.current[i] = el;
               }}
@@ -465,16 +505,19 @@ export default function FaceField({ density = 0.00016 }: { density?: number }) {
               } ${coarse ? "h-14 w-14" : "h-11 w-11"}`}
             >
               <span
-                className={`glass pointer-events-none absolute whitespace-nowrap rounded-xl px-3 py-2 text-left transition-all duration-200 ${align} ${
+                className={`glass pointer-events-none absolute w-max max-w-[15rem] rounded-xl px-3 py-2 text-left transition-all duration-200 ${align} ${
                   below ? "top-full mt-2" : "bottom-full mb-2"
                 } ${isActive ? "translate-y-0 opacity-100" : `${below ? "-translate-y-1" : "translate-y-1"} opacity-0`}`}
               >
-                <span className="block text-sm font-semibold leading-tight text-snow">{link.label}</span>
+                <span className="block text-sm font-semibold leading-snug text-snow">
+                  {link.label}
+                  {external && <span className="ml-1 text-mist">↗</span>}
+                </span>
                 <span className="mt-0.5 block font-mono text-[10px] leading-tight text-mist">
                   {link.kicker}
                 </span>
               </span>
-            </Link>
+            </LinkOrAnchor>
           );
         })}
       </div>

@@ -11,7 +11,7 @@ with no configuration.
 
 | Route | What it is |
 |---|---|
-| `/` | Hero with an interactive particle constellation that doubles as a knowledge graph — 13 of the dots are real links, and hovering one locks it in place, names it, and shoves the surrounding dots away on a shockwave (`lib/heroLinks.ts` + `lib/linkNodes.ts`) — plus a rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
+| `/` | Hero with an interactive particle constellation that doubles as a knowledge graph — twelve of the dots are real destinations, drawn fresh on every visit from a pool of 416 links across four tiers, and hovering one locks it in place, names it, and sends soft ripples lapping through the surrounding dots (`lib/heroLinks.ts` + `lib/heroLinkPool.ts` + `lib/linkNodes.ts`) — plus a rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
 | `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
 | `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`, real "Join the membership" checkout via `components/JoinMembershipButton.tsx`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + a Stripe price in `STRIPE_MEMBERSHIP_PRICE_ID`. Live, it shows a $50/month Join card instead of the waitlist; post-checkout redirects to `/members?joined=1` |
@@ -57,8 +57,10 @@ npm run build && npm start
 1. **Run it locally** — `npm install && npm run dev`, open http://localhost:3000, and wave your
    cursor through the hero: the particle constellation gets out of your way.
 2. **Hover one of the big haloed dots in the hero** — it locks in place, names where it goes, and
-   knocks the nearby dots outward on a visible wavefront. Click it to travel there. Thirteen of
-   them are real pages; they stand down below 1024px, where the hero copy needs the whole screen.
+   sends a soft ripple lapping through the dots around it. Click it to travel there. Then reload:
+   you get a different twelve. Teal is a nav page, grape a section, amber something specific
+   (a 2015 meetup talk, one repo), sky a link that leaves the site. They stand down below 1024px,
+   where the hero copy needs the whole screen.
 3. **Press `⌘K`** (or `Ctrl+K`) anywhere — a command palette jumps you to any page, repo, or
    product. Type "godot" and hit Enter.
 4. **Enter the Konami code** (`↑ ↑ ↓ ↓ ← → ← → B A`) — the site briefly enters immersive mode,
@@ -102,6 +104,22 @@ node scripts/diff-content.mjs    # show exactly what changed, and which file eac
 `content/strings.snapshot.json` (the baseline from the last `gen-content` run). Apply the changes
 to the source files it names, then `gen-content` again to refresh the baseline. (Editing assistant:
 "sweep the copy" runs `diff-content`, applies each change, rebuilds, and redeploys.)
+
+### Hero constellation links — `npm run gen:hero-links`
+
+The hero draws its dozen dots from a pool of every destination on the site.
+[`lib/heroLinkPool.ts`](lib/heroLinkPool.ts) models most of it from the data modules
+(repos, lab products, all 100+ appearances, newsletter issues, classes, press). The links that
+exist only in page JSX are discovered by parsing a real build:
+
+```bash
+npm run build && npm run gen:hero-links
+```
+
+That writes [`lib/heroLinkPool.generated.ts`](lib/heroLinkPool.generated.ts) (committed, same
+round-trip as `gen-content`) and prints coverage. It refuses to write from a dev-server build —
+`npm run dev` rewrites `.next`, which would otherwise leave it finding nothing and blanking the
+file. Re-run it whenever pages gain or lose links.
 
 ## Store / payments
 

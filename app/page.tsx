@@ -10,6 +10,7 @@ import AppearancesSection from "@/components/AppearancesSection";
 import LatestVideo from "@/components/LatestVideo";
 import VenueMarquee from "@/components/VenueMarquee";
 import { repos, products, roles } from "@/lib/data";
+import { buildHeroLinkPool } from "@/lib/heroLinkPool";
 import { renderBreaks } from "@/components/Lines";
 
 // Loads the three.js-based morphing point-cloud hero backdrop only in the
@@ -26,6 +27,11 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  // Built on the server: the pool reaches the filesystem and pulls in the
+  // appearances/press archives, none of which should ship to the browser.
+  // FaceField draws its dozen from this on the client, once per visit.
+  const heroLinkPool = buildHeroLinkPool();
+
   const featured = [...repos].sort((a, b) => b.stars - a.stars).slice(0, 6);
 
   // Hand-picked top 6 for the homepage teaser — the most mature, most
@@ -53,7 +59,7 @@ export default function Home() {
           top of it and stay fully legible. See components/SplatHero.tsx. */}
       <section className="relative isolate flex min-h-[92vh] items-center overflow-hidden">
         <SplatHero />
-        <FaceField />
+        <FaceField pool={heroLinkPool} />
         <div className="orb left-[10%] top-[20%] h-72 w-72 bg-teal" />
         <div className="orb right-[12%] top-[40%] h-80 w-80 bg-grape" style={{ animationDelay: "-6s" }} />
         <div className="orb bottom-[10%] left-[40%] h-64 w-64 bg-amber" style={{ animationDelay: "-11s" }} />

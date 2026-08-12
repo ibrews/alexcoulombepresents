@@ -20,8 +20,8 @@ const FAR = { x: -9999, y: -9999 }; // pointer parked off-field
 const OPEN = { navBottom: 0, cutoutTop: H, cutoutLeft: W, enabled: true };
 
 const LINKS = [
-  { href: "/a", label: "A", kicker: "", band: "left" as const, along: 0.5, inset: 360, hue: 174 },
-  { href: "/b", label: "B", kicker: "", band: "top" as const, along: 0.5, inset: 400, hue: 42 },
+  { href: "/a", label: "A", kicker: "", band: "left" as const, along: 0.5, inset: 360, hue: 174, tier: "primary" as const },
+  { href: "/b", label: "B", kicker: "", band: "top" as const, along: 0.5, inset: 400, hue: 42, tier: "deep" as const },
 ];
 
 function makeLayer(reduced = false) {
@@ -69,7 +69,7 @@ test("disabled bounds stand the whole layer down", () => {
 
 test("a home is never placed under the fixed header", () => {
   // A top-band node asking for an inset that would tuck it beneath the nav.
-  const tucked = [{ href: "/t", label: "T", kicker: "", band: "top" as const, along: 0.5, inset: -50, hue: 174 }];
+  const tucked = [{ href: "/t", label: "T", kicker: "", band: "top" as const, along: 0.5, inset: -50, hue: 174, tier: "deep" as const }];
   const layer = new LinkNodeLayer(tucked, {});
   layer.resize(W, H, { navBottom: 104, cutoutTop: H, cutoutLeft: W, enabled: true });
   // The invariant that matters: the top edge of the hit-target still clears
@@ -87,7 +87,7 @@ test("the nav clamp does not flatten a band onto one line", () => {
   // to an identical y, which looked like a bug and hid four links behind each
   // other's labels. Distinct insets must stay distinct.
   const band = [33, 41, 49, 62].map((inset, i) => ({
-    href: "/n" + i, label: "N", kicker: "", band: "top" as const, along: i * 0.2, inset, hue: 174,
+    href: "/n" + i, label: "N", kicker: "", band: "top" as const, along: i * 0.2, inset, hue: 174, tier: "deep" as const,
   }));
   const layer = new LinkNodeLayer(band, {});
   layer.resize(W, H, { navBottom: 104, cutoutTop: H, cutoutLeft: W, enabled: true });
@@ -96,7 +96,7 @@ test("the nav clamp does not flatten a band onto one line", () => {
 });
 
 test("bands reclaim the cutout's space when the portrait is hidden", () => {
-  const link = [{ href: "/f", label: "F", kicker: "", band: "floor" as const, along: 1, inset: 60, hue: 42 }];
+  const link = [{ href: "/f", label: "F", kicker: "", band: "floor" as const, along: 1, inset: 60, hue: 42, tier: "deep" as const }];
   const withCutout = new LinkNodeLayer(link, {});
   withCutout.resize(W, H, { navBottom: 104, cutoutTop: 362, cutoutLeft: 1048, enabled: true });
   const without = new LinkNodeLayer(link, {});
