@@ -11,7 +11,7 @@ with no configuration.
 
 | Route | What it is |
 |---|---|
-| `/` | Hero with an interactive particle constellation, rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
+| `/` | Hero with an interactive particle constellation that doubles as a knowledge graph — 13 of the dots are real links, and hovering one locks it in place, names it, and shoves the surrounding dots away on a shockwave (`lib/heroLinks.ts` + `lib/linkNodes.ts`) — plus a rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
 | `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
 | `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`, real "Join the membership" checkout via `components/JoinMembershipButton.tsx`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + a Stripe price in `STRIPE_MEMBERSHIP_PRICE_ID`. Live, it shows a $50/month Join card instead of the waitlist; post-checkout redirects to `/members?joined=1` |
@@ -56,15 +56,18 @@ npm run build && npm start
 
 1. **Run it locally** — `npm install && npm run dev`, open http://localhost:3000, and wave your
    cursor through the hero: the particle constellation gets out of your way.
-2. **Press `⌘K`** (or `Ctrl+K`) anywhere — a command palette jumps you to any page, repo, or
+2. **Hover one of the big haloed dots in the hero** — it locks in place, names where it goes, and
+   knocks the nearby dots outward on a visible wavefront. Click it to travel there. Thirteen of
+   them are real pages; they stand down below 1024px, where the hero copy needs the whole screen.
+3. **Press `⌘K`** (or `Ctrl+K`) anywhere — a command palette jumps you to any page, repo, or
    product. Type "godot" and hit Enter.
-3. **Enter the Konami code** (`↑ ↑ ↓ ↓ ← → ← → B A`) — the site briefly enters immersive mode,
+4. **Enter the Konami code** (`↑ ↑ ↓ ↓ ← → ← → B A`) — the site briefly enters immersive mode,
    locked at 90 fps, naturally.
-4. **Open a repo page** (e.g. `/repos/blueprint-auto-layout`) and watch the star count — it's
+5. **Open a repo page** (e.g. `/repos/blueprint-auto-layout`) and watch the star count — it's
    fetched live from the GitHub API with a baked fallback, so it's always current.
-5. **Visit `/links` and click "Visit anyway (brave)"** under the vintage alexcoulombe.com card.
+6. **Visit `/links` and click "Visit anyway (brave)"** under the vintage alexcoulombe.com card.
    You were warned.
-6. **Play a video on `/videos`** — embeds are click-to-load (zero YouTube JS until you press play),
+7. **Play a video on `/videos`** — embeds are click-to-load (zero YouTube JS until you press play),
    served via youtube-nocookie.
 
 ## Editing content
