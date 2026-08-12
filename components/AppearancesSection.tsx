@@ -2,14 +2,21 @@ import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import { appearances, categoryForAppearance, type Appearance } from "@/lib/appearances";
 import { CATEGORY_STYLE } from "@/lib/categories";
+import { LinkTypeIcon, linkKindForUrl } from "@/components/LinkTypeIcon";
 
 export function Card({ a, past }: { a: Appearance; past?: boolean }) {
   const style = CATEGORY_STYLE[categoryForAppearance(a)];
-  const className = `glass flex h-full gap-4 rounded-2xl p-6 transition hover:border-teal/40 ${
+  const className = `group glass relative flex h-full gap-4 rounded-2xl p-6 transition hover:border-teal/40 ${
     past ? "opacity-70" : ""
   }`;
   const body = (
     <>
+      {a.url && (
+        <LinkTypeIcon
+          kind={linkKindForUrl(a.url)}
+          className={`absolute right-4 top-4 h-4 w-4 ${style.text} opacity-40 transition group-hover:opacity-90`}
+        />
+      )}
       {a.image && (
         <Image
           src={a.image}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Ethereal from "@/components/Ethereal";
 import Reveal from "@/components/Reveal";
 import { Card } from "@/components/AppearancesSection";
@@ -60,12 +61,15 @@ export default function AppearancesPage() {
       <Reveal>
         <p className="font-mono text-sm text-teal">/appearances</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
-          Every stage, panel, <span className="grad-text">and byline he&apos;s been part of.</span>
+          Presentations, press, <span className="grad-text">&amp; pedagogy.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
-          {appearances.length} talks, workshops, judging gigs, and guest lectures, plus {pressMentions.length}{" "}
-          press mentions and podcast spots, since 2012 — SIGGRAPH, GDC, Unreal Fest, AWE, UploadVR, and dozens
-          more. This is the full record behind the &quot;Featured in&quot; ticker on the homepage.
+          {appearances.length + pressMentions.length} talks, workshops, guest lectures, articles, podcasts, and
+          more since 2012. This is the full record behind the &quot;Featured in&quot; ticker on the homepage.
+          Want to book Alex to speak at your next event?{" "}
+          <Link href="/contact" className="text-teal hover:underline">
+            Reach out.
+          </Link>
         </p>
       </Reveal>
 
