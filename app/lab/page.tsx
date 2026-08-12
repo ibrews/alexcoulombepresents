@@ -41,6 +41,13 @@ export default function Lab() {
               the engines, the assets, and the AI agents finally cooperate. Hardware-verified,
               demo-ready, and approaching the launch pad.
             </p>
+            <p className="mt-4 text-sm text-mist">
+              Looking for what&apos;s already shipped?{" "}
+              <Link href="/plugins" className="text-teal hover:underline">
+                Licensed Unreal Engine plugins
+              </Link>{" "}
+              are live now.
+            </p>
           </Reveal>
         </div>
       </section>

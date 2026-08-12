@@ -62,6 +62,12 @@ export default function Contact() {
                   info@alexcoulombepresents.com
                 </a>
               </p>
+              <p>
+                <a href="/links" className="text-teal hover:underline">
+                  Every other link
+                </a>{" "}
+                — Agile Lens, socials, the podcast — lives on one page.
+              </p>
             </div>
           </div>
         </Reveal>

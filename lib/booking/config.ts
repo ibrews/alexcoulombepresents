@@ -45,6 +45,12 @@ export const bookingConfig: BookingConfig = {
   minNoticeHours: 24,
   horizonDays: 21,
   bufferMinutes: 15,
+  // Tuesday afternoons were showing zero slots at all, every week — Reclaim.ai
+  // auto-blocks that window as a soft focus-time hold, not a real
+  // commitment, and it was reading as fully busy. Deliberately ignored here;
+  // the manual confirm-before-payment step is still what catches an actual
+  // Tuesday conflict this misses.
+  ignoreCalendarBusyOnWeekdays: [2],
 };
 
 export type BookingRow = {

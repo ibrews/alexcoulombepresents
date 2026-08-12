@@ -18,6 +18,17 @@ export type BookingConfig = {
   horizonDays: number;
   /** Minimum gap to leave around an existing commitment, in minutes. */
   bufferMinutes: number;
+  /** Weekdays (0=Sun) where calendar busy blocks are ignored entirely — only
+   * our own database (`taken`) still excludes a slot. Exists because
+   * Reclaim.ai auto-blocks Tuesday afternoons as soft focus-time holds, not
+   * real commitments, and that was blocking every Tuesday slot outright.
+   * Confirmed against a real risk, not free of one: this also stops
+   * offering time truly booked elsewhere (a client call put straight on the
+   * calendar, say) from getting excluded on this weekday. The manual
+   * confirm-before-payment step is what actually catches that — it's the
+   * real backstop for every imperfection in the calendar read, this one
+   * included, not something new this introduces. */
+  ignoreCalendarBusyOnWeekdays?: number[];
 };
 
 export type Slot = { start: Date; end: Date };
@@ -81,6 +92,7 @@ export function generateSlots(
     const dayInstant = new Date(now.getTime() + dayOffset * 24 * 60 * 60 * 1000);
     const parts = wallClockPartsInZone(dayInstant, config.timeZone);
     const windows = config.weeklyHours[parts.weekday] ?? [];
+    const ignoreCalendarToday = config.ignoreCalendarBusyOnWeekdays?.includes(parts.weekday) ?? false;
 
     for (const window of windows) {
       const from = parseHHMM(window.from);
@@ -107,7 +119,7 @@ export function generateSlots(
       for (let t = windowStart.getTime(); t + slotMs <= windowEnd.getTime(); t += stepMs) {
         const slot = { start: new Date(t), end: new Date(t + slotMs) };
         if (slot.start < earliest || slot.start > latest) continue;
-        if (paddedBusy.some((b) => overlaps(slot, b))) continue;
+        if (!ignoreCalendarToday && paddedBusy.some((b) => overlaps(slot, b))) continue;
         if (taken.some((b) => overlaps(slot, b))) continue;
         slots.push(slot);
       }

@@ -358,3 +358,33 @@ test("zoneLabel: a fixed-offset zone with no distinct abbreviation shows the off
   assert.equal(label, "GMT+5:30");
   assert.ok(!label.includes("(("), "must not double-wrap the offset");
 });
+
+// ── ignoreCalendarBusyOnWeekdays ─────────────────────────────────────────────
+// Reclaim.ai auto-blocks Tuesday afternoons as a soft focus-time hold, not a
+// real commitment, which was zeroing out every Tuesday slot. Deliberately
+// ignored for that weekday specifically.
+
+const TUE_CONFIG: BookingConfig = { ...CONFIG, ignoreCalendarBusyOnWeekdays: [2] };
+
+test("a busy block on an ignored weekday no longer removes the slot", () => {
+  // Aug 11 2026 is a Tuesday.
+  const busy = [{ start: new Date("2026-08-11T13:00:00Z"), end: new Date("2026-08-11T17:00:00Z") }];
+  const starts = generateSlots(TUE_CONFIG, busy, [], NOW).map((s) => s.start.toISOString());
+  assert.ok(starts.includes("2026-08-11T13:00:00.000Z"), "Tuesday should be offered despite the busy block");
+});
+
+test("a non-ignored weekday still respects calendar busy blocks", () => {
+  // A fresh config, NOT derived from TUE_CONFIG — spreading it would have
+  // silently inherited "ignore Tuesday", defeating the point of this test.
+  // Monday Aug 17 2026, comfortably past minNoticeHours/within horizonDays.
+  const mondayConfig: BookingConfig = { ...CONFIG, weeklyHours: { 1: [{ from: "09:00", to: "12:00" }] } };
+  const busy = [{ start: new Date("2026-08-17T13:00:00Z"), end: new Date("2026-08-17T17:00:00Z") }];
+  const starts = generateSlots(mondayConfig, busy, [], NOW).map((s) => s.start.toISOString());
+  assert.ok(!starts.includes("2026-08-17T13:00:00.000Z"), "Monday must still exclude a real busy block");
+});
+
+test("our own database still blocks an ignored weekday — ignoring the calendar isn't ignoring real bookings", () => {
+  const taken = [{ start: new Date("2026-08-11T13:00:00Z"), end: new Date("2026-08-11T14:00:00Z") }];
+  const starts = generateSlots(TUE_CONFIG, [], taken, NOW).map((s) => s.start.toISOString());
+  assert.ok(!starts.includes("2026-08-11T13:00:00.000Z"), "a slot already booked through this system must still be excluded");
+});

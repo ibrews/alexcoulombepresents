@@ -4,17 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+// Trimmed from 11 entries to 7 — the bar was too busy. Skills, Videos,
+// Plugins, and Links didn't disappear; each now has a real link from a page
+// where it belongs (Store, Training, The Lab, Contact respectively) instead
+// of a permanent top-level slot. Footer.tsx still lists all of them — this
+// is only about what the header shows on every page.
 const links = [
   { href: "/about", label: "About" },
   { href: "/training", label: "Training" },
   { href: "/repos", label: "Open Source" },
-  { href: "/skills", label: "Skills" },
-  { href: "/videos", label: "Videos" },
-  { href: "/appearances", label: "Appearances" },
   { href: "/lab", label: "The Lab" },
+  { href: "/appearances", label: "Appearances" },
   { href: "/store", label: "Store" },
-  { href: "/plugins", label: "Plugins" },
-  { href: "/links", label: "Links" },
   { href: "/contact", label: "Contact" },
 ];
 

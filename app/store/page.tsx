@@ -296,8 +296,12 @@ export default async function Store() {
               sandbox.
             </p>
             <p>
-              <span className="text-snow">Skills and templates.</span> Installable Claude Code
-              skills and Unreal templates also live on{" "}
+              <span className="text-snow">Skills and templates.</span> The full lineup — live,
+              coming soon, and free — is on{" "}
+              <Link className="text-teal hover:underline" href="/skills">
+                the Skills page
+              </Link>
+              . Installable Claude Code skills and Unreal templates also live on{" "}
               <a className="text-teal hover:underline" href="https://capafy.ai/publisher/alex-coulombe-presents" target="_blank" rel="noopener noreferrer">
                 Capafy
               </a>{" "}

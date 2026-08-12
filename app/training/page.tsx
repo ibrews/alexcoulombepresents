@@ -426,7 +426,13 @@ export default function Training() {
               className="mt-5 inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
             >
               All {trainingPlaylist.count} talks on YouTube →
-            </a>
+            </a>{" "}
+            <Link
+              href="/videos"
+              className="mt-5 inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+            >
+              Browse the curated collection →
+            </Link>
           </div>
           <LiteVideo
             id={trainingPlaylist.featuredVideoId}
