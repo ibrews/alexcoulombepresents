@@ -69,13 +69,18 @@ export type HeroLink = {
 /** A link that has been dealt into a slot. This is what the canvas layer eats. */
 export type HeroNodeLink = HeroLink & HeroSlot & { hue: number };
 
-// Equal draw from every tier, every visit — so the mix always feels the same
-// even though the contents don't. Must sum to heroSlots.length.
+// Fixed draw per tier, every visit — so the mix always feels the same even
+// though the contents don't. Must sum to heroSlots.length.
+//
+// Not an even split: external is deliberately the smallest. At 3 of 12 a
+// quarter of the hero led off-site, which is a lot of exit for a homepage.
+// The slot it gave up went to `deep`, which is the widest pool (157) and
+// where the variety actually lives.
 export const TIER_QUOTA: Record<HeroTier, number> = {
   primary: 3,
   section: 3,
-  deep: 3,
-  external: 3,
+  deep: 4,
+  external: 2,
 };
 
 // Tier is legible at a glance in the existing palette, which makes the mix
