@@ -8,31 +8,33 @@ import {
   BOOKING_TIMEZONE,
   BOOKING_DURATIONS,
   BOOKING_RATES,
-  durationForHours,
-  rateById,
   priceFor,
 } from "@/lib/booking/config";
 
-// Open slots for /book.
+// Open slots for /book — every duration's slot list and every rate's price,
+// in one response.
 //
 // Availability = configured weekly windows − calendar busy blocks − slots
 // already claimed by a live booking. Returns 503 rather than a slot list when
 // the calendar feed is unreachable: showing every window during an outage
 // would take requests for times that are already committed, and the whole
 // point of reading the calendar is to not do that.
+//
+// Deliberately NOT parameterized by hours/rate: those used to be query params,
+// and the picker refetched this route on every duration or rate click —
+// which meant every click re-ran the full calendar fetch, including its 8s +
+// 12s retry budget (fetchOneIcsFeed in lib/booking/config.ts) if a feed was
+// slow. Rate never affected availability at all, and duration only changes
+// which slots FIT, not what's busy — so the one genuinely expensive part
+// (reading three calendars) now happens exactly once per page load, and
+// switching duration or rate afterward is a client-side array lookup.
 
 export const dynamic = "force-dynamic";
-// A single flaky feed can now take up to 8s + 12s of retries (see
+// A single flaky feed can take up to 8s + 12s of retries (see
 // fetchOneIcsFeed in lib/booking/config.ts) before this route gives up.
 export const maxDuration = 30;
 
-export async function GET(req: Request) {
-  // Which block length to price and fit. Longer blocks have fewer valid start
-  // times, so the slot list genuinely differs per duration.
-  const hoursParam = Number(new URL(req.url).searchParams.get("hours") ?? "1");
-  const duration = durationForHours(hoursParam) ?? BOOKING_DURATIONS[0];
-  const rate = rateById(new URL(req.url).searchParams.get("rate") ?? "standard") ?? BOOKING_RATES[0];
-
+export async function GET() {
   const now = new Date();
   const horizonEnd = new Date(now.getTime() + bookingConfig.horizonDays * 24 * 60 * 60 * 1000);
 
@@ -63,28 +65,32 @@ export async function GET(req: Request) {
     );
   }
 
-  const slots = generateSlots(bookingConfig, busy, taken, now, duration.minutes);
   return NextResponse.json({
     timeZone: BOOKING_TIMEZONE,
-    priceCents: priceFor(duration, rate.id),
-    durationMinutes: duration.minutes,
-    hours: duration.hours,
-    rate: rate.id,
-    // Every price at every rate, so the picker can show the full grid without
-    // a round-trip per combination.
+    // Every duration's price at every rate, keyed by rate id, so the picker
+    // never needs a round-trip to reprice a combination.
     durations: BOOKING_DURATIONS.map((d) => ({
       hours: d.hours,
       label: d.label,
-      priceCents: priceFor(d, rate.id),
+      minutes: d.minutes,
       standardPriceCents: d.priceCents,
+      prices: Object.fromEntries(BOOKING_RATES.map((r) => [r.id, priceFor(d, r.id)])),
     })),
     rates: BOOKING_RATES.map((r) => ({ id: r.id, label: r.label, note: "note" in r ? r.note : null })),
-    slots: slots.map((s) => ({
-      start: s.start.toISOString(),
-      end: s.end.toISOString(),
-      label: formatSlot(s.start, BOOKING_TIMEZONE),
-      day: formatSlotDay(s.start, BOOKING_TIMEZONE),
-      time: formatSlotTime(s.start, BOOKING_TIMEZONE),
-    })),
+    // Every duration's fitted slot list, keyed by hours. generateSlots is
+    // pure/sync — computing it three times against the same busy+taken data
+    // is negligible next to the network fetch that produced that data.
+    slotsByHours: Object.fromEntries(
+      BOOKING_DURATIONS.map((d) => [
+        d.hours,
+        generateSlots(bookingConfig, busy, taken, now, d.minutes).map((s) => ({
+          start: s.start.toISOString(),
+          end: s.end.toISOString(),
+          label: formatSlot(s.start, BOOKING_TIMEZONE),
+          day: formatSlotDay(s.start, BOOKING_TIMEZONE),
+          time: formatSlotTime(s.start, BOOKING_TIMEZONE),
+        })),
+      ])
+    ),
   });
 }
