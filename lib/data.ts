@@ -1163,7 +1163,8 @@ export const products: Product[] = [
       },
     ],
     links: [
-      { label: "npm install -g xrsim", url: "https://www.npmjs.com/package/xrsim" },
+      { label: "Download for Mac (.app)", url: "/downloads/xrsim.zip" },
+      { label: "npm install -g xrsim (Mac + Windows)", url: "https://www.npmjs.com/package/xrsim" },
       { label: "Get a license →", url: "/store#xrsim" },
     ],
     accent: "teal",
