@@ -14,6 +14,10 @@ import { sendBookingRequestAck, sendBookingOwnerRequest } from "@/lib/booking/em
 
 // Takes an appointment request. Nobody is charged here — payment happens only
 // after the request is confirmed (see /api/book/action).
+//
+// A single flaky calendar feed can now take up to 8s + 12s of retries (see
+// fetchOneIcsFeed in lib/booking/config.ts) before this route gives up.
+export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   if (!(await rateLimitAllows(`book:${clientIp(req)}`, 5, 60))) {

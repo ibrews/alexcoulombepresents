@@ -22,6 +22,9 @@ import {
 // point of reading the calendar is to not do that.
 
 export const dynamic = "force-dynamic";
+// A single flaky feed can now take up to 8s + 12s of retries (see
+// fetchOneIcsFeed in lib/booking/config.ts) before this route gives up.
+export const maxDuration = 30;
 
 export async function GET(req: Request) {
   // Which block length to price and fit. Longer blocks have fewer valid start

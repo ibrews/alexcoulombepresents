@@ -105,28 +105,38 @@ export async function fetchBusyIntervals(
   // like a perfectly normal set of busy blocks with a whole account's
   // commitments silently missing. Better to say "can't read the calendar"
   // than to offer time that one of three calendars already owns.
-  const results = await Promise.all(
-    urls.map(async (url) => {
-      try {
-        const res = await fetch(url, {
-          signal: AbortSignal.timeout(6000),
-          // Google serves these with long cache headers; we still want the
-          // freshest copy the CDN will give us.
-          cache: "no-store",
-        });
-        if (!res.ok) {
-          console.error(`[booking] ICS fetch failed: HTTP ${res.status}`);
-          return null;
-        }
-        return busyIntervalsFromIcs(await res.text(), windowStart, windowEnd, BOOKING_TIMEZONE);
-      } catch (err) {
-        console.error("[booking] ICS fetch failed", err);
-        return null;
-      }
-    })
-  );
+  const results = await Promise.all(urls.map((url) => fetchOneIcsFeed(url, windowStart, windowEnd)));
   if (results.some((r) => r === null)) return null;
   return results.flat() as Interval[];
+}
+
+// Observed live 2026-08-13, three real feeds in production: a single ~6s
+// timeout made roughly 40% of requests to /book fail outright, because one
+// of the three calendars is only OCCASIONALLY slow to respond — not down,
+// not misconfigured, just slow often enough that a tight one-shot timeout
+// turned normal latency variance into a coin-flip 503 for every visitor.
+// One retry after a longer timeout absorbs that variance; a feed that's
+// actually unreachable still fails both attempts and correctly 503s.
+async function fetchOneIcsFeed(url: string, windowStart: Date, windowEnd: Date): Promise<Interval[] | null> {
+  for (const timeoutMs of [8000, 12000]) {
+    try {
+      const res = await fetch(url, {
+        signal: AbortSignal.timeout(timeoutMs),
+        // Google serves these with long cache headers; we still want the
+        // freshest copy the CDN will give us.
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        console.error(`[booking] ICS fetch failed: HTTP ${res.status}`);
+        return null; // an HTTP error is a real failure — no point retrying it
+      }
+      return busyIntervalsFromIcs(await res.text(), windowStart, windowEnd, BOOKING_TIMEZONE);
+    } catch (err) {
+      console.error(`[booking] ICS fetch failed (timeout ${timeoutMs}ms)`, err);
+      // fall through to the next timeout, if any
+    }
+  }
+  return null;
 }
 
 /** Slots already claimed by a live booking. Authoritative — unlike the
