@@ -1138,7 +1138,7 @@ export const products: Product[] = [
       },
       {
         heading: "The frontier",
-        body: "Streamed PC-VR testing is a daily driver now, and standalone on-device simulation shipped too — a real GPU-accelerated Android emulator runs an actual standalone OpenXR APK locally, no streaming pipeline at all, verified end-to-end against a shipped Godot VR game. Current frontier: modeling each device's real performance envelope, so a demo throttled to a Quest 1's frame budget visibly runs choppier than one throttled to a Quest 3 — a test can fail not just on 'wrong answer' but on 'too slow for this headset.'",
+        body: "Streamed PC-VR testing is a daily driver now, and standalone on-device simulation shipped too — a real GPU-accelerated Android emulator runs an actual standalone OpenXR APK locally, no streaming pipeline at all, verified against both a shipped Godot VR game and real Android XR builds (Galaxy XR-class devices). Controller button input on that on-device path is real and scripted too — a live button press dispatches into the running app and the app's own code reacts to it, not a synthetic event that only looks like input. Current frontier: full head/controller pose injection for that same on-device path — button presses work today, movement doesn't yet, and that gap is public, not hidden (see the docs).",
       },
     ],
     bullets: [
@@ -1147,7 +1147,8 @@ export const products: Product[] = [
       "One-command, pass/fail runs an AI agent can drive in its own edit-test loop",
       "Runs fully headless on a plain workstation — no headset, background, overnight, at scale",
       "First proof: headless co-location verified to 0.4 cm accuracy, start to finish",
-      "Standalone on-device: a real GPU-accelerated Android emulator runs actual OpenXR APKs, no streaming pipeline",
+      "Standalone on-device: a real GPU-accelerated Android emulator runs actual OpenXR APKs (PICO-native and Android XR), no streaming pipeline",
+      "Real controller button input on-device — a scripted trigger press reaches the app's own code, confirmed via device logs, not just a synthetic event",
       "Per-device performance envelope: throttle a demo to a chosen headset's real frame budget",
       "Free forever to explore (help + the built-in demo cockpit, no account needed); a 14-day trial covers pointing it at a real app, then it's free for active members or a one-time purchase — see the store link below",
     ],
@@ -1164,7 +1165,8 @@ export const products: Product[] = [
     ],
     links: [
       { label: "Download for Mac (.app)", url: "/downloads/xrsim.zip" },
-      { label: "npm install -g xrsim (Mac + Windows)", url: "https://www.npmjs.com/package/xrsim" },
+      { label: "Download for Windows (installer)", url: "https://unpkg.com/xrsim@latest/install/install-windows.bat" },
+      { label: "Documentation & full command reference", url: "https://www.npmjs.com/package/xrsim" },
       { label: "Get a license →", url: "/store#xrsim" },
     ],
     accent: "teal",
