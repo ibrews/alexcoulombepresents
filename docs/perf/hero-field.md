@@ -4,9 +4,9 @@ Date: 2026-08-13
 
 ## Status
 
-No browser frame-time or FPS result is available from this run. Do not treat
-this document as a clean bill of health: the required browser trace could not
-be captured in this sandbox.
+**Scripting cost: measured, and it is a non-issue.** Canvas paint cost:
+still unmeasured. Read the two sections below as separate findings — this is
+not yet a full clean bill of health, but the O(n²) worry is answered.
 
 ## Intended method
 
@@ -27,6 +27,30 @@ The application could not be served locally: `next start --hostname 127.0.0.1`
 was denied with `listen EPERM`. The available browser integration also reported
 that no browser was connected. Consequently, idle frame time/FPS and hovered
 frame time/FPS are **not measured** rather than estimated.
+
+## Measured: per-frame scripting cost (2026-08-13)
+
+Benchmarked by replaying `FaceField`'s exact per-frame JS — `LinkNodeLayer.update()`,
+pointer repulsion, the 20 face attractors, damping/integration/wrapping, the settling
+pass and the pair-linking pass — over 600 frames at the 320-particle cap, after 300
+warm-up frames. Node 26 / V8, MacBook Pro M1 Max. **Canvas painting is excluded**; this
+is the scripting half only.
+
+| state | median | p95 | share of a 16.67ms frame |
+|---|---|---|---|
+| idle (one pair pass) | 0.69ms | 0.75ms | 4.2% |
+| idle + settling (two pair passes) | 0.80ms | 0.84ms | 4.8% |
+| hovered (ripple active) | 0.72ms | 0.80ms | 4.3% |
+| hovered + settling | 0.83ms | 0.90ms | 5.0% |
+
+**The O(n²) loops do not dominate, and there is nothing to optimize here.** 51,040 pairs
+of cheap arithmetic costs well under a millisecond; the second (settling) pass adds ~0.1ms
+and the whole ripple displacement pass adds ~0.03ms. Even allowing an order of magnitude
+for a much slower machine, the scripting side stays inside the frame budget.
+
+**What this does NOT cover:** `ctx.stroke()` per linked pair. That is the remaining
+candidate for real cost, and it is a renderer question a browser trace has to answer —
+see the intended method below. Do not conclude the hero is fast until that exists.
 
 ## Static workload accounting (not a timing measurement)
 
