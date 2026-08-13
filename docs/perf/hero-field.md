@@ -74,3 +74,44 @@ machine, then keep the implementation unchanged if both stay comfortably below
 the 16.7 ms frame budget. If the traces identify the pairwise work as dominant,
 evaluate a spatial grid for the link and settling neighbor searches; retain the
 same visual distance thresholds before considering any particle-count change.
+
+## `/lab`'s ParticleField — measured, and why the constellation did NOT ship there
+
+Measured 2026-08-13 at 1440x900 (`app/lab/page.tsx`):
+
+```
+nav          y    0–64
+field band   y  128–521   (1440 x 393 — the whole canvas)
+h1           x  164–932   y 182–302
+paragraph    x  164–836   y 326–443
+next line    x  164–1276  y 459–479
+field wrapper opacity: 0.5
+```
+
+There **is** free space — a 164px left margin running the full 393px height, and
+a right region roughly x 950–1400 / y 182–443. So "no room" is not the reason.
+Three concrete blockers are:
+
+1. **The band is 393px tall, not 828px.** `heroSlots` is tuned for the homepage
+   hero. Its `floor` band (`h - inset`, insets 46–83) would land at y 310–347
+   here — directly on the h1 and paragraph. `/lab` needs its own slot set, not
+   a reuse.
+2. **The field wrapper is `opacity-50`.** Link dots, halos and labels would be
+   washed to half strength — dimmer than the ambient dots on a page that is
+   already busier. Hit-testing is unaffected, but discoverability (already the
+   weak point of this feature) gets worse, not better.
+3. **`ParticleField` takes no links today.** Wiring it means a lab-scoped pool,
+   its own bounds measurement, and its own tests — the homepage's version of
+   this took several rounds and shipped a real bug at 1024x800 that only
+   measurement caught.
+
+None of that is hard; it is just more than a measurement. The next session
+should start from the numbers above rather than re-deriving them.
+
+## Canvas paint cost — still open, and honestly so
+
+Unchanged from above: `ctx.stroke()` per linked pair is unmeasured. It needs a
+DevTools trace in a **visible** window — an undisplayed browser pane throttles
+`requestAnimationFrame`, so any FPS sampled through one is a number nobody
+should stand behind. Scripting is measured and fine (4–5% of a frame); this is
+the only remaining unknown.

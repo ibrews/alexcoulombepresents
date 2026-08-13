@@ -118,7 +118,16 @@ export default function Home() {
             </div>
           </div>
           <p className="mt-12 hidden font-mono text-xs text-mist lg:block">
+            {/* The constellation is otherwise undiscoverable: the link dots are
+                bigger, haloed and pulse slowly, but nothing says they are
+                clickable, and the cursor only tells you once you have already
+                found one. This line is the affordance. It sits next to ⌘K
+                because both answer the same question — how do I get around. */}
             press <kbd className="rounded border border-line px-1.5 py-0.5">⌘K</kbd> to jump anywhere
+            <span className="hidden lg:inline">
+              {" "}
+              · or follow a <span className="text-teal">glowing dot</span> — each one goes somewhere
+            </span>
           </p>
         </div>
       </section>
