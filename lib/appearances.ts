@@ -665,15 +665,6 @@ export const appearances: Appearance[] = [
     location: "Virtual",
   },
   {
-    slug: "vienna-civa-festival-2021",
-    role: "Instructor",
-    title: "UE4 Instructor",
-    org: "Vienna CIVA Festival",
-    date: "2021",
-    endsISO: "2021-06-30T00:00:00Z",
-    location: "Vienna, Austria",
-  },
-  {
     slug: "nyvr-art-in-vr-2021",
     role: "Speaker",
     title: "NYVR Art in VR",
@@ -897,15 +888,6 @@ export const appearances: Appearance[] = [
     url: "https://worldsinplay.com/past-events-1",
   },
   {
-    slug: "unreal-fest-gold-coast-2024",
-    role: "Speaker",
-    title: "Unreal Fest Gold Coast",
-    org: "Unreal Fest",
-    date: "May 29–30, 2024",
-    endsISO: "2024-05-30T23:00:00Z",
-    location: "Gold Coast, Australia",
-  },
-  {
     slug: "unreal-fest-prague-2024",
     role: "Speaker",
     title: "I Wish I Learned This Sooner!",
@@ -944,6 +926,15 @@ export const appearances: Appearance[] = [
     endsISO: "2024-10-20T00:00:00Z",
     location: "Belgrade, Serbia",
     url: "https://youtu.be/9q7GIQVh2Nc",
+  },
+  {
+    slug: "awe-eu-vienna-2024",
+    role: "Demos",
+    title: "Show Floor VR Demos",
+    org: "AWE EU 2024",
+    date: "Oct 29–30, 2024",
+    endsISO: "2024-10-30T22:00:00Z",
+    location: "Vienna, Austria",
   },
   {
     slug: "digital-body-festival-2024",
