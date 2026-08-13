@@ -201,5 +201,12 @@ export async function ensureCommerceSchema() {
     )
   `;
 
+  // Which date the stored meeting is FOR ("YYYY-MM-DD"). This is what makes
+  // the weekly cron idempotent (lib/zoom.ts's ensureOfficeHoursMeeting): a
+  // retried or double-fired cron compares against this and no-ops, instead
+  // of creating a second meeting and overwriting meeting_id — which would
+  // strand anyone already registered on the first one.
+  await db`ALTER TABLE zoom_meetings ADD COLUMN IF NOT EXISTS meeting_date TEXT`;
+
   _ensured = true;
 }

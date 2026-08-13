@@ -128,8 +128,53 @@ export async function addZoomRegistrant(
 
 const OFFICE_HOURS_PURPOSE = "office_hours";
 
-// Set by scripts/zoom/create-office-hours-meeting.mjs each Friday. Read by
-// app/api/admin/credits (POST body {"for":"office_hours"}) at redemption time.
+// ── Office hours scheduling — pure date helpers ────────────────────────────
+// Exported (and unit-tested) rather than inlined, because "1p ET" is the one
+// genuinely error-prone part of this feature: it's 17:00Z for most of the
+// year and 18:00Z in winter, and getting it wrong silently schedules the
+// meeting an hour off rather than failing loudly.
+
+/** Today's calendar date in New York, "YYYY-MM-DD". */
+function newYorkToday(now: Date): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
+
+/** Nearest Friday on-or-after today in New York, "YYYY-MM-DD". Today counts
+ * if today IS Friday, so a Friday-morning run still targets that same day. */
+export function upcomingFridayISO(now: Date = new Date()): string {
+  const [y, m, d] = newYorkToday(now).split("-").map(Number);
+  // Noon UTC anchor — far enough from either midnight that the arithmetic
+  // below can't slip a day regardless of offset.
+  const anchor = new Date(Date.UTC(y, m - 1, d, 12));
+  anchor.setUTCDate(anchor.getUTCDate() + ((5 - anchor.getUTCDay() + 7) % 7)); // 5 = Friday
+  return anchor.toISOString().slice(0, 10);
+}
+
+/** "YYYY-MM-DD" + 1p New York time → the matching UTC instant, correct
+ * across the EDT/EST boundary without pulling in a date library: ask Intl
+ * what New York's offset actually is that day, then apply it. */
+export function onePmEasternToUTC(dateISO: string): string {
+  const sameDayNoonish = new Date(`${dateISO}T16:00:00Z`); // still that date in NY year-round
+  const offsetLabel = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    timeZoneName: "longOffset",
+  })
+    .formatToParts(sameDayNoonish)
+    .find((p) => p.type === "timeZoneName")!.value; // "GMT-04:00" | "GMT-05:00"
+  const offsetHours = parseInt(offsetLabel.replace("GMT", ""), 10); // -4 | -5
+  return `${dateISO}T${String(13 - offsetHours).padStart(2, "0")}:00:00Z`;
+}
+
+// ── Office hours meeting — stored current-week pointer ─────────────────────
+
+/** The meeting ID for the week's office hours, whatever it currently is.
+ * Read by app/api/admin/credits (POST body {"for":"office_hours"}) at
+ * redemption time. */
 export async function currentOfficeHoursMeetingId(): Promise<string | null> {
   await ensureCommerceSchema();
   const rows = (await sql()`
@@ -138,11 +183,49 @@ export async function currentOfficeHoursMeetingId(): Promise<string | null> {
   return rows[0]?.meeting_id ?? null;
 }
 
-export async function setOfficeHoursMeetingId(meetingId: string): Promise<void> {
+/**
+ * Create this week's office-hours meeting, or return the existing one if
+ * it's already been created for that date.
+ *
+ * The idempotency is load-bearing, not defensive padding: this runs from a
+ * Vercel cron (app/api/cron/office-hours-meeting), and a retried or
+ * double-fired cron that blindly created a second meeting would overwrite
+ * the stored ID — stranding anyone already registered on the first meeting
+ * on a link nobody would ever join. Keyed on the meeting's DATE rather than
+ * a timestamp so a re-run any time during the same week is a no-op.
+ */
+export async function ensureOfficeHoursMeeting(
+  now: Date = new Date()
+): Promise<{ meetingId: string; dateISO: string; created: boolean; registrationUrl?: string; joinUrl?: string }> {
   await ensureCommerceSchema();
+  const dateISO = upcomingFridayISO(now);
+
+  const rows = (await sql()`
+    SELECT meeting_id, meeting_date FROM zoom_meetings WHERE purpose = ${OFFICE_HOURS_PURPOSE}
+  `) as { meeting_id: string; meeting_date: string | null }[];
+  if (rows[0]?.meeting_date === dateISO) {
+    return { meetingId: rows[0].meeting_id, dateISO, created: false };
+  }
+
+  const meeting = await createZoomMeeting({
+    topic: `Office Hours — ${dateISO}`,
+    startTimeISO: onePmEasternToUTC(dateISO),
+    durationMinutes: 120, // "Two live hours", per lib/store.ts's officeHoursDropIn
+    agenda: "Drop-in office hours with Alex.",
+  });
+
   await sql()`
-    INSERT INTO zoom_meetings (purpose, meeting_id, updated_at)
-    VALUES (${OFFICE_HOURS_PURPOSE}, ${meetingId}, now())
-    ON CONFLICT (purpose) DO UPDATE SET meeting_id = EXCLUDED.meeting_id, updated_at = now()
+    INSERT INTO zoom_meetings (purpose, meeting_id, meeting_date, updated_at)
+    VALUES (${OFFICE_HOURS_PURPOSE}, ${meeting.meetingId}, ${dateISO}, now())
+    ON CONFLICT (purpose) DO UPDATE
+      SET meeting_id = EXCLUDED.meeting_id, meeting_date = EXCLUDED.meeting_date, updated_at = now()
   `;
+
+  return {
+    meetingId: meeting.meetingId,
+    dateISO,
+    created: true,
+    registrationUrl: meeting.registrationUrl,
+    joinUrl: meeting.joinUrl,
+  };
 }
