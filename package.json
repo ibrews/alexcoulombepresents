@@ -10,7 +10,8 @@
     "lint": "next lint",
     "test": "node --test \"tests/**/*.test.ts\"",
     "studio": "node scripts/newsletter-studio.mjs",
-    "gen:hero-links": "node --experimental-strip-types scripts/gen-hero-links.mjs"
+    "gen:hero-links": "node --experimental-strip-types scripts/gen-hero-links.mjs",
+    "check:hero-links": "node --experimental-strip-types scripts/gen-hero-links.mjs --check"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1081.0",
