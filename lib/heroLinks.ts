@@ -145,7 +145,8 @@ function shuffled<T>(items: readonly T[], rand: () => number): T[] {
 export function dealHeroLinks(
   pool: readonly HeroLink[],
   rand: () => number = Math.random,
-  slots: readonly HeroSlot[] = heroSlots
+  slots: readonly HeroSlot[] = heroSlots,
+  quotas: Record<HeroTier, number> = TIER_QUOTA
 ): HeroNodeLink[] {
   const byTier = new Map<HeroTier, HeroLink[]>();
   for (const link of pool) {
@@ -158,7 +159,7 @@ export function dealHeroLinks(
   const leftovers: HeroLink[] = [];
   for (const [tier, links] of byTier) {
     const order = shuffled(links, rand);
-    const quota = TIER_QUOTA[tier] ?? 0;
+    const quota = quotas[tier] ?? 0;
     picked.push(...order.slice(0, quota));
     leftovers.push(...order.slice(quota));
   }

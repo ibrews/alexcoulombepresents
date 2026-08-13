@@ -9,7 +9,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { LinkNodeLayer, type FieldParticle } from "../lib/linkNodes.ts";
+import { LinkNodeLayer, NODE_REACH, type FieldParticle } from "../lib/linkNodes.ts";
 
 const W = 1440;
 const H = 800;
@@ -93,6 +93,38 @@ test("the nav clamp does not flatten a band onto one line", () => {
   layer.resize(W, H, { navBottom: 104, cutoutTop: H, cutoutLeft: W, enabled: true });
   const ys = new Set(layer.nodes.map((n) => Math.round(n.y)));
   assert.ok(ys.size >= 3, `expected varied heights, got ${[...ys].join(",")}`);
+});
+
+test("a side band is pulled in to fit its gutter, and dropped when it cannot", () => {
+  const sides = [
+    { href: "/l", label: "L", kicker: "", band: "left" as const, along: 0.5, inset: 300, hue: 174, tier: "deep" as const },
+    { href: "/r", label: "R", kicker: "", band: "right" as const, along: 0.5, inset: 300, hue: 174, tier: "deep" as const },
+  ];
+
+  // A 200px gutter cannot hold a node asking to sit 300px in; it gets pulled
+  // back to the deepest spot whose reach still clears the copy.
+  const tight = new LinkNodeLayer(sides, {});
+  tight.resize(W, H, { ...OPEN, gutterLeft: 200, gutterRight: 200 });
+  assert.equal(tight.nodes.length, 2);
+  assert.equal(tight.nodes[0].x, 200 - NODE_REACH);
+  assert.equal(tight.nodes[1].x, W - (200 - NODE_REACH));
+
+  // A gutter that is only the page's own padding has no honest home at all.
+  const none = new LinkNodeLayer(sides, {});
+  none.resize(W, H, { ...OPEN, gutterLeft: 20, gutterRight: 20 });
+  assert.deepEqual(none.nodes, []);
+
+  // …and one side closing must not take the other with it.
+  const half = new LinkNodeLayer(sides, {});
+  half.resize(W, H, { ...OPEN, gutterLeft: 20, gutterRight: 400 });
+  assert.deepEqual(half.visibleLinks.map((l) => l.band), ["right"]);
+});
+
+test("omitting the gutters leaves the hero's own bands exactly where they were", () => {
+  const link = [{ href: "/l", label: "L", kicker: "", band: "left" as const, along: 0.5, inset: 300, hue: 174, tier: "deep" as const }];
+  const layer = new LinkNodeLayer(link, {});
+  layer.resize(W, H, OPEN); // OPEN carries no gutterLeft/gutterRight
+  assert.equal(layer.nodes[0].x, 300);
 });
 
 test("bands reclaim the cutout's space when the portrait is hidden", () => {

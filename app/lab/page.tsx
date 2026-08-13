@@ -5,6 +5,7 @@ import Ethereal from "@/components/Ethereal";
 import ParticleField from "@/components/ParticleField";
 import WaitlistForm from "@/components/WaitlistForm";
 import { products } from "@/lib/data";
+import { buildLabLinkPool } from "@/lib/labLinkPool";
 import { renderBreaks } from "@/components/Lines";
 
 export const metadata: Metadata = {
@@ -26,8 +27,12 @@ export default function Lab() {
     <div className="pb-24 pt-32">
       <Ethereal variant="nebula" />
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 opacity-50">
-          <ParticleField density={0.00005} />
+        {/* No `opacity-50` on this wrapper any more: the constellation's link
+            dots draw onto the same canvas as the ambient field, and halving
+            them along with it made the one interactive thing here the dimmest
+            thing here. The ambient dots keep their old strength via `dim`. */}
+        <div className="absolute inset-0">
+          <ParticleField density={0.00005} dim={0.5} pool={buildLabLinkPool()} />
         </div>
         <div className="relative mx-auto max-w-6xl px-5 pb-16">
           <Reveal>

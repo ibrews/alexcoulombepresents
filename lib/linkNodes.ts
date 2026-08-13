@@ -21,7 +21,7 @@
 //   · Nothing accumulates: peak sway is ~9-16px and every dot returns to
 //     exactly where the ambient field had it. A crater is not representable.
 
-import type { HeroNodeLink } from "@/lib/heroLinks";
+import type { HeroBand, HeroNodeLink } from "@/lib/heroLinks";
 
 /** Minimal shape this layer needs from the host's particle array. */
 export type FieldParticle = { x: number; y: number; vx: number; vy: number };
@@ -36,6 +36,17 @@ export type HeroBounds = {
   cutoutTop: number;
   cutoutLeft: number;
   enabled: boolean;
+  /**
+   * Free px between the canvas's left/right edge and the page's text column,
+   * for hosts whose obstacle is a column of copy rather than a portrait — see
+   * ParticleField on /lab, where the headline eats the middle of the field and
+   * the only honest homes are the margins either side of it.
+   *
+   * Default Infinity: the homepage hero measures a cutout, not a column, and
+   * its left/right bands are already hand-placed against it.
+   */
+  gutterLeft?: number;
+  gutterRight?: number;
 };
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), Math.max(lo, hi));
@@ -92,6 +103,20 @@ const EDGE_PAD = 44;         // hard keep-out from the hero's own edges
 // a single line.
 const NAV_CLEAR = 40;
 
+/**
+ * How far a node reaches past its home in the worst case: its drift budget
+ * plus half of the LARGEST hit-target the hosts render (56px on coarse
+ * pointers, so 28). Any gutter narrower than this cannot hold a node without
+ * its tap area landing on the copy beside it.
+ *
+ * The drift budget is 30, not WANDER_AMP's 26. Measured, not assumed: 60s of
+ * physics with the pointer sweeping through the field peaks at 27.2px, since
+ * the home spring overshoots its wander target and the cursor dodge adds to it
+ * — see the drift test in tests/lab-links.test.ts, which is what caught the
+ * 26px version of this constant understating the hit-boxes.
+ */
+export const NODE_REACH = 30 + 28;
+
 export class LinkNodeLayer {
   nodes: LinkNodeRuntime[] = [];
   private waves: Wave[] = [];
@@ -124,7 +149,18 @@ export class LinkNodeLayer {
   resize(w: number, h: number, bounds: HeroBounds) {
     this.w = w;
     this.h = h;
-    const visible = bounds.enabled ? this.links : [];
+
+    // Deepest a side-band node may sit before its wander/hit-target crosses
+    // into the text column. A band with no room at all loses its slots
+    // outright rather than stacking them on the column's edge — that is how
+    // /lab keeps a right-hand strand at 1024 wide, where the left margin is
+    // 20px, while still using both margins at 1440.
+    const maxLeft = (bounds.gutterLeft ?? Infinity) - NODE_REACH;
+    const maxRight = (bounds.gutterRight ?? Infinity) - NODE_REACH;
+    const fits = (band: HeroBand) =>
+      band === "left" ? maxLeft >= NODE_REACH : band === "right" ? maxRight >= NODE_REACH : true;
+
+    const visible = bounds.enabled ? this.links.filter((l) => fits(l.band)) : [];
 
     // Vertical extent each side band may use, and the horizontal extent the
     // floor may use — all derived from where the nav and cutout actually are.
@@ -148,11 +184,11 @@ export class LinkNodeLayer {
           hy = h - link.inset;
           break;
         case "right":
-          hx = w - link.inset;
+          hx = w - Math.min(link.inset, maxRight);
           hy = rightTop + link.along * Math.max(0, rightBottom - rightTop);
           break;
         default: // "left"
-          hx = link.inset;
+          hx = Math.min(link.inset, maxLeft);
           hy = top + BAND_PAD + link.along * Math.max(0, h - top - 2 * BAND_PAD);
           break;
       }

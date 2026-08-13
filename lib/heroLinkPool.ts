@@ -56,7 +56,7 @@ const SECTION: HeroLink[] = [
  * Trim a title to something a tooltip can hold without turning into a
  * paragraph. Cuts on a word boundary so it never reads as a truncation bug.
  */
-function short(text: string, max = 44): string {
+export function short(text: string, max = 44): string {
   const clean = text.replace(/\s+/g, " ").trim();
   if (clean.length <= max) return clean;
   const cut = clean.slice(0, max);
@@ -65,7 +65,7 @@ function short(text: string, max = 44): string {
 }
 
 /** Where an off-site link actually goes, for the tooltip's second line. */
-function hostOf(url: string): string {
+export function hostOf(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
   } catch {

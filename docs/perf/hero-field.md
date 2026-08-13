@@ -75,38 +75,59 @@ the 16.7 ms frame budget. If the traces identify the pairwise work as dominant,
 evaluate a spatial grid for the link and settling neighbor searches; retain the
 same visual distance thresholds before considering any particle-count change.
 
-## `/lab`'s ParticleField — measured, and why the constellation did NOT ship there
+## `/lab`'s ParticleField — measured, then shipped (2026-08-13)
 
-Measured 2026-08-13 at 1440x900 (`app/lab/page.tsx`):
+The constellation now runs on `/lab` too. The layout it was placed against,
+measured off the running page:
 
 ```
-nav          y    0–64
-field band   y  128–521   (1440 x 393 — the whole canvas)
-h1           x  164–932   y 182–302
-paragraph    x  164–836   y 326–443
-next line    x  164–1276  y 459–479
-field wrapper opacity: 0.5
+                       1440x900          1024x800
+nav bottom             y  64 (104 with the announcement banner live)
+field band             y 128–521         y 128–521      (the whole canvas)
+h1 block               x 164–932         x  20–788
+lead paragraph         x 164–836         x  20–692
+left gutter            164px             20px   ← the section's own padding
+right gutter           508px             236px
 ```
 
-There **is** free space — a 164px left margin running the full 393px height, and
-a right region roughly x 950–1400 / y 182–443. So "no room" is not the reason.
-Three concrete blockers are:
+Each of the three blockers this file used to list, and what closed it:
 
-1. **The band is 393px tall, not 828px.** `heroSlots` is tuned for the homepage
-   hero. Its `floor` band (`h - inset`, insets 46–83) would land at y 310–347
-   here — directly on the h1 and paragraph. `/lab` needs its own slot set, not
-   a reuse.
-2. **The field wrapper is `opacity-50`.** Link dots, halos and labels would be
-   washed to half strength — dimmer than the ambient dots on a page that is
-   already busier. Hit-testing is unaffected, but discoverability (already the
-   weak point of this feature) gets worse, not better.
-3. **`ParticleField` takes no links today.** Wiring it means a lab-scoped pool,
-   its own bounds measurement, and its own tests — the homepage's version of
-   this took several rounds and shipped a real bug at 1024x800 that only
-   measurement caught.
+1. **The band is 393px tall, not 828px.** `/lab` got its own slot set rather
+   than reusing `heroSlots` — `lib/labLinks.ts`. Side bands only: `top` spans
+   the full width and `floor` is anchored to the band's bottom edge, so
+   heroSlots' floor insets would have landed at y 310–347, on the headline.
+2. **The field wrapper was `opacity-50`.** Removed. `ParticleField` now takes a
+   `dim` prop and applies it per ambient dot in code, so the ambient field
+   keeps exactly the strength it had while the link dots, halos and labels draw
+   at full strength on the same canvas.
+3. **`ParticleField` took no links.** It now measures its own bounds with
+   `getBoundingClientRect` on a 400ms timer (not inside the RAF loop — under
+   `prefers-reduced-motion` there is no RAF loop, which is how the homepage
+   once stranded its top row under the nav), and `HeroBounds` gained
+   `gutterLeft`/`gutterRight` so a band whose margin cannot hold a node is
+   dropped rather than stacked onto the copy.
 
-None of that is hard; it is just more than a measurement. The next session
-should start from the numbers above rather than re-deriving them.
+**What that yields:** 9 nodes at 1440 (4 left, 5 right), 5 at 1024 (right only
+— a 20px margin has no honest home). Verified live at both sizes by measuring
+every anchor's `getBoundingClientRect`, expanding each by `NODE_REACH` (58px:
+30px drift budget + half of the largest hit-target) and asserting no overlap
+with the nav, the h1, the lead paragraph, the viewport or the canvas clip. Zero
+violations. `tests/lab-links.test.ts` replays the same two layouts through the
+real `LinkNodeLayer` across 25 seeds.
+
+**Two bugs measurement caught, both of which a screenshot would have passed:**
+
+- `NODE_REACH` was first written as `WANDER_AMP + 28` = 54. Simulated, drift
+  peaks at **27.2px**, not 26 — the home spring overshoots its wander target
+  and the cursor dodge adds to that. Every hit-box in the tests was understated
+  until the constant became `30 + 28`.
+- On a window resize the nodes were left gliding home from their old positions.
+  The home spring is overdamped enough that, measured, they crawl at roughly
+  20px/second: dragging 1440 → 1024 parked the entire right strand off-screen
+  and unclickable for several seconds. `resize()` now calls `snapToHomes()`.
+  **The homepage hero has the same shape of issue** and is untouched here — its
+  bands are also viewport-anchored, so a wide resize strands them too. Not
+  fixed, not measured, and worth its own pass.
 
 ## Canvas paint cost — still open, and honestly so
 
