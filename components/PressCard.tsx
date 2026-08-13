@@ -23,16 +23,23 @@ export function PressCard({ p }: { p: PressMention }) {
     </>
   );
 
+  // `id` matches the appearance cards so /appearances#<slug> deep links land on
+  // press entries too, not just talks.
   if (!p.url) {
-    return <div className="glass relative flex h-full flex-col gap-4 rounded-2xl p-6">{body}</div>;
+    return (
+      <div id={p.slug} className="glass relative flex h-full scroll-mt-32 flex-col gap-4 rounded-2xl p-6">
+        {body}
+      </div>
+    );
   }
 
   return (
     <a
+      id={p.slug}
       href={p.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group glass relative flex h-full flex-col gap-4 rounded-2xl p-6 transition hover:border-teal/40"
+      className="group glass relative flex h-full scroll-mt-32 flex-col gap-4 rounded-2xl p-6 transition hover:border-teal/40"
     >
       {body}
     </a>
