@@ -14,7 +14,7 @@ with no configuration.
 | `/` | Hero with an interactive particle constellation that doubles as a knowledge graph — twelve of the dots are real destinations, drawn fresh on every visit from a pool of 416 links across four tiers, and hovering one locks it in place, names it, and sends soft ripples lapping through the surrounding dots (`lib/heroLinks.ts` + `lib/heroLinkPool.ts` + `lib/linkNodes.ts`) — plus a rotating-role typewriter, featured repos with live GitHub star counts, and an optional orbitable Gaussian Splat viewer (activates once `public/hero.splat` exists — see `components/SplatHero.tsx`) |
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
 | `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
-| `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`, real "Join the membership" checkout via `components/JoinMembershipButton.tsx`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + a Stripe price in `STRIPE_MEMBERSHIP_PRICE_ID`. Live, it shows a $50/month Join card instead of the waitlist; post-checkout redirects to `/members?joined=1` |
+| `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`, real "Join the membership" checkout via `components/JoinMembershipButton.tsx`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + the per-tier Stripe prices in `STRIPE_MEMBERSHIP_PRICE_ID_STARTER`/`_UNLIMITED`/`_INSIDER`. Live, it shows the three tier cards (Starter $200 / Unlimited $350 / Insider $500 per month) instead of the waitlist; post-checkout redirects to `/members?joined=1` |
 | `/members/recordings` | Members-only class-recording library (gated on the `membership` entitlement; entries in `lib/recordings.ts` — interim link list until the HLS player lands) |
 | `/account` | Magic-link sign-in, purchases/downloads, membership card (class credits, recording library, Stripe Customer Portal), and sign-out (linked from footer + store success page) |
 | `/repos` | Curated open-source catalog by category — each repo gets its own beautifully formatted page linking to its living GitHub wiki |
@@ -140,9 +140,20 @@ sell Epic-owned content off-Fab) — guardrail notes are in `lib/store.ts`.
 
 The membership subscription lifecycle is fully wired end-to-end — Join button, checkout, webhook
 fulfillment, welcome email, portal — and rehearsed against real Stripe test-mode events (not just
-unit fixtures). Live Stripe price already exists (`price_1U054TDALxplFYNoJHrIoHfN`, $50/month, set
-as `STRIPE_MEMBERSHIP_PRICE_ID` in Vercel production). The only thing gating public launch is
-`NEXT_PUBLIC_MEMBERSHIP_LIVE`, still `0` in production pending a final copy/UX check.
+unit fixtures).
+
+**Three tiers**, each its own Stripe Product and Price, defined in
+[`lib/commerce/membership.ts`](lib/commerce/membership.ts)'s `MEMBERSHIP_TIERS` and pointed at by
+`STRIPE_MEMBERSHIP_PRICE_ID_STARTER` / `_UNLIMITED` / `_INSIDER`: **Starter $200/mo** (3 pooled
+class credits per cycle), **Unlimited $350/mo**, **Insider $500/mo** (both unlimited — they skip
+the credit system entirely). Prices were raised from $99/$149/$299 on 2026-08-12.
+
+Each tier gets its own Stripe *Product* deliberately: they briefly shared one, which made Checkout
+show the same product name no matter which tier a buyer picked. When raising prices, add a NEW
+Price to the EXISTING product rather than creating a new product, and **add the outgoing price ID
+to `LEGACY_MEMBERSHIP_PRICE_IDS`** in the webhook before swapping the env var — Stripe never
+migrates existing subscriptions, so a price this list forgets is a live subscriber whose renewals
+silently stop granting access.
 
 - **Join flow**: [`components/JoinMembershipButton.tsx`](components/JoinMembershipButton.tsx) →
   `POST /api/checkout` with `{ membership: true }` → a real `mode=subscription` Stripe Checkout
@@ -152,8 +163,9 @@ as `STRIPE_MEMBERSHIP_PRICE_ID` in Vercel production). The only thing gating pub
 - **Webhook fulfillment**: [`lib/commerce/membershipBilling.ts`](lib/commerce/membershipBilling.ts)
   (decision logic, dependency-injected and unit-tested) +
   [`lib/commerce/membership.ts`](lib/commerce/membership.ts) (persistence). `invoice.paid`
-  grants/extends the `membership` entitlement and mints 2 `booking_credit` entitlements per
-  billing cycle (first grant only sends the welcome email — renewals don't);
+  grants/extends the `membership` entitlement and, for Starter only, mints that tier's
+  `booking_credit` entitlements for the cycle (Unlimited/Insider are uncapped and never touch the
+  credit system); first grant only sends the welcome email — renewals don't;
   `customer.subscription.updated/deleted` revokes on cancellation; refunds revoke that cycle's
   entitlements through the existing `charge.refunded` branch. Everything is idempotent against
   webhook retries and dashboard resends. **The membership grant is a DB-level atomic upsert**
@@ -175,6 +187,36 @@ as `STRIPE_MEMBERSHIP_PRICE_ID` in Vercel production). The only thing gating pub
   [`tests/membership-webhook.test.ts`](tests/membership-webhook.test.ts)), including cases only
   found by running the real flow (e.g. Stripe's transient `customer.subscription.created` with
   `status=incomplete` before a Checkout-driven subscription goes active).
+
+### Zoom auto-invite
+
+[`lib/zoom.ts`](lib/zoom.ts) wraps the "ZoomClaude" Server-to-Server OAuth app so buyers and
+members get registered on the right Zoom meeting automatically instead of clicking a registration
+link themselves. Needs `ZOOM_ACCOUNT_ID` / `ZOOM_CLIENT_ID` / `ZOOM_CLIENT_SECRET`; with them
+unset the whole feature no-ops and everyone falls back to the registration link, exactly as before
+it existed.
+
+- **Classes**: a `wednesdayCalendar` item with a `zoomMeetingId` auto-registers its buyer from the
+  stripe-webhook fulfillment branch. Create a class's meeting with
+  `node scripts/zoom/create-class-meeting.mjs --topic "…" --start 2026-09-02T15:00:00Z` — it
+  prints the `zoomRegistrationUrl` + `zoomMeetingId` lines to paste into
+  [`lib/store.ts`](lib/store.ts). Classes without a `zoomMeetingId` simply don't auto-register.
+- **Office hours**: a *fresh* Zoom meeting every Friday, so its ID can't live in code — it's kept
+  in the `zoom_meetings` table and refreshed by a daily cron
+  ([`/api/cron/office-hours-meeting`](app/api/cron/office-hours-meeting/route.ts)).
+  `POST /api/admin/credits` with `{"for":"office_hours"}` then registers the member on that week's
+  meeting as part of burning their credit, and reports `zoomRegistered` so a failure is visible
+  rather than silent. `node scripts/zoom/create-office-hours-meeting.mjs` is the manual escape
+  hatch; it's the same idempotent function the cron calls.
+- **Every Zoom call is best-effort and independently caught** — a Zoom outage can never fail an
+  already-charged purchase or an already-spent credit.
+- `node scripts/zoom/audit-class-meeting-ids.mjs` pairs each class to its real meeting by
+  registration URL and flags any that are missing or *mismatched* — a wrong ID would auto-register
+  buyers onto the wrong meeting, which is worse than not registering them.
+- Scopes needed on the Zoom app: `meeting:write:meeting:admin`, `meeting:write:registrant:admin`
+  (+ `meeting:read:list_meetings:admin` for the audit script). They're edited in Zoom's
+  **Developer** console (`marketplace.zoom.us/develop/apps/<id>/scope`) — *not* the
+  Marketplace-Admin "Apps on account" page, which has no Scopes tab at all.
 
 ## Signup lists & broadcasts
 

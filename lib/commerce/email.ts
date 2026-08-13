@@ -253,7 +253,7 @@ export async function sendOrderEmails(input: {
 // /members and simply never delivered). Deliberately lives here in this
 // server-only module rather than on MEMBERSHIP_TIERS: that array is rendered
 // by the public /members page, so a code parked on it would ship in the client
-// bundle and hand a $299/mo perk to anyone who opened devtools.
+// bundle and hand the Insider-tier perk to anyone who opened devtools.
 const INSIDER_GUMROAD_CODE = "VVVIP";
 const INSIDER_GUMROAD_URL = "https://ibrews.gumroad.com";
 

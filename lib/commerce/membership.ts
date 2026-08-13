@@ -99,6 +99,25 @@ export function membershipTier(id: MembershipTierId | string | null | undefined)
   return MEMBERSHIP_TIERS.find((t) => t.id === id);
 }
 
+// ── Derived marketing copy ─────────────────────────────────────────────────
+// Marketing prose quotes these prices in several places (the /members hero
+// and meta description, /training, the training calendar). Those were
+// hardcoded and went stale the first time prices moved — the tier cards
+// showed the new numbers while the surrounding copy still advertised the old
+// ones, on a live public page. Deriving them here means the next price
+// change can't reintroduce that contradiction.
+
+/** The entry tier — what "cheapest way in" copy should quote. */
+export const STARTER_TIER: MembershipTier =
+  MEMBERSHIP_TIERS.find((t) => t.id === "starter") ?? MEMBERSHIP_TIERS[0];
+
+/** e.g. "$200–$500/mo" — the full spread across tiers, for one-line summaries. */
+export function membershipPriceRange(): string {
+  const dollars = MEMBERSHIP_TIERS.map((t) => t.priceCents).sort((a, b) => a - b);
+  const fmt = (cents: number) => `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
+  return `${fmt(dollars[0])}–${fmt(dollars[dollars.length - 1])}/mo`;
+}
+
 export function hasUnlimitedBooking(tierId: MembershipTierId | string | null | undefined): boolean {
   return membershipTier(tierId)?.monthlyCredits === "unlimited";
 }

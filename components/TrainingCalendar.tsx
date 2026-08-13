@@ -2,6 +2,7 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import BuyButton from "@/components/BuyButton";
 import { wednesdayCalendar, officeHoursDropIn, consultationDropIn, formatPrice, isPurchasable } from "@/lib/store";
+import { STARTER_TIER } from "@/lib/commerce/membership";
 
 // How many "TBD via voting" placeholder Wednesdays to show after the named
 // 8-week run — the full back half of 2026 exists too, but listing all of it
@@ -71,7 +72,8 @@ export default function TrainingCalendar() {
           </span>
           <span className="font-bold text-snow">Become a member!</span>
           <span className="text-mist">
-            3 classes a month for $99 — that&apos;s less than the price of one class à la carte, plus
+            {STARTER_TIER.monthlyCredits} classes a month for{" "}
+            {formatPrice(STARTER_TIER.priceCents)} — cheaper than buying them one at a time, plus
             every recording and a bigger vote →
           </span>
         </Link>

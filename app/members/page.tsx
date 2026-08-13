@@ -12,6 +12,8 @@ import {
   memberBenefits,
   MEMBERSHIP_LIVE,
   MEMBERSHIP_TIERS,
+  STARTER_TIER,
+  membershipPriceRange,
 } from "@/lib/commerce/membership";
 
 // Title/description track MEMBERSHIP_LIVE so the tab and social cards never
@@ -19,7 +21,7 @@ import {
 export const metadata: Metadata = {
   title: MEMBERSHIP_LIVE ? "Members" : "Members — Coming Soon",
   description: MEMBERSHIP_LIVE
-    ? "The Alex Coulombe Presents membership: three tiers from $99–$299/mo — class credits or unlimited classes, every recording, member pricing, and a vote on what gets taught next that counts for more the higher your tier."
+    ? `The Alex Coulombe Presents membership: three tiers from ${membershipPriceRange()} — class credits or unlimited classes, every recording, member pricing, and a vote on what gets taught next that counts for more the higher your tier.`
     : "The Alex Coulombe Presents membership: every class recording, member pricing, early Lab access, and a vote on what gets taught next. Join the founding waitlist.",
   alternates: { canonical: "/members" },
 };
@@ -59,7 +61,7 @@ export default async function Members({
           member pricing, and a vote on what gets taught next that counts for more the higher your
           tier.{" "}
           {MEMBERSHIP_LIVE
-            ? "$99–$299/mo — cancel anytime."
+            ? `${membershipPriceRange()} — cancel anytime.`
             : "Pricing lands with the launch — waitlist members hear first and get the founding rate."}
         </p>
         {MEMBERSHIP_LIVE && (
@@ -68,8 +70,11 @@ export default async function Members({
               Cheapest way in!
             </span>
             <span className="text-mist">
-              Starter is <span className="font-bold text-snow">$99/mo for 3 classes</span> — that&apos;s
-              less than the price of one, à la carte.
+              Starter is{" "}
+              <span className="font-bold text-snow">
+                {STARTER_TIER.priceLabel} for {STARTER_TIER.monthlyCredits} classes
+              </span>{" "}
+              — cheaper than buying them one at a time.
             </span>
           </p>
         )}

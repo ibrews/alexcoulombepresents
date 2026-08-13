@@ -11,6 +11,7 @@ import CounterStat from "@/components/CounterStat";
 import TestimonialWall from "@/components/TestimonialWall";
 import TrainingSurveyForm from "@/components/TrainingSurveyForm";
 import TrainingCalendar from "@/components/TrainingCalendar";
+import { STARTER_TIER } from "@/lib/commerce/membership";
 import { getCurriculumEntries } from "@/lib/curriculum";
 import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
@@ -627,9 +628,9 @@ export default function Training() {
             Members save — <span className="grad-text">and get more.</span>
           </h2>
           <p className="mt-4 max-w-3xl leading-relaxed text-mist">
-            Starter is $99/mo for 3 live-class credits — cheaper than buying a single class à la
-            carte — plus every class recording, member pricing sitewide, and a vote that counts for
-            more. On top of that: hands-on access to real internal tools Alex builds for production
+            Starter is {STARTER_TIER.priceLabel} for {STARTER_TIER.monthlyCredits} live-class
+            credits — cheaper than buying them one at a time — plus every class recording, member
+            pricing sitewide, and a vote that counts for more. On top of that: hands-on access to real internal tools Alex builds for production
             work — xrsim (test VR apps without a headset), Forage (an AI-first
             scout for the Unreal asset packs you already own), and Constellation (your own notes as
             a walk-in 3D star map on Vision Pro) are shipping today, with more landing as
