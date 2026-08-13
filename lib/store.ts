@@ -168,6 +168,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-08-12T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/Nn4mW45KRKeDkokoTk4o0A",
+    zoomMeetingId: "87591560629",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-08-19-intermediate-vr",
@@ -177,6 +178,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-08-19T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/2rQ9e2yxSu68RM8Otdm-RA",
+    zoomMeetingId: "87269338974",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-08-26-intro-metahumans",
@@ -186,6 +188,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-08-26T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/IzjAamgLQTibb6xeFARbBQ",
+    zoomMeetingId: "89330075334",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-02-mocap",
@@ -195,6 +198,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-09-02T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/Peidz5xgTV6qQa2zT2kOxw",
+    zoomMeetingId: "85821901213",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-09-intro-pcg",
@@ -204,6 +208,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-09T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/12r37RLTSZiBavbpsCDHFQ",
+    zoomMeetingId: "87245477645",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-16-unity-to-unreal",
@@ -213,6 +218,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-16T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/C2MxUYbAQyKMSY2HzsumCg",
+    zoomMeetingId: "82747526686",
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-09-23-usd-glb-export",
@@ -222,6 +228,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-09-23T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/ggxLvryiSFKKtA1Xp9enoQ",
+    zoomMeetingId: "86937931870",
   }),
   // Was "Apple Vision Pro Unreal Engine Masterclass — Part 1" (advanced/$200
   // tier), blurb: "The deep dive: shipping real Unreal content to Vision Pro
@@ -235,6 +242,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-09-30T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/XnHIYeiPTxCvS15x4aLNWw",
+    zoomMeetingId: "85064862653",
   }),
 ];
 
