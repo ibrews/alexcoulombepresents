@@ -1044,7 +1044,7 @@ export const appearances: Appearance[] = [
     date: "Sun Jul 19, 4:25–4:45pm PT",
     endsISO: "2026-07-19T23:45:00Z",
     location: "Room 403 B, Los Angeles",
-    url: "https://s2026.conference-schedule.org/presenter/?uid=645453",
+    url: "https://doi.org/10.1145/3799818.3812091",
   },
   {
     slug: "siggraph-2026-gaussian-splats",
@@ -1054,7 +1054,7 @@ export const appearances: Appearance[] = [
     date: "Mon Jul 20, 3:30–5:00pm PT",
     endsISO: "2026-07-21T00:00:00Z",
     location: "Concourse Hall, Los Angeles",
-    url: "https://s2026.conference-schedule.org/presenter/?uid=645453",
+    url: "https://doi.org/10.1145/3799820.3820876",
   },
   {
     slug: "siggraph-2026-virtual-theatre",
@@ -1064,6 +1064,6 @@ export const appearances: Appearance[] = [
     date: "Wed Jul 22, 1:00–1:45pm PT",
     endsISO: "2026-07-22T20:45:00Z",
     location: "Concourse Hall, Los Angeles",
-    url: "https://s2026.conference-schedule.org/presenter/?uid=645453",
+    url: "https://doi.org/10.1145/3799822.3812463",
   },
 ];
