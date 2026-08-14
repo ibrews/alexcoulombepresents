@@ -88,8 +88,11 @@ export const classFolders: ClassFolder[] = [
       "How virtual reality actually works, the current headset landscape, and getting an Unreal project running on a headset.",
     recordingSlug: "intro-to-vr-2026-08-12",
     materials: [
-      // Paste the Drive/Dropbox share link here and this class is done:
-      //   sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      // "Public Classes / Intro to VR" — holds Assets/ and Recordings/.
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1QlL8cbw06yneEyLydocbPjZr2XOOZgJu",
+        note: "Everything for this class — assets and recordings. Opens in Google Drive.",
+      }),
       {
         key: "slides",
         label: "Slide deck (PDF)",
