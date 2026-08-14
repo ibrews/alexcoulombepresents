@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { recordings } from "../lib/recordings.ts";
-import { materials, findMaterial, MATERIALS_DIR } from "../lib/materials.ts";
+import { classFolders, findMaterial } from "../lib/classMaterials.ts";
 
 test("recording slugs are unique", () => {
   const slugs = recordings.map((r) => r.slug);
@@ -18,24 +18,31 @@ test("every recording has a watchable url and a sortable date", () => {
   }
 });
 
-test("every gated material link resolves to a file on disk", () => {
-  // A dead /api/members/material key renders as a download button that 404s
-  // for a paying member — cheapest possible thing to catch here.
+test("every gated material link resolves in the class-materials registry", () => {
+  // A dead /api/materials link renders as a download button that 404s for a
+  // paying member — cheapest possible thing to catch here.
   for (const r of recordings) {
     for (const m of r.materials ?? []) {
-      if (!m.href.startsWith("/api/members/material")) continue;
-      const key = new URL(m.href, "https://x.invalid").searchParams.get("key") ?? "";
-      const material = findMaterial(key);
-      assert.ok(material, `${r.slug} references unknown material key "${key}"`);
-      assert.ok(
-        existsSync(path.join(MATERIALS_DIR, material.file)),
-        `missing file for material "${key}": ${material.file}`
-      );
+      if (!m.href.startsWith("/api/materials")) continue;
+      const q = new URL(m.href, "https://x.invalid").searchParams;
+      const folderSlug = q.get("class") ?? "";
+      const key = q.get("key") ?? "";
+      const found = findMaterial(folderSlug, key);
+      assert.ok(found, `${r.slug} references unknown material ${folderSlug}/${key}`);
+      if (found.material.source.kind === "local") {
+        assert.ok(
+          existsSync(path.join(process.cwd(), "content", "materials", found.material.source.file)),
+          `missing file for ${folderSlug}/${key}`
+        );
+      }
     }
   }
 });
 
-test("material keys are unique", () => {
-  const keys = materials.map((m) => m.key);
-  assert.equal(new Set(keys).size, keys.length);
+test("every recording's class folder cross-link points at a real folder", () => {
+  const slugs = new Set(recordings.map((r) => r.slug));
+  for (const f of classFolders) {
+    if (!f.recordingSlug) continue;
+    assert.ok(slugs.has(f.recordingSlug), `folder ${f.slug} → unknown recording ${f.recordingSlug}`);
+  }
 });

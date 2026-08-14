@@ -2,11 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // The gated-materials route reads content/materials/ at runtime with a
-  // computed path, which Next's static trace can't follow — without this the
-  // PDFs get dropped from the serverless bundle and a member's download 500s.
+  // The gated-materials route (/api/materials) reads content/materials/ at
+  // runtime with a computed path, which Next's static trace can't follow —
+  // without this the files get dropped from the serverless bundle and a
+  // paying customer's download 500s.
   outputFileTracingIncludes: {
-    "/api/members/material": ["./content/materials/**"],
+    "/api/materials": ["./content/materials/**"],
   },
   async redirects() {
     return [

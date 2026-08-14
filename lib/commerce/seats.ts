@@ -119,6 +119,25 @@ export async function getOrdersForSlug(slug: string): Promise<CatalogOrderRow[]>
   return rows;
 }
 
+// Every catalog slug this email has a non-refunded order for. Backs the
+// class-materials folders (lib/classMaterials.ts): buying a class is what
+// grants access to that class's folder, and a refund takes it away again.
+//
+// Matched case-insensitively because catalog_orders.email comes straight from
+// whatever Stripe Checkout captured, while the signed-in customer's email
+// comes from the customers table — the same person can easily be
+// "Alex@Example.com" in one and "alex@example.com" in the other, and a
+// case-sensitive compare would silently lock a paying buyer out of the
+// materials they just bought.
+export async function purchasedSlugsForEmail(email: string): Promise<string[]> {
+  await ensureTable();
+  const rows = (await sql()`
+    SELECT DISTINCT slug FROM catalog_orders
+    WHERE lower(email) = lower(${email}) AND refunded = false AND slug IS NOT NULL
+  `) as { slug: string }[];
+  return rows.map((r) => r.slug);
+}
+
 // All orders, newest first — for the admin roster export.
 export async function getAllCatalogOrders(): Promise<CatalogOrderRow[]> {
   await ensureTable();

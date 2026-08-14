@@ -68,6 +68,24 @@ export default async function Account({
         </form>
       </div>
 
+      {/* Shown to every signed-in customer, not just members: class materials
+          are the one thing a single-class buyer comes back here for, and
+          their orders live in catalog_orders rather than as entitlements, so
+          nothing below this point would ever surface them. */}
+      <div className="glass mt-10 rounded-2xl p-7">
+        <h2 className="font-bold">Class materials</h2>
+        <p className="mt-2 text-sm leading-relaxed text-mist">
+          Slides, project files, and course content — a folder per class. Every class you&apos;ve
+          signed up for is already unlocked; members get all of them.
+        </p>
+        <Link
+          href="/materials"
+          className="mt-4 inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+        >
+          Open your folders →
+        </Link>
+      </div>
+
       {membership && (
         <div
           className={`mt-10 rounded-2xl p-7 ${

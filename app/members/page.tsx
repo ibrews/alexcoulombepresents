@@ -134,6 +134,12 @@ export default async function Members({
                 Browse the recording library →
               </Link>
               <Link
+                href="/materials"
+                className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+              >
+                Class materials →
+              </Link>
+              <Link
                 href="/members/tools"
                 className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
               >

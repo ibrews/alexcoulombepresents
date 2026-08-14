@@ -21,19 +21,20 @@ export type Recording = {
   youtubeId?: string; // when hosted on YouTube — drives the thumbnail
   durationMin?: number;
   topics?: string[];
-  // Slide decks and handouts. Members-only files go through materialHref(key)
-  // — the key must exist in lib/materials.ts, which tests/recordings.test.ts
-  // enforces. Public links from the original class (Dropbox, Drive) can be
-  // plain URLs.
+  // Slide decks and handouts. Gated files go through materialHref(folder, key)
+  // — the pair must exist in lib/classMaterials.ts, which
+  // tests/recordings.test.ts enforces. Public links from the original class
+  // (Dropbox, Drive) can be plain URLs.
   materials?: { label: string; href: string }[];
 };
 
 const yt = (id: string) => `https://youtu.be/${id}`;
 
-// Inlined rather than imported from lib/materials.ts on purpose: that module
-// pulls in node:path, and this one is imported by the test runner without the
-// "@/" alias. The shape is asserted against the registry in the tests.
-const materialHref = (key: string) => `/api/members/material?key=${encodeURIComponent(key)}`;
+// Inlined rather than imported from lib/classMaterials.ts on purpose: this
+// module is loaded by the test runner without the "@/" alias. The shape is
+// asserted against the real registry in tests/recordings.test.ts.
+const materialHref = (folder: string, key: string) =>
+  `/api/materials?class=${encodeURIComponent(folder)}&key=${encodeURIComponent(key)}`;
 
 export const recordings: Recording[] = [
   {
@@ -46,7 +47,7 @@ export const recordings: Recording[] = [
     youtubeId: "0WPJjRclWLQ",
     topics: ["unreal", "vr", "intro"],
     materials: [
-      { label: "Slide deck (PDF)", href: materialHref("intro-to-vr-2026-08-12-slides") },
+      { label: "Slide deck (PDF)", href: materialHref("wed-2026-08-12-intro-vr", "slides") },
     ],
   },
   {
