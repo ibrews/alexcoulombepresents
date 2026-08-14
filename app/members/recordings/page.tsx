@@ -60,8 +60,9 @@ export default async function Recordings() {
         <p className="font-mono text-sm text-teal">/members/recordings</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight">The recording library</h1>
         <p className="mt-4 max-w-2xl text-mist">
-          Every class recording, including the sessions you didn&apos;t attend. New recordings land
-          here after each live class.
+          Every class recording, including the sessions you didn&apos;t attend — plus the archive of
+          earlier free training, multi-day workshops, and conference talks. New recordings land here
+          after each live class.
         </p>
       </Reveal>
 
@@ -82,39 +83,70 @@ export default async function Recordings() {
         <div className="mt-10 grid gap-5">
           {sorted.map((r, i) => (
             <Reveal key={r.slug} delay={Math.min(i * 60, 240)}>
-              <div className="glass rounded-2xl p-7">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h2 className="font-bold">{r.title}</h2>
-                  <p className="font-mono text-xs text-mist">
-                    {new Date(`${r.recordedAt}T00:00:00`).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                    {r.durationMin ? ` · ${r.durationMin} min` : ""}
-                  </p>
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-mist">{r.description}</p>
-                {r.topics && r.topics.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {r.topics.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-mist"
+              <div className="glass grid gap-6 rounded-2xl p-7 sm:grid-cols-[minmax(0,14rem)_1fr]">
+                {r.youtubeId && (
+                  <a
+                    href={r.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block overflow-hidden rounded-xl border border-line transition-transform hover:scale-[1.02]"
+                  >
+                    <img
+                      src={`https://i.ytimg.com/vi/${r.youtubeId}/hqdefault.jpg`}
+                      alt=""
+                      loading="lazy"
+                      className="aspect-video w-full object-cover"
+                    />
+                  </a>
+                )}
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h2 className="font-bold">{r.title}</h2>
+                    <p className="font-mono text-xs text-mist">
+                      {r.dateLabel ??
+                        new Date(`${r.recordedAt}T00:00:00`).toLocaleDateString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      {r.durationMin ? ` · ${r.durationMin} min` : ""}
+                    </p>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-mist">{r.description}</p>
+                  {r.topics && r.topics.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {r.topics.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-mist"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+                    >
+                      Watch →
+                    </a>
+                    {r.materials?.map((m) => (
+                      <a
+                        key={m.href}
+                        href={m.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-teal hover:underline"
                       >
-                        {t}
-                      </span>
+                        {m.label} ↓
+                      </a>
                     ))}
                   </div>
-                )}
-                <a
-                  href={r.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
-                >
-                  Watch →
-                </a>
+                </div>
               </div>
             </Reveal>
           ))}

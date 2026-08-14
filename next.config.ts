@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // The gated-materials route reads content/materials/ at runtime with a
+  // computed path, which Next's static trace can't follow — without this the
+  // PDFs get dropped from the serverless bundle and a member's download 500s.
+  outputFileTracingIncludes: {
+    "/api/members/material": ["./content/materials/**"],
+  },
   async redirects() {
     return [
       { source: "/lab/unrealitykit", destination: "/lab/unrealitykit-bridge", permanent: true },
