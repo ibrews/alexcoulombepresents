@@ -118,7 +118,10 @@ export const classFolders: ClassFolder[] = [
     blurb:
       "Past the basics: interaction, locomotion, and the performance work that keeps an XR build comfortable.",
     materials: [
-      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1qKqDuYP5UsLVLnkFnMQdQhd_Ej12LqWO",
+        note: "Assets and recordings land here around class time.",
+      }),
     ],
   },
   {
@@ -128,7 +131,10 @@ export const classFolders: ClassFolder[] = [
     blurb:
       "Building, customizing, and animating MetaHumans, and getting one into your own project.",
     materials: [
-      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1mIac_K-YSAKPGoPA95zIkrsXMHcdROY1",
+        note: "Assets and recordings land here around class time.",
+      }),
     ],
   },
   {
@@ -138,7 +144,10 @@ export const classFolders: ClassFolder[] = [
     blurb:
       "Motion capture into Unreal — capture options, cleanup, and retargeting onto your character.",
     materials: [
-      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1y0uyZMTudxrUw0PKUeBuOmvEatty5Uez",
+        note: "Assets and recordings land here around class time.",
+      }),
     ],
   },
   {
@@ -148,7 +157,10 @@ export const classFolders: ClassFolder[] = [
     blurb:
       "Procedural Content Generation in Unreal, and where AI tooling genuinely speeds up the work.",
     materials: [
-      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1fJq7GfPX2TPpt9J5ftewDwTkSQ0P3L9P",
+        note: "Assets and recordings land here around class time.",
+      }),
     ],
   },
   {
@@ -158,7 +170,10 @@ export const classFolders: ClassFolder[] = [
     blurb:
       "The transition class: what maps across, what doesn't, and the habits worth unlearning.",
     materials: [
-      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1zxI_LUn4jUVvwqtlX9xDQMoBZ-TMWS8j",
+        note: "Assets and recordings land here around class time.",
+      }),
     ],
   },
   {
@@ -168,7 +183,10 @@ export const classFolders: ClassFolder[] = [
     blurb:
       "Getting scenes out of Unreal and into the rest of the pipeline via OpenUSD and glTF/GLB.",
     materials: [
-      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1jXeYji2mo57tuR76jYjfG_1C0ppjbJzD",
+        note: "Assets and recordings land here around class time.",
+      }),
     ],
   },
   {
@@ -178,7 +196,10 @@ export const classFolders: ClassFolder[] = [
     blurb:
       "Augmented reality fundamentals and building your first AR experience in Unreal.",
     materials: [
-      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+      sharedFolder({
+        url: "https://drive.google.com/drive/folders/1JLyN_VpJhuHGo3GpwkC-yeBeSzK0avTD",
+        note: "Assets and recordings land here around class time.",
+      }),
     ],
   },
   {
