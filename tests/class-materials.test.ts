@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { classFolders, findMaterial, sharedFolder } from "../lib/classMaterials.ts";
+import { classFolders, findMaterial, sharedFolder, canOpen, type ClassFolder } from "../lib/classMaterials.ts";
 import { storeItems } from "../lib/store.ts";
 
 const MATERIALS_DIR = path.join(process.cwd(), "content", "materials");
@@ -106,4 +106,32 @@ test("every dated Wednesday class has a folder", () => {
   for (const item of dated) {
     assert.ok(folderSlugs.has(item.slug), `class "${item.slug}" has no materials folder`);
   }
+});
+
+test("a rerun of the same class title never opens on another session's purchase", () => {
+  // Alex, 2026-08-15: "teach Intro to XR 5 times, a member should have
+  // access to all of them, someone who bought a single class should only
+  // have access to the one." Encodes that at the function level rather than
+  // just asserting slugs are unique — proves the ACCESS CHECK, not just the
+  // data shape, keeps two same-titled sessions apart.
+  const sessionA: ClassFolder = {
+    slug: "wed-2026-11-04-intro-xr",
+    title: "Intro to XR",
+    blurb: "",
+    materials: [],
+  };
+  const sessionB: ClassFolder = {
+    slug: "wed-2026-11-18-intro-xr",
+    title: "Intro to XR", // same title, different session — the whole point
+    blurb: "",
+    materials: [],
+  };
+
+  const boughtA = { member: false, purchasedSlugs: [sessionA.slug] };
+  assert.equal(canOpen(sessionA, boughtA), true, "buyer should open their own session");
+  assert.equal(canOpen(sessionB, boughtA), false, "buyer must NOT open a same-titled different session");
+
+  const member = { member: true, purchasedSlugs: [] };
+  assert.equal(canOpen(sessionA, member), true, "member opens every session");
+  assert.equal(canOpen(sessionB, member), true, "member opens every session");
 });

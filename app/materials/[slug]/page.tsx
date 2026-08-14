@@ -145,17 +145,37 @@ export default async function MaterialFolder({
         </div>
       )}
 
-      {recording && (
+      {/* Gated on `open`, not on a separate check — whoever can see this
+          folder (member or this-session buyer) already cleared the bar for
+          the recording too. Previously this rendered unconditionally and
+          only ever pointed a buyer at the members-only library, which they
+          can't open — so a single-class buyer had no way to reach the
+          recording of the class they paid for. The recording itself is a
+          YouTube link (lib/recordings.ts), not something we host — buyers
+          watch the same unlisted video members do, we just link it directly
+          instead of making them find /members/recordings and bounce. */}
+      {open && recording && (
         <Reveal>
           <div className="glass mt-8 rounded-2xl p-6">
             <p className="font-mono text-xs uppercase tracking-widest text-teal">The recording</p>
-            <p className="mt-2 text-sm leading-relaxed text-mist">
-              This class was recorded — members can watch it in the{" "}
-              <Link href="/members/recordings" className="text-teal hover:underline">
-                recording library
-              </Link>
-              .
-            </p>
+            <p className="mt-2 text-sm leading-relaxed text-mist">{recording.description}</p>
+            <a
+              href={recording.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+            >
+              Watch the recording →
+            </a>
+            {access.member && (
+              <p className="mt-3 text-xs text-mist">
+                Members also get every other class in the{" "}
+                <Link href="/members/recordings" className="text-teal hover:underline">
+                  recording library
+                </Link>
+                .
+              </p>
+            )}
           </div>
         </Reveal>
       )}

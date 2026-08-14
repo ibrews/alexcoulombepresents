@@ -114,6 +114,19 @@ pull` — they're marked Sensitive there and pull back as the literal string `[S
 A file whose R2 object isn't uploaded yet renders as "Uploading — not available yet" rather than
 a Download button that 503s.
 
+**Recordings don't go in the Drive folder — they're YouTube, via [`lib/recordings.ts`](lib/recordings.ts).**
+Set a folder's `recordingSlug` to cross-link one; anyone who can already open the folder (member or
+this-session buyer) gets a direct "Watch the recording →" link on `/materials/<slug>` — no need to
+duplicate the video into Drive, and no bounce through the members-only `/members/recordings` library,
+which is a separate perk (every class you *didn't* attend, not the one you bought).
+
+**Reruns** (the same class taught again on a later date) are a new [`lib/store.ts`](lib/store.ts) item
+with a new, dated slug and a new `classFolders` entry — never edit an existing entry's date in place.
+The slug is the purchase key: two sessions sharing one slug would merge their buyers' access.
+`tests/store.test.ts` and `tests/class-materials.test.ts` both fail the build on that mistake, the
+second one by asserting `canOpen()` directly rather than just the data shape — buying session A must
+never open session B, title collision or not.
+
 
 Structured content (repos, products, timeline, courses, links) lives in [`lib/data.ts`](lib/data.ts);
 the store catalog in [`lib/store.ts`](lib/store.ts); page prose in the page files under `app/`.

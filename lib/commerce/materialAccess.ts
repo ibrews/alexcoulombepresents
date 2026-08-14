@@ -15,12 +15,12 @@
 import { isMember } from "./membership";
 import { getCustomer } from "./entitlements";
 import { purchasedSlugsForEmail } from "./seats";
-import { classFolders, type ClassFolder } from "@/lib/classMaterials";
 
-export type MaterialAccess = {
-  member: boolean;
-  purchasedSlugs: string[];
-};
+// canOpen()/foldersFor()/MaterialAccess are pure and live in
+// lib/classMaterials.ts (see the comment there for why) — re-exported here
+// so every existing importer of THIS module keeps working unchanged.
+export { canOpen, foldersFor, type MaterialAccess } from "@/lib/classMaterials";
+import type { MaterialAccess } from "@/lib/classMaterials";
 
 export async function accessForCustomer(customerId: number | null): Promise<MaterialAccess> {
   if (!customerId) return { member: false, purchasedSlugs: [] };
@@ -35,14 +35,4 @@ export async function accessForCustomer(customerId: number | null): Promise<Mate
   ]);
 
   return { member, purchasedSlugs };
-}
-
-export function canOpen(folder: ClassFolder, access: MaterialAccess): boolean {
-  if (access.member) return true;
-  if (folder.membersOnly) return false;
-  return access.purchasedSlugs.includes(folder.slug);
-}
-
-export function foldersFor(access: MaterialAccess): { folder: ClassFolder; open: boolean }[] {
-  return classFolders.map((folder) => ({ folder, open: canOpen(folder, access) }));
 }

@@ -89,9 +89,11 @@ export const classFolders: ClassFolder[] = [
     recordingSlug: "intro-to-vr-2026-08-12",
     materials: [
       // "Public Classes / Intro to VR" — holds Assets/ and Recordings/.
+      // Assets/project files only — the recording is YouTube, linked
+      // directly below via recordingSlug, not duplicated into Drive.
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1QlL8cbw06yneEyLydocbPjZr2XOOZgJu",
-        note: "Everything for this class — assets and recordings. Opens in Google Drive.",
+        note: "Class assets and project files. Opens in Google Drive.",
       }),
       {
         key: "slides",
@@ -120,7 +122,7 @@ export const classFolders: ClassFolder[] = [
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1qKqDuYP5UsLVLnkFnMQdQhd_Ej12LqWO",
-        note: "Assets and recordings land here around class time.",
+        note: "Class assets land here around class time.",
       }),
     ],
   },
@@ -133,7 +135,7 @@ export const classFolders: ClassFolder[] = [
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1mIac_K-YSAKPGoPA95zIkrsXMHcdROY1",
-        note: "Assets and recordings land here around class time.",
+        note: "Class assets land here around class time.",
       }),
     ],
   },
@@ -146,7 +148,7 @@ export const classFolders: ClassFolder[] = [
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1y0uyZMTudxrUw0PKUeBuOmvEatty5Uez",
-        note: "Assets and recordings land here around class time.",
+        note: "Class assets land here around class time.",
       }),
     ],
   },
@@ -159,7 +161,7 @@ export const classFolders: ClassFolder[] = [
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1fJq7GfPX2TPpt9J5ftewDwTkSQ0P3L9P",
-        note: "Assets and recordings land here around class time.",
+        note: "Class assets land here around class time.",
       }),
     ],
   },
@@ -172,7 +174,7 @@ export const classFolders: ClassFolder[] = [
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1zxI_LUn4jUVvwqtlX9xDQMoBZ-TMWS8j",
-        note: "Assets and recordings land here around class time.",
+        note: "Class assets land here around class time.",
       }),
     ],
   },
@@ -185,7 +187,7 @@ export const classFolders: ClassFolder[] = [
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1jXeYji2mo57tuR76jYjfG_1C0ppjbJzD",
-        note: "Assets and recordings land here around class time.",
+        note: "Class assets land here around class time.",
       }),
     ],
   },
@@ -198,7 +200,7 @@ export const classFolders: ClassFolder[] = [
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1JLyN_VpJhuHGo3GpwkC-yeBeSzK0avTD",
-        note: "Assets and recordings land here around class time.",
+        note: "Class assets land here around class time.",
       }),
     ],
   },
@@ -263,4 +265,34 @@ export function materialAvailable(material: ClassMaterial): boolean {
 
 export function materialHref(folderSlug: string, key: string): string {
   return `/api/materials?class=${encodeURIComponent(folderSlug)}&key=${encodeURIComponent(key)}`;
+}
+
+// ── Access rule ──────────────────────────────────────────────────────────
+//
+// Pure and DB-free on purpose, colocated with the data it operates over
+// rather than with lib/commerce/materialAccess.ts's DB-touching
+// accessForCustomer() — that split is what lets tests/class-materials.test.ts
+// exercise the actual "who can open this" decision (e.g. "a rerun of the
+// same class title never opens on another session's purchase") without
+// dragging in lib/commerce/{membership,entitlements,seats}.ts, none of which
+// resolve under plain `node --test` (their extensionless relative imports —
+// e.g. `import { sql } from "./schema"` — are fine for Next's bundler but
+// Node's own ESM loader doesn't do TypeScript-style extension inference, so
+// importing that chain directly in a test throws ERR_MODULE_NOT_FOUND before
+// a single assertion runs). materialAccess.ts re-exports both functions
+// unchanged, so nothing that already imports them from there needs to move.
+
+export type MaterialAccess = {
+  member: boolean;
+  purchasedSlugs: string[];
+};
+
+export function canOpen(folder: ClassFolder, access: MaterialAccess): boolean {
+  if (access.member) return true;
+  if (folder.membersOnly) return false;
+  return access.purchasedSlugs.includes(folder.slug);
+}
+
+export function foldersFor(access: MaterialAccess): { folder: ClassFolder; open: boolean }[] {
+  return classFolders.map((folder) => ({ folder, open: canOpen(folder, access) }));
 }
