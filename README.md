@@ -76,6 +76,30 @@ npm run build && npm start
 
 ## Editing content
 
+### Class materials
+
+Folders and files are declared in [`lib/classMaterials.ts`](lib/classMaterials.ts). A folder's
+`slug` must equal the [`lib/store.ts`](lib/store.ts) item slug for the class — that equality is
+what lets a purchase unlock it, and `tests/class-materials.test.ts` fails the build if it drifts.
+
+Small files (decks, PDFs) go in `content/materials/` and are declared `{ kind: "local" }`. Never
+put them in `public/` — the CDN serves that with no auth at all.
+
+Anything over a few MB goes to R2:
+
+```bash
+node scripts/upload-class-material.mjs <local-file> <r2-key> --env <file-with-R2-creds>
+```
+
+The `<r2-key>` must match the entry's `source.key`. The uploader always uses multipart because
+R2 caps a single PUT at 5 GiB, and it verifies the stored byte count before reporting success.
+Credentials come from the Cloudflare dashboard (R2 → Manage API tokens), **not** `vercel env
+pull` — they're marked Sensitive there and pull back as the literal string `[SENSITIVE]`.
+
+A file whose R2 object isn't uploaded yet renders as "Uploading — not available yet" rather than
+a Download button that 503s.
+
+
 Structured content (repos, products, timeline, courses, links) lives in [`lib/data.ts`](lib/data.ts);
 the store catalog in [`lib/store.ts`](lib/store.ts); page prose in the page files under `app/`.
 
