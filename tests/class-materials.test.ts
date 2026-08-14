@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { classFolders, findMaterial } from "../lib/classMaterials.ts";
+import { classFolders, findMaterial, sharedFolder } from "../lib/classMaterials.ts";
 import { storeItems } from "../lib/store.ts";
 
 const MATERIALS_DIR = path.join(process.cwd(), "content", "materials");
@@ -78,4 +78,32 @@ test("findMaterial resolves every registered pair and rejects junk", () => {
   }
   assert.equal(findMaterial("nope", "nope"), undefined);
   assert.equal(findMaterial(classFolders[0].slug, "nope"), undefined);
+});
+
+test("sharedFolder() produces a gated, primary external entry", () => {
+  const m = sharedFolder({ url: "https://drive.google.com/drive/folders/abc" });
+  assert.equal(m.key, "folder");
+  assert.equal(m.primary, true);
+  assert.equal(m.source.kind, "external");
+  assert.match(m.label, /Google Drive/);
+  // Host is part of the label so a Dropbox folder doesn't say "Google Drive".
+  assert.match(sharedFolder({ url: "https://x.test/a", host: "Dropbox" }).label, /Dropbox/);
+});
+
+test("at most one primary material per folder", () => {
+  // Two primaries would render two competing "this is the folder" buttons.
+  for (const f of classFolders) {
+    const primaries = f.materials.filter((m) => m.primary);
+    assert.ok(primaries.length <= 1, `${f.slug} has ${primaries.length} primary materials`);
+  }
+});
+
+test("every dated Wednesday class has a folder", () => {
+  // The whole point is one folder per class — a class that sells but has no
+  // folder sends its buyers to a page that doesn't exist.
+  const folderSlugs = new Set(classFolders.map((f) => f.slug));
+  const dated = storeItems.filter((i) => i.sessionDateISO);
+  for (const item of dated) {
+    assert.ok(folderSlugs.has(item.slug), `class "${item.slug}" has no materials folder`);
+  }
 });

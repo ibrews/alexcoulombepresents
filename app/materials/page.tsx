@@ -93,7 +93,12 @@ export default async function Materials() {
               </div>
               <p className="mt-3 text-sm leading-relaxed text-mist">{folder.blurb}</p>
               <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-mist">
-                {folder.materials.length} item{folder.materials.length === 1 ? "" : "s"}
+                {folder.materials.length === 0
+                  ? // "0 items" reads like something broke. An upcoming class
+                    // genuinely has nothing yet, and saying so is the honest
+                    // version of the same fact.
+                    "Materials posted around class time"
+                  : `${folder.materials.length} item${folder.materials.length === 1 ? "" : "s"}`}
               </p>
               <div className="mt-5 border-t border-line pt-5">
                 {open ? (

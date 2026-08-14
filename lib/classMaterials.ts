@@ -36,7 +36,36 @@ export type ClassMaterial = {
   source: MaterialSource;
   sizeLabel?: string; // human hint, e.g. "6.1 GB" — worth warning people
   note?: string;
+  // Renders first and as the main call to action. Used for the shared
+  // Drive/Dropbox folder that holds the bulk of a class's content, so the
+  // page reads "here's the folder" rather than burying it among loose files.
+  primary?: boolean;
 };
+
+// The shared-folder entry for a class. Chosen over a top-level `driveUrl`
+// field on ClassFolder specifically so it flows through the SAME gating,
+// the same route and the same tests as every other material — a second
+// access path is a second thing that can be wrong.
+//
+// Honest about what this does and doesn't do: the site decides who is shown
+// the link. Once shown, the underlying Drive URL is a normal shareable URL
+// and can be forwarded. That matches the security of the Dropbox/Drive links
+// these classes already shipped with; use `r2` instead for anything where
+// leaking actually costs money.
+export function sharedFolder(input: {
+  url: string;
+  host?: string; // "Google Drive" (default), "Dropbox", …
+  note?: string;
+}): ClassMaterial {
+  const host = input.host ?? "Google Drive";
+  return {
+    key: "folder",
+    label: `Class folder on ${host}`,
+    source: { kind: "external", url: input.url },
+    note: input.note ?? "Everything for this class — slides, project files, and assets.",
+    primary: true,
+  };
+}
 
 export type ClassFolder = {
   slug: string;
@@ -53,30 +82,100 @@ export type ClassFolder = {
 export const classFolders: ClassFolder[] = [
   {
     slug: "wed-2026-08-12-intro-vr",
-    title: "Intro to VR",
+    title: "Intro to VR in Unreal 5.8",
     date: "2026-08-12",
     blurb:
-      "Slides and project files from the Intro to VR class — how VR works, the current headset landscape, and getting an Unreal project onto a headset.",
+      "How virtual reality actually works, the current headset landscape, and getting an Unreal project running on a headset.",
     recordingSlug: "intro-to-vr-2026-08-12",
     materials: [
+      // Paste the Drive/Dropbox share link here and this class is done:
+      //   sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
       {
         key: "slides",
         label: "Slide deck (PDF)",
         source: { kind: "local", file: "2026-08-12-intro-to-vr-slides.pdf" },
         sizeLabel: "4.8 MB",
       },
-      {
-        key: "ue-project",
-        label: "Course Unreal project (UE 5.3)",
-        // NOT yet uploaded — R2 credentials aren't available on this machine.
-        // The folder, the gating and the UI are all live; this one entry
-        // 404s at the route until the object exists, which is why
-        // materialAvailable() exists and the page renders it as "coming
-        // soon" rather than as a button that fails.
-        source: { kind: "r2", key: "class-materials/wed-2026-08-12-intro-vr/216.03_UET_53.zip" },
-        sizeLabel: "6.1 GB",
-        note: "Large download — 2,110 files. Unreal Engine 5.3 project.",
-      },
+      // The 6.1 GB course project (216.03_UET_53.zip) rides in the shared
+      // folder above. If Drive's per-file download quota ever locks it —
+      // plausible for a file this size across a full class — move it to R2
+      // instead and it becomes a presigned, expiring link:
+      //   node scripts/upload-class-material.mjs <file> \
+      //     class-materials/wed-2026-08-12-intro-vr/216.03_UET_53.zip
+      // then add:
+      //   { key: "ue-project", label: "Course Unreal project (UE 5.3)",
+      //     source: { kind: "r2", key: "class-materials/wed-2026-08-12-intro-vr/216.03_UET_53.zip" },
+      //     sizeLabel: "6.1 GB" },
+    ],
+  },
+  {
+    slug: "wed-2026-08-19-intermediate-vr",
+    title: "Intermediate XR in Unreal 5.8",
+    date: "2026-08-19",
+    blurb:
+      "Past the basics: interaction, locomotion, and the performance work that keeps an XR build comfortable.",
+    materials: [
+      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+    ],
+  },
+  {
+    slug: "wed-2026-08-26-intro-metahumans",
+    title: "Intro to MetaHumans in Unreal 5.8",
+    date: "2026-08-26",
+    blurb:
+      "Building, customizing, and animating MetaHumans, and getting one into your own project.",
+    materials: [
+      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+    ],
+  },
+  {
+    slug: "wed-2026-09-02-mocap",
+    title: "Mocap in Unreal 5.8",
+    date: "2026-09-02",
+    blurb:
+      "Motion capture into Unreal — capture options, cleanup, and retargeting onto your character.",
+    materials: [
+      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+    ],
+  },
+  {
+    slug: "wed-2026-09-09-intro-pcg",
+    title: "Intro to PCG & AI",
+    date: "2026-09-09",
+    blurb:
+      "Procedural Content Generation in Unreal, and where AI tooling genuinely speeds up the work.",
+    materials: [
+      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+    ],
+  },
+  {
+    slug: "wed-2026-09-16-unity-to-unreal",
+    title: "Unity to Unreal",
+    date: "2026-09-16",
+    blurb:
+      "The transition class: what maps across, what doesn't, and the habits worth unlearning.",
+    materials: [
+      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+    ],
+  },
+  {
+    slug: "wed-2026-09-23-usd-glb-export",
+    title: "Exporting UE5 to OpenUSD to GLB",
+    date: "2026-09-23",
+    blurb:
+      "Getting scenes out of Unreal and into the rest of the pipeline via OpenUSD and glTF/GLB.",
+    materials: [
+      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
+    ],
+  },
+  {
+    slug: "wed-2026-09-30-intro-ar",
+    title: "Intro to AR",
+    date: "2026-09-30",
+    blurb:
+      "Augmented reality fundamentals and building your first AR experience in Unreal.",
+    materials: [
+      // sharedFolder({ url: "https://drive.google.com/drive/folders/…" }),
     ],
   },
   {

@@ -89,11 +89,28 @@ export default async function MaterialFolder({
         </Reveal>
       ) : (
         <div className="mt-10 grid gap-4">
-          {folder.materials.map((m, i) => {
+          {folder.materials.length === 0 && (
+            <div className="glass rounded-2xl p-8 text-center">
+              <p className="font-bold">Materials aren&apos;t posted yet.</p>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-mist">
+                They go up around the class — you already have access, so this page is the place to
+                check back. Nothing to redeem.
+              </p>
+            </div>
+          )}
+          {/* Primary first: the shared class folder is the answer to "where is
+              everything", so it should never sit below a loose PDF. */}
+          {[...folder.materials]
+            .sort((a, b) => Number(Boolean(b.primary)) - Number(Boolean(a.primary)))
+            .map((m, i) => {
             const ready = materialAvailable(m);
             return (
               <Reveal key={m.key} delay={Math.min(i * 60, 240)}>
-                <div className="glass rounded-2xl p-6">
+                <div
+                  className={`rounded-2xl p-6 ${
+                    m.primary ? "glow-card border border-teal/40" : "glass"
+                  }`}
+                >
                   <div className="flex flex-wrap items-baseline justify-between gap-3">
                     <h2 className="font-bold">{m.label}</h2>
                     {m.sizeLabel && (
@@ -107,7 +124,11 @@ export default async function MaterialFolder({
                         href={materialHref(folder.slug, m.key)}
                         className="inline-block rounded-full bg-snow px-5 py-2 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
                       >
-                        {m.source.kind === "external" ? "Open →" : "Download ↓"}
+                        {m.source.kind === "external"
+                          ? m.primary
+                            ? "Open the class folder →"
+                            : "Open →"
+                          : "Download ↓"}
                       </a>
                     ) : (
                       // Never render a button that would 503. See

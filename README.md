@@ -82,10 +82,25 @@ Folders and files are declared in [`lib/classMaterials.ts`](lib/classMaterials.t
 `slug` must equal the [`lib/store.ts`](lib/store.ts) item slug for the class — that equality is
 what lets a purchase unlock it, and `tests/class-materials.test.ts` fails the build if it drifts.
 
-Small files (decks, PDFs) go in `content/materials/` and are declared `{ kind: "local" }`. Never
-put them in `public/` — the CDN serves that with no auth at all.
+**The normal case is a shared Drive/Dropbox folder per class.** Share the folder however you like,
+then paste the link:
 
-Anything over a few MB goes to R2:
+```ts
+materials: [sharedFolder({ url: "https://drive.google.com/drive/folders/…" })],
+```
+
+That's it — the site decides who is *shown* the link (members, plus anyone with a paid order for
+that class), and Drive does the hosting. Be clear-eyed about the limit: this gates discovery, not
+the file. Someone who opens it can forward the underlying URL. That's the same exposure the 2023/24
+Dropbox and Drive class links already had, which is why it's fine for course material and wrong for
+anything where leaking costs money.
+
+Small files (decks, PDFs) can also be committed to `content/materials/` as `{ kind: "local" }` —
+genuinely gated, streamed by our route. Never put them in `public/`; the CDN serves that with no
+auth at all.
+
+For a file that must expire, or one big enough that Drive's per-file download quota could lock it
+(a 6 GB project across a full class is squarely in that range), use R2 instead:
 
 ```bash
 node scripts/upload-class-material.mjs <local-file> <r2-key> --env <file-with-R2-creds>
