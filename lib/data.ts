@@ -43,7 +43,7 @@ export const repos: Repo[] = [
     name: "Blueprint Auto Layout",
     tagline: "Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.",
     category: "Unreal Engine",
-    stars: 28,
+    stars: 38,
     language: "C++",
     story:
       "Blueprint spaghetti is a rite of passage — and a productivity tax. This plugin rearranges any Blueprint graph into a readable left-to-right execution flow with one keystroke (Ctrl/Cmd+Shift+L). Under the hood it's a real layered-graph engine implemented from the published papers (Sugiyama et al.; Brandes & Köpf), not a naive tree walk — so cross-row connections, multi-consumer data pins, and long edges all route cleanly.",
@@ -63,7 +63,7 @@ export const repos: Repo[] = [
     name: "ue5-mcp",
     tagline: "A field manual for AI agents driving Unreal Engine 5 through MCP.",
     category: "AI & Agents",
-    stars: 25,
+    stars: 34,
     language: "Markdown / Skill",
     story:
       "When an AI agent connects to the UE5 editor through an MCP server, it can manipulate Blueprints, materials, Niagara, MetaSounds, levels — anything UE's reflection surface exposes. But UE is full of undocumented quirks: APIs that silently no-op, crash patterns that only surface at runtime, render paths that compile cleanly and draw nothing. This skill gives your AI that scar tissue upfront, so it doesn't rediscover it every session. Server-agnostic — works with Epic's official MCP plugin (UE 5.8) or any custom server.",
@@ -82,7 +82,7 @@ export const repos: Repo[] = [
     name: "Claude Fleet",
     tagline: "Coordinate a fleet of computers running Claude Code through git-based messaging.",
     category: "AI & Agents",
-    stars: 17,
+    stars: 22,
     language: "JavaScript",
     story:
       "What happens when one AI session isn't enough? Claude Fleet coordinates multiple machines — macOS, Windows, Linux — each running Claude Code, communicating asynchronously through git, with phone access to every session for human-in-the-loop control. Includes Fleet Commander, an interactive browser game that teaches the system by playing it.",
@@ -107,7 +107,7 @@ export const repos: Repo[] = [
     name: "Cascade Countdown",
     tagline: "A hand-tracked physics arcade game for Apple Vision Pro, built on Godot. Live on TestFlight.",
     category: "Games",
-    stars: 7,
+    stars: 10,
     language: "GDScript",
     story:
       "Emissive cubes cascade through spinning bumpers and a prism splitter onto tilted catch plates in your immersive space. Reach in and pinch to grab and throw. Every collision is a synthesized chime pitch-snapped to the key, so the chaos harmonizes into a tune. Built on Apple's official upstream visionOS contribution to Godot — a device smoke test on real Vision Pro hardware measured a locked 90 FPS across 23 measurement windows, with continuous physics racking up hundreds of collisions per run. Getting there took 8 TestFlight builds: a rejected privacy manifest with unsubstituted template variables, a near plane nudged down to Apple's 0.1 minimum, and a grab bug that looked like a left/right-hand asymmetry but was really several stacked issues plus noisy hand-tracking input — collapsed into a single THUMB-only grab-by-point with sticky release. The project also produced a reusable build-switcher script that flips a Godot visionOS project between device and simulator builds from one command, later adopted by other visionOS projects on the fleet.",
@@ -128,7 +128,7 @@ export const repos: Repo[] = [
     name: "Godot visionOS Simulator Kit",
     tagline: "Develop & test Godot visionOS apps in the Simulator — input, hand-tracking, one-command build switching.",
     category: "Godot × Vision Pro",
-    stars: 4,
+    stars: 5,
     language: "Swift",
     story:
       "A Godot visionOS app renders an immersive custom-Metal CompositorServices scene — which means the visionOS Simulator's built-in pinch simulation can't reach it. Out of the box you get zero input and zero hands in the sim, forcing a physical-device round-trip for every change. This kit closes the gap: simulated input over UDP, a SwiftUI control panel, canned hand feeds, and an engine module for real articulated MediaPipe hands.",
@@ -147,7 +147,7 @@ export const repos: Repo[] = [
     name: "MetaHuman → Godot",
     tagline: "MetaHuman characters in stock Godot — look-dev sliders, full-body animation, and a stereo VR preview build.",
     category: "Godot × Vision Pro",
-    stars: 6,
+    stars: 21,
     language: "GDScript",
     story:
       "MetaHumans rendered in stock Godot 4.6/4.7 Forward+ — no engine fork, no custom build. Started as a look-dev turntable (dial in skin, lighting, hair, eyes with live sliders; drive all 52 ARKit facial blendshapes), now a full character viewer: v0.3.0 added a retargeted Mixamo motion library with planted feet; v0.4.0 landed pore detail, a grounded studio floor, and limbal ring eye shaders. The VR preview (v0.1.0, Godot 4.7-beta3) puts it in stereo room-scale on Quest — walk around the character at path quality. Bring your own MetaHuman (Epic EULA respected; assets aren't redistributed).",
@@ -172,7 +172,7 @@ export const repos: Repo[] = [
     name: "VitruvianGodot",
     tagline: "A fully CC0, EULA-free photoreal digital human in stock Godot — she speaks, she breathes, ship her anywhere.",
     category: "Godot × Vision Pro",
-    stars: 1,
+    stars: 11,
     language: "GDScript",
     story:
       "The free counterpart to MetaHumanGodot: a CC0 real-time digital human in stock Godot 4.6 Forward+, with no Epic MetaHuman EULA attached. v1.1 is the full demo reel: she speaks (neural TTS + envelope-driven FACS viseme sync), has 4K eyes with tearline and lacrimal caruncle AO, 4K skin with pore and cavity detail, closed hair part-line, a hero studio floor, vignette, and a liveness layer — micro-sway, asymmetric rest face, micro-expressions. Ships as a signed + notarized macOS Universal app and Windows x64. Everything can be redistributed, cloud-rendered, and shipped in closed-source commercial products.",
@@ -193,7 +193,7 @@ export const repos: Repo[] = [
     name: "SplatStage",
     tagline: "Walk inside photoreal Gaussian-splat scenes on Vision Pro via visionOS 27's native splat API.",
     category: "visionOS & Spatial",
-    stars: 0,
+    stars: 2,
     language: "Swift",
     story:
       "Stand inside a photoreal Gaussian-splat environment on Apple Vision Pro, rendered by visionOS 27's native RealityKit GaussianSplatComponent — then light it like a film set with the new cinematic RealityKit stack: projective-texture spotlights, soft shadows, ray-traced reverb meshes. Built the day after WWDC 2026 against Xcode 27 beta 1, with the device-proven beta-1 recipe (chunking, buffer alignment, colorSpace) documented for everyone who hits the same walls.",
@@ -251,7 +251,7 @@ export const repos: Repo[] = [
     name: "Spatial Deck",
     tagline: "The presentation framework for people who think spatially. One HTML file, runs anywhere, forever.",
     category: "Tools",
-    stars: 3,
+    stars: 11,
     language: "HTML",
     story:
       "Built for the HarvardXR 2026 closing keynote, when PowerPoint wasn't going to cut it. A single self-contained HTML file with presenter tooling PowerPoint never gave you: animated canvas media galleries, Web Audio sound design, live annotation and element repositioning mid-presentation, and — critically — a format an AI collaborator can edit with you right up until showtime. The Harvard keynote was a hit; the framework that powered it became Spatial Deck.",
@@ -270,7 +270,7 @@ export const repos: Repo[] = [
     name: "ue5-testflight",
     tagline: "Fully autonomous UE5 → TestFlight pipeline for iOS, visionOS, and macOS. One command.",
     category: "Unreal Engine",
-    stars: 4,
+    stars: 5,
     language: "Shell",
     story:
       "One command triggers build → sign → upload → distribute. Thirty to sixty minutes later your Unreal build is live in TestFlight with internal and external groups notified. Cook and stage via RunUAT, Info.plist patching, auto-incrementing build numbers with no gaps — every manual step of the Apple distribution dance, automated.",
@@ -307,7 +307,7 @@ export const repos: Repo[] = [
     name: "Unreal Custodian",
     tagline: "Reclaim the build caches your Unreal projects quietly hoard — without touching anything you authored.",
     category: "Unreal Engine",
-    stars: 34,
+    stars: 61,
     language: "Python",
     story:
       "A few years of Unreal projects on one machine means tens or hundreds of gigabytes of pure rebuild artifacts — Intermediate, Binaries, DerivedDataCache, cooked content, staged builds. The Windows box this was tested against held 539 projects, 14 engines, and 2.0 TB of reclaimable cache with 17 GB of headroom left. Custodian finds all of it and tells you exactly what goes, what shrinks, and what it will not touch, before it touches anything. Content, Config, and the .uproject always survive.",
@@ -401,7 +401,7 @@ export const repos: Repo[] = [
     name: "gh-wiki-init",
     tagline: "Enable + initialize a GitHub repo's wiki from the terminal — including the impossible first page.",
     category: "Tools",
-    stars: 0,
+    stars: 1,
     language: "JavaScript",
     story:
       "Spinning up a repo wiki from a script is weirdly hard: the wiki git repo doesn't exist until a first page is created, and there is no REST or GraphQL API to create one. (The 'just git push to init it' trick is a myth.) gh-wiki-init does the one unavoidable UI step via a saved browser session, then everything else over plain git. The wiki sibling of gh-social-upload.",
@@ -438,7 +438,7 @@ export const repos: Repo[] = [
     name: "Swing City",
     tagline: "A rain-soaked neon city you can swing across, Spider-Man style — now with multiplayer joust rules.",
     category: "Games",
-    stars: 0,
+    stars: 1,
     language: "JavaScript",
     story:
       "A low-poly Blade Runner grid, procedurally generated from a single seed — streets, traffic-light-obeying cars, rain, neon towers — built first as a Blender/Python generator, then ported line-for-line into a self-contained Three.js browser game. Web-swing between skyscrapers, knock cars flying, climb buildings, chain combos, and dodge a zombie wave or two. One July 2026 session ran 13 rounds of real-hardware VR playtesting back to back — ship a batch, play it on the headset, get bug reports, ship the next batch. The hardest of those bugs was a right-stick calibration that got re-specified 10 times before a hardware-confirmed fix finally stuck (\"LOCK THAT\"), and a separate VR avatar-invisible bug that root-caused to a one-line three.js gotcha: Object3D.lookAt() orients +Z for everything except cameras, so the follow-rig was facing 180° away from the player every frame. Multiplayer runs on a from-scratch Cloudflare Worker + Durable Object relay: zero server-side physics, an \"attacker computes, server relays, victim applies\" message convention reused across every player-vs-player mechanic, and the WebSocket Hibernation API so a room full of idle sockets never pins memory.",
@@ -486,7 +486,7 @@ export const repos: Repo[] = [
     name: "Tank Commander",
     tagline: "A VR tank game for Meta Quest 3 with a physically-operated cockpit. Made for Ani.",
     category: "Games",
-    stars: 0,
+    stars: 1,
     language: "GDScript",
     story:
       "Sit inside a one-man turret and physically operate it: flip the battery master, hold the starter until the engine catches, grab twin tillers to drive the tracks, work the turret joystick, cycle the breech lever to reload, arm the rocket console behind its safety cover. Every texture, sound, and voice line is procedurally generated — nothing imported — and every piece of geometry, cockpit included, is built at runtime in pure GDScript rather than loaded from a scene file. The physical cockpit controls were fully built and unit-tested from day one, and never actually worked in the headset for most of the project's life: the hand-proximity code read from a Godot group that, per a full git history search, no control had ever actually joined. Root-caused and fixed in the same session as an even bigger discovery — roughly 70% of the game's geometry had inverted face normals from the very first commit, because the custom mesh-building helper wound triangles counter-clockwise, the OpenGL convention, when Godot's front faces are clockwise. Alex caught it live in the headset before any tool did: \"I conservatively estimate about 70% of the normals are inverted. You need to trust me on this — I have depth perception.\" He was right, proven with a one-triangle test scene, not documentation. The team's own automated mesh-audit tool shared the same wrong assumption and had been validating broken geometry the whole time.",
@@ -572,7 +572,7 @@ export const repos: Repo[] = [
     tagline: "PCVR passthrough for Unreal via raw OpenXR — no 500MB Meta XR Plugin required.",
     category: "Unreal Engine",
     org: "agilelens",
-    stars: 2,
+    stars: 5,
     language: "C++",
     story:
       "The official way to get Meta Quest passthrough working over Quest Link/Air Link in Unreal is the Meta XR Plugin — a ~500MB dependency that drags a lot of Meta-specific code into a project. This is the ~500-line alternative: it registers as an IOpenXRExtensionPlugin so UE's OpenXR runtime picks it up automatically, requests XR_FB_passthrough directly, and auto-detects PCVR vs. standalone by checking which blend modes the runtime actually supports — doing real work only on PCVR (flipping UE's alpha-inversion CVars so the compositor's underlay renders correctly) and quietly doing nothing on standalone Quest, where the engine-native path already handles it.",
