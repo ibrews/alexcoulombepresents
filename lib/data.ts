@@ -1182,6 +1182,10 @@ export const products: Product[] = [
         body: "A trajectory is just JSON: at t=0 the head is here, by t=4 it's drifted there, at t=8 the controller pinches. xrsim plays it back into a running VR build as if a person were wearing the headset — smooth interpolated motion, real controller input — so the same 'walk up to the thing and look at it' test runs identically every time instead of depending on how you happened to move that day.",
       },
       {
+        heading: "Hands, not just controllers",
+        body: "Controllers were the easy half. `xrsim hand` drives a full 25-joint tracked hand — named poses, analog pinch, wrist placement, and a live joint read-back a test can assert on. Three poses ship built in and you can register your own from a file (fist, open palm, peace, finger guns, per-finger pinches). It's verified where it counts: a driven pinch closed the thumb-index gap the consuming app measures from 9.4 cm down to 1.5 cm while the undriven hand stayed open as a control. The honest limit is stated in the docs rather than papered over — this tests gesture *logic* headlessly, not real-world tracking quality.",
+      },
+      {
         heading: "Read the app's mind, not just its pixels",
         body: "The hard part of testing VR isn't sending input — it's knowing whether the app got it right. xrsim opens a live channel into the running build so a test can ask it questions: did you lock onto the marker? what world position do you think the headset is at? how confident are you? The app answers over the wire, and the test asserts on the answer. Pixels lie; internal state doesn't.",
       },
@@ -1200,6 +1204,7 @@ export const products: Product[] = [
     ],
     bullets: [
       "Scripted virtual headset + controllers played back from a JSON trajectory",
+      "25-joint hand tracking with named poses, analog pinch, and joint read-back — a driven pinch closed a measured thumb-index gap from 9.4 cm to 1.5 cm",
       "Live introspection channel — assert on the app's actual internal state, not screenshots",
       "One-command, pass/fail runs an AI agent can drive in its own edit-test loop",
       "Runs fully headless on a plain workstation — no headset, background, overnight, at scale",
