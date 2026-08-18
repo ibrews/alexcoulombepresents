@@ -28,7 +28,7 @@
 - `[home.6]` ▸ Open source
 - `[home.7]` ▸ Learn AI
 - `[home.8]` ▸ Learn Unreal
-- `[home.9]` ▸ press ⌘K to jump anywhere
+- `[home.9]` ▸ press ⌘K to jump anywhere · or follow a glowing dot — each one goes somewhere
 - `[home.10]` ▸ Three passions, one through-line
 - `[home.11]` ▸ How can I make digital space feel visceral and alive?
 - `[home.12]` ▸ 01 / ENGINES
@@ -135,41 +135,42 @@
 - `[training.36]` ▸ Try the teaching first
 - `[training.37]` ▸ All
 - `[training.38]` ▸ talks on YouTube →
-- `[training.39]` ▸ From the Epic Games archives
-- `[training.40]` ▸ Courses built for Epic Games.
-- `[training.41]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
-- `[training.42]` ▸ AI training · its own track
-- `[training.43]` ▸ Learn AI workflows, Unreal optional.
-- `[training.44]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
-- `[training.45]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
-- `[training.46]` ▸ AI classes are coming
-- `[training.47]` ▸ Watch the full talk →
-- `[training.48]` ▸ Learn AI
-- `[training.49]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
-- `[training.50]` ▸ Learn Unreal
-- `[training.51]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
-- `[training.52]` ▸ Why learn here and not from an on-demand video course?
-- `[training.53]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
-- `[training.54]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
-- `[training.55]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
-- `[training.56]` ▸ Book a class — instant checkout →
-- `[training.57]` ▸ Team / studio training
-- `[training.58]` ▸ Membership · shipping today
-- `[training.59]` ▸ Cheapest way in!
-- `[training.60]` ▸ Members save — and get more.
-- `[training.61]` ▸ Starter is $99/mo for 3 live-class credits — cheaper than buying a single class à la carte — plus every class recording, member pricing sitewide, and a vote that counts for more. On top of that: hands-on access to real internal tools Alex builds for production work — xrsim (test VR apps without a headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
-- `[training.62]` ▸ See tiers & join →
-- `[training.63]` ▸ Unreal NYC
-- `[training.64]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
-- `[training.65]` ▸ agilelens.com/unrealnyc ↗
-- `[training.66]` ▸ Epic community page ↗
-- `[training.67]` ▸ Free stuff first
-- `[training.68]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
-- `[training.69]` ▸ Podcast on all platforms ↗
-- `[training.70]` ▸ Request a team quote →
-- `[training.71]` ▸ Alex will follow up with a scoped quote — usually within a day.
-- `[training.72]` ▸ Tell me when this runs →
-- `[training.73]` ▸ You'll hear when this class is scheduled.
+- `[training.39]` ▸ Browse the curated collection →
+- `[training.40]` ▸ From the Epic Games archives
+- `[training.41]` ▸ Courses built for Epic Games.
+- `[training.42]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
+- `[training.43]` ▸ AI training · its own track
+- `[training.44]` ▸ Learn AI workflows, Unreal optional.
+- `[training.45]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
+- `[training.46]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
+- `[training.47]` ▸ AI classes are coming
+- `[training.48]` ▸ Watch the full talk →
+- `[training.49]` ▸ Learn AI
+- `[training.50]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
+- `[training.51]` ▸ Learn Unreal
+- `[training.52]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
+- `[training.53]` ▸ Why learn here and not from an on-demand video course?
+- `[training.54]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
+- `[training.55]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
+- `[training.56]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
+- `[training.57]` ▸ Book a class — instant checkout →
+- `[training.58]` ▸ Team / studio training
+- `[training.59]` ▸ Membership · shipping today
+- `[training.60]` ▸ Cheapest way in!
+- `[training.61]` ▸ Members save — and get more.
+- `[training.62]` ▸ Starter is for live-class credits — cheaper than buying them one at a time — plus every class recording, member pricing sitewide, and a vote that counts for more. On top of that: hands-on access to real internal tools Alex builds for production work — xrsim (test VR apps without a headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
+- `[training.63]` ▸ See tiers & join →
+- `[training.64]` ▸ Unreal NYC
+- `[training.65]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
+- `[training.66]` ▸ agilelens.com/unrealnyc ↗
+- `[training.67]` ▸ Epic community page ↗
+- `[training.68]` ▸ Free stuff first
+- `[training.69]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
+- `[training.70]` ▸ Podcast on all platforms ↗
+- `[training.71]` ▸ Request a team quote →
+- `[training.72]` ▸ Alex will follow up with a scoped quote — usually within a day.
+- `[training.73]` ▸ Tell me when this runs →
+- `[training.74]` ▸ You'll hear when this class is scheduled.
 
 ---
 
@@ -259,10 +260,11 @@
 
 - `[lab.1]` ▸ The private repos are getting restless.
 - `[lab.2]` ▸ products in active development (plus a peek at the internal tooling), all pointed at the same future: spatial computing where the engines, the assets, and the AI agents finally cooperate. Hardware-verified, demo-ready, and approaching the launch pad.
-- `[lab.3]` ▸ full briefing →
-- `[lab.4]` ▸ Want early access to any of these?
-- `[lab.5]` ▸ Raise your hand →
-- `[lab.6]` ▸ You'll hear first when any of these open up.
+- `[lab.3]` ▸ Looking for what's already shipped? Licensed Unreal Engine plugins are live now.
+- `[lab.4]` ▸ full briefing →
+- `[lab.5]` ▸ Want early access to any of these?
+- `[lab.6]` ▸ Raise your hand →
+- `[lab.7]` ▸ You'll hear first when any of these open up.
 
 ---
 
@@ -312,7 +314,7 @@
 - `[store.15]` ▸ Cheapest way in!
 - `[store.16]` ▸ Not sure where to start?
 - `[store.17]` ▸ Training. From one intro session to a full eleven-class curriculum — live, on your schedule, using your own project as the sandbox.
-- `[store.18]` ▸ Skills and templates. Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
+- `[store.18]` ▸ Skills and templates. The full lineup — live, coming soon, and free — is on the Skills page . Installable Claude Code skills and Unreal templates also live on Capafy and Gumroad .
 - `[store.19]` ▸ Custom work. Pilot projects, collaborations, and studio pipelines — that's Agile Lens territory (browse the portfolio). Email info@alexcoulombepresents.com or use the contact form .
 - `[store.20]` ▸ Join the list for the next one →
 - `[store.21]` ▸ You'll hear the moment the next one's scheduled.
@@ -586,6 +588,15 @@
   - Freshness measured twice, because mtimes lie: filesystem times plus Unreal's rotated editor logs
   - Trash and Recycle Bin by default; --permanent only when you're actually out of room
   - clean is a dry run unless you pass --apply, and report has no destructive flag at all
+- `[data.repos.unreal-custodian.testimonials.0.quote]` ▸ 550 gb on main box, 1.2 tb on server. Thank you so much🙏🫡
+- `[data.repos.unreal-custodian.testimonials.0.author]` ▸ Supersane_Games
+- `[data.repos.unreal-custodian.testimonials.0.handle]` ▸ SupersaneG
+- `[data.repos.unreal-custodian.testimonials.0.date]` ▸ Aug 10, 2026
+- `[data.repos.unreal-custodian.testimonials.1.quote]` ▸ Thanks for the 92.4 gig 🫡
+- `[data.repos.unreal-custodian.testimonials.1.author]` ▸ Graham Rust
+- `[data.repos.unreal-custodian.testimonials.1.handle]` ▸ GrhmRst
+- `[data.repos.unreal-custodian.testimonials.1.date]` ▸ Aug 9, 2026
+- `[data.repos.unreal-custodian.testimonials.1.image]` ▸ /unreal-custodian/testimonial-grhmrst.jpg
 - `[data.repos.apple-platform-skills.name]` ▸ apple-platform-skills
 - `[data.repos.apple-platform-skills.tagline]` ▸ Claude Code skills for Apple platform development — visionOS SharePlay, SpriteKit, GameKit.
 - `[data.repos.apple-platform-skills.story]` ▸ Install once (`npx skills add ibrews/apple-platform-skills`) and your AI assistant knows the traps before it falls in them: the GroupSession `session.join()` trap, spatial Persona lifecycle, SpriteKit's physics bitmask UInt32 overflow, GameKit multiplayer handshakes. Written from real shipped-app scar tissue, not docs paraphrase.
@@ -824,8 +835,8 @@
 - `[data.products.project-ion.videos.LOnijsxamts.title]` ▸ Projection Mapping Update · Jun 2026
 - `[data.products.project-ion.videos.EqFayHb1AQo.title]` ▸ Frank and Bob Visit the Chicago Bean
 - `[data.products.unrealitykit-bridge.name]` ▸ UnRealityKit Bridge
-- `[data.products.unrealitykit-bridge.tagline]` ▸ Unreal Engine as the simulation brain. RealityKit as the renderer. The architecture ILM shipped, opened up.
-- `[data.products.unrealitykit-bridge.pitch]` ▸ There are two ways to put Unreal Engine on Apple Vision Pro. One is the native path: UE renders every pixel itself. The other is the path ILM used for Marvel's "What If…?": UE runs as the simulation, logic, and asset source while RealityKit — Apple's own renderer — draws the frame. That second path gets you passthrough, occlusion, hover effects, anchors, spatial audio, and Personas for free, because you're rendering with the system. UnRealityKit Bridge is that architecture, productized.
+- `[data.products.unrealitykit-bridge.tagline]` ▸ Unreal Engine as the simulation brain. RealityKit as the renderer. The hybrid architecture Unity proved out with PolySpatial — open for Unreal.
+- `[data.products.unrealitykit-bridge.pitch]` ▸ There are two ways to put Unreal Engine on Apple Vision Pro. One is the native path: UE renders every pixel itself. The other is a hybrid path — the same idea Unity ships in production with PolySpatial: the engine runs as the simulation, logic, and asset source while RealityKit — Apple's own renderer — draws the frame. That second path gets you passthrough, occlusion, hover effects, anchors, spatial audio, and Personas for free, because you're rendering with the system. UnRealityKit Bridge brings that architecture to Unreal.
 - `[data.products.unrealitykit-bridge.sections.0.heading]` ▸ Preview before you build
 - `[data.products.unrealitykit-bridge.sections.0.body]` ▸ The Live Link Previewer is the lead tool: connect your live Unreal Editor to the RealityKit viewer over the Remote Control API and see a translated preview on device — no packaged build, no full framework compile. Run `make previewer` and stream your scene through the bridge the moment you wire up the plugin (Window ▸ UnRealityKit Live Link). It's the fastest iteration loop for mixed-reality UE content that exists.
 - `[data.products.unrealitykit-bridge.sections.1.heading]` ▸ Know what bridges before you build
@@ -835,7 +846,7 @@
 - `[data.products.unrealitykit-bridge.sections.3.heading]` ▸ The material translator
 - `[data.products.unrealitykit-bridge.sections.3.body]` ▸ The hardest single problem: every UE material has to become a RealityKit ShaderGraph. The bridge translates UE material graphs to MaterialX — texture binding, colorspace, lighting response, normal-map conventions, alpha and opacity, dynamic parameters — each milestone render-verified against ground truth. The BridgeabilityAnalyzer scores your project first so you know what to expect before touching the translator.
 - `[data.products.unrealitykit-bridge.sections.4.heading]` ▸ Why it matters
-- `[data.products.unrealitykit-bridge.sections.4.body]` ▸ For polished mixed reality on Vision Pro, rendering with RealityKit beats fighting the compositor. A flagship Disney/Marvel production validated the architecture; an open bridge makes it available to everyone else. The repo is proprietary — bring your own Unreal Engine source license; Epic-linked GitHub accounts can request collaborator access. Royalty-free until $1M revenue.
+- `[data.products.unrealitykit-bridge.sections.4.body]` ▸ For polished mixed reality on Vision Pro, rendering with RealityKit beats fighting the compositor. Unity already proved the pattern works in production with PolySpatial; UnRealityKit Bridge brings the same idea to Unreal, in the open. The repo is proprietary — bring your own Unreal Engine source license; Epic-linked GitHub accounts can request collaborator access. Royalty-free until $1M revenue.
 
   **list: bullets** (6 items — add or remove lines freely)
   - UE simulation + RealityKit rendering — best of both worlds for MR
@@ -992,15 +1003,16 @@
 - `[data.products.xrsim.sections.3.heading]` ▸ Built for the agent era
 - `[data.products.xrsim.sections.3.body]` ▸ Every capability is one command with a clean pass/fail, so an AI build agent can close its own loop: change the code, run the trajectory, read the assert, fix what broke — the same edit-test-repeat cycle a web developer takes for granted, finally available for spatial apps. It runs on a plain workstation with no headset attached, which means it runs in the background, overnight, at whatever scale the work needs.
 - `[data.products.xrsim.sections.4.heading]` ▸ The frontier
-- `[data.products.xrsim.sections.4.body]` ▸ Streamed PC-VR testing is a daily driver now, and standalone on-device simulation shipped too — a real GPU-accelerated Android emulator runs an actual standalone OpenXR APK locally, no streaming pipeline at all, verified end-to-end against a shipped Godot VR game. Current frontier: modeling each device's real performance envelope, so a demo throttled to a Quest 1's frame budget visibly runs choppier than one throttled to a Quest 3 — a test can fail not just on 'wrong answer' but on 'too slow for this headset.'
+- `[data.products.xrsim.sections.4.body]` ▸ Streamed PC-VR testing is a daily driver now, and standalone on-device simulation shipped too — a real GPU-accelerated Android emulator runs an actual standalone OpenXR APK locally, no streaming pipeline at all, verified against both a shipped Godot VR game and real Android XR builds (Galaxy XR-class devices). Controller button input on that on-device path is real and scripted too — a live button press dispatches into the running app and the app's own code reacts to it, not a synthetic event that only looks like input. Current frontier: full head/controller pose injection for that same on-device path — button presses work today, movement doesn't yet, and that gap is public, not hidden (see the docs).
 
-  **list: bullets** (8 items — add or remove lines freely)
+  **list: bullets** (9 items — add or remove lines freely)
   - Scripted virtual headset + controllers played back from a JSON trajectory
   - Live introspection channel — assert on the app's actual internal state, not screenshots
   - One-command, pass/fail runs an AI agent can drive in its own edit-test loop
   - Runs fully headless on a plain workstation — no headset, background, overnight, at scale
   - First proof: headless co-location verified to 0.4 cm accuracy, start to finish
-  - Standalone on-device: a real GPU-accelerated Android emulator runs actual OpenXR APKs, no streaming pipeline
+  - Standalone on-device: a real GPU-accelerated Android emulator runs actual OpenXR APKs (PICO-native and Android XR), no streaming pipeline
+  - Real controller button input on-device — a scripted trigger press reaches the app's own code, confirmed via device logs, not just a synthetic event
   - Per-device performance envelope: throttle a demo to a chosen headset's real frame budget
   - Free forever to explore (help + the built-in demo cockpit, no account needed); a 14-day trial covers pointing it at a real app, then it's free for active members or a one-time purchase — see the store link below
 - `[data.products.xrsim.heroImage.src]` ▸ /lab/xrsim/cockpit.png
@@ -1008,8 +1020,10 @@
 - `[data.products.xrsim.screenshots.0.src]` ▸ /lab/xrsim/fleet-dashboard.png
 - `[data.products.xrsim.screenshots.0.alt]` ▸ xrsim's fleet dashboard showing two simulated headsets running side by side
 - `[data.products.xrsim.screenshots.0.caption]` ▸ `xrsim fleet ui` — every simulated headset on the machine in one dashboard, for running (or teaching) more than one at a time.
-- `[data.products.xrsim.links.0.label]` ▸ npm install -g xrsim
-- `[data.products.xrsim.links.1.label]` ▸ Get a license →
+- `[data.products.xrsim.links.0.label]` ▸ Download for Mac (.app)
+- `[data.products.xrsim.links.1.label]` ▸ Download for Windows (installer)
+- `[data.products.xrsim.links.2.label]` ▸ Documentation & full command reference
+- `[data.products.xrsim.links.3.label]` ▸ Get a license →
 - `[data.products.roomscanpro.name]` ▸ RoomScanPro
 - `[data.products.roomscanpro.tagline]` ▸ Collaborative room scanning and real-world measurement for Apple Vision Pro and iPhone.
 - `[data.products.roomscanpro.pitch]` ▸ Before XR, Alex trained as an architect — and a tool that scans a real room, measures it precisely, and hands back an exportable 3D model is the most direct descendant of that on this whole site. Multiple people scan the same room together over SharePlay, mesh data streams live between every device, and the result is measurable and exportable, not just a pretty capture.
@@ -1244,6 +1258,7 @@
 - `[store.storeItems.wed-2026-08-12-intro-vr.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-08-12-intro-vr.sessionDateISO]` ▸ 2026-08-12T15:00:00Z
 - `[store.storeItems.wed-2026-08-12-intro-vr.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/Nn4mW45KRKeDkokoTk4o0A
+- `[store.storeItems.wed-2026-08-12-intro-vr.zoomMeetingId]` ▸ 87591560629
 - `[store.storeItems.wed-2026-08-12-intro-vr.saleWindow.closesAtISO]` ▸ 2026-08-12T15:00:00Z
 - `[store.storeItems.wed-2026-08-12-intro-vr.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-08-12-intro-vr.saleWindow.closedList]` ▸ unreal
@@ -1252,6 +1267,7 @@
 - `[store.storeItems.wed-2026-08-19-intermediate-vr.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-08-19-intermediate-vr.sessionDateISO]` ▸ 2026-08-19T15:00:00Z
 - `[store.storeItems.wed-2026-08-19-intermediate-vr.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/2rQ9e2yxSu68RM8Otdm-RA
+- `[store.storeItems.wed-2026-08-19-intermediate-vr.zoomMeetingId]` ▸ 87269338974
 - `[store.storeItems.wed-2026-08-19-intermediate-vr.saleWindow.closesAtISO]` ▸ 2026-08-19T15:00:00Z
 - `[store.storeItems.wed-2026-08-19-intermediate-vr.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-08-19-intermediate-vr.saleWindow.closedList]` ▸ unreal
@@ -1260,6 +1276,7 @@
 - `[store.storeItems.wed-2026-08-26-intro-metahumans.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-08-26-intro-metahumans.sessionDateISO]` ▸ 2026-08-26T15:00:00Z
 - `[store.storeItems.wed-2026-08-26-intro-metahumans.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/IzjAamgLQTibb6xeFARbBQ
+- `[store.storeItems.wed-2026-08-26-intro-metahumans.zoomMeetingId]` ▸ 89330075334
 - `[store.storeItems.wed-2026-08-26-intro-metahumans.saleWindow.closesAtISO]` ▸ 2026-08-26T15:00:00Z
 - `[store.storeItems.wed-2026-08-26-intro-metahumans.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-08-26-intro-metahumans.saleWindow.closedList]` ▸ unreal
@@ -1268,6 +1285,7 @@
 - `[store.storeItems.wed-2026-09-02-mocap.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-09-02-mocap.sessionDateISO]` ▸ 2026-09-02T15:00:00Z
 - `[store.storeItems.wed-2026-09-02-mocap.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/Peidz5xgTV6qQa2zT2kOxw
+- `[store.storeItems.wed-2026-09-02-mocap.zoomMeetingId]` ▸ 85821901213
 - `[store.storeItems.wed-2026-09-02-mocap.saleWindow.closesAtISO]` ▸ 2026-09-02T15:00:00Z
 - `[store.storeItems.wed-2026-09-02-mocap.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-02-mocap.saleWindow.closedList]` ▸ unreal
@@ -1276,6 +1294,7 @@
 - `[store.storeItems.wed-2026-09-09-intro-pcg.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-09-09-intro-pcg.sessionDateISO]` ▸ 2026-09-09T15:00:00Z
 - `[store.storeItems.wed-2026-09-09-intro-pcg.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/12r37RLTSZiBavbpsCDHFQ
+- `[store.storeItems.wed-2026-09-09-intro-pcg.zoomMeetingId]` ▸ 87245477645
 - `[store.storeItems.wed-2026-09-09-intro-pcg.saleWindow.closesAtISO]` ▸ 2026-09-09T15:00:00Z
 - `[store.storeItems.wed-2026-09-09-intro-pcg.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-09-intro-pcg.saleWindow.closedList]` ▸ unreal
@@ -1284,6 +1303,7 @@
 - `[store.storeItems.wed-2026-09-16-unity-to-unreal.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-09-16-unity-to-unreal.sessionDateISO]` ▸ 2026-09-16T15:00:00Z
 - `[store.storeItems.wed-2026-09-16-unity-to-unreal.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/C2MxUYbAQyKMSY2HzsumCg
+- `[store.storeItems.wed-2026-09-16-unity-to-unreal.zoomMeetingId]` ▸ 82747526686
 - `[store.storeItems.wed-2026-09-16-unity-to-unreal.saleWindow.closesAtISO]` ▸ 2026-09-16T15:00:00Z
 - `[store.storeItems.wed-2026-09-16-unity-to-unreal.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-16-unity-to-unreal.saleWindow.closedList]` ▸ unreal
@@ -1292,6 +1312,7 @@
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.sessionDateISO]` ▸ 2026-09-23T15:00:00Z
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/ggxLvryiSFKKtA1Xp9enoQ
+- `[store.storeItems.wed-2026-09-23-usd-glb-export.zoomMeetingId]` ▸ 86937931870
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closesAtISO]` ▸ 2026-09-23T15:00:00Z
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedList]` ▸ unreal
@@ -1300,6 +1321,7 @@
 - `[store.storeItems.wed-2026-09-30-intro-ar.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-09-30-intro-ar.sessionDateISO]` ▸ 2026-09-30T15:00:00Z
 - `[store.storeItems.wed-2026-09-30-intro-ar.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/XnHIYeiPTxCvS15x4aLNWw
+- `[store.storeItems.wed-2026-09-30-intro-ar.zoomMeetingId]` ▸ 85064862653
 - `[store.storeItems.wed-2026-09-30-intro-ar.saleWindow.closesAtISO]` ▸ 2026-09-30T15:00:00Z
 - `[store.storeItems.wed-2026-09-30-intro-ar.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-30-intro-ar.saleWindow.closedList]` ▸ unreal

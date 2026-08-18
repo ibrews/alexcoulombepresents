@@ -816,9 +816,9 @@ export const products: Product[] = [
     slug: "unrealitykit-bridge",
     name: "UnRealityKit Bridge",
     status: "Collaborator beta — hardware-verified",
-    tagline: "Unreal Engine as the simulation brain. RealityKit as the renderer. The architecture ILM shipped, opened up.",
+    tagline: "Unreal Engine as the simulation brain. RealityKit as the renderer. The hybrid architecture Unity proved out with PolySpatial — open for Unreal.",
     pitch:
-      "There are two ways to put Unreal Engine on Apple Vision Pro. One is the native path: UE renders every pixel itself. The other is the path ILM used for Marvel's \"What If…?\": UE runs as the simulation, logic, and asset source while RealityKit — Apple's own renderer — draws the frame. That second path gets you passthrough, occlusion, hover effects, anchors, spatial audio, and Personas for free, because you're rendering with the system. UnRealityKit Bridge is that architecture, productized.",
+      "There are two ways to put Unreal Engine on Apple Vision Pro. One is the native path: UE renders every pixel itself. The other is a hybrid path — the same idea Unity ships in production with PolySpatial: the engine runs as the simulation, logic, and asset source while RealityKit — Apple's own renderer — draws the frame. That second path gets you passthrough, occlusion, hover effects, anchors, spatial audio, and Personas for free, because you're rendering with the system. UnRealityKit Bridge brings that architecture to Unreal.",
     sections: [
       {
         heading: "Preview before you build",
@@ -838,7 +838,7 @@ export const products: Product[] = [
       },
       {
         heading: "Why it matters",
-        body: "For polished mixed reality on Vision Pro, rendering with RealityKit beats fighting the compositor. A flagship Disney/Marvel production validated the architecture; an open bridge makes it available to everyone else. The repo is proprietary — bring your own Unreal Engine source license; Epic-linked GitHub accounts can request collaborator access. Royalty-free until $1M revenue.",
+        body: "For polished mixed reality on Vision Pro, rendering with RealityKit beats fighting the compositor. Unity already proved the pattern works in production with PolySpatial; UnRealityKit Bridge brings the same idea to Unreal, in the open. The repo is proprietary — bring your own Unreal Engine source license; Epic-linked GitHub accounts can request collaborator access. Royalty-free until $1M revenue.",
       },
     ],
     bullets: [
