@@ -38,6 +38,17 @@ const materialHref = (folder: string, key: string) =>
 
 export const recordings: Recording[] = [
   {
+    slug: "intermediate-xr-2026-08-19",
+    title: "Intermediate XR in Unreal 5.8",
+    recordedAt: "2026-08-19",
+    description:
+      "Past the basics: interaction, locomotion, and the performance work that keeps an XR build comfortable.",
+    url: yt("RsAk2VfueXA"),
+    youtubeId: "RsAk2VfueXA",
+    durationMin: 123,
+    topics: ["unreal", "vr", "xr"],
+  },
+  {
     slug: "intro-to-vr-2026-08-12",
     title: "Intro to VR",
     recordedAt: "2026-08-12",

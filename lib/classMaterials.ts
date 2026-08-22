@@ -119,6 +119,7 @@ export const classFolders: ClassFolder[] = [
     date: "2026-08-19",
     blurb:
       "Past the basics: interaction, locomotion, and the performance work that keeps an XR build comfortable.",
+    recordingSlug: "intermediate-xr-2026-08-19",
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1qKqDuYP5UsLVLnkFnMQdQhd_Ej12LqWO",
