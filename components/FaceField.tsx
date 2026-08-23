@@ -157,6 +157,22 @@ export default function FaceField({
     // Retarget the constellation whenever the hero's furniture actually moves.
     // Cheap because it early-outs on an unchanged key; two getBoundingClientRect
     // calls a few times a second, never per frame.
+    //
+    // A bounds change SNAPS rather than glides, and that is a correction to
+    // what this file used to do. The old rule — snap once after mount, ease
+    // every later change because "the glide is the right behavior once someone
+    // is actually looking" — was an aesthetic judgement, and measured against
+    // the physics it is a correctness bug both times it fires:
+    //
+    //   banner slides the nav 64 -> 104   2.28s with a hit-target UNDER the nav
+    //   window resize 1440 -> 1024        1.65s with one OFF-SCREEN (x edge 1361)
+    //
+    // The home spring is deliberately loose (HOME_K 2.2), so it takes seconds
+    // to cross a gap the layout crossed instantly. Bounds only change when the
+    // page's furniture actually moves — a re-layout, never a nudge — so there
+    // is nothing here worth easing. Numbers from scripts/probe-hero-transients.mjs; the invariant
+    // is pinned by "a bounds change never strands a node" in
+    // tests/link-nodes.test.ts.
     function syncBounds() {
       const bounds = measureBounds();
       const key = `${bounds.navBottom}|${bounds.cutoutTop}|${bounds.cutoutLeft}|${bounds.enabled}`;
@@ -164,6 +180,7 @@ export default function FaceField({
       boundsKey = key;
       boundsRef.current = bounds;
       layer.resize(w, h, bounds);
+      layer.snapToHomes();
       // Only re-render the anchor list when the visible set actually changes.
       setNodeLinks((prev) => {
         const next = layer.visibleLinks;
@@ -333,13 +350,10 @@ export default function FaceField({
     resize();
     // FaceField and AnnouncementBanner mount in an unspecified order, so the
     // header may still be at its pre-banner offset when resize() first
-    // measures. Re-measure once the first frame has settled and place the
-    // constellation outright, so nobody watches it drift into position.
+    // measures. Re-measure once the first frame has settled; syncBounds()
+    // places the constellation outright, so nobody watches it drift.
     requestAnimationFrame(() => {
-      if (syncBounds()) {
-        layer.snapToHomes();
-        redrawRef.current();
-      }
+      if (syncBounds()) redrawRef.current();
     });
     // A timer rather than a check inside the frame loop, because the frame
     // loop does not exist under reduced motion — and that is exactly the mode

@@ -127,6 +127,39 @@ test("omitting the gutters leaves the hero's own bands exactly where they were",
   assert.equal(layer.nodes[0].x, 300);
 });
 
+test("a bounds change never strands a node — the layer can be placed outright", () => {
+  // The hosts SNAP on a bounds change rather than letting the home spring ease
+  // across it. Measured (probe-hero.mjs) with the old glide: 2.28s of a
+  // hit-target under the nav after the announcement banner slid the header
+  // 64->104, and 1.65s off-screen after a 1440->1024 resize, because HOME_K is
+  // 2.2 and the layout moved instantly. This pins the property the fix relies
+  // on: snapToHomes() leaves every node exactly at a home the CURRENT bounds
+  // produced, so "the homes are legal" is the only thing left to be true.
+  const HALF = 22; // half a 44px fine-pointer hit-target
+  const hero = [
+    { href: "/t", label: "T", kicker: "", band: "top" as const, along: 0.2, inset: 41, hue: 174, tier: "deep" as const },
+    { href: "/r", label: "R", kicker: "", band: "right" as const, along: 0.3, inset: 101, hue: 174, tier: "deep" as const },
+  ];
+  const layer = new LinkNodeLayer(hero, {});
+
+  // Mount-time measurement: banner not applied, wide window.
+  layer.resize(1440, 828, { navBottom: 64, cutoutTop: 466, cutoutLeft: 1048, enabled: true });
+  layer.snapToHomes();
+
+  // Both events that move the furniture, each followed by the snap the hosts do.
+  for (const [w, h, navBottom] of [[1440, 828, 104], [1024, 736, 104]] as const) {
+    layer.resize(w, h, { navBottom, cutoutTop: h * 0.56, cutoutLeft: w * 0.72, enabled: true });
+    layer.snapToHomes();
+    for (const n of layer.nodes) {
+      assert.ok(n.y - HALF >= navBottom, `${w}x${h}: node top ${n.y - HALF} is under the nav (${navBottom})`);
+      assert.ok(n.x + HALF <= w, `${w}x${h}: node right ${n.x + HALF} is off-screen`);
+      assert.ok(n.x - HALF >= 0, `${w}x${h}: node left ${n.x - HALF} is off-screen`);
+      assert.equal(n.vx, 0, "a snapped node carries no velocity");
+      assert.equal(n.vy, 0, "a snapped node carries no velocity");
+    }
+  }
+});
+
 test("bands reclaim the cutout's space when the portrait is hidden", () => {
   const link = [{ href: "/f", label: "F", kicker: "", band: "floor" as const, along: 1, inset: 60, hue: 42, tier: "deep" as const }];
   const withCutout = new LinkNodeLayer(link, {});
