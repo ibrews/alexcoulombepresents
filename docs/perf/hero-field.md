@@ -125,9 +125,15 @@ real `LinkNodeLayer` across 25 seeds.
   The home spring is overdamped enough that, measured, they crawl at roughly
   20px/second: dragging 1440 → 1024 parked the entire right strand off-screen
   and unclickable for several seconds. `resize()` now calls `snapToHomes()`.
-  **The homepage hero has the same shape of issue** and is untouched here — its
-  bands are also viewport-anchored, so a wide resize strands them too. Not
-  fixed, not measured, and worth its own pass.
+  **The homepage hero had the same shape of issue** — fixed since, in `b1c7c31`,
+  after measuring it rather than assuming: `scripts/probe-hero-transients.mjs`
+  put it at **1.65s off-screen** on a 1440 → 1024 resize (right edge 1361
+  against a 1024 viewport) and, separately, **2.28s with a hit-target under the
+  nav** when the announcement banner slides the header 64 → 104 after mount.
+  The hero's `syncBounds()` now snaps on any measured bounds change, which
+  covers the banner, the resize and the breakpoint that hides the cutout from
+  one place. Verified live: nodes under the nav 4 → 0 at 1440x900, off-screen
+  3 → 0 after resizing to 1024x800.
 
 ## Canvas paint cost — still open, and honestly so
 
