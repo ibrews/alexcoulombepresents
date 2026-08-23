@@ -2,19 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "acp-site",
+      "name": "acp-hero",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "cwd": ".",
       "port": 3000,
       "autoPort": true
-    },
-    {
-      "name": "newsletter-studio",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "studio"],
-      "cwd": ".",
-      "port": 4848
     }
   ]
 }
