@@ -43,7 +43,7 @@ export const repos: Repo[] = [
     name: "Blueprint Auto Layout",
     tagline: "Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.",
     category: "Unreal Engine",
-    stars: 38,
+    stars: 39,
     language: "C++",
     story:
       "Blueprint spaghetti is a rite of passage — and a productivity tax. This plugin rearranges any Blueprint graph into a readable left-to-right execution flow with one keystroke (Ctrl/Cmd+Shift+L). Under the hood it's a real layered-graph engine implemented from the published papers (Sugiyama et al.; Brandes & Köpf), not a naive tree walk — so cross-row connections, multi-consumer data pins, and long edges all route cleanly.",
@@ -270,7 +270,7 @@ export const repos: Repo[] = [
     name: "ue5-testflight",
     tagline: "Fully autonomous UE5 → TestFlight pipeline for iOS, visionOS, and macOS. One command.",
     category: "Unreal Engine",
-    stars: 5,
+    stars: 6,
     language: "Shell",
     story:
       "One command triggers build → sign → upload → distribute. Thirty to sixty minutes later your Unreal build is live in TestFlight with internal and external groups notified. Cook and stage via RunUAT, Info.plist patching, auto-incrementing build numbers with no gaps — every manual step of the Apple distribution dance, automated.",
@@ -307,7 +307,7 @@ export const repos: Repo[] = [
     name: "Unreal Custodian",
     tagline: "Reclaim the build caches your Unreal projects quietly hoard — without touching anything you authored.",
     category: "Unreal Engine",
-    stars: 61,
+    stars: 64,
     language: "Python",
     story:
       "A few years of Unreal projects on one machine means tens or hundreds of gigabytes of pure rebuild artifacts — Intermediate, Binaries, DerivedDataCache, cooked content, staged builds. The Windows box this was tested against held 539 projects, 14 engines, and 2.0 TB of reclaimable cache with 17 GB of headroom left. Custodian finds all of it and tells you exactly what goes, what shrinks, and what it will not touch, before it touches anything. Content, Config, and the .uproject always survive.",
@@ -438,7 +438,7 @@ export const repos: Repo[] = [
     name: "Swing City",
     tagline: "A rain-soaked neon city you can swing across, Spider-Man style — now with multiplayer joust rules.",
     category: "Games",
-    stars: 1,
+    stars: 2,
     language: "JavaScript",
     story:
       "A low-poly Blade Runner grid, procedurally generated from a single seed — streets, traffic-light-obeying cars, rain, neon towers — built first as a Blender/Python generator, then ported line-for-line into a self-contained Three.js browser game. Web-swing between skyscrapers, knock cars flying, climb buildings, chain combos, and dodge a zombie wave or two. One July 2026 session ran 13 rounds of real-hardware VR playtesting back to back — ship a batch, play it on the headset, get bug reports, ship the next batch. The hardest of those bugs was a right-stick calibration that got re-specified 10 times before a hardware-confirmed fix finally stuck (\"LOCK THAT\"), and a separate VR avatar-invisible bug that root-caused to a one-line three.js gotcha: Object3D.lookAt() orients +Z for everything except cameras, so the follow-rig was facing 180° away from the player every frame. Multiplayer runs on a from-scratch Cloudflare Worker + Durable Object relay: zero server-side physics, an \"attacker computes, server relays, victim applies\" message convention reused across every player-vs-player mechanic, and the WebSocket Hibernation API so a room full of idle sockets never pins memory.",
@@ -572,7 +572,7 @@ export const repos: Repo[] = [
     tagline: "PCVR passthrough for Unreal via raw OpenXR — no 500MB Meta XR Plugin required.",
     category: "Unreal Engine",
     org: "agilelens",
-    stars: 5,
+    stars: 6,
     language: "C++",
     story:
       "The official way to get Meta Quest passthrough working over Quest Link/Air Link in Unreal is the Meta XR Plugin — a ~500MB dependency that drags a lot of Meta-specific code into a project. This is the ~500-line alternative: it registers as an IOpenXRExtensionPlugin so UE's OpenXR runtime picks it up automatically, requests XR_FB_passthrough directly, and auto-detects PCVR vs. standalone by checking which blend modes the runtime actually supports — doing real work only on PCVR (flipping UE's alpha-inversion CVars so the compositor's underlay renders correctly) and quietly doing nothing on standalone Quest, where the engine-native path already handles it.",
