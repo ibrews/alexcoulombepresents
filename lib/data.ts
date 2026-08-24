@@ -341,6 +341,25 @@ export const repos: Repo[] = [
     ],
   },
   {
+    slug: "unreal-visionos-basics",
+    name: "unreal-visionos-basics",
+    tagline: "The UE 5.8 VR Template that actually renders opaque in mixed immersion on Apple Vision Pro.",
+    category: "Unreal Engine",
+    stars: 4,
+    language: "Unreal Engine 5.8",
+    story:
+      "Follow Epic's visionOS docs exactly and the VR Template still comes up entirely semi-transparent on a Vision Pro. The three console variables Epic tells you to uncomment are correct and not sufficient: the template ships r.MobileHDR=False, so the mobile base pass draws straight to the backbuffer and SceneTextures.Color is never written \u2014 while the stock alpha-invert pass reads exactly that unwritten texture. Unreal's convention is alpha 0 = opaque; visionOS wants 1. The inversion silently never happens, so every opaque pixel tells the compositor it is transparent, and the only warning is one line buried in the device log. Eight hypotheses died against fork-side engine code before the real answer turned out to be a defect in stock UE 5.8. This repo is the working template plus every measured finding \u2014 including the ones that did not help.",
+    highlights: [
+      "r.Mobile.EarlyZPass=1 is the fix \u2014 without it, the r.AlphaInvertPass Epic documents does nothing at all",
+      "r.AllowOcclusionQueries=False fixes geometry that renders in only one eye (also true in 5.7)",
+      "Shadows that actually stick: the VisionPro device profile inherits iOS caps that clamp after scalability runs, so sg.ShadowQuality is a no-op and 1024 \u2192 4096 CSM has to live in the project's own device profile",
+      "Verified on a physical Vision Pro (M2, visionOS 27) against launcher-installed UE 5.8.1 \u2014 no engine fork, no source build, no command-line flags",
+      "Touch r.Mobile.EarlyZPass or r.MobileHDR and you must delete Saved/Cooked/VisionOS first \u2014 an incremental cook reports success and quietly ships the old shaders",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/unreal-visionos-basics",
+  },
+  {
     slug: "apple-platform-skills",
     name: "apple-platform-skills",
     tagline: "Claude Code skills for Apple platform development — visionOS SharePlay, SpriteKit, GameKit.",
@@ -394,6 +413,25 @@ export const repos: Repo[] = [
     links: [],
     github: "https://github.com/ibrews/gh-wiki-init",
     wiki: "https://github.com/ibrews/gh-wiki-init/wiki",
+  },
+  {
+    slug: "found-footage",
+    name: "found-footage",
+    tagline: "Your Mac said it couldn't save that screen recording. It probably did \u2014 this finds it.",
+    category: "Tools",
+    stars: 0,
+    language: "Bash",
+    story:
+      "When macOS screen recording fails with \"Could not save recording,\" the file is usually still on your disk. macOS writes the finished recording first and then copies it to wherever you asked it to go \u2014 and it is the copy that fails. The original survives, in a staging directory nobody thinks to look in. found-footage checks that directory and the five other places recordings get stranded, reports what it found and why the save probably failed, and moves nothing unless you ask it to. Its first real recovery was an 18-minute 4K60 recording macOS had already declared lost.",
+    highlights: [
+      "One dependency-free Bash script \u2014 one curl to install, works on a stock Mac",
+      "Read-only by default; --rescue is the only thing that moves a file",
+      "With ffmpeg installed it also reports length, resolution, and whether each file is actually playable",
+      "Explains the failure, not just the file \u2014 e.g. saving needs a second copy and you were short on disk",
+      "Run it sooner rather than later: these are staging directories macOS clears on its own schedule",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/found-footage",
   },
   {
     slug: "swing-city",
@@ -605,6 +643,25 @@ export const repos: Repo[] = [
     ],
     links: [],
     github: "https://github.com/ibrews/claude-session-recovery",
+  },
+  {
+    slug: "claude-session-search",
+    name: "claude-session-search",
+    tagline: "Search your Claude Code conversation history from inside Claude \u2014 as an MCP server.",
+    category: "AI & Agents",
+    stars: 0,
+    language: "JavaScript",
+    story:
+      "Claude Code has no search across past sessions, so \"what did we decide about auth last week?\" means grepping JSONL transcripts by hand. This MCP server adds it: point Claude Desktop at it once and plain-language questions search your local conversation history automatically, returning ranked snippets with the session title and project attached. Nothing leaves the machine \u2014 it reads the transcripts already sitting in ~/.claude/projects and never writes to them.",
+    highlights: [
+      "Ask in plain language \u2014 \"find the session where we set up the database\" \u2014 no query syntax to learn",
+      "Two tools: search_sessions for ranked full-text matches with context, list_sessions for a dated, scannable list",
+      "Roughly 30 seconds of setup: npm install and one entry in claude_desktop_config.json",
+      "Read-only and offline by design: no network calls, no API keys, no telemetry",
+      "The search sibling of claude-session-recovery, for sessions that are present but unfindable",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/claude-session-search",
   },
   {
     slug: "claude-usage-audit",

@@ -445,7 +445,7 @@
 - `[data.courses.11.blurb]` ▸ For teams making the switch: the concepts that map over, the ones that don't, and why your prefabs are now actors.
 - `[data.courses.11.tier]` ▸ intro
 
-### repos  (28 entries — add or remove whole entries)
+### repos  (31 entries — add or remove whole entries)
 
 - `[data.repos.blueprint-auto-layout.name]` ▸ Blueprint Auto Layout
 - `[data.repos.blueprint-auto-layout.tagline]` ▸ Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.
@@ -597,6 +597,16 @@
 - `[data.repos.unreal-custodian.testimonials.1.handle]` ▸ GrhmRst
 - `[data.repos.unreal-custodian.testimonials.1.date]` ▸ Aug 9, 2026
 - `[data.repos.unreal-custodian.testimonials.1.image]` ▸ /unreal-custodian/testimonial-grhmrst.jpg
+- `[data.repos.unreal-visionos-basics.name]` ▸ unreal-visionos-basics
+- `[data.repos.unreal-visionos-basics.tagline]` ▸ The UE 5.8 VR Template that actually renders opaque in mixed immersion on Apple Vision Pro.
+- `[data.repos.unreal-visionos-basics.story]` ▸ Follow Epic's visionOS docs exactly and the VR Template still comes up entirely semi-transparent on a Vision Pro. The three console variables Epic tells you to uncomment are correct and not sufficient: the template ships r.MobileHDR=False, so the mobile base pass draws straight to the backbuffer and SceneTextures.Color is never written — while the stock alpha-invert pass reads exactly that unwritten texture. Unreal's convention is alpha 0 = opaque; visionOS wants 1. The inversion silently never happens, so every opaque pixel tells the compositor it is transparent, and the only warning is one line buried in the device log. Eight hypotheses died against fork-side engine code before the real answer turned out to be a defect in stock UE 5.8. This repo is the working template plus every measured finding — including the ones that did not help.
+
+  **list: highlights** (5 items — add or remove lines freely)
+  - r.Mobile.EarlyZPass=1 is the fix — without it, the r.AlphaInvertPass Epic documents does nothing at all
+  - r.AllowOcclusionQueries=False fixes geometry that renders in only one eye (also true in 5.7)
+  - Shadows that actually stick: the VisionPro device profile inherits iOS caps that clamp after scalability runs, so sg.ShadowQuality is a no-op and 1024 → 4096 CSM has to live in the project's own device profile
+  - Verified on a physical Vision Pro (M2, visionOS 27) against launcher-installed UE 5.8.1 — no engine fork, no source build, no command-line flags
+  - Touch r.Mobile.EarlyZPass or r.MobileHDR and you must delete Saved/Cooked/VisionOS first — an incremental cook reports success and quietly ships the old shaders
 - `[data.repos.apple-platform-skills.name]` ▸ apple-platform-skills
 - `[data.repos.apple-platform-skills.tagline]` ▸ Claude Code skills for Apple platform development — visionOS SharePlay, SpriteKit, GameKit.
 - `[data.repos.apple-platform-skills.story]` ▸ Install once (`npx skills add ibrews/apple-platform-skills`) and your AI assistant knows the traps before it falls in them: the GroupSession `session.join()` trap, spatial Persona lifecycle, SpriteKit's physics bitmask UInt32 overflow, GameKit multiplayer handshakes. Written from real shipped-app scar tissue, not docs paraphrase.
@@ -622,6 +632,16 @@
   - gh wiki-init OWNER/REPO ./pages — enable, create first page, push
   - Documents the undocumented: why wiki automation fails for everyone
   - Plain git after the first page — no magic left behind
+- `[data.repos.found-footage.name]` ▸ found-footage
+- `[data.repos.found-footage.tagline]` ▸ Your Mac said it couldn't save that screen recording. It probably did — this finds it.
+- `[data.repos.found-footage.story]` ▸ When macOS screen recording fails with "Could not save recording," the file is usually still on your disk. macOS writes the finished recording first and then copies it to wherever you asked it to go — and it is the copy that fails. The original survives, in a staging directory nobody thinks to look in. found-footage checks that directory and the five other places recordings get stranded, reports what it found and why the save probably failed, and moves nothing unless you ask it to. Its first real recovery was an 18-minute 4K60 recording macOS had already declared lost.
+
+  **list: highlights** (5 items — add or remove lines freely)
+  - One dependency-free Bash script — one curl to install, works on a stock Mac
+  - Read-only by default; --rescue is the only thing that moves a file
+  - With ffmpeg installed it also reports length, resolution, and whether each file is actually playable
+  - Explains the failure, not just the file — e.g. saving needs a second copy and you were short on disk
+  - Run it sooner rather than later: these are staging directories macOS clears on its own schedule
 - `[data.repos.swing-city.name]` ▸ Swing City
 - `[data.repos.swing-city.tagline]` ▸ A rain-soaked neon city you can swing across, Spider-Man style — now with multiplayer joust rules.
 - `[data.repos.swing-city.story]` ▸ A low-poly Blade Runner grid, procedurally generated from a single seed — streets, traffic-light-obeying cars, rain, neon towers — built first as a Blender/Python generator, then ported line-for-line into a self-contained Three.js browser game. Web-swing between skyscrapers, knock cars flying, climb buildings, chain combos, and dodge a zombie wave or two. One July 2026 session ran 13 rounds of real-hardware VR playtesting back to back — ship a batch, play it on the headset, get bug reports, ship the next batch. The hardest of those bugs was a right-stick calibration that got re-specified 10 times before a hardware-confirmed fix finally stuck ("LOCK THAT"), and a separate VR avatar-invisible bug that root-caused to a one-line three.js gotcha: Object3D.lookAt() orients +Z for everything except cameras, so the follow-rig was facing 180° away from the player every frame. Multiplayer runs on a from-scratch Cloudflare Worker + Durable Object relay: zero server-side physics, an "attacker computes, server relays, victim applies" message convention reused across every player-vs-player mechanic, and the WebSocket Hibernation API so a room full of idle sockets never pins memory.
@@ -735,6 +755,16 @@
   - `restore --dry-run` — see exactly what's missing before touching anything
   - `export` — plain-text transcripts for full-text search or archival
   - Python 3.8+, stdlib only, zero external dependencies
+- `[data.repos.claude-session-search.name]` ▸ claude-session-search
+- `[data.repos.claude-session-search.tagline]` ▸ Search your Claude Code conversation history from inside Claude — as an MCP server.
+- `[data.repos.claude-session-search.story]` ▸ Claude Code has no search across past sessions, so "what did we decide about auth last week?" means grepping JSONL transcripts by hand. This MCP server adds it: point Claude Desktop at it once and plain-language questions search your local conversation history automatically, returning ranked snippets with the session title and project attached. Nothing leaves the machine — it reads the transcripts already sitting in ~/.claude/projects and never writes to them.
+
+  **list: highlights** (5 items — add or remove lines freely)
+  - Ask in plain language — "find the session where we set up the database" — no query syntax to learn
+  - Two tools: search_sessions for ranked full-text matches with context, list_sessions for a dated, scannable list
+  - Roughly 30 seconds of setup: npm install and one entry in claude_desktop_config.json
+  - Read-only and offline by design: no network calls, no API keys, no telemetry
+  - The search sibling of claude-session-recovery, for sessions that are present but unfindable
 - `[data.repos.claude-usage-audit.name]` ▸ usage-audit
 - `[data.repos.claude-usage-audit.tagline]` ▸ Mines your past Claude Code sessions for what you should actually automate next — evidence, not guesses.
 - `[data.repos.claude-usage-audit.story]` ▸ Instead of guessing which workflows deserve a skill or a script, this reflects on the sessions already run: repeated manual work, recurring friction, anything with a stable enough shape to script. It doesn't implement anything — it hands back a ranked, evidence-backed list and you decide what's worth building. The one hard constraint baked into the design: mining a month of transcripts is a job for a cheap model, not a frontier one, so four narrow-scope subagents on Haiku/Sonnet-tier models do the raw digging, and only the final clustering-and-ranking pass touches the main session's model.
