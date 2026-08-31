@@ -63,8 +63,8 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   {
     id: "unlimited",
     name: "Unlimited",
-    priceLabel: "$350/mo",
-    priceCents: 35000,
+    priceLabel: "$300/mo",
+    priceCents: 30000,
     priceEnvVar: "STRIPE_MEMBERSHIP_PRICE_ID_UNLIMITED",
     voteWeight: 4,
     monthlyCredits: "unlimited",
