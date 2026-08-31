@@ -38,6 +38,17 @@ const materialHref = (folder: string, key: string) =>
 
 export const recordings: Recording[] = [
   {
+    slug: "intro-to-metahumans-2026-08-26",
+    title: "Intro to MetaHumans in Unreal 5.8",
+    recordedAt: "2026-08-26",
+    description:
+      "Building MetaHumans the new way \u2014 from inside the editor, and from external face and body meshes. Realistic and stylized, animated, and dropped into a project of your own, with a look at the new toon shading.",
+    url: yt("5-YYva5AWHs"),
+    youtubeId: "5-YYva5AWHs",
+    durationMin: 135,
+    topics: ["unreal", "metahuman"],
+  },
+  {
     slug: "intermediate-xr-2026-08-19",
     title: "Intermediate XR in Unreal 5.8",
     recordedAt: "2026-08-19",

@@ -133,6 +133,7 @@ export const classFolders: ClassFolder[] = [
     date: "2026-08-26",
     blurb:
       "Building, customizing, and animating MetaHumans, and getting one into your own project.",
+    recordingSlug: "intro-to-metahumans-2026-08-26",
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1mIac_K-YSAKPGoPA95zIkrsXMHcdROY1",
