@@ -492,6 +492,16 @@
     "Explains the failure, not just the file — e.g. saving needs a second copy and you were short on disk",
     "Run it sooner rather than later: these are staging directories macOS clears on its own schedule"
   ],
+  "data.repos.gputrace.name": "gputrace",
+  "data.repos.gputrace.tagline": "Read an Xcode GPU capture from the command line — the format Apple never documented.",
+  "data.repos.gputrace.story": "Xcode's Metal GPU debugger writes a .gputrace package to disk, then makes you click through a GUI to ask it anything — is this array texture populated for both eyes, which encoder actually wrote that render target. gputrace parses the capture's record format directly, so the answer is a one-line command instead of a click-through session. Apple documents none of the format; the layout was derived byte-by-byte from a visionOS 26 capture and has since been exercised against UE 5.8.1 Metal captures. The README leads with the two ways a pixel dump silently lies to you — the payload sits at the tail of the file rather than a fixed offset, and depth+stencil dumps are planar, not row-interleaved, which produces a coherent-looking depth image whose bottom fifth is exactly zero.",
+  "data.repos.gputrace.highlights": [
+    "textures, encoders, records, descriptors, dump — five subcommands over one capture",
+    "Named texture inventory: joins setLabel: records to the pixel-dump manifest by object pointer",
+    "PNG pixel dumps straight out of a capture; multi-slice textures stack top-to-bottom",
+    "Structured text an agent can grep and diff across captures — not a GUI it has to screenshot",
+    "Single-file Python 3, stdlib only except dump (numpy + Pillow)"
+  ],
   "data.repos.swing-city.name": "Swing City",
   "data.repos.swing-city.tagline": "A rain-soaked neon city you can swing across, Spider-Man style — now with multiplayer joust rules.",
   "data.repos.swing-city.story": "A low-poly Blade Runner grid, procedurally generated from a single seed — streets, traffic-light-obeying cars, rain, neon towers — built first as a Blender/Python generator, then ported line-for-line into a self-contained Three.js browser game. Web-swing between skyscrapers, knock cars flying, climb buildings, chain combos, and dodge a zombie wave or two. One July 2026 session ran 13 rounds of real-hardware VR playtesting back to back — ship a batch, play it on the headset, get bug reports, ship the next batch. The hardest of those bugs was a right-stick calibration that got re-specified 10 times before a hardware-confirmed fix finally stuck (\"LOCK THAT\"), and a separate VR avatar-invisible bug that root-caused to a one-line three.js gotcha: Object3D.lookAt() orients +Z for everything except cameras, so the follow-rig was facing 180° away from the player every frame. Multiplayer runs on a from-scratch Cloudflare Worker + Durable Object relay: zero server-side physics, an \"attacker computes, server relays, victim applies\" message convention reused across every player-vs-player mechanic, and the WebSocket Hibernation API so a room full of idle sockets never pins memory.",
@@ -994,6 +1004,10 @@
   "data.videos.PLynIuxA9r8.blurb": "The engine fix from the Unreal × visionOS punch list, demonstrated.",
   "data.videos.R6NGhLpUZnw.title": "Unreal Engine AVP — Improved Hand Tracking & Interaction",
   "data.videos.R6NGhLpUZnw.blurb": "The work that became Pinchwork.",
+  "data.videos.i82w64IwVH8.title": "How to Keep Cloth & Destruction Cheap in Unreal Engine 5.8",
+  "data.videos.i82w64IwVH8.blurb": "Chaos cloth and destruction that hold up in a real budget — where the cost actually goes, and what to spend it on.",
+  "data.videos.s9abxp3E1JE.title": "Quick Tip: UE 5.8 Full Body Mesh to MetaHuman (+ override materials)",
+  "data.videos.s9abxp3E1JE.blurb": "Bring your own full-body mesh into the 5.8 MetaHuman pipeline, then override the materials it hands you.",
   "data.videos.C6FQKW2uNXo.title": "MetaHuman to Godot",
   "data.videos.C6FQKW2uNXo.blurb": "The pipeline behind the MetaHumanGodot repo.",
   "data.videos.iRnbWTv1HkQ.title": "MetaHumans in Godot? In VR?!",

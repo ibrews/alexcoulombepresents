@@ -43,7 +43,7 @@ export const repos: Repo[] = [
     name: "Blueprint Auto Layout",
     tagline: "Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.",
     category: "Unreal Engine",
-    stars: 39,
+    stars: 41,
     language: "C++",
     story:
       "Blueprint spaghetti is a rite of passage — and a productivity tax. This plugin rearranges any Blueprint graph into a readable left-to-right execution flow with one keystroke (Ctrl/Cmd+Shift+L). Under the hood it's a real layered-graph engine implemented from the published papers (Sugiyama et al.; Brandes & Köpf), not a naive tree walk — so cross-row connections, multi-consumer data pins, and long edges all route cleanly.",
@@ -63,7 +63,7 @@ export const repos: Repo[] = [
     name: "ue5-mcp",
     tagline: "A field manual for AI agents driving Unreal Engine 5 through MCP.",
     category: "AI & Agents",
-    stars: 34,
+    stars: 37,
     language: "Markdown / Skill",
     story:
       "When an AI agent connects to the UE5 editor through an MCP server, it can manipulate Blueprints, materials, Niagara, MetaSounds, levels — anything UE's reflection surface exposes. But UE is full of undocumented quirks: APIs that silently no-op, crash patterns that only surface at runtime, render paths that compile cleanly and draw nothing. This skill gives your AI that scar tissue upfront, so it doesn't rediscover it every session. Server-agnostic — works with Epic's official MCP plugin (UE 5.8) or any custom server.",
@@ -147,7 +147,7 @@ export const repos: Repo[] = [
     name: "MetaHuman → Godot",
     tagline: "MetaHuman characters in stock Godot — look-dev sliders, full-body animation, and a stereo VR preview build.",
     category: "Godot × Vision Pro",
-    stars: 21,
+    stars: 22,
     language: "GDScript",
     story:
       "MetaHumans rendered in stock Godot 4.6/4.7 Forward+ — no engine fork, no custom build. Started as a look-dev turntable (dial in skin, lighting, hair, eyes with live sliders; drive all 52 ARKit facial blendshapes), now a full character viewer: v0.3.0 added a retargeted Mixamo motion library with planted feet; v0.4.0 landed pore detail, a grounded studio floor, and limbal ring eye shaders. The VR preview (v0.1.0, Godot 4.7-beta3) puts it in stereo room-scale on Quest — walk around the character at path quality. Bring your own MetaHuman (Epic EULA respected; assets aren't redistributed).",
@@ -172,7 +172,7 @@ export const repos: Repo[] = [
     name: "VitruvianGodot",
     tagline: "A fully CC0, EULA-free photoreal digital human in stock Godot — she speaks, she breathes, ship her anywhere.",
     category: "Godot × Vision Pro",
-    stars: 11,
+    stars: 10,
     language: "GDScript",
     story:
       "The free counterpart to MetaHumanGodot: a CC0 real-time digital human in stock Godot 4.6 Forward+, with no Epic MetaHuman EULA attached. v1.1 is the full demo reel: she speaks (neural TTS + envelope-driven FACS viseme sync), has 4K eyes with tearline and lacrimal caruncle AO, 4K skin with pore and cavity detail, closed hair part-line, a hero studio floor, vignette, and a liveness layer — micro-sway, asymmetric rest face, micro-expressions. Ships as a signed + notarized macOS Universal app and Windows x64. Everything can be redistributed, cloud-rendered, and shipped in closed-source commercial products.",
@@ -193,7 +193,7 @@ export const repos: Repo[] = [
     name: "SplatStage",
     tagline: "Walk inside photoreal Gaussian-splat scenes on Vision Pro via visionOS 27's native splat API.",
     category: "visionOS & Spatial",
-    stars: 2,
+    stars: 3,
     language: "Swift",
     story:
       "Stand inside a photoreal Gaussian-splat environment on Apple Vision Pro, rendered by visionOS 27's native RealityKit GaussianSplatComponent — then light it like a film set with the new cinematic RealityKit stack: projective-texture spotlights, soft shadows, ray-traced reverb meshes. Built the day after WWDC 2026 against Xcode 27 beta 1, with the device-proven beta-1 recipe (chunking, buffer alignment, colorSpace) documented for everyone who hits the same walls.",
@@ -307,7 +307,7 @@ export const repos: Repo[] = [
     name: "Unreal Custodian",
     tagline: "Reclaim the build caches your Unreal projects quietly hoard — without touching anything you authored.",
     category: "Unreal Engine",
-    stars: 64,
+    stars: 67,
     language: "Python",
     story:
       "A few years of Unreal projects on one machine means tens or hundreds of gigabytes of pure rebuild artifacts — Intermediate, Binaries, DerivedDataCache, cooked content, staged builds. The Windows box this was tested against held 539 projects, 14 engines, and 2.0 TB of reclaimable cache with 17 GB of headroom left. Custodian finds all of it and tells you exactly what goes, what shrinks, and what it will not touch, before it touches anything. Content, Config, and the .uproject always survive.",
@@ -345,7 +345,7 @@ export const repos: Repo[] = [
     name: "unreal-visionos-basics",
     tagline: "The UE 5.8 VR Template that actually renders opaque in mixed immersion on Apple Vision Pro.",
     category: "Unreal Engine",
-    stars: 4,
+    stars: 1,
     language: "Unreal Engine 5.8",
     story:
       "Follow Epic's visionOS docs exactly and the VR Template still comes up entirely semi-transparent on a Vision Pro. The three console variables Epic tells you to uncomment are correct and not sufficient: the template ships r.MobileHDR=False, so the mobile base pass draws straight to the backbuffer and SceneTextures.Color is never written \u2014 while the stock alpha-invert pass reads exactly that unwritten texture. Unreal's convention is alpha 0 = opaque; visionOS wants 1. The inversion silently never happens, so every opaque pixel tells the compositor it is transparent, and the only warning is one line buried in the device log. Eight hypotheses died against fork-side engine code before the real answer turned out to be a defect in stock UE 5.8. This repo is the working template plus every measured finding \u2014 including the ones that did not help.",
@@ -432,6 +432,25 @@ export const repos: Repo[] = [
     ],
     links: [],
     github: "https://github.com/ibrews/found-footage",
+  },
+  {
+    slug: "gputrace",
+    name: "gputrace",
+    tagline: "Read an Xcode GPU capture from the command line \u2014 the format Apple never documented.",
+    category: "Tools",
+    stars: 0,
+    language: "Python",
+    story:
+      "Xcode's Metal GPU debugger writes a .gputrace package to disk, then makes you click through a GUI to ask it anything \u2014 is this array texture populated for both eyes, which encoder actually wrote that render target. gputrace parses the capture's record format directly, so the answer is a one-line command instead of a click-through session. Apple documents none of the format; the layout was derived byte-by-byte from a visionOS 26 capture and has since been exercised against UE 5.8.1 Metal captures. The README leads with the two ways a pixel dump silently lies to you \u2014 the payload sits at the tail of the file rather than a fixed offset, and depth+stencil dumps are planar, not row-interleaved, which produces a coherent-looking depth image whose bottom fifth is exactly zero.",
+    highlights: [
+      "textures, encoders, records, descriptors, dump \u2014 five subcommands over one capture",
+      "Named texture inventory: joins setLabel: records to the pixel-dump manifest by object pointer",
+      "PNG pixel dumps straight out of a capture; multi-slice textures stack top-to-bottom",
+      "Structured text an agent can grep and diff across captures \u2014 not a GUI it has to screenshot",
+      "Single-file Python 3, stdlib only except dump (numpy + Pillow)",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/gputrace",
   },
   {
     slug: "swing-city",
@@ -1615,6 +1634,8 @@ export const videos: Video[] = [
   { id: "SfmLwmJ4bkg", title: "SHARP splats generated & viewed on Apple Vision Pro", tag: "Vision Pro" },
   { id: "PLynIuxA9r8", title: "Translucency over Mixed Reality for Vision Pro", tag: "Vision Pro", blurb: "The engine fix from the Unreal × visionOS punch list, demonstrated." },
   { id: "R6NGhLpUZnw", title: "Unreal Engine AVP — Improved Hand Tracking & Interaction", tag: "Unreal", blurb: "The work that became Pinchwork." },
+  { id: "i82w64IwVH8", title: "How to Keep Cloth & Destruction Cheap in Unreal Engine 5.8", tag: "Unreal", blurb: "Chaos cloth and destruction that hold up in a real budget — where the cost actually goes, and what to spend it on." },
+  { id: "s9abxp3E1JE", title: "Quick Tip: UE 5.8 Full Body Mesh to MetaHuman (+ override materials)", tag: "Unreal", blurb: "Bring your own full-body mesh into the 5.8 MetaHuman pipeline, then override the materials it hands you." },
   { id: "C6FQKW2uNXo", title: "MetaHuman to Godot", tag: "Godot", blurb: "The pipeline behind the MetaHumanGodot repo." },
   { id: "iRnbWTv1HkQ", title: "MetaHumans in Godot? In VR?!", tag: "Godot", blurb: "The VR preview build: room-scale MetaHuman on Quest via Godot 4.7-beta3." },
   { id: "p0JoPJb4e84", title: "VR Depth of Field in Godot", tag: "Godot" },
