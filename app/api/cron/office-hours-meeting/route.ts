@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { ensureOfficeHoursMeeting } from "@/lib/zoom";
+import { ensureOfficeHoursMeeting, addZoomRegistrant } from "@/lib/zoom";
+
+// Alex hosts these (the S2S app creates them under his own Zoom account via
+// /users/me/meetings) but a host is never a registrant of their own meeting
+// by default, so he never got the registrant confirmation email Zoom sends
+// on registration — the one with the "Add to Calendar" links. Confirmed live
+// 2026-08-31 that Zoom's registrants API accepts the host's own email (201,
+// not the "can't register with host email" rejection some Zoom setups
+// report) — so registering him alongside real attendees is enough to get him
+// a calendar invite too, no separate .ics generation needed.
+const OWNER_EMAIL = "info@alexcoulombepresents.com";
 
 // Creates the week's Friday office-hours Zoom meeting (fresh each week —
 // Alex's call, 2026-08-12) so /api/admin/credits can auto-register members
@@ -36,10 +46,18 @@ export async function GET(req: NextRequest) {
 
   try {
     const result = await ensureOfficeHoursMeeting();
+    let ownerRegistered: boolean | null = null;
     if (result.created) {
       console.log(
         `[office-hours-meeting] created ${result.dateISO} → meeting ${result.meetingId} (${result.joinUrl})`
       );
+      // Only on the run that actually creates the week's meeting — every
+      // other daily run is a no-op and re-registering would just re-fire
+      // Zoom's confirmation email at him for nothing.
+      ownerRegistered = await addZoomRegistrant(result.meetingId, {
+        email: OWNER_EMAIL,
+        name: "Alex Coulombe",
+      });
     }
     return NextResponse.json({
       ok: true,
@@ -51,6 +69,7 @@ export async function GET(req: NextRequest) {
       // buyers get pointed at.
       joinUrl: result.joinUrl,
       registrationUrl: result.registrationUrl,
+      ownerRegistered,
     });
   } catch (err) {
     console.error("[office-hours-meeting] failed", err);
