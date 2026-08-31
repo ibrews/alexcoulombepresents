@@ -387,6 +387,77 @@ export async function fetchStripeCustomer(
   return { email: customer.email ?? null, name: customer.name ?? null };
 }
 
+// ── Renewal reminders — real DB + Stripe side of renewalReminders.ts ────────
+
+export type MembershipRenewalRow = {
+  customer_id: number;
+  email: string;
+  name: string | null;
+  tier: string;
+  updates_until: string;
+  stripe_customer_id: string | null;
+};
+
+// Every currently-active member with a real paid-through date — the
+// candidate list for renewal reminders. A membership with no updates_until
+// (shouldn't happen — every grant sets one) is excluded rather than treated
+// as "never renews," since there's nothing to warn about a date that doesn't
+// exist.
+export async function activeMembershipsForReminders(): Promise<MembershipRenewalRow[]> {
+  await ensureCommerceSchema();
+  return (await sql()`
+    SELECT e.customer_id, c.email, c.name, e.tier, e.updates_until, c.stripe_customer_id
+    FROM entitlements e
+    JOIN customers c ON c.id = e.customer_id
+    WHERE e.sku = ${MEMBERSHIP_SKU}
+      AND e.status = 'active'
+      AND e.updates_until IS NOT NULL
+  `) as MembershipRenewalRow[];
+}
+
+// Atomic claim — true only for the call that should actually send. See
+// schema.ts's membership_reminders comment for why this is a separate table
+// keyed on the cycle's updates_until rather than a flag on the entitlements
+// row (which keeps extending forward and would need resetting every cycle).
+export async function claimRenewalReminder(
+  customerId: number,
+  updatesUntil: Date,
+  kind: "7d" | "1d"
+): Promise<boolean> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    INSERT INTO membership_reminders (customer_id, updates_until, kind)
+    VALUES (${customerId}, ${updatesUntil.toISOString()}, ${kind})
+    ON CONFLICT (customer_id, updates_until, kind) DO NOTHING
+    RETURNING id
+  `) as { id: number }[];
+  return rows.length > 0;
+}
+
+// Stripe's own answer to "what will this customer actually be charged next"
+// — the only source that's automatically correct whether or not their
+// subscription's price has been changed since they joined, and whether any
+// promotional coupon on it is still active or has expired (Stripe accounts
+// for both when computing the upcoming invoice). Returns null on any failure
+// (no active subscription, API error, key not configured) rather than
+// guessing — callers must degrade the reminder copy gracefully, never invent
+// a number for a real dollar amount in a customer-facing email.
+export async function fetchUpcomingRenewalAmountCents(stripeCustomerId: string): Promise<number | null> {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+  try {
+    const res = await fetch(
+      `https://api.stripe.com/v1/invoices/upcoming?customer=${encodeURIComponent(stripeCustomerId)}`,
+      { headers: { Authorization: `Bearer ${key}` } }
+    );
+    if (!res.ok) return null;
+    const invoice = (await res.json()) as { amount_due?: number };
+    return typeof invoice.amount_due === "number" ? invoice.amount_due : null;
+  } catch {
+    return null;
+  }
+}
+
 // ── Booking-credit redemption — manual/admin honor system (launch step 4) ───
 // Cal.com integration comes later (business plan §2.7); until then Alex
 // redeems a credit via /api/admin/credits when a member books a class.

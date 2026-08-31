@@ -344,6 +344,93 @@ export async function sendMembershipOwnerNotification(input: {
   if (error) console.error("membership owner notification failed:", error);
 }
 
+// Sent by app/api/cron/membership-renewal-reminders, 7 days and 1 day before
+// a member's subscription renews — so a promotional/legacy price expiring,
+// or any base-price change Alex makes directly on their subscription, is a
+// heads-up instead of a surprise line on their card statement. Triggered by
+// two real members (Lynne Heller, Jan Solarski) approaching their first
+// renewal after the 2026-08-12 price increase, both still on their original
+// (lower) price — this fires regardless of whether that's still true by the
+// time it sends, since the price line is read live off Stripe, never assumed.
+export type RenewalReminderKind = "7d" | "1d";
+
+export async function sendMembershipRenewalReminder(input: {
+  email: string;
+  name?: string | null;
+  tier: MembershipTierId;
+  kind: RenewalReminderKind;
+  renewalDate: Date;
+  // Stripe's live upcoming-invoice amount — see
+  // lib/commerce/membership.ts's fetchUpcomingRenewalAmountCents. Null means
+  // the live lookup failed; the copy below degrades to the tier's listed
+  // price with an explicit "may differ" caveat rather than stating a number
+  // that could be wrong.
+  renewalAmountCents: number | null;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const first = input.name?.split(" ")[0];
+  const tier = membershipTier(input.tier);
+  const tierName = tier?.name ?? input.tier;
+  const benefits = tier?.benefits ?? MEMBERSHIP_TIERS[0].benefits;
+  const otherTiers = MEMBERSHIP_TIERS.filter((t) => t.id !== input.tier);
+  const whenLabel = input.kind === "7d" ? "in 7 days" : "tomorrow";
+  const dateLabel = input.renewalDate.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/New_York",
+  });
+  const fmtCents = (c: number) => `$${(c / 100).toFixed(c % 100 === 0 ? 0 : 2)}`;
+  const priceLine =
+    input.renewalAmountCents !== null ? `${fmtCents(input.renewalAmountCents)}/mo` : `${tier?.priceLabel ?? "—"}`;
+  const priceCaveat =
+    input.renewalAmountCents === null
+      ? [
+          "",
+          "(couldn't confirm your exact next charge automatically — that's our current listed",
+          `${tierName} price, but yours may differ. Check your billing portal at`,
+          "https://www.alexcoulombepresents.com/account if you want to be sure, or just ask.)",
+        ]
+      : [];
+
+  const __body = [
+    `${first ? `Hey ${first}` : "Hey"} — heads up: your ${tierName} membership renews ${whenLabel}, on ${dateLabel}.`,
+    "",
+    `Next charge: ${priceLine}`,
+    ...priceCaveat,
+    "",
+    `What you get on ${tierName}:`,
+    ...benefits.map((b) => `  • ${b}`),
+    "",
+    "Want to switch before it renews? Here's what the other tiers offer:",
+    ...otherTiers.map((t) => `  • ${t.name} (${t.priceLabel}) — ${t.tagline}`),
+    "",
+    "Manage, change, or cancel your membership any time from your account:",
+    "https://www.alexcoulombepresents.com/account",
+    "",
+    "Questions about any of this? Just reply, or write info@alexcoulombepresents.com — always happy to help.",
+    "",
+    "— Alex Coulombe Presents",
+  ].join("\n");
+
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    to: input.email,
+    // Same rule as the welcome email: Alex gets a copy of every reminder as
+    // it goes out, so "did this actually send?" never again needs a support
+    // complaint to surface (see the 2026-08-10/11 welcome-email incidents).
+    bcc: OWNER_EMAIL,
+    replyTo: "info@alexcoulombepresents.com",
+    subject: `Your ${tierName} membership renews ${whenLabel}`,
+    text: __body,
+    html: brandedHtml(__body),
+  });
+  if (error) {
+    console.error("Resend membership renewal reminder error:", error);
+    throw new Error("Failed to send membership renewal reminder");
+  }
+}
+
 export async function sendVoucherEmail(input: {
   email: string;
   name?: string;

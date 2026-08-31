@@ -208,5 +208,24 @@ export async function ensureCommerceSchema() {
   // strand anyone already registered on the first one.
   await db`ALTER TABLE zoom_meetings ADD COLUMN IF NOT EXISTS meeting_date TEXT`;
 
+  // Renewal-reminder idempotency (lib/commerce/renewalReminders.ts). Keyed on
+  // the SPECIFIC cycle (updates_until) rather than a flag column on the
+  // entitlements row itself — that row's updates_until keeps extending
+  // forward on every renewal (grantOrExtendMembership's upsert), so a flag
+  // there would need resetting every cycle or it'd silently suppress every
+  // future reminder after the first one ever sent. A new cycle is a new
+  // updates_until value, so it's automatically eligible again with no reset
+  // step to forget.
+  await db`
+    CREATE TABLE IF NOT EXISTS membership_reminders (
+      id             BIGSERIAL PRIMARY KEY,
+      customer_id    BIGINT NOT NULL REFERENCES customers(id),
+      updates_until  TIMESTAMPTZ NOT NULL,
+      kind           TEXT NOT NULL, -- '7d' | '1d'
+      sent_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (customer_id, updates_until, kind)
+    )
+  `;
+
   _ensured = true;
 }

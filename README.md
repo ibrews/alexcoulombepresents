@@ -242,6 +242,40 @@ silently stop granting access.
   found by running the real flow (e.g. Stripe's transient `customer.subscription.created` with
   `status=incomplete` before a Checkout-driven subscription goes active).
 
+### Renewal reminders
+
+[`lib/commerce/renewalReminders.ts`](lib/commerce/renewalReminders.ts) (decision logic,
+dependency-injected and unit-tested) + [`app/api/cron/membership-renewal-reminders`](app/api/cron/membership-renewal-reminders/route.ts)
+warn an active member **7 days and 1 day** before their subscription renews — same daily cron slot
+as the rest of the site's crons. Built 2026-08-31 so a promotional/legacy price expiring, or any
+base-price change Alex makes directly on a subscription in Stripe, is a heads-up instead of a
+surprise line on a card statement.
+
+- **Idempotency**: a `membership_reminders` table (schema.ts) claims each `(customer, cycle, kind)`
+  slot atomically — keyed on the entitlement's `updates_until` rather than a flag column on the
+  entitlements row itself, since that row's `updates_until` keeps extending forward on every
+  renewal and a flag there would need resetting each cycle or it'd silently suppress every future
+  reminder after the first.
+- **Self-healing, not "exactly on day N"**: a reminder fires once its window is *entered*
+  (days-remaining ≤ 7 or ≤ 1) and hasn't been claimed yet — so a missed cron run still catches up
+  the next day instead of silently dropping that member's warning, and a member already inside a
+  window the first time this code ever runs for them gets the reminder immediately rather than
+  waiting for a day that's already in the past.
+- **The renewal price is read live from Stripe's `/v1/invoices/upcoming`**
+  (`fetchUpcomingRenewalAmountCents`, `lib/commerce/membership.ts`) — never assumed from
+  `MEMBERSHIP_TIERS`' current listed price. That's the only source that's automatically correct
+  whether or not a member's subscription price has actually been changed, and whether any
+  promotional coupon on it is still active or has expired. A failed lookup degrades the email to
+  the tier's listed price with an explicit "may differ, check your billing portal" caveat rather
+  than stating a number that could be wrong.
+- **Email** (`sendMembershipRenewalReminder`, `lib/commerce/email.ts`): next charge, current tier's
+  full benefit list, a one-line summary of the other two tiers for anyone considering an
+  upgrade/downgrade, a link to `/account` (Stripe Customer Portal) to change or cancel, and the
+  usual "reply or write info@alexcoulombepresents.com" — BCCs Alex on every send, same rule as the
+  welcome email.
+- Tests: [`tests/renewal-reminders.test.ts`](tests/renewal-reminders.test.ts), including the
+  catch-up-after-an-outage case and the "don't double-send on a retried run" case.
+
 ### Zoom auto-invite
 
 [`lib/zoom.ts`](lib/zoom.ts) wraps the "ZoomClaude" Server-to-Server OAuth app so buyers and
