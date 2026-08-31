@@ -113,47 +113,118 @@ export default async function Members({
       </Reveal>
 
       {member ? (
-        <Reveal>
-          <div className="glow-card mt-14 rounded-3xl border border-teal/40 p-8 text-center md:p-10">
-            <p className="font-mono text-xs uppercase tracking-widest text-teal">
-              {activeTier ? `${activeTier.name} membership active ✓` : "Membership active ✓"}
-            </p>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
-            <p className="mx-auto mt-3 max-w-md text-sm text-mist">
-              Your class credits and billing live in{" "}
-              <Link href="/account" className="text-teal hover:underline">
-                your account
-              </Link>
-              ; more member perks unlock as the program rolls out.
-            </p>
-            <div className="mt-5 flex flex-wrap justify-center gap-3">
-              <Link
-                href="/members/recordings"
-                className="rounded-full bg-snow px-6 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
-              >
-                Browse the recording library →
-              </Link>
-              <Link
-                href="/materials"
-                className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
-              >
-                Class materials →
-              </Link>
-              <Link
-                href="/members/tools"
-                className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
-              >
-                Browse the Lab tools →
-              </Link>
-              <Link
-                href="/members/decks"
-                className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
-              >
-                Spatial Deck presentations →
-              </Link>
+        <>
+          <Reveal>
+            <div className="glow-card mt-14 rounded-3xl border border-teal/40 p-8 text-center md:p-10">
+              <p className="font-mono text-xs uppercase tracking-widest text-teal">
+                {activeTier ? `${activeTier.name} membership active ✓` : "Membership active ✓"}
+              </p>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight">You&apos;re in — welcome.</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+                Your class credits and billing live in{" "}
+                <Link href="/account" className="text-teal hover:underline">
+                  your account
+                </Link>
+                ; more member perks unlock as the program rolls out.
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/members/recordings"
+                  className="rounded-full bg-snow px-6 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+                >
+                  Browse the recording library →
+                </Link>
+                <Link
+                  href="/materials"
+                  className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+                >
+                  Class materials →
+                </Link>
+                <Link
+                  href="/members/tools"
+                  className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+                >
+                  Browse the Lab tools →
+                </Link>
+                <Link
+                  href="/members/decks"
+                  className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+                >
+                  Spatial Deck presentations →
+                </Link>
+              </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+
+          {/* Existing members previously had no way to even SEE the other
+              tiers, let alone switch — /members swapped straight to the
+              status card above with no comparison anywhere on the site.
+              Self-serve switching isn't wired up yet (would ride the Stripe
+              Customer Portal's subscription-update feature once that's
+              confirmed configured), so the CTA routes to a support email
+              rather than promising a click-to-switch flow that doesn't
+              exist. */}
+          <Reveal>
+            <div className="mt-14">
+              <h2 className="text-center text-2xl font-bold tracking-tight md:text-3xl">
+                Want to switch tiers?
+              </h2>
+              <p className="mx-auto mt-3 max-w-lg text-center text-sm leading-relaxed text-mist">
+                Upgrade, downgrade, or ask a question — email{" "}
+                <a href="mailto:info@alexcoulombepresents.com" className="text-teal hover:underline">
+                  info@alexcoulombepresents.com
+                </a>{" "}
+                and it takes effect at your next renewal.
+              </p>
+              <div className="mt-8 grid gap-5 md:grid-cols-3">
+                {MEMBERSHIP_TIERS.map((tier) => {
+                  const isCurrent = tier.id === tierId;
+                  return (
+                    <div
+                      key={tier.id}
+                      className={`glass flex h-full flex-col rounded-2xl p-7 ${
+                        isCurrent ? "border-teal ring-2 ring-teal/40" : ""
+                      }`}
+                    >
+                      {isCurrent && (
+                        <span className="self-start rounded-full bg-teal px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a12]">
+                          Your plan
+                        </span>
+                      )}
+                      <h3 className="mt-3 font-bold">{tier.name}</h3>
+                      <p className="mt-1 text-2xl font-bold text-snow">{tier.priceLabel}</p>
+                      <p className="mt-1 text-sm text-mist">{tier.tagline}</p>
+                      <ul className="mt-4 flex-1 space-y-2">
+                        {tier.benefits.map((b) => (
+                          <li key={b} className="flex gap-2 text-xs leading-relaxed text-mist">
+                            <span className="mt-0.5 text-teal/70">✦</span>
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-6">
+                        {isCurrent ? (
+                          <span className="block rounded-full border border-line px-6 py-2.5 text-center text-sm font-semibold text-mist">
+                            Current plan
+                          </span>
+                        ) : (
+                          <a
+                            href={`mailto:info@alexcoulombepresents.com?subject=${encodeURIComponent(
+                              `Switch to ${tier.name}`
+                            )}`}
+                            className="block rounded-full bg-snow px-6 py-2.5 text-center text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+                          >
+                            Switch to {tier.name} →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </Reveal>
+        </>
       ) : MEMBERSHIP_LIVE ? (
         <Reveal>
           {joined === "1" ? (
