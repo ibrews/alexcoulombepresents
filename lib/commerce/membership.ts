@@ -297,6 +297,26 @@ export async function releaseMembershipWelcome(customerId: number): Promise<void
 // on the cycle's expiry — so a webhook retry after a mid-flight failure never
 // double-mints. Counts every status (a credit redeemed mid-retry still counts
 // toward the cycle). Returns how many were newly minted.
+//
+// tier is 'credit', deliberately NOT 'member': schema.ts's
+// entitlements_one_member_license_per_customer_sku is a partial unique index
+// on (customer_id, sku) WHERE tier = 'member', added later (feat(commerce):
+// daily cron auto-issues/renews members' xrsim license) for
+// grantOrRefreshMemberLicense's one-row-per-member-perk upsert. It never
+// anticipated this function, which legitimately inserts MULTIPLE booking_credit
+// rows per customer per cycle (STARTER_CREDITS_PER_CYCLE) — every insert past
+// the first here used to violate that index and throw, which crashed the
+// entire membership webhook handler (uncaught inside handleMembershipEvent)
+// before the welcome email / owner alert / xrsim provisioning ever ran.
+// Starter is the only tier that mints >0 credits, so this only ever fired for
+// starter signups — invisible in the mocked webhook tests, which stub
+// mintBookingCredits out entirely and never touch the real schema. Confirmed
+// live 2026-08-31 (Andrei Torres, customer 24): 1 of 3 credits minted, zero
+// welcome email, zero xrsim license, welcomed_at stuck permanently claimed
+// with no retry able to complete (checkoutSessionProcessed/recordCheckoutSession
+// never ran either, so every retry re-hit the identical crash). Nothing reads
+// tier on a booking_credit row (bookingCreditsForCustomer/redeemOldestBookingCredit
+// key on sku only) — no downstream behavior depends on the literal value.
 export async function mintBookingCredits(customerId: number, count: number, expiresAt: Date): Promise<number> {
   await ensureCommerceSchema();
   const db = sql();
@@ -309,7 +329,7 @@ export async function mintBookingCredits(customerId: number, count: number, expi
   for (let i = 0; i < missing; i++) {
     await db`
       INSERT INTO entitlements (customer_id, sku, tier, status, updates_until)
-      VALUES (${customerId}, ${BOOKING_CREDIT_SKU}, 'member', 'active', ${expiresAt.toISOString()})
+      VALUES (${customerId}, ${BOOKING_CREDIT_SKU}, 'credit', 'active', ${expiresAt.toISOString()})
     `;
   }
   return missing;
