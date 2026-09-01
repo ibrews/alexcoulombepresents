@@ -44,19 +44,46 @@ export async function syncDriveAccess(
     if (folderId) addGrant(folderId, buyer.email);
   }
 
+  return runGrants(grants, deps.shareDriveFolder);
+}
+
+// Drive's permissions.create endpoint runs ~2s per call regardless of token
+// caching (confirmed live 2026-08-31 — not an artifact of this client, the
+// endpoint itself is just slow) — sequential grants blew the cron's time
+// budget well before the member/folder count gets large enough to matter on
+// its own (35 grants × ~2s ≈ 70s, over even a 60s budget). Batches run
+// concurrently instead; kept small and fixed rather than unbounded so a
+// large future member list can't slam Drive's per-second rate limit.
+// Batching (not a work-stealing pool) keeps this deterministic to test:
+// `Promise.all(batch.map(...))` starts every call in the batch before any of
+// them can resolve, and preserves result order — the same shape a plain
+// sequential loop had, just with each item's network wait overlapped.
+const GRANT_CONCURRENCY = 6;
+
+async function runGrants(
+  grants: { folderId: string; email: string }[],
+  shareDriveFolder: DriveAccessSyncDeps["shareDriveFolder"]
+): Promise<DriveAccessSyncSummary> {
   const summary: DriveAccessSyncSummary = { attempted: 0, succeeded: 0, failed: 0 };
-  for (const grant of grants) {
-    summary.attempted += 1;
-    try {
-      const shared = await deps.shareDriveFolder(grant.folderId, grant.email);
+  for (let i = 0; i < grants.length; i += GRANT_CONCURRENCY) {
+    const batch = grants.slice(i, i + GRANT_CONCURRENCY);
+    const results = await Promise.all(
+      batch.map(async (grant) => {
+        try {
+          return await shareDriveFolder(grant.folderId, grant.email);
+        } catch (err) {
+          console.error(
+            `[drive-access-sync] grant failed for folder ${grant.folderId}, email ${grant.email}:`,
+            err
+          );
+          return false;
+        }
+      })
+    );
+    for (const shared of results) {
+      summary.attempted += 1;
       if (shared) summary.succeeded += 1;
       else summary.failed += 1;
-    } catch (err) {
-      console.error(
-        `[drive-access-sync] grant failed for folder ${grant.folderId}, email ${grant.email}:`,
-        err
-      );
-      summary.failed += 1;
     }
   }
   return summary;

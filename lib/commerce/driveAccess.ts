@@ -21,10 +21,19 @@ function encodeJwtPart(value: Record<string, unknown>): string {
   return Buffer.from(JSON.stringify(value)).toString("base64url");
 }
 
-// No caching — this is only called by the low-frequency daily access cron,
-// so tracking token expiry across serverless invocations adds complexity
-// without helping a hot path.
+// Cached in module scope for the lifetime of one serverless invocation — NOT
+// persisted across invocations (a cold start gets a fresh module, so this
+// never risks serving a stale token from a previous run). Load-bearing, not
+// an optimization: the daily sync makes one grant per (member × folder) pair
+// — with even a handful of members and folders that's dozens of Drive calls
+// in one run, and re-authenticating before every single one blew the cron's
+// 60s budget (FUNCTION_INVOCATION_TIMEOUT, confirmed live 2026-08-31) well
+// before the actual permission grants got anywhere near it.
+let cachedToken: { token: string; expiresAtMs: number } | null = null;
+
 async function accessToken(): Promise<string> {
+  if (cachedToken && cachedToken.expiresAtMs > Date.now()) return cachedToken.token;
+
   const key = serviceAccountKey();
   const iat = Math.floor(Date.now() / 1000);
   const header = encodeJwtPart({ alg: "RS256", typ: "JWT" });
@@ -52,7 +61,11 @@ async function accessToken(): Promise<string> {
   if (!json || typeof json.access_token !== "string") {
     throw new Error(`Google OAuth token response was missing access_token: ${JSON.stringify(json)}`);
   }
-  return json.access_token;
+  // expires_in is seconds-from-now per Google's token response; back off 60s
+  // as a safety margin against clock drift and in-flight request time.
+  const expiresInSec = typeof json.expires_in === "number" ? json.expires_in : 3600;
+  cachedToken = { token: json.access_token, expiresAtMs: Date.now() + (expiresInSec - 60) * 1000 };
+  return cachedToken.token;
 }
 
 async function call(method: string, path: string, body: Record<string, unknown>): Promise<void> {

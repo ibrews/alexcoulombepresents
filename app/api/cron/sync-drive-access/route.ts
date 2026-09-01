@@ -10,7 +10,12 @@ import {
 import { activeMembersForLicensing } from "@/lib/commerce/entitlements";
 import { allNonRefundedOrderEmails } from "@/lib/commerce/seats";
 
-export const maxDuration = 30;
+// Higher than the other crons here (30s): this one makes one Drive API call
+// per (member × folder) grant, sequentially — dozens of round-trips even at
+// today's small member/class count. Confirmed live 2026-08-31 that 30s
+// wasn't enough headroom even after fixing the real cause (a token refetched
+// per grant instead of cached — see driveAccess.ts).
+export const maxDuration = 60;
 
 function authorized(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET;
