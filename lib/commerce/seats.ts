@@ -138,6 +138,16 @@ export async function purchasedSlugsForEmail(email: string): Promise<string[]> {
   return rows.map((r) => r.slug);
 }
 
+// Every buyer/class pair across the catalog — shaped for the daily Drive
+// access sync without loading refunded orders or unrelated order columns.
+export async function allNonRefundedOrderEmails(): Promise<{ email: string; slug: string }[]> {
+  await ensureTable();
+  return (await sql()`
+    SELECT DISTINCT email, slug FROM catalog_orders
+    WHERE refunded = false AND email IS NOT NULL AND slug IS NOT NULL
+  `) as { email: string; slug: string }[];
+}
+
 // All orders, newest first — for the admin roster export.
 export async function getAllCatalogOrders(): Promise<CatalogOrderRow[]> {
   await ensureTable();

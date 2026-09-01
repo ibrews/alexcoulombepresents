@@ -1,0 +1,62 @@
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "node:crypto";
+import { classFolders } from "@/lib/classMaterials";
+import { extractDriveFolderId, shareDriveFolder } from "@/lib/commerce/driveAccess";
+import {
+  syncDriveAccess,
+  type DriveAccessFolder,
+  type DriveAccessSyncDeps,
+} from "@/lib/commerce/driveAccessSync";
+import { activeMembersForLicensing } from "@/lib/commerce/entitlements";
+import { allNonRefundedOrderEmails } from "@/lib/commerce/seats";
+
+export const maxDuration = 30;
+
+function authorized(req: NextRequest): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+  const header = req.headers.get("authorization") ?? "";
+  const expected = `Bearer ${secret}`;
+  const a = crypto.createHash("sha256").update(header).digest();
+  const b = crypto.createHash("sha256").update(expected).digest();
+  return crypto.timingSafeEqual(a, b);
+}
+
+function driveFolders(): DriveAccessFolder[] {
+  const folders: DriveAccessFolder[] = [];
+  for (const folder of classFolders) {
+    const material = folder.materials.find(
+      (candidate) => candidate.key === "folder" && candidate.source.kind === "external"
+    );
+    if (!material || material.source.kind !== "external") continue;
+    const folderId = extractDriveFolderId(material.source.url);
+    if (folderId) folders.push({ slug: folder.slug, folderId });
+  }
+  return folders;
+}
+
+function driveAccessSyncDeps(): DriveAccessSyncDeps {
+  return {
+    activeMembers: activeMembersForLicensing,
+    buyers: allNonRefundedOrderEmails,
+    shareDriveFolder,
+  };
+}
+
+export async function GET(req: NextRequest) {
+  if (!authorized(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY) {
+    return NextResponse.json({ ok: true, skipped: "no GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY configured" });
+  }
+
+  try {
+    const summary = await syncDriveAccess(driveFolders(), driveAccessSyncDeps());
+    return NextResponse.json({ ok: true, ...summary });
+  } catch (err) {
+    console.error("[sync-drive-access] sync failed", err);
+    return NextResponse.json({ ok: false, error: "Drive access sync failed" }, { status: 500 });
+  }
+}

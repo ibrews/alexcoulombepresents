@@ -276,6 +276,25 @@ surprise line on a card statement.
 - Tests: [`tests/renewal-reminders.test.ts`](tests/renewal-reminders.test.ts), including the
   catch-up-after-an-outage case and the "don't double-send on a retried run" case.
 
+### Class-materials Drive access sync
+
+[`lib/commerce/driveAccessSync.ts`](lib/commerce/driveAccessSync.ts) (decision logic,
+dependency-injected and unit-tested) + [`app/api/cron/sync-drive-access`](app/api/cron/sync-drive-access/route.ts)
+keep the Google Drive permissions behind class-material links aligned with the site's access rules.
+Folders are shared with real named people, never "anyone with the link" — that is a deliberate
+access policy, not a future cleanup item.
+
+- **Members**: every active member receives reader access to every Drive-backed class folder.
+- **Individual buyers**: each non-refunded buyer receives reader access only to the folder whose
+  slug they purchased; unmatched slugs and non-Drive materials are skipped.
+- **Drive client**: [`lib/commerce/driveAccess.ts`](lib/commerce/driveAccess.ts) uses the built-in
+  Node crypto APIs and raw `fetch` for service-account OAuth and named-user permission grants — no
+  Google SDK dependency. Each grant is best-effort, so one rejected folder never stops the rest.
+- **Schedule**: the authenticated cron runs daily at 14:00 UTC and deliberately no-ops when
+  `GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY` is unset.
+- Tests: [`tests/drive-access-sync.test.ts`](tests/drive-access-sync.test.ts) cover member and buyer
+  targeting, missing-folder skips, per-grant failures, summary counts, and Drive URL parsing.
+
 ### Zoom auto-invite
 
 [`lib/zoom.ts`](lib/zoom.ts) wraps the "ZoomClaude" Server-to-Server OAuth app so buyers and
