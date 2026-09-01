@@ -11,6 +11,10 @@ export type DriveAccessBuyer = { email: string; slug: string };
 export type DriveAccessSyncDeps = {
   activeMembers(): Promise<DriveAccessMember[]>;
   buyers(): Promise<DriveAccessBuyer[]>;
+  // Skips a pair entirely (no API call, doesn't count toward the summary) —
+  // this is the real fix for the rate-limit problem below, not the batching.
+  alreadyGranted(folderId: string, email: string): Promise<boolean>;
+  recordGrant(folderId: string, email: string): Promise<void>;
   shareDriveFolder(folderId: string, email: string): Promise<boolean>;
 };
 
@@ -18,6 +22,7 @@ export type DriveAccessSyncSummary = {
   attempted: number;
   succeeded: number;
   failed: number;
+  skipped: number; // already granted in a prior run — no API call made
 };
 
 export async function syncDriveAccess(
@@ -44,45 +49,52 @@ export async function syncDriveAccess(
     if (folderId) addGrant(folderId, buyer.email);
   }
 
-  return runGrants(grants, deps.shareDriveFolder);
+  return runGrants(grants, deps);
 }
 
-// Drive's permissions.create endpoint runs ~2s per call regardless of token
-// caching (confirmed live 2026-08-31 — not an artifact of this client, the
-// endpoint itself is just slow) — sequential grants blew the cron's time
-// budget well before the member/folder count gets large enough to matter on
-// its own (35 grants × ~2s ≈ 70s, over even a 60s budget). Batches run
-// concurrently instead; kept small and fixed rather than unbounded so a
-// large future member list can't slam Drive's per-second rate limit.
-// Batching (not a work-stealing pool) keeps this deterministic to test:
-// `Promise.all(batch.map(...))` starts every call in the batch before any of
-// them can resolve, and preserves result order — the same shape a plain
-// sequential loop had, just with each item's network wait overlapped.
-const GRANT_CONCURRENCY = 6;
+// Google's Drive sharing endpoint enforces its own tight rate limit,
+// separate from general API quota (confirmed live 2026-08-31: even 2
+// concurrent grants with full exponential backoff still failed 10 of 15 real
+// calls over 5+ minutes — the quota window is clearly minutes, not seconds,
+// so no realistic in-request retry bridges it). The actual fix is
+// `alreadyGranted`/`recordGrant`: without them, every daily run re-attempted
+// every existing (member × folder) pair from scratch, which is what
+// generated enough call volume to trip the limit in the first place.
+// Steady-state daily volume is now just that day's genuinely new grants —
+// small enough that low concurrency here is about safety margin, not speed.
+const GRANT_CONCURRENCY = 2;
 
 async function runGrants(
   grants: { folderId: string; email: string }[],
-  shareDriveFolder: DriveAccessSyncDeps["shareDriveFolder"]
+  deps: Pick<DriveAccessSyncDeps, "alreadyGranted" | "recordGrant" | "shareDriveFolder">
 ): Promise<DriveAccessSyncSummary> {
-  const summary: DriveAccessSyncSummary = { attempted: 0, succeeded: 0, failed: 0 };
+  const summary: DriveAccessSyncSummary = { attempted: 0, succeeded: 0, failed: 0, skipped: 0 };
   for (let i = 0; i < grants.length; i += GRANT_CONCURRENCY) {
     const batch = grants.slice(i, i + GRANT_CONCURRENCY);
     const results = await Promise.all(
-      batch.map(async (grant) => {
+      batch.map(async (grant): Promise<"skipped" | "succeeded" | "failed"> => {
         try {
-          return await shareDriveFolder(grant.folderId, grant.email);
+          if (await deps.alreadyGranted(grant.folderId, grant.email)) return "skipped";
+          const shared = await deps.shareDriveFolder(grant.folderId, grant.email);
+          if (!shared) return "failed";
+          await deps.recordGrant(grant.folderId, grant.email);
+          return "succeeded";
         } catch (err) {
           console.error(
             `[drive-access-sync] grant failed for folder ${grant.folderId}, email ${grant.email}:`,
             err
           );
-          return false;
+          return "failed";
         }
       })
     );
-    for (const shared of results) {
+    for (const result of results) {
+      if (result === "skipped") {
+        summary.skipped += 1;
+        continue;
+      }
       summary.attempted += 1;
-      if (shared) summary.succeeded += 1;
+      if (result === "succeeded") summary.succeeded += 1;
       else summary.failed += 1;
     }
   }

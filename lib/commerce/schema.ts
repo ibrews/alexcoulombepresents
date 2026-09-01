@@ -227,5 +227,25 @@ export async function ensureCommerceSchema() {
     )
   `;
 
+  // Drive-access-grant memory (lib/commerce/driveAccessSync.ts). Google's
+  // Drive sharing endpoint enforces its own tight rate limit, separate from
+  // general API quota — confirmed live 2026-08-31: even 2 concurrent grants
+  // with exponential backoff still failed the majority of the time (10 of 15
+  // in one real run, over 5 minutes). Without this table the daily cron
+  // re-attempted every (member × folder) grant from scratch every single
+  // day — that redundant re-granting of people who already had access WAS
+  // the rate-limit problem, not the concurrency tuning. With it, steady-state
+  // daily volume drops to just that day's new signups, which comfortably
+  // fits under any real-world version of that quota.
+  await db`
+    CREATE TABLE IF NOT EXISTS drive_access_grants (
+      id          BIGSERIAL PRIMARY KEY,
+      folder_id   TEXT NOT NULL,
+      email       TEXT NOT NULL,
+      granted_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (folder_id, email)
+    )
+  `;
+
   _ensured = true;
 }

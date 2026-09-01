@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { classFolders } from "@/lib/classMaterials";
 import { extractDriveFolderId, shareDriveFolder } from "@/lib/commerce/driveAccess";
+import { alreadyGrantedDriveAccess, recordDriveAccessGrant } from "@/lib/commerce/driveAccessGrants";
 import {
   syncDriveAccess,
   type DriveAccessFolder,
@@ -10,11 +11,10 @@ import {
 import { activeMembersForLicensing } from "@/lib/commerce/entitlements";
 import { allNonRefundedOrderEmails } from "@/lib/commerce/seats";
 
-// Higher than the other crons here (30s): this one makes one Drive API call
-// per (member × folder) grant, sequentially — dozens of round-trips even at
-// today's small member/class count. Confirmed live 2026-08-31 that 30s
-// wasn't enough headroom even after fixing the real cause (a token refetched
-// per grant instead of cached — see driveAccess.ts).
+// Higher than the other crons here (30s): even with alreadyGranted/
+// recordGrant keeping steady-state volume low (see driveAccessSync.ts), a
+// day with several new signups still means real Drive API round-trips at
+// ~2s+ each, plus room for the occasional rate-limit retry.
 export const maxDuration = 60;
 
 function authorized(req: NextRequest): boolean {
@@ -44,6 +44,8 @@ function driveAccessSyncDeps(): DriveAccessSyncDeps {
   return {
     activeMembers: activeMembersForLicensing,
     buyers: allNonRefundedOrderEmails,
+    alreadyGranted: alreadyGrantedDriveAccess,
+    recordGrant: recordDriveAccessGrant,
     shareDriveFolder,
   };
 }

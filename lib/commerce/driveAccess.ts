@@ -68,18 +68,49 @@ async function accessToken(): Promise<string> {
   return cachedToken.token;
 }
 
+// Google's Drive sharing endpoint enforces its own, fairly tight rate limit
+// distinct from general API quota — confirmed live 2026-08-31 in two real
+// runs: 6 concurrent calls drew a 403 sharingRateLimitExceeded on the
+// majority of them, and even 2 concurrent WITH 5 rounds of exponential
+// backoff (up to ~31s) still failed 10 of 15 calls over 5+ minutes. That
+// second result rules out bridging this with in-request retries — the quota
+// window is clearly minutes, not seconds. A couple of short retries here are
+// only for a genuinely brief blip; the real fix for volume is
+// driveAccessSync.ts's alreadyGranted/recordGrant, which keeps a normal
+// day's call count near zero in the first place.
+const RATE_LIMIT_REASONS = new Set(["sharingRateLimitExceeded", "userRateLimitExceeded", "rateLimitExceeded"]);
+const MAX_RATE_LIMIT_RETRIES = 2;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function call(method: string, path: string, body: Record<string, unknown>): Promise<void> {
-  const token = await accessToken();
-  const res = await fetch(`${DRIVE_API_BASE}${path}`, {
-    method,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  const json = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(`Google Drive ${method} ${path} failed (${res.status}): ${JSON.stringify(json)}`);
+  for (let attempt = 0; ; attempt++) {
+    const token = await accessToken();
+    const res = await fetch(`${DRIVE_API_BASE}${path}`, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) return;
+
+    const json = await res.json().catch(() => null);
+    const reason = json?.error?.errors?.[0]?.reason;
+    if (res.status === 403 && RATE_LIMIT_REASONS.has(reason) && attempt < MAX_RATE_LIMIT_RETRIES) {
+      // Exponential backoff with jitter: 1s, 2s, 4s, 8s, 16s (+/-20%) — long
+      // enough for Drive's sharing quota window to actually reset, short
+      // enough that even every retry firing still lands inside the cron's
+      // maxDuration.
+      const backoffMs = 2 ** attempt * 1000;
+      await sleep(backoffMs + Math.random() * backoffMs * 0.2);
+      continue;
+    }
+    throw new Error(`Google Drive ${method} ${path} failed (${res.status}): ${JSON.stringify(json)}`);
+  }
 }
 
 export function extractDriveFolderId(url: string): string | null {
