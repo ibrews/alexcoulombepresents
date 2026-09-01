@@ -89,11 +89,16 @@ then paste the link:
 materials: [sharedFolder({ url: "https://drive.google.com/drive/folders/…" })],
 ```
 
-That's it — the site decides who is *shown* the link (members, plus anyone with a paid order for
-that class), and Drive does the hosting. Be clear-eyed about the limit: this gates discovery, not
-the file. Someone who opens it can forward the underlying URL. That's the same exposure the 2023/24
-Dropbox and Drive class links already had, which is why it's fine for course material and wrong for
-anything where leaking costs money.
+The site decides who is *shown* the link (members, plus anyone with a paid order for that class)
+— the same rule the folder's real Drive permissions are kept in sync with by the daily
+[Class-materials Drive access sync](#class-materials-drive-access-sync) below. Sharing the folder
+"however you like" only needs to happen once, as **Editor**, with
+`acp-drive-access@agile-lens-reminders.iam.gserviceaccount.com` — the cron grants everyone else
+real, named-person reader access automatically from there. **Never set a folder's general access
+to "Anyone with the link"**: that was the actual root cause of a real access gap (folders were
+gated in the app but not actually shared with anyone, so paying buyers hit "Access Denied" until
+2026-08-31) and "anyone with the link" was explicitly rejected as the fix in favor of real
+per-person grants — see the section below.
 
 Small files (decks, PDFs) can also be committed to `content/materials/` as `{ kind: "local" }` —
 genuinely gated, streamed by our route. Never put them in `public/`; the CDN serves that with no
