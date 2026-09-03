@@ -11,6 +11,10 @@ on:
     - cron: "*/15 * * * *"
   workflow_dispatch: {}
 
+concurrency:
+  group: ue-tip-cron
+  cancel-in-progress: true
+
 jobs:
   ping:
     runs-on: ubuntu-latest
