@@ -149,7 +149,20 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <Reveal>
         <div id="waitlist" className="glass mt-8 scroll-mt-24 rounded-3xl p-8 text-center md:p-10">
-          {product.internal && product.links.length === 0 ? (
+          {product.experiment ? (
+            <>
+              <h2 className="text-xl font-bold">An experiment, not a product.</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+                There is nothing to install or join here — {product.name} is a write-up of one
+                night&apos;s work and what it taught me. Read the devlog above, and if this kind of
+                AI-driven engine work is relevant to what you are building,{" "}
+                <Link href="/contact" className="text-teal hover:underline">
+                  get in touch
+                </Link>
+                .
+              </p>
+            </>
+          ) : product.internal && product.links.length === 0 ? (
             <>
               <h2 className="text-xl font-bold">This one&apos;s internal.</h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-mist">
