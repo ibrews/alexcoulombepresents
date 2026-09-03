@@ -1318,6 +1318,95 @@ export const products: Product[] = [
     links: [],
     accent: "amber",
   },
+  {
+    slug: "fabel-showcase",
+    name: "Fabel Showcase",
+    status: "Experiment · September 2026",
+    tagline:
+      "I handed a brand-new UE 5.8 project to Claude Fable 5.1 for one night, gave it the Lab's own tools, and walked away.",
+    pitch:
+      "No brief beyond the concept, no me at the keyboard: a fresh Third Person template, ECABridge's roughly 780 editor commands, and Forage pointed at my own Fab library. The idea — a museum hub whose portals are showcase levels for a category of the Unreal tool surface — was mine. Everything after that, the model built, tested, and photographed on its own overnight.",
+    sections: [
+      {
+        heading: "The setup",
+        body: "A completely empty UE 5.8 Third Person template project, ECABridge's roughly 780 editor commands as the only way in, and Forage pointed at my own Fab library to pull in real environment art instead of grey boxes. No dedicated live connection to the editor for most of the run — commands went through ECABridge's own client library instead, one call at a time.",
+      },
+      {
+        heading: "The hub",
+        body: "The concept: a museum gallery where each doorway is a portal to a showcase level for one category of the tool surface. It found a museum asset pack through Forage, confirmed it actually looked like a museum with a couple of establishing shots, then built a row of glowing bronze portal arches down both walls of the hall — one per wing, each labeled and wired to teleport a player through on overlap.",
+      },
+      {
+        heading: "The wings",
+        body: "Five of nine planned levels got built in one overnight session: the hub, a landscape and weather pass, a Niagara particle showcase, a materials showcase, and an audio pass. Three of those five are rough — presentable, not polished. Four more wings are still bare placeholder rooms with nothing but a return portal.",
+      },
+      {
+        heading: "What it got wrong",
+        body: "Text that renders mirrored and upside-down. A landscape that displays as a flat checkerboard instead of a texture. A level that goes solid black after a lighting edit and stays that way until you reopen it. A room with no front wall, blown out to flat white. None of these were hidden — they show up in the devlog below exactly as captured, next to the shots where the fix landed.",
+      },
+      {
+        heading: "What I learned",
+        body: "The interesting part isn't that an AI agent can drive Unreal Engine through a command surface instead of a mouse — it's watching where that approach breaks down. Static screenshot commands never tick the running world, so particle effects are invisible until you catch them mid Play-in-Editor. A failed level-creation call leaves you silently building inside whatever level was already open. The gotchas read like the ones any new team member would hit, just faster and overnight.",
+      },
+    ],
+    bullets: [
+      "5 of 9 planned showcase levels built in one overnight run — hub, environment, particles, materials, audio",
+      "Roughly 780 ECABridge editor commands drove the entire build, no mouse in the loop",
+      "32 Fab asset packs pulled from my own owned library through Forage, zero manual downloads",
+      "13 ECABridge feature and bug requests filed against a second Claude session overnight; 12 shipped before the run ended",
+      "Four Sonnet subagents, each pinned to a single level, sharing one running editor in turn",
+      "A 12-second hub flythrough rendered and Video-QA'd three times before a clean pass",
+    ],
+    links: [
+      { label: "ue5-mcp", url: "/repos/ue5-mcp" },
+      { label: "Forage", url: "/lab/forage" },
+      { label: "Video QA Workbench", url: "/lab/video-qa-workbench" },
+    ],
+    accent: "amber",
+    heroImage: {
+      src: "/lab/fabel-showcase/hub-flythrough-poster.webp",
+      alt: "A moodily lit museum hall with pink and pale-green glowing portal arches on either side, a metal pyramid centerpiece on the floor, and a framed portrait of a woman on the back wall.",
+    },
+    screenshots: [
+      {
+        src: "/lab/fabel-showcase/01-museum-first-look.webp",
+        alt: "A grand marble museum gallery with barrel-vaulted glass ceiling, framed portraits on the walls, a marble bust in the foreground, and a glazed pyramid structure sitting on the floor.",
+        caption:
+          "The Museum Environment Kit's demo hall, pulled in through Forage and dropped straight into the project — the model's starting material, not its own construction.",
+      },
+      {
+        src: "/lab/fabel-showcase/04-portal-arch-prototype.webp",
+        alt: "A free-standing bronze, arched doorway frame filled edge-to-edge with a glowing white marble-veined panel, standing on the gallery's parquet floor between two portraits.",
+        caption:
+          "The first working portal prototype: a swept bronze arch with an animated, glowing marble face — the single-portal shape the hub's eight showcase doorways were later built from.",
+      },
+      {
+        src: "/lab/fabel-showcase/07-hub-labeled-portals.webp",
+        alt: "The finished hub hallway with upright glowing portal arches down both walls, one showing a readable floating text label reading 'Surface & Light' near it.",
+        caption:
+          "A later iteration of the same hall: portal faces upright and glowing again, and at least one arch showing a correctly oriented category label.",
+      },
+      {
+        src: "/lab/fabel-showcase/15-ring-of-flames-pie.webp",
+        alt: "A cube on a plinth glows inside a pink circular floor pool, with orange spark particles drifting off its top edge and, behind it, a second plinth showing green and blue-white particle bursts.",
+        caption:
+          "A Play-in-Editor capture showing warm orange embers actually lifting off a plinth's glowing top edge, confirming particles from an authored system and a library effect were genuinely simulating.",
+      },
+      {
+        src: "/lab/fabel-showcase/16-hero-silhouette-doorway.webp",
+        alt: "A dark silhouette of a humanoid figure stands facing a bright, glowing archway at the end of a dim wood-paneled corridor, inside a running Play-in-Editor window.",
+        caption:
+          "A quieter capture from later in the Niagara pass: the player character stands backlit in the hall's return-portal archway, the rest of the space fallen into shadow.",
+      },
+      {
+        src: "/lab/fabel-showcase/18-hologram-material-closeup.webp",
+        alt: "A row of spheres and cubes on a white table against a blue sky background, with a translucent teal glass cube labeled 'Hologram' on the left and a plain gray sphere in the middle.",
+        caption:
+          "A closer look at three of the eight hand-authored materials: a translucent cyan 'Hologram' cube, a plain matte gray sphere, and a pale lavender pair at the right edge.",
+      },
+    ],
+    guide: { href: "/lab/fabel-showcase/devlog", label: "Read the devlog" },
+    internal: true,
+  },
 ];
 
 // ── About: timeline ─────────────────────────────────────────────────────────
