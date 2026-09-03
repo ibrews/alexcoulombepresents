@@ -730,6 +730,9 @@ export type Product = {
   // Internal Agile Lens tooling with no public release planned — shown for
   // transparency but WITHOUT a waitlist CTA (nothing to wait for).
   internal?: boolean;
+  // A one-off experiment or write-up (e.g. the Fabel Showcase devlog): no install, no license,
+  // no waitlist — the CTA block becomes a neutral "read the devlog / get in touch" note.
+  experiment?: boolean;
 };
 
 export const products: Product[] = [
@@ -1406,6 +1409,7 @@ export const products: Product[] = [
     ],
     guide: { href: "/lab/fabel-showcase/devlog", label: "Read the devlog" },
     internal: true,
+    experiment: true,
   },
 ];
 
