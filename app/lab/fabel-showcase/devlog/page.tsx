@@ -5,12 +5,12 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 
 export const metadata: Metadata = {
-  title: "Fabel Showcase — Devlog",
+  title: "Fable Showcase — Devlog",
   description:
     "A fresh UE 5.8 project, handed to Claude Fable 5.1 for one night with ECABridge and Forage. What it built, what broke, and what came out of it.",
   alternates: { canonical: "/lab/fabel-showcase/devlog" },
   openGraph: {
-    title: "Fabel Showcase — Devlog",
+    title: "Fable Showcase — Devlog",
     description:
       "A fresh UE 5.8 project, handed to Claude Fable 5.1 for one night with ECABridge and Forage. What it built, what broke, and what came out of it.",
     url: "/lab/fabel-showcase/devlog",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fabel Showcase — Devlog",
+    title: "Fable Showcase — Devlog",
     description:
       "A fresh UE 5.8 project, handed to Claude Fable 5.1 for one night with ECABridge and Forage.",
     images: ["/lab/fabel-showcase/hub-flythrough-poster.webp"],
@@ -325,7 +325,7 @@ export default function FabelShowcaseDevlogPage() {
       <Ethereal variant="nebula" />
       <Reveal>
         <Link href="/lab/fabel-showcase" className="font-mono text-sm text-mist hover:text-teal">
-          ← Fabel Showcase
+          ← Fable Showcase
         </Link>
         <p className="mt-6 font-mono text-xs uppercase tracking-widest text-amber">Devlog</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
@@ -424,7 +424,7 @@ export default function FabelShowcaseDevlogPage() {
             href="/lab/fabel-showcase"
             className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
           >
-            ← Back to Fabel Showcase
+            ← Back to Fable Showcase
           </Link>
         </div>
       </Reveal>

@@ -730,7 +730,7 @@ export type Product = {
   // Internal Agile Lens tooling with no public release planned — shown for
   // transparency but WITHOUT a waitlist CTA (nothing to wait for).
   internal?: boolean;
-  // A one-off experiment or write-up (e.g. the Fabel Showcase devlog): no install, no license,
+  // A one-off experiment or write-up (e.g. the Fable Showcase devlog): no install, no license,
   // no waitlist — the CTA block becomes a neutral "read the devlog / get in touch" note.
   experiment?: boolean;
 };
@@ -1323,7 +1323,7 @@ export const products: Product[] = [
   },
   {
     slug: "fabel-showcase",
-    name: "Fabel Showcase",
+    name: "Fable Showcase",
     status: "Experiment · September 2026",
     tagline:
       "I handed a brand-new UE 5.8 project to Claude Fable 5.1 for one night, gave it the Lab's own tools, and walked away.",
@@ -1360,6 +1360,7 @@ export const products: Product[] = [
       "A 12-second hub flythrough rendered and Video-QA'd three times before a clean pass",
     ],
     links: [
+      { label: "Download for Windows (.zip, ~2.4GB)", url: "https://drive.google.com/open?id=1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns" },
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
       { label: "Forage", url: "/lab/forage" },
       { label: "Video QA Workbench", url: "/lab/video-qa-workbench" },
