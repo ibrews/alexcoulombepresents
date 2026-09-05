@@ -964,7 +964,7 @@ export const products: Product[] = [
       },
       {
         heading: "AOVs and Cryptomatte, through the button",
-        body: "The settings panel now has a quality-preset dropdown, resolution X/Y fields, and checkboxes for denoise and Cryptomatte, alongside per-light diffuse/specular AOVs driven by the renderer's own compositing grammar. Getting the real texture-UV AOV right took catching a subtle bug: RenderMan's bare geometric u/v is not the artist's authored UV, and shipping the wrong one would have looked plausible in every render while being quietly incorrect. Sequence-level AOV collection across the multi-machine farm landed this week too, alongside a real actor-coverage measurement on a second outside project — 22,708 actors, 90.55% translated.",
+        body: "The settings panel has a quality-preset dropdown, resolution X/Y fields, and checkboxes for denoise and Cryptomatte, alongside per-light diffuse/specular AOVs driven by the renderer's own compositing grammar. Getting the real texture-UV AOV right took catching a subtle bug: RenderMan's bare geometric u/v is not the artist's authored UV, and shipping the wrong one would have looked plausible in every render while being quietly incorrect. Sequence-level rendering — driving the bridge across a full animated shot via Unreal's Movie Render Queue — is in progress and not yet at the maturity of the single-frame button; a real actor-coverage measurement on a second outside project (22,708 actors, 90.55% translated) held up well independent of that work.",
       },
       {
         heading: "Where it goes next",
@@ -979,7 +979,9 @@ export const products: Product[] = [
       "Hero looks authored natively in RenderMan compose over the export as USD sublayers",
       "Full animated sequence proven end to end: 96 frames, multi-material, multi-light, two-camera cut",
       "Multi-machine render farm — 2.72x measured speedup across 3 machines",
-      "AOVs and Cryptomatte wired through the settings panel, including sequence-level farm collection",
+      "AOVs and Cryptomatte wired through the settings panel — quality presets, per-light diffuse/specular splits, real texture-UV",
+      "Movie Render Queue (sequence) integration is in progress — the single-frame button is the current, proven path",
+      "Distribution and licensing terms are still being finalized",
     ],
     links: [],
     accent: "amber",
@@ -1021,7 +1023,7 @@ export const products: Product[] = [
     status: "Ongoing engine contributions",
     tagline: "The punch list for making Unreal Engine on Apple Vision Pro feel production-ready.",
     pitch:
-      "Unreal's Vision Pro support is officially Experimental: source-only builds, sparse docs, and a set of sharp edges every team hits in the same order. Rather than working around them, this is an ongoing effort to fix them at the engine level — contributed through the community fork ecosystem where visionOS UE development actually lives.",
+      "Unreal's Vision Pro support is officially Experimental: source-only builds, sparse docs, and a set of sharp edges every team hits in the same order. This is an ongoing effort to fix those at the engine level and push rendering further than Epic has taken it on this platform — Lumen global illumination and Nanite virtualized geometry included — contributed through the community fork ecosystem where visionOS UE development actually lives.",
     sections: [
       {
         heading: "Lifecycle & stability",
@@ -1032,6 +1034,14 @@ export const products: Product[] = [
         body: "Translucency over passthrough used to produce blocky grey halos around glass, smoke, and glow — a depth/alpha invariant Apple's compositor enforces and the engine didn't satisfy. The fix lands real glass in mixed reality. Plus: foveation artifact mitigation, and passthrough-safe material patterns documented for everyone.",
       },
       {
+        heading: "Lumen, demonstrated on device",
+        body: "Lumen — Unreal's dynamic global illumination and reflections — is confirmed rendering on real Apple Vision Pro hardware: GI and reflections visibly correct, blocky shadow quality the main open complaint. It runs today at roughly 20 fps on M5, GPU-bound by scene complexity rather than a setting you can just turn down — demonstrated, not yet a usable frame rate. Stability work continues alongside it: shader-permutation crashes on the SM5/SM6 paths get root-caused and fixed one at a time as they surface.",
+      },
+      {
+        heading: "Nanite: under investigation, not yet working",
+        body: "Nanite's SM6 compute path hits a hard compiler crash on this fork today, so it ships disabled while the cause gets pinned down. The leading hypothesis, drawn from Epic's own engineering notes on macOS parity: Nanite-on-SM6 depends on Apple's Metal Shader Converter, and this fork's visionOS build has no visionOS slice of that converter — forcing an unsupported fallback path. Plausible, but unverified. Call this active research, not a roadmap item with a date.",
+      },
+      {
         heading: "The Mac-native toolchain",
         body: "Lightmass — Unreal's baked-lighting renderer — shipped x86-only and crashed under Rosetta on Apple Silicon (Embree probes for AVX). A native arm64 Lightmass build makes baked lighting possible on the same M-series Mac you deploy from. Add layered parallax app icons, simulator build revival, and headless commandlet pipelines, and the whole loop runs on one machine.",
       },
@@ -1040,6 +1050,8 @@ export const products: Product[] = [
       "Crown-exit lifecycle fix — no more reboot-to-recover",
       "OpenLevel / ServerTravel compositor fix, upstreamed as a fork PR",
       "Passthrough translucency depth/alpha fix — real glass in mixed reality",
+      "Lumen GI + reflections confirmed rendering on Apple Vision Pro hardware — ~20 fps today, GPU-bound; frame rate and shadow quality are ongoing work, not solved",
+      "Nanite on visionOS under active investigation — a missing Metal Shader Converter slice is the leading, unverified hypothesis for the current compiler crash",
       "Native arm64 Lightmass — baked lighting on Apple Silicon",
       "Layered parallax app icons, simulator builds, headless cook pipelines",
     ],
