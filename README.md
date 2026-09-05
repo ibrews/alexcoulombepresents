@@ -27,7 +27,7 @@ with no configuration.
 | `/lab/forage` | Forage — AI-first asset scout for your owned Fab library |
 | `/lab/unrealitykit-bridge` | UnRealityKit Bridge — UE simulation + RealityKit rendering |
 | `/lab/pinchwork` | Pinchwork — universal OpenXR hand tracking template |
-| `/lab/unreal-visionos` | The Unreal × visionOS engine-improvement punch list |
+| `/lab/avp-openxr` | Apple Vision Pro + OpenXR engine work — punch-list fixes, Lumen, Nanite research (`/lab/unreal-visionos` redirects here) |
 | `/links` | Agile Lens, socials, podcast — and alexcoulombe.com, lovingly preserved in 2013 amber |
 | `/store` | Direct sales (courses, skills, templates) — Stripe Checkout, no marketplace cut. Rule of thumb: anything ready-to-deliver has a price + instant checkout; anything in-progress collects an email instead. Ships in preview mode (inquiry fallback) until `NEXT_PUBLIC_STORE_LIVE=1` |
 | `/newsletter` | Archive of every newsletter issue (markdown files in `content/newsletters/`) + subscribe form |
@@ -335,8 +335,10 @@ it existed.
 Every "join the waitlist / notify me / inquire" action on the site posts to
 [`app/api/subscribe/route.ts`](app/api/subscribe/route.ts), which saves the signup to a
 **Neon Postgres** database and emails `info@` a notification. The lists are defined in one place,
-[`lib/lists.ts`](lib/lists.ts) (`forage`, `unrealitykit-bridge`, `pinchwork`, `unreal-visionos`,
-`lab`, `skills`, `store`, plus `ai`/`unreal`). `ai` and `unreal` also mirror into Resend audiences
+[`lib/lists.ts`](lib/lists.ts) (`forage`, `unrealitykit-bridge`, `pinchwork`, `avp-openxr`,
+`lab`, `skills`, `store`, plus `ai`/`unreal`; `unreal-visionos` stays defined but retired, kept
+only so old signups and the newsletter's historical `sentList` still resolve to a real label).
+`ai` and `unreal` also mirror into Resend audiences
 so training demand can be compared in the Resend dashboard. The shared UI is
 [`components/WaitlistForm.tsx`](components/WaitlistForm.tsx) (+ the reveal wrapper
 [`components/InquireButton.tsx`](components/InquireButton.tsx)), both with a honeypot + "I'm not a

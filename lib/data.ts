@@ -1018,12 +1018,12 @@ export const products: Product[] = [
     accent: "teal",
   },
   {
-    slug: "unreal-visionos",
-    name: "Unreal × visionOS",
+    slug: "avp-openxr",
+    name: "Apple Vision Pro + OpenXR",
     status: "Ongoing engine contributions",
-    tagline: "The punch list for making Unreal Engine on Apple Vision Pro feel production-ready.",
+    tagline: "The engine-level work behind Unreal on Apple Vision Pro over OpenXR — punch-list fixes today, Lumen and Nanite research pushing further.",
     pitch:
-      "Unreal's Vision Pro support is officially Experimental: source-only builds, sparse docs, and a set of sharp edges every team hits in the same order. This is an ongoing effort to fix those at the engine level and push rendering further than Epic has taken it on this platform — Lumen global illumination and Nanite virtualized geometry included — contributed through the community fork ecosystem where visionOS UE development actually lives.",
+      "Unreal's Vision Pro support runs over OpenXR and is officially Experimental: source-only builds, sparse docs, and a set of sharp edges every team hits in the same order. This is an ongoing effort to fix those at the engine level and push rendering further than Epic has taken it on this platform — Lumen global illumination and Nanite virtualized geometry included. The fixes land through the community fork ecosystem where visionOS UE development actually lives, and because the foundation is OpenXR, most of them aren't Vision-Pro-specific.",
     sections: [
       {
         heading: "Lifecycle & stability",
@@ -1057,6 +1057,10 @@ export const products: Product[] = [
     ],
     links: [],
     video: "PLynIuxA9r8",
+    videos: [
+      { id: "QqDW-3tio0o", title: "Apple Vision Pro can do Lumen ??" },
+      { id: "ReJuECqdIM4", title: "Everything I'm Building with Unreal Engine 5.8 in Apple Vision Pro" },
+    ],
     accent: "blue",
   },
   {

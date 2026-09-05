@@ -42,7 +42,7 @@ export default function Home() {
     "renderman-bridge",
     "project-ion",
     "forage",
-    "unreal-visionos",
+    "avp-openxr",
     "pinchwork",
   ]
     .map((slug) => products.find((p) => p.slug === slug))
@@ -148,7 +148,7 @@ export default function Home() {
         </Reveal>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           <Reveal delay={0}>
-            <Link href="/lab/unreal-visionos" className="glass block h-full rounded-2xl p-7">
+            <Link href="/lab/avp-openxr" className="glass block h-full rounded-2xl p-7">
               <p className="font-mono text-xs text-teal">01 / ENGINES</p>
               <h3 className="mt-3 text-xl font-bold">Unreal & Godot & even ThreeJS, let&apos;s go further than the documentation</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">

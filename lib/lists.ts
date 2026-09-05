@@ -8,7 +8,11 @@ export const LISTS = {
   "unrealitykit-bridge": "UnRealityKit Bridge",
   "renderman-bridge": "UE→RenderMan Bridge",
   pinchwork: "Pinchwork",
+  // Renamed from unreal-visionos (2026-09-05); the old key stays below,
+  // unchanged, so past signups and the newsletter's historical sentList
+  // records still resolve to a real label.
   "unreal-visionos": "Unreal × visionOS",
+  "avp-openxr": "Apple Vision Pro + OpenXR",
   lab: "The Lab — early access",
   skills: "Custom AI skill",
   store: "Store interest",
@@ -32,6 +36,7 @@ export const LIST_REASON: Record<ListSlug, string> = {
   "renderman-bridge": "you asked to be notified about the UE→RenderMan Bridge",
   pinchwork: "you joined the early-access list for Pinchwork",
   "unreal-visionos": "you signed up for Unreal × visionOS updates",
+  "avp-openxr": "you signed up for Apple Vision Pro + OpenXR updates",
   lab: "you asked for early access to Lab projects",
   skills: "you inquired about a custom AI skill",
   store: "you inquired about something in the store",

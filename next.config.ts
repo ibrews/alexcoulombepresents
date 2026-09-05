@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
     return [
       { source: "/lab/unrealitykit", destination: "/lab/unrealitykit-bridge", permanent: true },
       { source: "/urk", destination: "/lab/unrealitykit-bridge", permanent: true },
+      // Renamed 2026-09-05 to reflect the OpenXR foundation, not just Vision
+      // Pro — the old slug is already live in submitted Epic MegaGrant
+      // applications, so it must keep resolving indefinitely.
+      { source: "/lab/unreal-visionos", destination: "/lab/avp-openxr", permanent: true },
       // Drainspotting's launch video end card and pre-domain marketing copy
       // point here; the product's real home is its own domain now. Temporary
       // on purpose — if it ever gets a page on this site, a cached 301 in
