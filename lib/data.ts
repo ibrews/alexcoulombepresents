@@ -1057,6 +1057,10 @@ export const products: Product[] = [
     ],
     links: [],
     video: "PLynIuxA9r8",
+    videos: [
+      { id: "QqDW-3tio0o", title: "Apple Vision Pro can do Lumen ??" },
+      { id: "ReJuECqdIM4", title: "Everything I'm Building with Unreal Engine 5.8 in Apple Vision Pro" },
+    ],
     accent: "blue",
   },
   {
