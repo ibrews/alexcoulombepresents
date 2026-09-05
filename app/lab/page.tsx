@@ -11,7 +11,7 @@ import { renderBreaks } from "@/components/Lines";
 export const metadata: Metadata = {
   title: "The Lab: Upcoming XR Tools",
   description:
-    "Upcoming products from Alex Coulombe: Forage (AI-first Fab asset scout), Project Ion (projection-mapping previz for Vision Pro), UnRealityKit Bridge, Pinchwork OpenXR hand tracking, and Unreal Engine × visionOS engine work.",
+    "Upcoming products from Alex Coulombe: Forage (AI-first Fab asset scout), Project Ion (projection-mapping previz for Vision Pro), UnRealityKit Bridge, Pinchwork OpenXR hand tracking, and Apple Vision Pro + OpenXR engine work.",
   alternates: { canonical: "/lab" },
 };
 

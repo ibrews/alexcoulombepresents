@@ -254,7 +254,7 @@
 **Browser tab / SEO**
 
 - `[lab.meta.title]` ▸ The Lab: Upcoming XR Tools
-- `[lab.meta.description]` ▸ Upcoming products from Alex Coulombe: Forage (AI-first Fab asset scout), Project Ion (projection-mapping previz for Vision Pro), UnRealityKit Bridge, Pinchwork OpenXR hand tracking, and Unreal Engine × visionOS engine work.
+- `[lab.meta.description]` ▸ Upcoming products from Alex Coulombe: Forage (AI-first Fab asset scout), Project Ion (projection-mapping previz for Vision Pro), UnRealityKit Bridge, Pinchwork OpenXR hand tracking, and Apple Vision Pro + OpenXR engine work.
 
 **On the page**
 
