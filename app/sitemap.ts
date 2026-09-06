@@ -54,5 +54,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...repoEntries, ...devlogEntries, ...productEntries];
+  const productGuideEntries: MetadataRoute.Sitemap = products
+    .filter((p) => p.guide?.href.startsWith("/lab/"))
+    .map((p) => ({
+      url: `${base}${p.guide!.href}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    }));
+
+  return [...staticEntries, ...repoEntries, ...devlogEntries, ...productEntries, ...productGuideEntries];
 }
