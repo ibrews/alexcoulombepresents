@@ -1368,11 +1368,11 @@ export const products: Product[] = [
       },
     ],
     bullets: [
-      "5 of 9 planned showcase levels built in one overnight run — hub, environment, particles, materials, audio",
+      "Round 1: 5 of 9 planned showcase levels built in one overnight run — hub, environment, particles, materials, audio",
+      "Round 2: all 9 levels complete — 4 more built from scratch (gameplay, cinematics, lighting, characters), plus real per-room soundscapes and in-world graph panels for every exhibit",
       "Roughly 780 ECABridge editor commands drove the entire build, no mouse in the loop",
       "32 Fab asset packs pulled from my own owned library through Forage, zero manual downloads",
-      "13 ECABridge feature and bug requests filed against a second Claude session overnight; 12 shipped before the run ended",
-      "Four Sonnet subagents, each pinned to a single level, sharing one running editor in turn",
+      "A mixed model roster on round 2: Claude Sonnet for the bug-fix pass, a Codex-coordinated worker for the bulk of the new content, a Codex Astra dispatch that failed outright on a Windows sandbox bug — reported as-is, not hidden",
       "A 12-second hub flythrough rendered and Video-QA'd three times before a clean pass",
     ],
     links: [

@@ -282,6 +282,16 @@ const lessons = [
   "Forage can log into Epic without a person at the keyboard if the browser is already signed in: grab the redirect auth code and use it within about a minute, before it expires.",
 ];
 
+const round2Lessons = [
+  "A UE editor's connection port can be LISTENING but refuse every connection — that means a modal dialog has parked the game thread, not that the server crashed. Windows title enumeration can confirm it without a screenshot, and closing the dialog is far cheaper than a cold relaunch.",
+  "Text3D's default material extension generates its own material instances for anything but Custom style, silently overriding any material you assign afterward — you have to set the extension's own color properties directly, and the fix has to be reapplied after any save/reopen rebuilds the glyph meshes fresh.",
+  "editor.save_level does not persist changes to a Blueprint or material asset referenced by the level — only save_dirty_assets does. Skipping it once cost a full pass of portal-label work to a mid-session crash.",
+  "A PostProcessVolume auto-exposure override tuned only against a non-gameplay screenshot command can look perfect at content-authoring time and break real Play-in-Editor exposure completely — the capture path silently ignores PPV overrides that gameplay rendering applies in full.",
+  "Two agents can end up editing the same live level at once with no locking to stop them — this happened more than once. Recovery worked because each agent independently re-verified from a fresh disk reload before trusting its own or a sibling's prior claim, rather than assuming the last save was correct.",
+  "A background agent that reports 'completed' isn't necessarily done — it can wake up again later (sometimes to retry the exact edit that caused a prior crash) with no warning. Checking live agent state directly beats trusting the notification history.",
+  "Compiling a Blueprint alone doesn't prove a generative system works at runtime — a Mutable character-customization graph compiled cleanly for hours while every actual runtime generation attempt returned a null result, until the real cause (unassigned source parameters) was found and fixed.",
+];
+
 function Tag({ outcome }: { outcome: Shot["outcome"] }) {
   const styles: Record<Shot["outcome"], string> = {
     win: "border-teal/40 text-teal",
@@ -342,6 +352,27 @@ export default function FabelShowcaseDevlogPage() {
           presentable, not polished — and this devlog says so plainly, chapter by chapter, in the
           order it actually happened: the wins next to the misses next to the fixes.
         </p>
+        <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+          <strong className="text-amber">Round 2, a few nights later:</strong> I played the round-1
+          build and sent back a real punch list — portal mechanics, two levels rendering solid black,
+          particles invisible in real play, and four levels that were still bare placeholders. Fixing
+          it took a genuinely mixed roster. <strong>Claude Sonnet</strong>, working through the same
+          ECABridge editor connection, closed out the portal round-trip/facing logic, both black-level
+          exposure bugs, a Niagara placement fix, and exhibit renaming — all verified in live
+          Play-in-Editor, not static screenshots. A <strong>Codex GPT-6 Astra</strong> dispatch was
+          tried on a stubborn Text3D material problem specifically because that class of task —
+          reading engine C++ source to explain unexpected behavior — is closer to what Astra is
+          positioned for than routine content work; it failed outright on a Windows sandbox bug before
+          reading a single file, which is worth reporting honestly rather than quietly retrying. The
+          bulk of round 2 — all four missing levels actually built, working per-room soundscapes,
+          in-world graph panels for every exhibit, a real fix for the Text3D problem Astra couldn&apos;t
+          reach, and full 8-room portal round-trip verification — was done by a separate Codex-based
+          worker running on another machine, coordinated through this project&apos;s own fleet
+          messaging bus rather than by me directly. It used a strict verify-before-claim discipline
+          throughout: every &quot;done&quot; is backed by a Play-in-Editor screenshot or a hashed
+          artifact, and every negative result was kept rather than quietly dropped. That log is the
+          most interesting part of round 2, and the lessons below are pulled from it.
+        </p>
       </Reveal>
 
       {chapters.map((chapter, ci) => (
@@ -397,6 +428,23 @@ export default function FabelShowcaseDevlogPage() {
             {lessons.map((lesson) => (
               <li key={lesson} className="flex gap-3 text-sm leading-relaxed text-mist">
                 <span className="mt-0.5 text-amber">✦</span>
+                <span>{lesson}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="mt-16">
+          <p className="font-mono text-xs uppercase tracking-widest text-mist">Round 2</p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight">
+            What broke — and got fixed — the second time around
+          </h2>
+          <ul className="mt-6 grid gap-4 md:grid-cols-2">
+            {round2Lessons.map((lesson) => (
+              <li key={lesson} className="flex gap-3 text-sm leading-relaxed text-mist">
+                <span className="mt-0.5 text-teal">✦</span>
                 <span>{lesson}</span>
               </li>
             ))}
