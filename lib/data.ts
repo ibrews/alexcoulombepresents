@@ -1377,6 +1377,7 @@ export const products: Product[] = [
       "Featured Niagara systems, courier StateTree and exact-process audio signal verified at runtime",
     ],
     links: [
+      { label: "Download for Windows — round 2, all 9 levels (.zip, ~3.4GB)", url: "https://drive.google.com/open?id=1P8MrVooCb4O4P3qKcdVTudsyT6tkZhkx" },
       { label: "Earlier Windows build — September 4 (.zip, ~2.4GB)", url: "https://drive.google.com/open?id=1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns" },
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
       { label: "Forage", url: "/lab/forage" },
