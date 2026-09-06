@@ -737,6 +737,77 @@ export type Product = {
 
 export const products: Product[] = [
   {
+    slug: "light-pavilion",
+    name: "Light Pavilion",
+    status: "In development · offline Phase 1",
+    tagline: "A room-scale instrument for shaping sunlight, shadow, and reflected color with dynamic global illumination.",
+    pitch:
+      "Light Pavilion starts with a small architectural scene and one demanding question: can a few carefully placed surfaces make bounced light legible enough to compose with? Its first neutral preview failed, then a corrected composition and matched panel comparison cleared the offline Phase 1 review. Unreal integration and a standalone Apple Vision Pro M5 pass come next.",
+    sections: [
+      {
+        heading: "Light is the material",
+        body: "The pavilion is conceived first as an opaque, fully immersive study of direct and indirect light. A compact arrangement of reflectors and receivers gives Unreal's dynamic global illumination a clear architectural subject: light should move through the scene, gather color from one surface, and become legible on another.",
+      },
+      {
+        heading: "A deliberately small first scene",
+        body: "The current source study contains 29 meshes and about 7,244 triangles. That modest footprint keeps attention on composition, contrast, surface response, and the path of light instead of hiding those decisions under scene complexity.",
+      },
+      {
+        heading: "What exists today",
+        body: "A Blender CPU preview pipeline has produced a neutral blockout, matched panel-rotation comparison, shutter-closed control, warm-light state, and diagnostic detail view. The first frame failed for a reversed sun direction and the next review exposed framing problems; the corrected neutral and comparison then cleared the offline Phase 1 art-direction gate. The failure stays in the development log beside the accepted correction.",
+      },
+      {
+        heading: "What still needs proof",
+        body: "The scene has not yet completed its Unreal-fork integration or an on-device Apple Vision Pro M5 pass. Lumen behavior, stereo exposure, standalone performance, and sustained thermal behavior remain tests rather than claims. A mixed-reality treatment may follow later as a separate exploration; passthrough and spatial anchoring are not gates for the first opaque build.",
+      },
+    ],
+    bullets: [
+      "29-mesh, ~7,244-triangle source study",
+      "Offline Blender Phase 1 art direction accepted",
+      "Failed frame, accepted correction, and matched comparison documented in sequence",
+      "Unreal-fork Lumen integration and Apple Vision Pro M5 validation still ahead",
+    ],
+    links: [],
+    guide: { href: "/lab/light-pavilion/devlog", label: "Open the development log" },
+    accent: "amber",
+  },
+  {
+    slug: "impossible-conservatory",
+    name: "Impossible Conservatory",
+    status: "Concept · integration untested",
+    tagline: "A living tabletop habitat that notices you, answers in expression, and can grow to fill the room.",
+    pitch:
+      "Impossible Conservatory is a proposed PICO mixed-reality experience: an AI-designed miniature habitat with one expressive creature at its center. It begins at tabletop scale, embedded in the real room through passthrough, then expands under deliberate control into a room-scale world. The concept is defined; the Unreal app and device integration are not yet built.",
+    sections: [
+      {
+        heading: "A creature with legible attention",
+        body: "The creature would notice where you look and answer a smile or wink with a visible expression of its own. Face signals are used as direct interaction inputs, not as a diagnosis of mood or emotion. Hand contact adds a second, physical-feeling way to earn its attention.",
+      },
+      {
+        heading: "Belonging in the room",
+        body: "The habitat is designed around PICO's eye and face tracking, hand input, spatial awareness, and color passthrough. At tabletop scale it should respect the room around it; expansion into a larger environment remains a deliberate transition, not an automatic clone of the user's space.",
+      },
+      {
+        heading: "AI with a named boundary",
+        body: "AI may design habitat variations and creature behavior on a local network compute fleet. If that pipeline is used, the experience and development log will label it plainly. Core rendering remains standalone on the headset; the concept does not depend on automatic object cloning or a SpatialLM pipeline.",
+      },
+      {
+        heading: "Capability is not integration",
+        body: "The target hardware and current PICO SDK expose the tracking and mixed-reality capabilities this idea needs. The Unreal app still has to prove access, latency, permissions, rendering, spatial stability, thermal behavior, and interaction quality on the intended device.",
+      },
+    ],
+    bullets: [
+      "Planned gaze, smile, wink, and hand-contact responses",
+      "Face signals mapped to expression — no emotion diagnosis",
+      "Tabletop habitat with controlled room-scale expansion",
+      "Standalone headset rendering; optional AI may run on a local network fleet",
+      "Unreal SDK integration and device behavior still to be tested",
+    ],
+    links: [{ label: "PICO developer resources", url: "https://developer.picoxr.com/resources/" }],
+    guide: { href: "/lab/impossible-conservatory/devlog", label: "Open the development log" },
+    accent: "teal",
+  },
+  {
     slug: "video-qa-workbench",
     name: "Video QA Workbench",
     status: "Design-partner preview · local-first",

@@ -11,7 +11,7 @@ import { renderBreaks } from "@/components/Lines";
 export const metadata: Metadata = {
   title: "The Lab: Upcoming XR Tools",
   description:
-    "Upcoming products from Alex Coulombe: Forage (AI-first Fab asset scout), Project Ion (projection-mapping previz for Vision Pro), UnRealityKit Bridge, Pinchwork OpenXR hand tracking, and Apple Vision Pro + OpenXR engine work.",
+    "Upcoming products and documented experiments from Alex Coulombe: spatial computing, mixed reality, Unreal Engine, OpenXR, and AI-assisted creative tools.",
   alternates: { canonical: "/lab" },
 };
 
@@ -43,8 +43,8 @@ export default function Lab() {
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
               {products.filter((p) => !p.internal).length} products in active development (plus a
               peek at the internal tooling), all pointed at the same future: spatial computing where
-              the engines, the assets, and the AI agents finally cooperate. Hardware-verified,
-              demo-ready, and approaching the launch pad.
+              the engines, the assets, and the AI agents finally cooperate. Each briefing separates
+              what is shipping, what has been tested, and what is still a proposal.
             </p>
             <p className="mt-4 text-sm text-mist">
               Looking for what&apos;s already shipped?{" "}

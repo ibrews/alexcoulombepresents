@@ -28,6 +28,10 @@ with no configuration.
 | `/lab/unrealitykit-bridge` | UnRealityKit Bridge — UE simulation + RealityKit rendering |
 | `/lab/pinchwork` | Pinchwork — universal OpenXR hand tracking template |
 | `/lab/avp-openxr` | Apple Vision Pro + OpenXR engine work — punch-list fixes, Lumen, Nanite research (`/lab/unreal-visionos` redirects here) |
+| `/lab/light-pavilion` | Light Pavilion — dynamic-GI reflected-light study for standalone Apple Vision Pro M5 |
+| `/lab/light-pavilion/devlog` | Chronological Light Pavilion build log — failed offline frames, corrections, and upcoming Unreal Lumen/device tests |
+| `/lab/impossible-conservatory` | Impossible Conservatory — proposed PICO tabletop habitat and expressive-creature interaction model |
+| `/lab/impossible-conservatory/devlog` | Impossible Conservatory validation log — planned interactions, capability basis, and device tests still required |
 | `/links` | Agile Lens, socials, podcast — and alexcoulombe.com, lovingly preserved in 2013 amber |
 | `/store` | Direct sales (courses, skills, templates) — Stripe Checkout, no marketplace cut. Rule of thumb: anything ready-to-deliver has a price + instant checkout; anything in-progress collects an email instead. Ships in preview mode (inquiry fallback) until `NEXT_PUBLIC_STORE_LIVE=1` |
 | `/newsletter` | Archive of every newsletter issue (markdown files in `content/newsletters/`) + subscribe form |
