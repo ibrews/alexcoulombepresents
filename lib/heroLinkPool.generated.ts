@@ -16,6 +16,12 @@ export const generatedHeroLinks: HeroLink[] = [
     "tier": "section"
   },
   {
+    "href": "/lab/fabel-showcase/devlog#round-two",
+    "label": "Read the round-two devlog",
+    "kicker": "On this site · /lab/fabel-showcase/devlo…",
+    "tier": "deep"
+  },
+  {
     "href": "/lab/video-qa-workbench/beta-handbook",
     "label": "Read the tester handbook",
     "kicker": "On this site · /lab/video-qa-workbench/b…",
@@ -516,6 +522,12 @@ export const generatedHeroLinks: HeroLink[] = [
   {
     "href": "https://web.archive.org/web/2013/http://alexcoulombe.com",
     "label": "Wayback Machine (recommended)",
+    "kicker": "web.archive.org",
+    "tier": "external"
+  },
+  {
+    "href": "https://web.archive.org/web/20221202000431/https://www.gokams.or.kr/webzine/wNew/column/column_view.asp?idx=2596&amp;page=1&amp;c_idx=95&amp;searchString=&amp;c_idx_2=",
+    "label": "Keynote Speaker Performing in the Metaverse…",
     "kicker": "web.archive.org",
     "tier": "external"
   },

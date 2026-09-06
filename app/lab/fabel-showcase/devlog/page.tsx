@@ -7,12 +7,12 @@ import Ethereal from "@/components/Ethereal";
 export const metadata: Metadata = {
   title: "Fable Showcase — Devlog",
   description:
-    "A fresh UE 5.8 project, handed to Claude Fable 5.1 for one night with ECABridge and Forage. What it built, what broke, and what came out of it.",
+    "An overnight Unreal Engine experiment, followed by a second pass through its empty rooms, runtime failures, and packaged Windows build.",
   alternates: { canonical: "/lab/fabel-showcase/devlog" },
   openGraph: {
     title: "Fable Showcase — Devlog",
     description:
-      "A fresh UE 5.8 project, handed to Claude Fable 5.1 for one night with ECABridge and Forage. What it built, what broke, and what came out of it.",
+      "An overnight Unreal Engine experiment, followed by a second pass through its empty rooms, runtime failures, and packaged Windows build.",
     url: "/lab/fabel-showcase/devlog",
     type: "website",
     images: [
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fable Showcase — Devlog",
     description:
-      "A fresh UE 5.8 project, handed to Claude Fable 5.1 for one night with ECABridge and Forage.",
+      "An overnight Unreal Engine experiment, followed by a tested second pass through all eight showcase wings.",
     images: ["/lab/fabel-showcase/hub-flythrough-poster.webp"],
   },
 };
@@ -38,6 +38,8 @@ type Shot = {
   alt: string;
   caption: string;
   outcome: "win" | "miss" | "fix";
+  width?: number;
+  height?: number;
 };
 
 type Chapter = {
@@ -46,6 +48,72 @@ type Chapter = {
   intro: string;
   shots: Shot[];
 };
+
+const roundTwoShots: Shot[] = [
+  {
+    file: "r2-01-environment-packaged.webp",
+    alt: "A third-person mannequin stands on a sunlit sandy mesa beside an exhibit panel showing the terrain material graph.",
+    caption:
+      "The packaged Environment wing after moving the player start and return portal onto the real landscape surface. The panel carries a capture of the material graph used by the terrain.",
+    outcome: "fix",
+    width: 1920,
+    height: 1080,
+  },
+  {
+    file: "r2-02-cinematics-alley.webp",
+    alt: "A cyan-and-magenta alley lined with red lanterns on visible wall brackets and overhead supports.",
+    caption:
+      "The Cinematics alley after its support pass. Its optional 15-second sequence uses three cameras, changes focus, and restores the player camera and controls after completion or cancellation.",
+    outcome: "fix",
+    width: 1286,
+    height: 760,
+  },
+  {
+    file: "r2-03-gameplay-packaged.webp",
+    alt: "A mannequin faces a stone courtyard while a courier walks at right and a dark HUD reads Courier StateTree: RUNNING.",
+    caption:
+      "The packaged Gameplay wing reports the live courier StateTree as RUNNING. The dark HUD backing was added after the original white text disappeared against the sky.",
+    outcome: "win",
+    width: 1920,
+    height: 1080,
+  },
+  {
+    file: "r2-04-mutable-packaged.webp",
+    alt: "Two different clothed characters stand on labeled plinths, each reporting Mutable generated and Idle looping.",
+    caption:
+      "Two packaged Mutable instances generated distinct transient skeletal meshes and started the same looping idle animation. Their visible labels match the runtime object queries.",
+    outcome: "fix",
+    width: 1920,
+    height: 1080,
+  },
+  {
+    file: "r2-05-niagara-packaged.webp",
+    alt: "A warm orange exhibit hall contains bright colored Niagara effects and an in-world system graph panel.",
+    caption:
+      "A native screenshot from the packaged Niagara wing. Timed captures changed across more than 1.6 million pixels, while runtime queries found the three featured systems active.",
+    outcome: "win",
+    width: 1920,
+    height: 1080,
+  },
+  {
+    file: "r2-06-ground-material-panel.webp",
+    alt: "A white exhibit panel headed Ground Material shows connected Unreal material nodes, with trees and blue sky at its sides.",
+    caption:
+      "A player-height view of the Environment panel. Each wing now mounts a real capture of the graph or timeline behind its exhibit.",
+    outcome: "win",
+    width: 1286,
+    height: 760,
+  },
+  {
+    file: "r2-07-native-render-comparison.webp",
+    alt: "Two mounted images of the same cabin and material spheres are labeled MRQ: Deferred and MRQ: Path Tracer.",
+    caption:
+      "The Lighting wing displays its actual Movie Render Queue outputs side by side. A separate Movie Render Graph configuration also produced a successful still.",
+    outcome: "win",
+    width: 1286,
+    height: 760,
+  },
+];
 
 const chapters: Chapter[] = [
   {
@@ -316,10 +384,10 @@ function ShotFigure({ shot }: { shot: Shot }) {
       <Image
         src={`/lab/fabel-showcase/${shot.file}`}
         alt={shot.alt}
-        width={1600}
-        height={900}
+        width={shot.width ?? 1600}
+        height={shot.height ?? 900}
         unoptimized
-        className="w-full"
+        className="h-auto w-full"
       />
       <figcaption className="flex flex-col gap-2 p-4 text-xs leading-relaxed text-mist">
         <Tag outcome={shot.outcome} />
@@ -339,18 +407,16 @@ export default function FabelShowcaseDevlogPage() {
         </Link>
         <p className="mt-6 font-mono text-xs uppercase tracking-widest text-amber">Devlog</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
-          What Claude Fable 5.1 built with a night and an empty project
+          Fable Showcase, from overnight experiment to tested museum
         </h1>
         <p className="mt-5 max-w-2xl text-xl leading-relaxed text-mist">
-          I handed it a fresh UE 5.8 Third Person template, ECABridge&apos;s roughly 780 editor
-          commands, and Forage pointed at my own Fab library. The idea — a museum hub whose portals
-          are showcase levels for a category of the tool surface — was mine. Everything after that,
-          it built, tested, and photographed on its own.
+          The first overnight run built a hub and four of its eight showcase wings. Round two filled
+          the remaining rooms, repaired failures found through ordinary play, exposed the graphs
+          behind the exhibits, and carried a fresh Windows package through every portal.
         </p>
         <p className="mt-4 max-w-2xl leading-relaxed text-mist">
-          Five of nine planned levels got built by morning. Three of those five are rough —
-          presentable, not polished — and this devlog says so plainly, chapter by chapter, in the
-          order it actually happened: the wins next to the misses next to the fixes.
+          Both rounds stay here: the new result first, followed by the original wins, misses and
+          fixes exactly where they happened.
         </p>
         <p className="mt-4 max-w-2xl leading-relaxed text-mist">
           <strong className="text-amber">Round 2, a few nights later:</strong> I played the round-1
@@ -373,6 +439,73 @@ export default function FabelShowcaseDevlogPage() {
           artifact, and every negative result was kept rather than quietly dropped. That log is the
           most interesting part of round 2, and the lessons below are pulled from it.
         </p>
+      </Reveal>
+
+      <Reveal>
+        <section id="round-two" className="mt-16 scroll-mt-28">
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">
+            Round two · September 6, 2026
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">
+            Making the museum work from the player&apos;s side
+          </h2>
+          <p className="mt-5 max-w-2xl leading-relaxed text-mist">
+            Cinematics became a cyan-and-magenta alley with a native three-camera sequence.
+            Lighting became a cabin study with animated sun, lantern and color grade. Gameplay
+            connects a signal ability, a navigating StateTree courier and a live HUD. Characters
+            compares skeletal animation, a keyed FK Control Rig and two Mutable-generated looks.
+          </p>
+          <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+            The return-trip test caught a camera bug that a correct character transform had hidden:
+            the controller rotation also needed restoring. The landscape test found the player and
+            portal below the actual terrain after short traces hit a lower water surface. Mutable
+            compiled cleanly while producing no meshes until both runtime instances received their
+            source skeletal mesh. These failures changed the implementation and the acceptance tests.
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {roundTwoShots.map((shot) => (
+              <ShotFigure key={shot.file} shot={shot} />
+            ))}
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="glass mt-16 rounded-3xl p-8 md:p-10">
+          <p className="font-mono text-xs uppercase tracking-widest text-teal">Standalone build</p>
+          <h2 className="mt-3 text-xl font-bold">All eight portal round trips passed</h2>
+          <p className="mt-4 leading-relaxed text-mist">
+            The fresh Windows Development package launched at Epic quality settings and travelled
+            from the hub into every wing and back through the actual portal triggers. The run logged
+            29 world starts across all nine maps. Runtime checks found the featured Niagara systems
+            active, both Mutable looks generated, the courier StateTree running, and an exact-process
+            audio signal with a 0.074 peak. The final log contained no fatal errors, assertions,
+            ensures, Blueprint errors, StateTree errors, Mutable errors, Accessed None messages or
+            GPU crashes.
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-mist">
+            The remaining warnings cover optional Composure materials, known renderer limitations,
+            a broad GameplayCue search path and teardown messages when the Gameplay map unloads.
+            No headset test was part of this pass. The public download still points to the earlier
+            September 4 build until the new archive has a distribution URL.
+          </p>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section id="round-one" className="mt-20 scroll-mt-28 border-t border-line pt-16">
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">
+            The original overnight run
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">
+            What Claude Fable 5.1 built with a night and an empty project
+          </h2>
+          <p className="mt-5 max-w-2xl leading-relaxed text-mist">
+            I handed it a fresh UE 5.8 Third Person template, ECABridge&apos;s roughly 780 editor
+            commands, and Forage pointed at my own Fab library. Five of nine planned levels were in
+            place by morning. The chapters below preserve that first-run record.
+          </p>
+        </section>
       </Reveal>
 
       {chapters.map((chapter, ci) => (
@@ -454,14 +587,16 @@ export default function FabelShowcaseDevlogPage() {
 
       <Reveal>
         <section className="glass mt-16 rounded-3xl p-8 md:p-10">
-          <p className="font-mono text-xs uppercase tracking-widest text-teal">What&apos;s next</p>
-          <h2 className="mt-3 text-xl font-bold">Four wings, still empty rooms with a return portal</h2>
+          <p className="font-mono text-xs uppercase tracking-widest text-teal">
+            What was still missing after round one
+          </p>
+          <h2 className="mt-3 text-xl font-bold">Four wings were empty rooms with a return portal</h2>
           <p className="mt-4 leading-relaxed text-mist">
-            Cinematics, gameplay, lighting, and characters are placeholders — bare rooms with
-            nothing built in yet. The UMG splash screen, main menu, and popups that were supposed
-            to wrap the whole hub are still owed too. Everything that shipped this round —
-            environment, materials, audio — is due a polish pass before any of it is done-done.
-            The flythrough sequence is already set up for a re-render once the rest catches up.
+            Cinematics, gameplay, lighting and characters were placeholders at the end of the first
+            night. Round two filled those rooms and retested every portal. The UMG splash screen and
+            main menu remain outside the current build, and no headset test has been performed. Read
+            the <Link href="#round-two" className="text-teal hover:underline">round-two record</Link>
+            {" "}for what changed next.
           </p>
         </section>
       </Reveal>
