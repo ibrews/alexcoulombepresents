@@ -381,14 +381,23 @@ function Tag({ outcome }: { outcome: Shot["outcome"] }) {
 function ShotFigure({ shot }: { shot: Shot }) {
   return (
     <figure className="overflow-hidden rounded-2xl border border-line">
-      <Image
-        src={`/lab/fabel-showcase/${shot.file}`}
-        alt={shot.alt}
-        width={shot.width ?? 1600}
-        height={shot.height ?? 900}
-        unoptimized
-        className="h-auto w-full"
-      />
+      <a
+        href={`/lab/fabel-showcase/${shot.file}`}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Open full-resolution image: ${shot.alt}`}
+        title="Open full-resolution image"
+        className="block cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal"
+      >
+        <Image
+          src={`/lab/fabel-showcase/${shot.file}`}
+          alt={shot.alt}
+          width={shot.width ?? 1600}
+          height={shot.height ?? 900}
+          unoptimized
+          className="h-auto w-full transition-opacity hover:opacity-90"
+        />
+      </a>
       <figcaption className="flex flex-col gap-2 p-4 text-xs leading-relaxed text-mist">
         <Tag outcome={shot.outcome} />
         <span>{shot.caption}</span>
