@@ -1340,15 +1340,15 @@ export const products: Product[] = [
   {
     slug: "fabel-showcase",
     name: "Fable Showcase",
-    status: "Experiment · Round 2 verified",
+    status: "Public build · Round 10 verified",
     tagline:
-      "I returned to the overnight Unreal experiment, filled its four empty wings, and tested every portal in a fresh Windows package.",
+      "A public, playable test of how reliably AI and a headless Unreal toolchain can build a museum-scale experience with limited handholding.",
     pitch:
-      "The first run built a museum hub and four showcase wings from a fresh UE 5.8 project, using ECABridge and assets from my own Fab library. Round two adds cinematics, gameplay, lighting and characters, exposes the real graphs behind all eight exhibits, and carries a fresh Windows package through every portal and back.",
+      "Built on prior Agile Lens work, Fable Showcase tests what AI, a growing knowledge base, Forage, SceneAudit, QA Video and other MCP tools can reliably author in Unreal Engine with limited handholding. The public Round 10 build is a nine-level museum with interactive exhibits, credited Fab assets, a full menu flow and a packaged acceptance pass behind it.",
     sections: [
       {
         heading: "The original overnight experiment",
-        body: "I gave Claude Fable 5.1 a fresh Third Person template, ECABridge's editor commands and Forage access to my owned Fab library. By morning there was a hub, terrain, particles, materials and an audio hall, with four wings still empty. That first run and its mistakes remain documented in the devlog. The existing Windows download is the earlier September 4 build.",
+        body: "I gave Claude Fable 5.1 a fresh Third Person template, Unreal MCP tools and Forage access to my owned Fab library. By morning there was a hub, terrain, particles, materials and an audio hall, with four wings still empty. That first run and its mistakes remain documented in the devlog; the current download is the much more complete Round 10 build.",
       },
       {
         heading: "Four rooms with systems behind the scenery",
@@ -1363,8 +1363,8 @@ export const products: Product[] = [
         body: "The return-trip test found a camera bug that a correct character transform had hidden. Portal labels needed to face the viewing camera while the words inside each arch stayed fixed. The terrain test found the player and return portal below the real landscape. All eight editor and packaged portal round trips subsequently passed using actual movement into the trigger.",
       },
       {
-        heading: "Where round two stands",
-        body: "The fresh Windows Development package launched at Epic quality and completed all eight portal round trips. Runtime checks found active featured Niagara systems, two generated Mutable looks, a running courier StateTree and an exact-process audio signal. Its final log had no fatal errors, assertions, ensures, Blueprint errors, StateTree errors, Mutable errors, Accessed None messages or GPU crashes. No headset test was performed.",
+        heading: "What the public build adds",
+        body: "Round 10 adds a clear entry screen and pause menu, gallery entry from first launch, keyboard and mouse input, quit and restart controls, a better return view, repaired Cinematics interaction, readable room descriptions and seller credits, expanded exhibits, and an Agile Lens identity. Its exact packaged archive passed movement, mouse look, Escape, gallery entry and return, Niagara, Cinematics start and cancel, restart and quit before upload.",
       },
     ],
     bullets: [
@@ -1375,9 +1375,11 @@ export const products: Product[] = [
       "Two Mutable appearances generated distinct native meshes and looped their idle animation in the packaged build",
       "Eight real graph or timeline panels, plus deferred and path-traced Movie Render Queue comparisons in two rooms",
       "Featured Niagara systems, courier StateTree and exact-process audio signal verified at runtime",
+      "The exact public Round 10 archive passed a final packaged input, navigation, interaction, restart and quit acceptance run",
     ],
     links: [
-      { label: "Download for Windows — round 2, all 9 levels (.zip, ~3.4GB)", url: "https://drive.google.com/open?id=1P8MrVooCb4O4P3qKcdVTudsyT6tkZhkx" },
+      { label: "Install for Windows — Round 10 (~3.1 GiB)", url: "https://github.com/ibrews/alexcoulombepresents/releases/download/fabel-showcase-round10/Install-FabelShowcase-Round10.cmd" },
+      { label: "Round 10 download, checksums and manual install", url: "https://github.com/ibrews/alexcoulombepresents/releases/tag/fabel-showcase-round10" },
       { label: "Earlier Windows build — September 4 (.zip, ~2.4GB)", url: "https://drive.google.com/open?id=1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns" },
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
       { label: "Forage", url: "/lab/forage" },
@@ -1426,7 +1428,7 @@ export const products: Product[] = [
           "The Lighting wing displays its native deferred and path-traced Movie Render Queue outputs side by side.",
       },
     ],
-    guide: { href: "/lab/fabel-showcase/devlog#round-two", label: "Read the round-two devlog" },
+    guide: { href: "/lab/fabel-showcase/devlog#round-two", label: "Read the full devlog" },
     internal: true,
     experiment: true,
   },

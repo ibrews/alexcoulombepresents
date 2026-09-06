@@ -149,7 +149,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <Reveal>
         <div id="waitlist" className="glass mt-8 scroll-mt-24 rounded-3xl p-8 text-center md:p-10">
-          {product.experiment ? (
+          {product.experiment && product.links.length > 0 ? (
+            <>
+              <h2 className="text-xl font-bold">Download the public build.</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+                Explore the full museum on Windows, then read the devlog for the prompts, failures,
+                fixes and packaged QA evidence behind it.
+              </p>
+            </>
+          ) : product.experiment ? (
             <>
               <h2 className="text-xl font-bold">An experiment, not a product.</h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-mist">

@@ -38,12 +38,12 @@ export default function Home() {
   // visually distinctive work, ahead of the internal-only Agile Lens tooling
   // further down the full /lab catalog. Order is deliberate, not alphabetical.
   const bubbling = [
+    "fabel-showcase",
     "unrealitykit-bridge",
     "renderman-bridge",
     "project-ion",
     "forage",
     "avp-openxr",
-    "pinchwork",
   ]
     .map((slug) => products.find((p) => p.slug === slug))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
