@@ -1378,7 +1378,7 @@ export const products: Product[] = [
       "The exact public Round 10 archive passed a final packaged input, navigation, interaction, restart and quit acceptance run",
     ],
     links: [
-      { label: "Install for Windows — Round 10 (~3.1 GiB)", url: "https://github.com/ibrews/alexcoulombepresents/releases/download/fabel-showcase-round10/Install-FabelShowcase-Round10.cmd" },
+      { label: "Install for Windows — Round 10 v2 (~3.1 GiB)", url: "https://github.com/ibrews/alexcoulombepresents/releases/download/fabel-showcase-round10/Install-FabelShowcase-Round10-v2.cmd" },
       { label: "Round 10 download, checksums and manual install", url: "https://github.com/ibrews/alexcoulombepresents/releases/tag/fabel-showcase-round10" },
       { label: "Earlier Windows build — September 4 (.zip, ~2.4GB)", url: "https://drive.google.com/open?id=1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns" },
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
