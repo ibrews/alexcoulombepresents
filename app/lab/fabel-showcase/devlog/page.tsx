@@ -338,7 +338,7 @@ const flythroughStills: Shot[] = [
 ];
 
 const lessons = [
-  "Claude Code's own Unreal MCP connection failed to come up at boot and never reconnected for the rest of the run — everything after that went through ECABridge's own Python client instead, one call at a time.",
+  "Claude Code's own Unreal MCP connection failed to come up at boot and never reconnected for the rest of the run — everything after that went through a separate MCP Python client instead, one call at a time.",
   "None of the static screenshot commands tick the running world. Niagara particles, and anything else that's animating, only show up in a capture taken during Play-in-Editor.",
   "A freshly created mesh renders on the default gray checkerboard material until something is actually assigned to it — an easy 'is this even broken' moment the first few times it happens.",
   "Landscape materials that blend based on painted layer weights render solid black with nothing painted yet. Start with a plain material, paint the blend later.",
@@ -432,7 +432,7 @@ export default function FabelShowcaseDevlogPage() {
           build and sent back a real punch list — portal mechanics, two levels rendering solid black,
           particles invisible in real play, and four levels that were still bare placeholders. Fixing
           it took a genuinely mixed roster. <strong>Claude Sonnet</strong>, working through the same
-          ECABridge editor connection, closed out the portal round-trip/facing logic, both black-level
+          Unreal MCP editor connection, closed out the portal round-trip/facing logic, both black-level
           exposure bugs, a Niagara placement fix, and exhibit renaming — all verified in live
           Play-in-Editor, not static screenshots. A <strong>Codex GPT-6 Astra</strong> dispatch was
           tried on a stubborn Text3D material problem specifically because that class of task —
@@ -495,8 +495,9 @@ export default function FabelShowcaseDevlogPage() {
           <p className="mt-4 text-sm leading-relaxed text-mist">
             The remaining warnings cover optional Composure materials, known renderer limitations,
             a broad GameplayCue search path and teardown messages when the Gameplay map unloads.
-            No headset test was part of this pass. The public download still points to the earlier
-            September 4 build until the new archive has a distribution URL.
+            No headset test was part of this pass. The public Round 10 download adds the final input,
+            menu, gallery-return, interaction, readability and material fixes, and passed a packaged
+            acceptance run before upload.
           </p>
         </section>
       </Reveal>
@@ -510,7 +511,7 @@ export default function FabelShowcaseDevlogPage() {
             What Claude Fable 5.1 built with a night and an empty project
           </h2>
           <p className="mt-5 max-w-2xl leading-relaxed text-mist">
-            I handed it a fresh UE 5.8 Third Person template, ECABridge&apos;s roughly 780 editor
+            I handed it a fresh UE 5.8 Third Person template, roughly 780 Unreal MCP editor
             commands, and Forage pointed at my own Fab library. Five of nine planned levels were in
             place by morning. The chapters below preserve that first-run record.
           </p>
