@@ -25,6 +25,7 @@ with no configuration.
 | `/videos` | Curated YouTube videos by theme + real channel playlists, with click-to-load embeds |
 | `/lab` | Teaser for upcoming products (the private repos) |
 | `/lab/fabel-showcase` | Playable Unreal experiment — top-of-page Google Drive download, followed by the tool links and devlog |
+| `/lab/scene-audit` | SceneAudit placement workflow, interactive explanatory diagram, measurement limits, and existing licensing/contact routes. Registered in `lib/data.ts`; a dedicated page keeps access copy separate from the generic Lab waitlist. |
 | `/lab/forage` | Forage — AI-first asset scout for your owned Fab library |
 | `/lab/unrealitykit-bridge` | UnRealityKit Bridge — UE simulation + RealityKit rendering |
 | `/lab/pinchwork` | Pinchwork — universal OpenXR hand tracking template |

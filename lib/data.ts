@@ -737,6 +737,43 @@ export type Product = {
 
 export const products: Product[] = [
   {
+    slug: "scene-audit",
+    name: "SceneAudit",
+    status: "Unreal Engine plugin · contact for access",
+    tagline: "Measure the gap your viewport hides.",
+    pitch:
+      "A panel can look flush in perspective and still float above its surface. I built SceneAudit to turn that guess into a measurement: a placement verdict, a signed offset in centimeters, and orthographic views you can inspect. It gives artists and AI agents a concrete way to check their work.",
+    sections: [
+      {
+        heading: "Select. Measure. Inspect.",
+        body: "Select the geometry and its reference surface in Unreal, then run Tools > SceneAudit > Audit Selected Placement. The report includes SEATED or MISPLACED, the offset along the surface normal where a dominant normal exists, and a correction vector. A quad-view PNG adds Front, Side, and Top orthographic views plus a signed-distance heatmap.",
+      },
+      {
+        heading: "Made for surface-conforming geometry",
+        body: "Use it for panels, decals, cladding, and other geometry meant to lie against a reference surface. The question is whether the geometry conforms to that surface. A sphere resting on a floor is a different test: most of the sphere is correctly far from the floor, so a placement audit can flag it even when its contact point is right.",
+      },
+      {
+        heading: "A measurement with visible limits",
+        body: "Static reference geometry is sampled across its triangles, so a coarse mesh does not reduce the measurement to its corner vertices. Skeletal meshes fall back to a bounding box and are labeled as coarse. Curved or closed reference surfaces may have no dominant normal; in that case, inspect the core verdict and quad view rather than relying on one directional offset.",
+      },
+      {
+        heading: "Start with the built-in placement demo",
+        body: "Create Placement Demo Scene makes a floor and two panels: one seated, one floating 12 cm above it. Audit the floating panel, then the seated panel, and compare the reports with the side views. The editor plugin is content-only, requires Node.js, and has been verified in Unreal Engine 5.8 on macOS. Run Check SceneAudit Install before the first audit.",
+      },
+    ],
+    bullets: [
+      "Placement verdicts and signed offsets in centimeters",
+      "Correction vector and orthographic quad-view evidence",
+      "Surface sampling for static reference meshes",
+      "Shared standalone Node.js measurement core",
+    ],
+    links: [
+      { label: "Licensing and access", url: "/plugins" },
+      { label: "Contact Alex", url: "/contact" },
+    ],
+    accent: "teal",
+  },
+  {
     slug: "video-qa-workbench",
     name: "Video QA Workbench",
     status: "Design-partner preview · local-first",
