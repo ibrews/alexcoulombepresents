@@ -7,20 +7,20 @@ import Ethereal from "@/components/Ethereal";
 export const metadata: Metadata = {
   title: "Fable Showcase — Devlog",
   description:
-    "An overnight Unreal Engine experiment, followed by a second pass through its empty rooms, runtime failures, and packaged Windows build.",
+    "A headless Unreal Engine experiment built on Agile Lens work: visible repairs, missed QA, and lessons from testing a playable museum.",
   alternates: { canonical: "/lab/fabel-showcase/devlog" },
   openGraph: {
     title: "Fable Showcase — Devlog",
     description:
-      "An overnight Unreal Engine experiment, followed by a second pass through its empty rooms, runtime failures, and packaged Windows build.",
+      "A headless Unreal Engine experiment built on Agile Lens work: visible repairs, missed QA, and lessons from testing a playable museum.",
     url: "/lab/fabel-showcase/devlog",
     type: "website",
     images: [
       {
-        url: "/lab/fabel-showcase/hub-flythrough-poster.webp",
-        width: 1280,
-        height: 720,
-        alt: "A moodily lit museum hall with glowing portal arches down both sides and a metal pyramid centerpiece on the floor.",
+        url: "/lab/fabel-showcase/gallery-return.png",
+        width: 1286,
+        height: 760,
+        alt: "A third-person view along the museum aisle, with glowing portals and framed paintings on both sides.",
       },
     ],
   },
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fable Showcase — Devlog",
     description:
-      "An overnight Unreal Engine experiment, followed by a tested second pass through all eight showcase wings.",
-    images: ["/lab/fabel-showcase/hub-flythrough-poster.webp"],
+      "Visible repairs and missed QA in an experiment with AI, shared knowledge, and headless Unreal Engine tools.",
+    images: ["/lab/fabel-showcase/gallery-return.png"],
   },
 };
 
@@ -48,6 +48,41 @@ type Chapter = {
   intro: string;
   shots: Shot[];
 };
+
+const repairShots: Shot[] = [
+  {
+    file: "gallery-return.png",
+    alt: "The mannequin faces along the central gallery aisle between glowing portals, with paintings on both walls.",
+    caption: "The gallery return now frames the aisle. This running editor capture checks the view the player actually receives after coming back through a portal.",
+    outcome: "fix",
+    width: 1286,
+    height: 760,
+  },
+  {
+    file: "embers-readable-label.png",
+    alt: "A tall orange particle plume rises above the plinth labeled Authored: Embers, with its system graph on the wall and blue and red particle exhibits alongside.",
+    caption: "Orange embers during sustained playback in the native Windows package, with a readable exhibit label and the system graph alongside. The neighboring blue and red particle systems are also visible.",
+    outcome: "fix",
+    width: 1920,
+    height: 1080,
+  },
+  {
+    file: "terrain-rain-shore.png",
+    alt: "Rain streaks cross a sandy landscape where a dark textured path meets a blue pond enclosed by a curved bank.",
+    caption: "Visible rain, a textured trail and a curved shoreline replace the missing weather and rectangular water surface. The wet ground still catches a strong highlight on the left.",
+    outcome: "fix",
+    width: 1286,
+    height: 760,
+  },
+  {
+    file: "sound-signal-room-guide.png",
+    alt: "A centered Sound & Signal wall panel gives listening instructions and names the sellers of the music, footsteps and architecture assets.",
+    caption: "A room guide with a clear uppercase heading, centered copy and seller credits. The listening instructions explain what to compare between exhibits.",
+    outcome: "fix",
+    width: 1920,
+    height: 1080,
+  },
+];
 
 const roundTwoShots: Shot[] = [
   {
@@ -398,9 +433,12 @@ function ShotFigure({ shot }: { shot: Shot }) {
           className="h-auto w-full transition-opacity hover:opacity-90"
         />
       </a>
-      <figcaption className="flex flex-col gap-2 p-4 text-xs leading-relaxed text-mist">
+      <figcaption className="flex flex-col gap-2 p-4 text-sm leading-relaxed text-mist">
         <Tag outcome={shot.outcome} />
         <span>{shot.caption}</span>
+        <a href={`/lab/fabel-showcase/${shot.file}`} target="_blank" rel="noreferrer" className="text-teal underline underline-offset-4">
+          View full resolution ↗
+        </a>
       </figcaption>
     </figure>
   );
@@ -416,44 +454,69 @@ export default function FabelShowcaseDevlogPage() {
         </Link>
         <p className="mt-6 font-mono text-xs uppercase tracking-widest text-amber">Devlog</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
-          Fable Showcase, from overnight experiment to tested museum
+          Fable Showcase: building it, then testing what actually works
         </h1>
         <p className="mt-5 max-w-2xl text-xl leading-relaxed text-mist">
-          The first overnight run built a hub and four of its eight showcase wings. Round two filled
-          the remaining rooms, repaired failures found through ordinary play, exposed the graphs
-          behind the exhibits, and carried a fresh Windows package through every portal.
+          A test of what AI agents can reliably produce in Unreal Engine through headless tools,
+          with limited handholding. It builds on prior Agile Lens work and a shared knowledge base,
+          using Forage, SceneAudit, QA Video and MCP tools to author and inspect a playable museum.
         </p>
         <p className="mt-4 max-w-2xl leading-relaxed text-mist">
-          Both rounds stay here: the new result first, followed by the original wins, misses and
-          fixes exactly where they happened.
+          Human playtesting has repeatedly exposed gaps in the automated checks. The latest repairs
+          come first below; the earlier captures remain as a record of what worked and what failed.
+          Click any screenshot to open its full-resolution image.
         </p>
         <p className="mt-4 max-w-2xl leading-relaxed text-mist">
-          <strong className="text-amber">Round 2, a few nights later:</strong> I played the round-1
-          build and sent back a real punch list — portal mechanics, two levels rendering solid black,
-          particles invisible in real play, and four levels that were still bare placeholders. Fixing
-          it took a genuinely mixed roster. <strong>Claude Sonnet</strong>, working through the same
-          Unreal MCP editor connection, closed out the portal round-trip/facing logic, both black-level
-          exposure bugs, a Niagara placement fix, and exhibit renaming — all verified in live
-          Play-in-Editor, not static screenshots. A <strong>Codex GPT-6 Astra</strong> dispatch was
-          tried on a stubborn Text3D material problem specifically because that class of task —
-          reading engine C++ source to explain unexpected behavior — is closer to what Astra is
-          positioned for than routine content work; it failed outright on a Windows sandbox bug before
-          reading a single file, which is worth reporting honestly rather than quietly retrying. The
-          bulk of round 2 — all four missing levels actually built, working per-room soundscapes,
-          in-world graph panels for every exhibit, a real fix for the Text3D problem Astra couldn&apos;t
-          reach, and full 8-room portal round-trip verification — was done by a separate Codex-based
-          worker running on another machine, coordinated through this project&apos;s own fleet
-          messaging bus rather than by me directly. It used a strict verify-before-claim discipline
-          throughout: every &quot;done&quot; is backed by a Play-in-Editor screenshot or a hashed
-          artifact, and every negative result was kept rather than quietly dropped. That log is the
-          most interesting part of round 2, and the lessons below are pulled from it.
+          The work began with Claude Fable 5.1 and continued with Claude Sonnet and Codex agents.
+          More agents helped separate implementation from review, but their completion reports
+          were not reliable acceptance evidence. The failures below explain why.
         </p>
+      </Reveal>
+
+      <Reveal>
+        <section id="latest-repairs" className="mt-16 scroll-mt-28">
+          <p className="font-mono text-xs uppercase tracking-widest text-amber">
+            September 6, 2026 · Playtest repairs
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight">The QA pass missed the player&apos;s experience</h2>
+          <p className="mt-5 max-w-2xl leading-relaxed text-mist">
+            Earlier checks accepted active components, compiled graphs and successful map loads.
+            A person playing found absent embers, broken input, unreadable panels and a terrain
+            room without its promised trail or weather. Those checks were insufficient, and the
+            earlier completion claims were too broad. An earlier downloadable archive also omitted
+            required engine libraries, so its executable did not open.
+          </p>
+          <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+            The ember repair uses a working Niagara system with the active lifetime, size and
+            velocity settings, checked during sustained play. Terrain and weather assets now have
+            explicit saves and reload checks: their actors existed before, but their generated
+            assets had never been persisted. The environment now has rain streaks, a broad
+            switchback trail and a pond with a curved bank. A real CharacterMovement test walked
+            the trail down and back; its first attempt caught an exhibit board blocking the path.
+          </p>
+          <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+            Room descriptions gained centered uppercase headings and seller credits. The gallery
+            return camera looks down the aisle, and the cinematic camera shots were reviewed for
+            panel obstruction and floor overlap. The courier now turns toward the player, while
+            Sound &amp; Signal uses the same modulation for drone pitch and light intensity.
+          </p>
+          <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+            The menu work covers first-time gallery entry, clickable room previews, pause, restart,
+            quit and a devlog link; the mouse wheel brings the camera closer for reading. These
+            editor and packaged captures document visible repairs. Release acceptance separately checks real
+            keyboard and mouse input, every portal, and launching the exact extracted Windows ZIP.
+            A still image cannot establish those results.
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {repairShots.map((shot) => <ShotFigure key={shot.file} shot={shot} />)}
+          </div>
+        </section>
       </Reveal>
 
       <Reveal>
         <section id="round-two" className="mt-16 scroll-mt-28">
           <p className="font-mono text-xs uppercase tracking-widest text-amber">
-            Round two · September 6, 2026
+            Earlier development · September 6, 2026
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">
             Making the museum work from the player&apos;s side
@@ -481,10 +544,10 @@ export default function FabelShowcaseDevlogPage() {
 
       <Reveal>
         <section className="glass mt-16 rounded-3xl p-8 md:p-10">
-          <p className="font-mono text-xs uppercase tracking-widest text-teal">Standalone build</p>
-          <h2 className="mt-3 text-xl font-bold">All eight portal round trips passed</h2>
+          <p className="font-mono text-xs uppercase tracking-widest text-teal">Earlier automated checks</p>
+          <h2 className="mt-3 text-xl font-bold">Passing a scripted route was too narrow a test</h2>
           <p className="mt-4 leading-relaxed text-mist">
-            The fresh Windows Development package launched at Epic quality settings and travelled
+            An earlier Windows Development package launched at Epic quality settings and travelled
             from the hub into every wing and back through the actual portal triggers. The run logged
             29 world starts across all nine maps. Runtime checks found the featured Niagara systems
             active, both Mutable looks generated, the courier StateTree running, and an exact-process
@@ -495,9 +558,9 @@ export default function FabelShowcaseDevlogPage() {
           <p className="mt-4 text-sm leading-relaxed text-mist">
             The remaining warnings cover optional Composure materials, known renderer limitations,
             a broad GameplayCue search path and teardown messages when the Gameplay map unloads.
-            No headset test was part of this pass. The public Round 10 download adds the final input,
-            menu, gallery-return, interaction, readability and material fixes, and passed a packaged
-            acceptance run before upload.
+            No headset test was part of this pass. These observations did not establish that the
+            embers stayed visible, that ordinary menu and input flows worked, or that the archive
+            someone downloaded could launch. The playtest repairs above correct that gap in scope.
           </p>
         </section>
       </Reveal>
@@ -580,7 +643,7 @@ export default function FabelShowcaseDevlogPage() {
 
       <Reveal>
         <section className="mt-16">
-          <p className="font-mono text-xs uppercase tracking-widest text-mist">Round 2</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-mist">Earlier repair lessons</p>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">
             What broke — and got fixed — the second time around
           </h2>
@@ -598,15 +661,15 @@ export default function FabelShowcaseDevlogPage() {
       <Reveal>
         <section className="glass mt-16 rounded-3xl p-8 md:p-10">
           <p className="font-mono text-xs uppercase tracking-widest text-teal">
-            What was still missing after round one
+            What was still missing after the first night
           </p>
           <h2 className="mt-3 text-xl font-bold">Four wings were empty rooms with a return portal</h2>
           <p className="mt-4 leading-relaxed text-mist">
             Cinematics, gameplay, lighting and characters were placeholders at the end of the first
-            night. Round two filled those rooms and retested every portal. The UMG splash screen and
-            main menu remain outside the current build, and no headset test has been performed. Read
-            the <Link href="#round-two" className="text-teal hover:underline">round-two record</Link>
-            {" "}for what changed next.
+            night. Later work filled those rooms and added the UMG entry and pause menus. No headset
+            test has been performed. Read the
+            {" "}<Link href="#latest-repairs" className="text-teal hover:underline">latest repair record</Link>
+            {" "}for the subsequent playtest findings.
           </p>
         </section>
       </Reveal>

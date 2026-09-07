@@ -149,12 +149,24 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <Reveal>
         <div id="waitlist" className="glass mt-8 scroll-mt-24 rounded-3xl p-8 text-center md:p-10">
-          {product.experiment && product.links.length > 0 ? (
+          {product.slug === "fabel-showcase" && !product.links.some((link) => link.url.startsWith("https://drive.google.com/")) ? (
+            <>
+              <h2 className="text-xl font-bold">Download temporarily unavailable</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
+                The replacement ZIP is being uploaded and verified. The earlier download links
+                have been removed. Read the devlog for the latest repairs and screenshots.
+              </p>
+              <Link href="/lab/fabel-showcase/devlog#latest-repairs" className="mt-4 inline-block text-sm text-teal underline underline-offset-4">
+                Read the latest devlog →
+              </Link>
+            </>
+          ) : product.experiment && product.links.length > 0 ? (
             <>
               <h2 className="text-xl font-bold">Download the public build.</h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-mist">
-                Explore the full museum on Windows, then read the devlog for the prompts, failures,
-                fixes and packaged QA evidence behind it.
+                Download the ZIP, choose Extract All, and double-click FabelShowcase.exe in the
+                extracted folder. Then read the devlog for the prompts, failures, fixes and packaged
+                QA evidence behind it.
               </p>
             </>
           ) : product.experiment ? (

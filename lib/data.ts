@@ -1340,15 +1340,15 @@ export const products: Product[] = [
   {
     slug: "fabel-showcase",
     name: "Fable Showcase",
-    status: "Public build · Round 10 verified",
+    status: "Replacement download being verified",
     tagline:
-      "A public, playable test of how reliably AI and a headless Unreal toolchain can build a museum-scale experience with limited handholding.",
+      "A playable experiment in how reliably AI and a headless Unreal toolchain can build a museum-scale experience with limited handholding.",
     pitch:
-      "Built on prior Agile Lens work, Fable Showcase tests what AI, a growing knowledge base, Forage, SceneAudit, QA Video and other MCP tools can reliably author in Unreal Engine with limited handholding. The public Round 10 build is a nine-level museum with interactive exhibits, credited Fab assets, a full menu flow and a packaged acceptance pass behind it.",
+      "Built on prior Agile Lens work, Fable Showcase tests what AI, a growing knowledge base, Forage, SceneAudit, QA Video and other MCP tools can reliably author in Unreal Engine with limited handholding. The nine-level museum includes interactive exhibits, credited Fab assets and a full menu flow. The devlog records the repairs and the failures that earlier automated QA missed.",
     sections: [
       {
         heading: "The original overnight experiment",
-        body: "I gave Claude Fable 5.1 a fresh Third Person template, Unreal MCP tools and Forage access to my owned Fab library. By morning there was a hub, terrain, particles, materials and an audio hall, with four wings still empty. That first run and its mistakes remain documented in the devlog; the current download is the much more complete Round 10 build.",
+        body: "I gave Claude Fable 5.1 a fresh Third Person template, Unreal MCP tools and Forage access to my owned Fab library. By morning there was a hub, terrain, particles, materials and an audio hall, with four wings still empty. That first run and its mistakes remain documented in the devlog alongside the subsequent repairs.",
       },
       {
         heading: "Four rooms with systems behind the scenery",
@@ -1360,42 +1360,43 @@ export const products: Product[] = [
       },
       {
         heading: "Fixes tested through the player",
-        body: "The return-trip test found a camera bug that a correct character transform had hidden. Portal labels needed to face the viewing camera while the words inside each arch stayed fixed. The terrain test found the player and return portal below the real landscape. All eight editor and packaged portal round trips subsequently passed using actual movement into the trigger.",
+        body: "Playtesting exposed missing embers, unsaved terrain and weather assets, confusing gallery returns and obstructed camera shots. The repairs include sustained particle checks, explicit asset saves and reloads, an aisle-facing return view, and a wide switchback trail physically walked down and back. Editor checks and downloadable-package acceptance are separate steps.",
       },
       {
         heading: "What the public build adds",
-        body: "Round 10 adds a clear entry screen and pause menu, gallery entry from first launch, keyboard and mouse input, quit and restart controls, a better return view, repaired Cinematics interaction, readable room descriptions and seller credits, expanded exhibits, and an Agile Lens identity. Its exact packaged archive passed movement, mouse look, Escape, gallery entry and return, Niagara, Cinematics start and cancel, restart and quit before upload.",
+        body: "The public build adds an entry screen and pause menu, gallery entry from first launch, clickable room previews, mouse-wheel camera distance, quit and restart controls, a better return view, repaired Cinematics interaction, readable room descriptions and seller credits, and an Agile Lens identity. Release checks cover input and interaction from the exact extracted ZIP, including whether its executable opens.",
+      },
+      {
+        heading: "Download temporarily unavailable",
+        body: "The replacement Windows ZIP is being uploaded and verified. Earlier download links have been removed. Once it is ready, this page will link directly to the ZIP on Google Drive, with ordinary extraction and launch instructions.",
       },
     ],
     bullets: [
-      "A mixed model roster on round 2: Claude Sonnet for the bug-fix pass, a Codex-coordinated worker for the bulk of the new content, a Codex Astra dispatch that failed outright on a Windows sandbox bug — reported as-is, not hidden",
-      "All eight authored wings passed actual portal entry and return in Play-in-Editor and in the fresh Windows package",
-      "29 packaged world starts covered the hub and every wing, including lower and upper aisle directions",
+      "An experiment using Claude and Codex agents, shared Agile Lens knowledge, Forage, SceneAudit, QA Video and MCP tools",
+      "Eight showcase wings reached through the gallery portals or clickable menu previews",
+      "Visible rain, a curved pond shore and a wide procedural trail tested with actual character movement",
       "An optional 15-second, three-camera sequence restores the player's camera and input after completion or cancellation",
       "Two Mutable appearances generated distinct native meshes and looped their idle animation in the packaged build",
       "Eight real graph or timeline panels, plus deferred and path-traced Movie Render Queue comparisons in two rooms",
-      "Featured Niagara systems, courier StateTree and exact-process audio signal verified at runtime",
-      "The exact public Round 10 archive passed a final packaged input, navigation, interaction, restart and quit acceptance run",
+      "Orange embers, a courier that turns toward the player, and light intensity that follows the drone's pitch modulation",
+      "Replacement Windows ZIP upload and verification underway; download link temporarily unavailable",
     ],
     links: [
-      { label: "Install for Windows — Round 10 v2 (~3.1 GiB)", url: "https://github.com/ibrews/alexcoulombepresents/releases/download/fabel-showcase-round10/Install-FabelShowcase-Round10-v2.cmd" },
-      { label: "Round 10 download, checksums and manual install", url: "https://github.com/ibrews/alexcoulombepresents/releases/tag/fabel-showcase-round10" },
-      { label: "Earlier Windows build — September 4 (.zip, ~2.4GB)", url: "https://drive.google.com/open?id=1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns" },
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
       { label: "Forage", url: "/lab/forage" },
       { label: "Video QA Workbench", url: "/lab/video-qa-workbench" },
     ],
     accent: "amber",
     heroImage: {
-      src: "/lab/fabel-showcase/hub-flythrough-poster.webp",
-      alt: "A moodily lit museum hall with pink and pale-green glowing portal arches on either side, a metal pyramid centerpiece on the floor, and a framed portrait of a woman on the back wall.",
+      src: "/lab/fabel-showcase/gallery-return.png",
+      alt: "The mannequin looks along the museum's central aisle between glowing portals and framed paintings.",
     },
     screenshots: [
       {
-        src: "/lab/fabel-showcase/r2-01-environment-packaged.webp",
-        alt: "A third-person mannequin stands on a sunlit sandy mesa beside an exhibit panel showing the terrain material graph.",
+        src: "/lab/fabel-showcase/terrain-rain-shore.png",
+        alt: "Rain falls over a sandy landscape, dark textured path and blue pond with a curved bank.",
         caption:
-          "The packaged Environment wing after the player start and return portal were moved onto the actual landscape surface.",
+          "The repaired terrain and weather exhibit, captured during editor play with rain and a curved shoreline.",
       },
       {
         src: "/lab/fabel-showcase/r2-02-cinematics-alley.webp",
@@ -1416,10 +1417,10 @@ export const products: Product[] = [
           "Two packaged Mutable instances generated distinct appearances and started the same looping idle animation.",
       },
       {
-        src: "/lab/fabel-showcase/r2-05-niagara-packaged.webp",
-        alt: "A warm orange exhibit hall contains bright colored Niagara effects and an in-world system graph panel.",
+        src: "/lab/fabel-showcase/embers-readable-label.png",
+        alt: "A tall orange particle plume rises above a plinth labeled Authored: Embers, beside its system graph and neighboring blue and red effects.",
         caption:
-          "The packaged Niagara wing with the featured systems active and their real graph displayed on the wall.",
+          "The repaired ember exhibit during sustained playback in the native Windows package, with its readable label and system graph.",
       },
       {
         src: "/lab/fabel-showcase/r2-07-native-render-comparison.webp",
@@ -1428,7 +1429,7 @@ export const products: Product[] = [
           "The Lighting wing displays its native deferred and path-traced Movie Render Queue outputs side by side.",
       },
     ],
-    guide: { href: "/lab/fabel-showcase/devlog#round-two", label: "Read the full devlog" },
+    guide: { href: "/lab/fabel-showcase/devlog#latest-repairs", label: "Read the full devlog" },
     internal: true,
     experiment: true,
   },
