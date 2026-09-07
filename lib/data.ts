@@ -1419,7 +1419,7 @@ export const products: Product[] = [
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
       { label: "Forage", url: "/lab/forage" },
       { label: "Video QA Workbench", url: "/lab/video-qa-workbench" },
-      { label: "SceneAudit", url: "/plugins" },
+      { label: "SceneAudit", url: "/lab/scene-audit" },
     ],
     accent: "amber",
     heroImage: {

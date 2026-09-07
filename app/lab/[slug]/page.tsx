@@ -12,7 +12,8 @@ import { isListSlug } from "@/lib/lists";
 import { renderBreaks, plainText } from "@/components/Lines";
 
 export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  // Dedicated routes own their HTML; generating the same path here overwrites it.
+  return products.filter((p) => p.slug !== "scene-audit").map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
