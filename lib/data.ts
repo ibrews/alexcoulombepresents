@@ -1366,10 +1366,6 @@ export const products: Product[] = [
         heading: "What the public build adds",
         body: "The public build adds an entry screen and pause menu, gallery entry from first launch, clickable room previews, mouse-wheel camera distance, quit and restart controls, a better return view, repaired Cinematics interaction, readable room descriptions and seller credits, and an Agile Lens identity. Release checks cover input and interaction from the exact extracted ZIP, including whether its executable opens.",
       },
-      {
-        heading: "Download and run",
-        body: "Download FabelShowcase-Windows.zip from Google Drive. In Downloads, right-click the ZIP and choose Extract All. Open the extracted folder and double-click FabelShowcase.exe. Use the menu to enter the gallery or choose a room, restart, or quit. There is no installer.",
-      },
     ],
     bullets: [
       "An experiment using Claude and Codex agents, shared Agile Lens knowledge, Forage, SceneAudit, QA Video and MCP tools",
@@ -1382,10 +1378,11 @@ export const products: Product[] = [
       "A single Windows ZIP on Google Drive, with ordinary extraction and launch instructions",
     ],
     links: [
-      { label: "Download for Windows — Google Drive (.zip, ~3.2 GiB)", url: "https://drive.google.com/file/d/1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns/view?usp=sharing" },
+      { label: "Download for Windows (~3.1GB)", url: "https://drive.google.com/file/d/1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns/view?usp=sharing" },
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
       { label: "Forage", url: "/lab/forage" },
       { label: "Video QA Workbench", url: "/lab/video-qa-workbench" },
+      { label: "SceneAudit", url: "/plugins" },
     ],
     accent: "amber",
     heroImage: {

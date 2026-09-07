@@ -24,6 +24,7 @@ with no configuration.
 | `/skills` | AI skills for Claude Code — live on Capafy (ue5-testflight, ios-testflight), in the pipeline (godot-visionos, spatial-deck-maker, app-store-aso, metahuman-godot-pipeline), and free open source |
 | `/videos` | Curated YouTube videos by theme + real channel playlists, with click-to-load embeds |
 | `/lab` | Teaser for upcoming products (the private repos) |
+| `/lab/fabel-showcase` | Playable Unreal experiment — top-of-page Google Drive download, followed by the tool links and devlog |
 | `/lab/forage` | Forage — AI-first asset scout for your owned Fab library |
 | `/lab/unrealitykit-bridge` | UnRealityKit Bridge — UE simulation + RealityKit rendering |
 | `/lab/pinchwork` | Pinchwork — universal OpenXR hand tracking template |

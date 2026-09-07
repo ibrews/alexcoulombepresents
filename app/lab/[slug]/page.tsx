@@ -40,6 +40,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   const accent = accentText[product.accent] ?? "text-teal";
   const others = products.filter((p) => p.slug !== product.slug);
+  const isFabelShowcase = product.slug === "fabel-showcase";
+  const downloadLink = isFabelShowcase
+    ? product.links.find((link) => link.url.startsWith("https://drive.google.com/"))
+    : undefined;
+  const toolLinks = isFabelShowcase
+    ? product.links.filter((link) => link !== downloadLink)
+    : [];
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-32">
@@ -54,6 +61,31 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.status}
           </span>
         </div>
+        {isFabelShowcase && downloadLink && (
+          <section id="download" aria-label="Download and tools" className="glass mt-6 scroll-mt-24 rounded-3xl p-6 md:p-8">
+            <a
+              href={downloadLink.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded-2xl bg-teal px-6 py-4 text-base font-bold text-ink transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal"
+            >
+              {downloadLink.label}
+            </a>
+            <p className="mt-3 text-sm leading-relaxed text-mist">
+              Choose Extract All, then open FabelShowcase.exe in the extracted folder.
+            </p>
+            <h2 className="mt-6 text-sm font-semibold">Some of the tools used:</h2>
+            <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-3">
+              {toolLinks.map((link) => (
+                <li key={link.url}>
+                  <a href={link.url} className="text-sm text-teal underline underline-offset-4 hover:opacity-80">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         <p className={`mt-5 text-xl leading-relaxed md:text-2xl ${accent}`}>{renderBreaks(product.tagline)}</p>
       </Reveal>
 
@@ -147,20 +179,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </Reveal>
       )}
 
-      <Reveal>
+      {!isFabelShowcase && <Reveal>
         <div id="waitlist" className="glass mt-8 scroll-mt-24 rounded-3xl p-8 text-center md:p-10">
-          {product.slug === "fabel-showcase" && !product.links.some((link) => link.url.startsWith("https://drive.google.com/")) ? (
-            <>
-              <h2 className="text-xl font-bold">Download temporarily unavailable</h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-mist">
-                The replacement ZIP is being uploaded and verified. The earlier download links
-                have been removed. Read the devlog for the latest repairs and screenshots.
-              </p>
-              <Link href="/lab/fabel-showcase/devlog#latest-repairs" className="mt-4 inline-block text-sm text-teal underline underline-offset-4">
-                Read the latest devlog →
-              </Link>
-            </>
-          ) : product.experiment && product.links.length > 0 ? (
+          {product.experiment && product.links.length > 0 ? (
             <>
               <h2 className="text-xl font-bold">Download the public build.</h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-mist">
@@ -257,7 +278,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           )}
         </div>
-      </Reveal>
+      </Reveal>}
 
       <Reveal>
         <div className="mt-16">
