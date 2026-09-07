@@ -352,8 +352,10 @@ export const storeItems: StoreItem[] = [
     name: "Unreal Foundations — August cohort",
     kind: "course-bundle",
     priceCents: 25000,
+    // The early-bird cutoff below has long passed and effectivePriceCents has
+    // already stepped this to $300 — the note only carries what's still true.
     priceNote:
-      "Early-bird through July 29 — $300 after. Student or between jobs? Email for a sliding-scale seat — no questions asked.",
+      "Student or between jobs? Email for a sliding-scale seat — no questions asked.",
     capacity: 25,
     blurb:
       "Zero to Environment in four live Wednesday classes: the editor & ecosystem, world building with Megascans & Nanite, Lumen & lighting, then cameras & Movie Render Queue — leave with a portfolio-ready render. Recordings and project files included.",

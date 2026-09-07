@@ -12,6 +12,7 @@ import TestimonialWall from "@/components/TestimonialWall";
 import TrainingSurveyForm from "@/components/TrainingSurveyForm";
 import TrainingCalendar from "@/components/TrainingCalendar";
 import { STARTER_TIER } from "@/lib/commerce/membership";
+import { wednesdayCalendar, isPurchasable } from "@/lib/store";
 import { getCurriculumEntries } from "@/lib/curriculum";
 import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
@@ -33,11 +34,20 @@ export const metadata: Metadata = {
 const FREE_CLASS_ENDS_ISO = "2026-08-05T17:00:00Z"; // Aug 5, 11a ET + ~2h
 const FREE_CLASS_ZOOM = "https://us06web.zoom.us/meeting/register/BpUpfAPDToWFUyqRgPFwXA";
 
+// The intro copy used to hard-code "the next eight Wednesdays" — true only on
+// the day the run was published, and wrong every week after as sessions close
+// themselves out via saleWindow. Count what's actually still bookable instead.
+const SPELLED = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight"];
+function spelledCount(n: number): string {
+  return SPELLED[n] ?? String(n);
+}
+
 // Without this the date check above would freeze at build time.
 export const revalidate = 3600;
 
 export default function Training() {
   const aiClasses = getCurriculumEntries().filter((entry) => entry.status === "teasing");
+  const bookableWednesdays = wednesdayCalendar.filter((s) => isPurchasable(s)).length;
   const freeClassAhead = Date.now() < new Date(FREE_CLASS_ENDS_ISO).getTime();
 
   return (
@@ -111,9 +121,21 @@ export default function Training() {
             <p className="mt-3 leading-relaxed text-mist">
               The free kickoff session has happened, and the rhythm it started continues: a live
               class every <strong className="text-snow">Wednesday at 11a ET</strong>, plus{" "}
-              <strong className="text-snow">office hours every Friday at 1p ET</strong>. The next
-              eight Wednesdays are on the calendar below at introductory pricing — book any of them
-              right now. After that run, what gets taught is exactly what the poll decides.
+              <strong className="text-snow">office hours every Friday at 1p ET</strong>.{" "}
+              {bookableWednesdays > 0 ? (
+                <>
+                  The next {spelledCount(bookableWednesdays)}{" "}
+                  {bookableWednesdays === 1 ? "Wednesday is" : "Wednesdays are"} on the calendar
+                  below at introductory pricing — book{" "}
+                  {bookableWednesdays === 1 ? "it" : "any of them"} right now. After that run, what
+                  gets taught is exactly what the poll decides.
+                </>
+              ) : (
+                <>
+                  The introductory run has finished and the next set of dates is being scheduled —
+                  what it covers is exactly what the poll decides.
+                </>
+              )}
             </p>
           )}
           <div className="mt-5 flex flex-wrap items-center gap-4">
