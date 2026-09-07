@@ -476,7 +476,7 @@ export default function FabelShowcaseDevlogPage() {
       <Reveal>
         <section id="latest-repairs" className="mt-16 scroll-mt-28">
           <p className="font-mono text-xs uppercase tracking-widest text-amber">
-            September 6, 2026 · Playtest repairs
+            September 6–7, 2026 · Playtest repairs
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">The QA pass missed the player&apos;s experience</h2>
           <p className="mt-5 max-w-2xl leading-relaxed text-mist">
@@ -492,7 +492,8 @@ export default function FabelShowcaseDevlogPage() {
             explicit saves and reload checks: their actors existed before, but their generated
             assets had never been persisted. The environment now has rain streaks, a broad
             switchback trail and a pond with a curved bank. A real CharacterMovement test walked
-            the trail down and back; its first attempt caught an exhibit board blocking the path.
+            the trail down and back in Play-in-Editor; its first attempt caught an exhibit board
+            blocking the path. That traversal preceded packaging.
           </p>
           <p className="mt-4 max-w-2xl leading-relaxed text-mist">
             Room descriptions gained centered uppercase headings and seller credits. The gallery
@@ -502,10 +503,12 @@ export default function FabelShowcaseDevlogPage() {
           </p>
           <p className="mt-4 max-w-2xl leading-relaxed text-mist">
             The menu work covers first-time gallery entry, clickable room previews, pause, restart,
-            quit and a devlog link; the mouse wheel brings the camera closer for reading. These
-            editor and packaged captures document visible repairs. Release acceptance separately checks real
-            keyboard and mouse input, every portal, and launching the exact extracted Windows ZIP.
-            A still image cannot establish those results.
+            quit and a devlog link; the mouse wheel brings the camera closer for reading. The exact
+            extracted Windows ZIP passed two fresh launches, all eight room-preview clicks with
+            forward movement and mouse look, the E-triggered camera sequence through its natural
+            finish, and one physical portal entry and return. The actual Restart button worked,
+            Quit closed the game twice, and the startup devlog link launched its URL. These are
+            scoped interaction checks; a still image alone cannot establish them.
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             {repairShots.map((shot) => <ShotFigure key={shot.file} shot={shot} />)}

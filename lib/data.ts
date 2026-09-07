@@ -1340,7 +1340,7 @@ export const products: Product[] = [
   {
     slug: "fabel-showcase",
     name: "Fable Showcase",
-    status: "Replacement download being verified",
+    status: "Public Windows build",
     tagline:
       "A playable experiment in how reliably AI and a headless Unreal toolchain can build a museum-scale experience with limited handholding.",
     pitch:
@@ -1360,15 +1360,15 @@ export const products: Product[] = [
       },
       {
         heading: "Fixes tested through the player",
-        body: "Playtesting exposed missing embers, unsaved terrain and weather assets, confusing gallery returns and obstructed camera shots. The repairs include sustained particle checks, explicit asset saves and reloads, an aisle-facing return view, and a wide switchback trail physically walked down and back. Editor checks and downloadable-package acceptance are separate steps.",
+        body: "Playtesting exposed missing embers, unsaved terrain and weather assets, confusing gallery returns and obstructed camera shots. The repairs include sustained particle checks, explicit asset saves and reloads, an aisle-facing return view, and a wide switchback trail physically walked down and back in Play-in-Editor. The devlog distinguishes those editor checks from tests of the extracted Windows package.",
       },
       {
         heading: "What the public build adds",
         body: "The public build adds an entry screen and pause menu, gallery entry from first launch, clickable room previews, mouse-wheel camera distance, quit and restart controls, a better return view, repaired Cinematics interaction, readable room descriptions and seller credits, and an Agile Lens identity. Release checks cover input and interaction from the exact extracted ZIP, including whether its executable opens.",
       },
       {
-        heading: "Download temporarily unavailable",
-        body: "The replacement Windows ZIP is being uploaded and verified. Earlier download links have been removed. Once it is ready, this page will link directly to the ZIP on Google Drive, with ordinary extraction and launch instructions.",
+        heading: "Download and run",
+        body: "Download FabelShowcase-Windows.zip from Google Drive. In Downloads, right-click the ZIP and choose Extract All. Open the extracted folder and double-click FabelShowcase.exe. Use the menu to enter the gallery or choose a room, restart, or quit. There is no installer.",
       },
     ],
     bullets: [
@@ -1379,9 +1379,10 @@ export const products: Product[] = [
       "Two Mutable appearances generated distinct native meshes and looped their idle animation in the packaged build",
       "Eight real graph or timeline panels, plus deferred and path-traced Movie Render Queue comparisons in two rooms",
       "Orange embers, a courier that turns toward the player, and light intensity that follows the drone's pitch modulation",
-      "Replacement Windows ZIP upload and verification underway; download link temporarily unavailable",
+      "A single Windows ZIP on Google Drive, with ordinary extraction and launch instructions",
     ],
     links: [
+      { label: "Download for Windows — Google Drive (.zip, ~3.2 GiB)", url: "https://drive.google.com/file/d/1rUUZJxxvyXTx4NCxLQTXZ9C1PzTQFWns/view?usp=sharing" },
       { label: "ue5-mcp", url: "/repos/ue5-mcp" },
       { label: "Forage", url: "/lab/forage" },
       { label: "Video QA Workbench", url: "/lab/video-qa-workbench" },
