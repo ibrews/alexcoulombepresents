@@ -96,6 +96,20 @@ export function splitName(name: string | null | undefined): { firstName: string;
 // lib/store.ts / the weekly office-hours meeting need, from one call instead
 // of Zoom's web scheduling form. startTimeISO must be UTC ("Z"-suffixed);
 // Zoom localizes display using the timezone field.
+/** Display timezone for created meetings.
+ *
+ * NOT "UTC", which is what this used to send. `start_time` is Z-suffixed, so
+ * Zoom pins the same instant either way — but the `timezone` field is what
+ * Zoom's confirmation emails and .ics attachments RENDER, and under "UTC" the
+ * confirmation reads "Sep 11, 2026 05:00 PM Universal Time UTC". That makes
+ * every registrant do the conversion themselves, and anyone who uses EST
+ * (UTC-5) instead of EDT (UTC-4) lands an hour early — which is exactly what
+ * happened on 2026-09-11, when a member turned up expecting 12p for a 1p ET
+ * session. Every session this app creates is scheduled in Eastern, so let Zoom
+ * say so.
+ */
+const DISPLAY_TIMEZONE = "America/New_York";
+
 export async function createZoomMeeting(input: {
   topic: string;
   startTimeISO: string;
@@ -107,7 +121,7 @@ export async function createZoomMeeting(input: {
     type: 2, // scheduled
     start_time: input.startTimeISO,
     duration: input.durationMinutes,
-    timezone: "UTC",
+    timezone: DISPLAY_TIMEZONE,
     agenda: input.agenda,
     settings: {
       approval_type: 0, // automatically approve registrants

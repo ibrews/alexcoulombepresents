@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { ensureOfficeHoursMeeting, ensureZoomRegistrants, STANDING_ATTENDEES } from "@/lib/zoom";
+import {
+  ensureOfficeHoursMeeting,
+  ensureZoomRegistrants,
+  onePmEasternToUTC,
+  STANDING_ATTENDEES,
+} from "@/lib/zoom";
 import { activeMemberContacts } from "@/lib/commerce/entitlements";
+import { sendOwnerAlert } from "@/lib/commerce/email";
 
 // Alex hosts these (the S2S app creates them under his own Zoom account via
 // /users/me/meetings) but a host is never a registrant of their own meeting
@@ -51,6 +57,36 @@ export async function GET(req: NextRequest) {
       console.log(
         `[office-hours-meeting] created ${result.dateISO} → meeting ${result.meetingId} (${result.joinUrl})`
       );
+      // Alex can't be a registrant on his own meeting (Zoom rejects the host
+      // account, code 3027), so the only notice he ever got was Zoom's
+      // confirmation to info@ — a mailbox he doesn't watch, which is why he
+      // had no invite for his own 2026-09-11 session. Mail him the details
+      // directly, at the address he actually reads.
+      try {
+        const startsAt = new Date(onePmEasternToUTC(result.dateISO));
+        await sendOwnerAlert({
+          subject: `Office hours ${result.dateISO} — your Zoom link`,
+          body: [
+            `This week's office hours is scheduled:`,
+            "",
+            `  ${startsAt.toLocaleString("en-US", {
+              timeZone: "America/New_York",
+              dateStyle: "full",
+              timeStyle: "short",
+            })} Eastern (2 hours)`,
+            "",
+            `Start it here: ${result.joinUrl}`,
+            "",
+            `Members are registered automatically by this cron and get their own`,
+            `Zoom confirmation. Registration link for anyone else:`,
+            `${result.registrationUrl ?? "(none)"}`,
+            "",
+            `Meeting ID: ${result.meetingId}`,
+          ].join("\n"),
+        });
+      } catch (err) {
+        console.error("[office-hours-meeting] owner notice failed", err);
+      }
     }
 
     // Invite Alex, the TA, and every active member — every run, not just the
