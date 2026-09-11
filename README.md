@@ -301,6 +301,30 @@ including Newsletter Studio.
 **Don't confuse it with `members`**, which is the founding *waitlist* — people who asked about
 membership, not people who pay for it.
 
+#### From Gmail instead: `members@alexcoulombepresents.com`
+
+For when a terminal isn't handy, the same population is reachable as a real list address you can
+email straight from Gmail. It's a **Mailgun** mailing list, because this domain's MX already points
+at Mailgun (`mxa/mxb.mailgun.org`) — so the list stays on the Alex Coulombe Presents domain and keeps
+the right sender identity. (A Google Group would also work, but only on a different, Workspace-hosted
+domain, which would send member mail from the wrong address.)
+
+```bash
+node scripts/mailgun/sync-members-list.mjs                  # dry run — shows adds/removals
+node scripts/mailgun/sync-members-list.mjs --apply          # sync membership
+node scripts/mailgun/sync-members-list.mjs --apply --create  # first run: create the list too
+```
+
+Membership is resolved from `current-members`, so running this on a cron keeps the list from drifting
+from who actually pays. It refuses to sync when the list resolves to zero people — that's a DB or
+config problem, not a real empty membership, and emptying the list on a bad read isn't recoverable.
+Created as `access_level=readonly` + `reply_preference=sender`: an announcement list, so no member can
+accidentally reply-all to every other member.
+
+One tradeoff worth knowing: mail sent this way does **not** carry the one-click unsubscribe,
+`List-Unsubscribe` headers, tracking, or attribution footer that `broadcast.mjs` adds. Fine for member
+operational notes; for anything marketing-shaped, prefer the CLI path.
+
 ### Owner copies on transactional email
 
 `ownerRecipients()` in [`lib/email.ts`](lib/email.ts) is the single list every owner alert, owner
