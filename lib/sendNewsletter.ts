@@ -16,6 +16,7 @@
 import crypto from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { Resend } from "resend";
+import { CURRENT_MEMBERS_LIST } from "./lists.ts";
 // .ts extensions so Node can run this directly (Studio/CLI) without a
 // bundler — Next's compiler accepts them via allowImportingTsExtensions.
 import { renderNewsletterEmail } from "./newsletterEmail.ts";
@@ -110,10 +111,38 @@ export async function listRecipients(lists: string | string[]): Promise<string[]
   const slugs = Array.isArray(lists) ? lists : [lists];
   if (slugs.length === 0) return [];
   const sql = neon(url);
+
+  // CURRENT_MEMBERS_LIST is the one list that is not a signup list: being a
+  // member is a live billing fact, so its recipients are derived from
+  // entitlements at send time rather than from rows anyone has to remember to
+  // maintain. Note the distinct, pre-existing `members` slug is the founding
+  // WAITLIST — people who asked about membership, not people who pay for it.
+  const signupSlugs = slugs.filter((slug) => slug !== CURRENT_MEMBERS_LIST);
+  const wantsMembers = slugs.includes(CURRENT_MEMBERS_LIST);
+
   // One retry after a short pause — a transient connect timeout must not
   // surface as a scary failure in the middle of a send flow.
-  const query = async () =>
-    (await sql`SELECT DISTINCT lower(email) AS email FROM signups WHERE list = ANY(${slugs}) ORDER BY email`) as { email: string }[];
+  const query = async () => {
+    const signupRows = signupSlugs.length
+      ? ((await sql`SELECT DISTINCT lower(email) AS email FROM signups WHERE list = ANY(${signupSlugs})`) as {
+          email: string;
+        }[])
+      : [];
+    // Same 7-day grace as the office-hours invite sweep: a renewal still
+    // settling in Stripe must not drop a paying member out of a member mailing.
+    const memberRows = wantsMembers
+      ? ((await sql`
+          SELECT DISTINCT lower(c.email) AS email
+          FROM entitlements e
+          JOIN customers c ON c.id = e.customer_id
+          WHERE e.sku = 'membership'
+            AND e.status = 'active'
+            AND (e.updates_until IS NULL OR e.updates_until > now() - interval '7 days')
+        `) as { email: string }[])
+      : [];
+    return [...signupRows, ...memberRows];
+  };
+
   let rows: { email: string }[];
   try {
     rows = await query();
@@ -121,7 +150,7 @@ export async function listRecipients(lists: string | string[]): Promise<string[]
     await new Promise((r) => setTimeout(r, 1500));
     rows = await query();
   }
-  return rows.map((r) => r.email);
+  return [...new Set(rows.map((r) => r.email))].sort();
 }
 
 export type SendResult = { sent: number; recipients: number; errors: string[] };

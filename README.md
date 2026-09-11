@@ -283,6 +283,24 @@ surprise line on a card statement.
 - Tests: [`tests/renewal-reminders.test.ts`](tests/renewal-reminders.test.ts), including the
   catch-up-after-an-outage case and the "don't double-send on a retried run" case.
 
+### Emailing current members
+
+`--list current-members` reaches everyone who currently pays for a membership:
+
+```bash
+node scripts/broadcast.mjs --list current-members --subject "…" --body note.md --dry-run
+```
+
+It is the one list in [`lib/lists.ts`](lib/lists.ts) whose recipients are **not** rows in `signups` —
+being a member is a live billing fact, so `listRecipients()` derives it from active membership
+entitlements at send time. There is no list to keep in sync, and it cannot go stale. It carries the
+same 7-day grace past `updates_until` as the office-hours invite sweep, so a renewal still settling
+in Stripe doesn't drop a paying member out of a member mailing. Works anywhere a list slug works,
+including Newsletter Studio.
+
+**Don't confuse it with `members`**, which is the founding *waitlist* — people who asked about
+membership, not people who pay for it.
+
 ### Owner copies on transactional email
 
 `ownerRecipients()` in [`lib/email.ts`](lib/email.ts) is the single list every owner alert, owner

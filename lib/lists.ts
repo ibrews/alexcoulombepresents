@@ -18,6 +18,10 @@ export const LISTS = {
   store: "Store interest",
   newsletter: "General newsletter",
   members: "Members — founding waitlist",
+  // NOT the waitlist above: actual paying members, resolved live from
+  // entitlements at send time (see CURRENT_MEMBERS_LIST / listRecipients), so
+  // it is always current and there is no list to keep in sync by hand.
+  "current-members": "Current members (live from billing)",
   "team-training": "Team / studio training",
   "receipt-reconciler": "Receipt Reconciler",
   "legacy-interest": "Old training interest form (imported)",
@@ -42,6 +46,7 @@ export const LIST_REASON: Record<ListSlug, string> = {
   store: "you inquired about something in the store",
   newsletter: "you expressed interest in Unreal Engine and related training and tools",
   members: "you joined the founding waitlist for membership",
+  "current-members": "you're a member of Alex Coulombe Presents",
   "team-training": "you inquired about team or studio training",
   "receipt-reconciler": "you asked to be notified when Receipt Reconciler goes on sale",
   "legacy-interest": "you filled out an earlier interest form about learning Unreal Engine",
@@ -49,6 +54,10 @@ export const LIST_REASON: Record<ListSlug, string> = {
 };
 
 export type ListSlug = keyof typeof LISTS;
+
+/** The one list whose recipients are NOT rows in `signups` — resolved from
+ * active membership entitlements at send time. See listRecipients. */
+export const CURRENT_MEMBERS_LIST = "current-members" satisfies ListSlug;
 
 export function isListSlug(v: unknown): v is ListSlug {
   return typeof v === "string" && v in LISTS;

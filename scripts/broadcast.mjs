@@ -8,6 +8,12 @@
  *   node scripts/broadcast.mjs --list newsletter --subject "…" --body issue.md [--broad] [--dry-run]
  *
  * --list      required. One of the slugs in lib/lists.ts.
+ *             `current-members` is the one to reach everyone who currently
+ *             PAYS for a membership — it's resolved live from billing at send
+ *             time, so it can't go stale and there's no list to maintain:
+ *               node scripts/broadcast.mjs --list current-members \
+ *                 --subject "…" --body note.md --dry-run
+ *             (Don't confuse it with `members`, the founding waitlist.)
  * --subject   required. Email subject line.
  * --body      required. Path to a markdown file (the same format as
  *             content/newsletters/*.md bodies — headings, bold, italic,
