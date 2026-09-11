@@ -12,8 +12,8 @@ import {
   bookingHours,
   type BookingRow,
 } from "./config";
+import { ownerRecipients } from "../email.ts";
 
-const OWNER_EMAIL = "info@alexcoulombepresents.com";
 const FROM = "Alex Coulombe Presents <info@alexcoulombepresents.com>";
 
 function brandedHtml(text: string): string {
@@ -70,8 +70,8 @@ export async function sendBookingRequestAck(booking: BookingRow): Promise<void> 
   const { error } = await resend.emails.send({
     from: FROM,
     to: booking.email,
-    bcc: OWNER_EMAIL,
-    replyTo: OWNER_EMAIL,
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `Request received: ${when}`,
     text: body,
     html: brandedHtml(body),
@@ -116,7 +116,7 @@ export async function sendBookingOwnerRequest(booking: BookingRow): Promise<void
   ].join("\n");
   const { error } = await resend.emails.send({
     from: FROM,
-    to: OWNER_EMAIL,
+    to: ownerRecipients(),
     replyTo: booking.email,
     subject: `Booking request: ${booking.name} — ${when}${reduced ? " (reduced rate claimed)" : ""}`,
     text: body,
@@ -150,8 +150,8 @@ export async function sendBookingConfirmedEmail(booking: BookingRow): Promise<vo
   const { error } = await resend.emails.send({
     from: FROM,
     to: booking.email,
-    bcc: OWNER_EMAIL,
-    replyTo: OWNER_EMAIL,
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `Confirmed — ${when} (payment link inside)`,
     text: body,
     html: brandedHtml(body),
@@ -176,8 +176,8 @@ export async function sendBookingDeclinedEmail(booking: BookingRow): Promise<voi
   const { error } = await resend.emails.send({
     from: FROM,
     to: booking.email,
-    bcc: OWNER_EMAIL,
-    replyTo: OWNER_EMAIL,
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `About ${when}`,
     text: body,
     html: brandedHtml(body),
@@ -205,8 +205,8 @@ export async function sendBookingPaidEmail(booking: BookingRow, schedulingUrl?: 
   const { error } = await resend.emails.send({
     from: FROM,
     to: booking.email,
-    bcc: OWNER_EMAIL,
-    replyTo: OWNER_EMAIL,
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `Booked: ${when}`,
     text: body,
     html: brandedHtml(body),

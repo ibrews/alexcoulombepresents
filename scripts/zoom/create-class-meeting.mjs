@@ -12,7 +12,7 @@
  * environment or .env.local.
  */
 import { readFileSync } from "node:fs";
-import { createZoomMeeting } from "../../lib/zoom.ts";
+import { createZoomMeeting, ensureZoomRegistrants, STANDING_ATTENDEES } from "../../lib/zoom.ts";
 
 function loadEnvLocal() {
   try {
@@ -56,6 +56,13 @@ async function main() {
 
   console.log(`Created "${topic}" — ${duration}min starting ${start}`);
   console.log(`Join URL (for Alex): ${joinUrl}`);
+
+  // The TA attends every class, so register him here rather than relying on
+  // someone remembering to add him to each meeting by hand — which is how he
+  // came to be missing from all three of the upcoming classes on 2026-09-10.
+  const invites = await ensureZoomRegistrants(meetingId, STANDING_ATTENDEES);
+  for (const email of invites.registered) console.log(`Registered standing attendee: ${email}`);
+  for (const email of invites.failed) console.error(`FAILED to register standing attendee: ${email}`);
   console.log();
   console.log("Paste into the wednesdayCalendarItem() call in lib/store.ts:");
   console.log(`    zoomRegistrationUrl: "${registrationUrl}",`);

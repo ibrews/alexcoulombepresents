@@ -4,9 +4,7 @@ import { Resend } from "resend";
 import { findDigitalProduct } from "./products";
 import { MEMBERSHIP_TIERS, membershipTier, type MembershipTierId } from "./membership";
 
-// Where owner copies/alerts go. Also the from/reply-to address, so this is
-// the one place to change if the support address ever moves.
-const OWNER_EMAIL = "info@alexcoulombepresents.com";
+import { ownerRecipients } from "../email.ts";
 
 // Renders our plain-text email bodies as simple branded HTML: white card,
 // auto-linked URLs, and the ACP logo in the footer. Every sender passes the
@@ -77,7 +75,7 @@ export async function sendFulfillmentEmail(input: {
     // "FULFILL:" mail), so a license sale was invisible short of checking
     // Stripe. Nothing to fulfill by hand here — this is purely so every
     // purchase shows up in Alex's inbox.
-    bcc: OWNER_EMAIL,
+    bcc: ownerRecipients(),
     subject: isNpm
       ? `Your ${product?.name ?? input.sku} license key`
       : `Your ${product?.name ?? input.sku} license + download`,
@@ -130,7 +128,7 @@ export async function sendDonationNotification(input: {
     ].join("\n");
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
-    to: "info@alexcoulombepresents.com",
+    to: ownerRecipients(),
     subject: `Lab donation: $${dollars} from ${input.name ?? input.email ?? "someone"}`,
     text: __body,
     html: brandedHtml(__body),
@@ -215,7 +213,11 @@ export async function sendOrderEmails(input: {
   const buyer = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
-    replyTo: "info@alexcoulombepresents.com",
+    // This was the one buyer-facing send in this file without an owner copy,
+    // leaving the separate "FULFILL:" alert below as the only notice of a
+    // sale — and that alert's failure is logged, never thrown or retried.
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `Order confirmed: ${input.itemName}`,
     text: __body,
     html: brandedHtml(__body),
@@ -234,7 +236,7 @@ export async function sendOrderEmails(input: {
     ].join("\n");
   const owner = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
-    to: "info@alexcoulombepresents.com",
+    to: ownerRecipients(),
     subject: `FULFILL: ${input.itemName} — $${dollars} from ${input.name ?? input.email}`,
     text: __ownerBody,
     html: brandedHtml(__ownerBody),
@@ -304,8 +306,8 @@ export async function sendMembershipWelcomeEmail(input: {
     // actually receive anything?" is answerable from his own inbox rather
     // than from Resend's dashboard — the question that took a customer
     // complaint to surface when these silently stopped sending.
-    bcc: OWNER_EMAIL,
-    replyTo: "info@alexcoulombepresents.com",
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `You're a member — welcome in (${tierName})`,
     text: __body,
     html: brandedHtml(__body),
@@ -336,7 +338,7 @@ export async function sendMembershipOwnerNotification(input: {
     ].join("\n");
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
-    to: "info@alexcoulombepresents.com",
+    to: ownerRecipients(),
     subject: `New member: ${tier?.name ?? input.tier} — ${input.name ?? input.email}`,
     text: __body,
     html: brandedHtml(__body),
@@ -419,8 +421,8 @@ export async function sendMembershipRenewalReminder(input: {
     // Same rule as the welcome email: Alex gets a copy of every reminder as
     // it goes out, so "did this actually send?" never again needs a support
     // complaint to surface (see the 2026-08-10/11 welcome-email incidents).
-    bcc: OWNER_EMAIL,
-    replyTo: "info@alexcoulombepresents.com",
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `Your ${tierName} membership renews ${whenLabel}`,
     text: __body,
     html: brandedHtml(__body),
@@ -460,8 +462,8 @@ export async function sendVoucherEmail(input: {
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
     // Same gap as the fulfillment mail: a $250 voucher sale alerted nobody.
-    bcc: OWNER_EMAIL,
-    replyTo: "info@alexcoulombepresents.com",
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
     subject: `Your class voucher: ${input.code}`,
     text: __body,
     html: brandedHtml(__body),
@@ -509,7 +511,7 @@ export async function sendClassCancelledEmail(input: {
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
     to: input.email,
-    replyTo: "info@alexcoulombepresents.com",
+    replyTo: ownerRecipients(),
     subject: `"${input.className}" didn't make the minimum — coupon or refund inside`,
     text: __body,
     html: brandedHtml(__body),

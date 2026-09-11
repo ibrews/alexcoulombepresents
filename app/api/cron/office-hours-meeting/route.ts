@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { ensureOfficeHoursMeeting, addZoomRegistrant } from "@/lib/zoom";
+import { ensureOfficeHoursMeeting, ensureZoomRegistrants, STANDING_ATTENDEES } from "@/lib/zoom";
+import { activeMemberContacts } from "@/lib/commerce/entitlements";
 
 // Alex hosts these (the S2S app creates them under his own Zoom account via
 // /users/me/meetings) but a host is never a registrant of their own meeting
@@ -46,19 +47,41 @@ export async function GET(req: NextRequest) {
 
   try {
     const result = await ensureOfficeHoursMeeting();
-    let ownerRegistered: boolean | null = null;
     if (result.created) {
       console.log(
         `[office-hours-meeting] created ${result.dateISO} → meeting ${result.meetingId} (${result.joinUrl})`
       );
-      // Only on the run that actually creates the week's meeting — every
-      // other daily run is a no-op and re-registering would just re-fire
-      // Zoom's confirmation email at him for nothing.
-      ownerRegistered = await addZoomRegistrant(result.meetingId, {
-        email: OWNER_EMAIL,
-        name: "Alex Coulombe",
-      });
     }
+
+    // Invite Alex, the TA, and every active member — every run, not just the
+    // one that creates the meeting. Members were never invited by any code
+    // path before (only a one-off script Alex ran by hand on 2026-09-04), so
+    // a week nobody remembered to run it was a week nobody was invited.
+    // ensureZoomRegistrants skips anyone Zoom already has, which is what
+    // makes a daily re-run safe: Zoom re-sends its confirmation on every
+    // successful registration, so registering blind would mail the same
+    // invite to every member every morning. Running daily rather than once
+    // also means someone who joins mid-week is invited the next day.
+    let invites: Awaited<ReturnType<typeof ensureZoomRegistrants>> | null = null;
+    try {
+      const members = await activeMemberContacts();
+      invites = await ensureZoomRegistrants(result.meetingId, [
+        { email: OWNER_EMAIL, name: "Alex Coulombe" },
+        ...STANDING_ATTENDEES,
+        ...members,
+      ]);
+      if (invites.registered.length) {
+        console.log(`[office-hours-meeting] invited ${invites.registered.join(", ")}`);
+      }
+      if (invites.failed.length) {
+        console.error(`[office-hours-meeting] invite FAILED for ${invites.failed.join(", ")}`);
+      }
+    } catch (err) {
+      // Never fail the whole cron over invites — the meeting itself exists,
+      // and the next daily run retries from Zoom's own registrant list.
+      console.error("[office-hours-meeting] invite sweep failed", err);
+    }
+
     return NextResponse.json({
       ok: true,
       date: result.dateISO,
@@ -69,7 +92,7 @@ export async function GET(req: NextRequest) {
       // buyers get pointed at.
       joinUrl: result.joinUrl,
       registrationUrl: result.registrationUrl,
-      ownerRegistered,
+      invites,
     });
   } catch (err) {
     console.error("[office-hours-meeting] failed", err);

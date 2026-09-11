@@ -1,6 +1,7 @@
 // ── Google Drive service-account client — named-user folder grants ─────────
 
 import crypto from "node:crypto";
+import { findClassFolder } from "../classMaterials.ts";
 
 const DRIVE_API_BASE = "https://www.googleapis.com/drive/v3";
 const OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -111,6 +112,18 @@ async function call(method: string, path: string, body: Record<string, unknown>)
     }
     throw new Error(`Google Drive ${method} ${path} failed (${res.status}): ${JSON.stringify(json)}`);
   }
+}
+
+/** The Drive folder id backing a class's shared folder, if it has one.
+ * Shared by the daily sync and the purchase webhook so the two can never
+ * disagree about which folder a slug maps to. */
+export function classDriveFolderId(slug: string): string | null {
+  const folder = findClassFolder(slug);
+  const material = folder?.materials.find(
+    (candidate) => candidate.key === "folder" && candidate.source.kind === "external"
+  );
+  if (!material || material.source.kind !== "external") return null;
+  return extractDriveFolderId(material.source.url);
 }
 
 export function extractDriveFolderId(url: string): string | null {

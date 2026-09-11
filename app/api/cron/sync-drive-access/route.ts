@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { classFolders } from "@/lib/classMaterials";
-import { extractDriveFolderId, shareDriveFolder } from "@/lib/commerce/driveAccess";
+import { classDriveFolderId, shareDriveFolder } from "@/lib/commerce/driveAccess";
 import { alreadyGrantedDriveAccess, recordDriveAccessGrant } from "@/lib/commerce/driveAccessGrants";
 import {
   syncDriveAccess,
@@ -30,11 +30,7 @@ function authorized(req: NextRequest): boolean {
 function driveFolders(): DriveAccessFolder[] {
   const folders: DriveAccessFolder[] = [];
   for (const folder of classFolders) {
-    const material = folder.materials.find(
-      (candidate) => candidate.key === "folder" && candidate.source.kind === "external"
-    );
-    if (!material || material.source.kind !== "external") continue;
-    const folderId = extractDriveFolderId(material.source.url);
+    const folderId = classDriveFolderId(folder.slug);
     if (folderId) folders.push({ slug: folder.slug, folderId });
   }
   return folders;

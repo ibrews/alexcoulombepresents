@@ -222,6 +222,29 @@ export async function activeMembersForLicensing(): Promise<MemberLicenseTarget[]
   return rows.map((r) => ({ customerId: r.customer_id, email: r.email }));
 }
 
+// Members to invite to a live session, with a 7-day grace period past
+// `updates_until`. The grace is load-bearing: a renewal still settling in
+// Stripe leaves a genuinely-paying member momentarily past their expiry, and
+// the strict check above then drops them off the invite list with no signal
+// (Lynne Heller, 2026-09-10 — her Unlimited entitlement expired at 08:02 and
+// she silently vanished from that Friday's office-hours invite). A real
+// cancellation flips `status` off 'active', so this only ever forgives an
+// in-flight renewal, never a churned member.
+const INVITE_GRACE = "7 days";
+
+export async function activeMemberContacts(): Promise<{ email: string; name: string | null }[]> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT c.email, c.name
+    FROM entitlements e
+    JOIN customers c ON c.id = e.customer_id
+    WHERE e.sku = ${MEMBERSHIP_SKU}
+      AND e.status = 'active'
+      AND (e.updates_until IS NULL OR e.updates_until > now() - ${INVITE_GRACE}::interval)
+  `) as { email: string; name: string | null }[];
+  return rows;
+}
+
 // Upserts the (customer, sku) member-tier entitlement to `updatesUntil` and
 // stores a freshly-signed key as this customer's current one — any prior
 // member-tier key for this entitlement is revoked first, so /account's

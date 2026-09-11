@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { LISTS, isListSlug, RESEND_AUDIENCE_BY_LIST } from "@/lib/lists";
 import { recordSignup } from "@/lib/db";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
+import { ownerRecipients } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
     // Notify Alex of the new signup.
     const { error: emailError } = await resend.emails.send({
       from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
-      to: "info@alexcoulombepresents.com",
+      to: ownerRecipients(),
       replyTo: email,
       subject: `New signup: ${label}`,
       text: [

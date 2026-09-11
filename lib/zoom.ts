@@ -126,6 +126,61 @@ export async function addZoomRegistrant(
   }
 }
 
+// Marshall TAs every class and every office hours, so he belongs on every
+// meeting this app creates — previously he was invited by hand from Alex's
+// Google Calendar, which silently skipped any meeting Alex forgot.
+// Alex himself is deliberately absent: Zoom rejects the host's own account
+// address with code 3027 ("Host can not register"), which is why his
+// office-hours calendar invite goes to info@alexcoulombepresents.com — an
+// alias Zoom treats as an ordinary, non-host address.
+export const STANDING_ATTENDEES: { email: string; name: string }[] = [
+  { email: "marshall@agilelens.com", name: "Marshall Nowak" },
+];
+
+/** Emails already registered on a meeting (approved + pending), lowercased.
+ * Zoom's own registrant list is the source of truth rather than a local
+ * table, so registrations Alex makes by hand in the Zoom UI count too. */
+export async function listZoomRegistrantEmails(meetingId: string): Promise<Set<string>> {
+  const emails = new Set<string>();
+  for (const status of ["approved", "pending"]) {
+    const json = await call("GET", `/meetings/${meetingId}/registrants?status=${status}&page_size=300`);
+    for (const r of (json?.registrants ?? []) as { email: string }[]) emails.add(r.email.toLowerCase());
+  }
+  return emails;
+}
+
+/**
+ * Register everyone in `people` who isn't already on the meeting.
+ *
+ * The skip is the whole point, not an optimization: Zoom re-sends its
+ * confirmation email on every successful registration, so a daily cron that
+ * blindly re-registered the same members would mail them the same invite
+ * every morning. Throws if the existing-registrant lookup fails — registering
+ * blind would do exactly that spamming.
+ */
+export async function ensureZoomRegistrants(
+  meetingId: string,
+  people: { email: string; name?: string | null }[]
+): Promise<{ registered: string[]; skipped: string[]; failed: string[] }> {
+  const existing = await listZoomRegistrantEmails(meetingId);
+  const registered: string[] = [];
+  const skipped: string[] = [];
+  const failed: string[] = [];
+  const seen = new Set(existing);
+
+  for (const person of people) {
+    const key = person.email.toLowerCase();
+    if (seen.has(key)) {
+      skipped.push(person.email);
+      continue;
+    }
+    seen.add(key); // guard against a duplicate inside `people` itself
+    if (await addZoomRegistrant(meetingId, person)) registered.push(person.email);
+    else failed.push(person.email);
+  }
+  return { registered, skipped, failed };
+}
+
 const OFFICE_HOURS_PURPOSE = "office_hours";
 
 // ── Office hours scheduling — pure date helpers ────────────────────────────

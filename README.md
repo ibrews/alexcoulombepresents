@@ -283,6 +283,25 @@ surprise line on a card statement.
 - Tests: [`tests/renewal-reminders.test.ts`](tests/renewal-reminders.test.ts), including the
   catch-up-after-an-outage case and the "don't double-send on a retried run" case.
 
+### Owner copies on transactional email
+
+`ownerRecipients()` in [`lib/email.ts`](lib/email.ts) is the single list every owner alert, owner
+`bcc`, and customer `replyTo` uses. It returns `info@alexcoulombepresents.com` — the public support
+address, and the only Resend-verified sending domain, so every `from` stays on it — plus the
+optional `OWNER_ALERT_EMAIL`.
+
+That second address matters because the support address is an alias for a Gmail account that isn't
+watched day to day. Sending owner alerts *only* there hid four class sales, a new member signup, and
+every contact-form inquiry for three weeks — Resend reported every one `delivered`, which is exactly
+why nothing looked broken. Set `OWNER_ALERT_EMAIL` to the inbox that actually gets read. It lives in
+the environment, not in source, because this repo is public. Unset or malformed → owner mail goes to
+the support address alone, exactly as before. If you add a sender, call `ownerRecipients()`; don't
+hardcode an address.
+
+Note that `sendOrderEmails`'s buyer confirmation carries an owner `bcc` *in addition to* the separate
+`FULFILL:` alert. The alert alone is not sufficient: its send failure is logged, never thrown or
+retried, so a sale could go unannounced with the webhook still returning 200.
+
 ### Class-materials Drive access sync
 
 [`lib/commerce/driveAccessSync.ts`](lib/commerce/driveAccessSync.ts) (decision logic,
@@ -299,6 +318,10 @@ access policy, not a future cleanup item.
   Google SDK dependency. Each grant is best-effort, so one rejected folder never stops the rest.
 - **Schedule**: the authenticated cron runs daily at 14:00 UTC and deliberately no-ops when
   `GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY` is unset.
+- **A class buyer is granted immediately at purchase**, from the stripe-webhook fulfillment branch,
+  rather than waiting for the next cron run — buying after 14:00 UTC otherwise meant no materials
+  until the following morning. The daily cron stays the safety net, and both paths resolve a slug's
+  folder through the same `classDriveFolderId()` so they can't disagree.
 - Tests: [`tests/drive-access-sync.test.ts`](tests/drive-access-sync.test.ts) cover member and buyer
   targeting, missing-folder skips, per-grant failures, summary counts, and Drive URL parsing.
 
@@ -317,11 +340,23 @@ it existed.
   [`lib/store.ts`](lib/store.ts). Classes without a `zoomMeetingId` simply don't auto-register.
 - **Office hours**: a *fresh* Zoom meeting every Friday, so its ID can't live in code — it's kept
   in the `zoom_meetings` table and refreshed by a daily cron
-  ([`/api/cron/office-hours-meeting`](app/api/cron/office-hours-meeting/route.ts)).
-  `POST /api/admin/credits` with `{"for":"office_hours"}` then registers the member on that week's
-  meeting as part of burning their credit, and reports `zoomRegistered` so a failure is visible
-  rather than silent. `node scripts/zoom/create-office-hours-meeting.mjs` is the manual escape
-  hatch; it's the same idempotent function the cron calls.
+  ([`/api/cron/office-hours-meeting`](app/api/cron/office-hours-meeting/route.ts)). That same cron
+  **invites every active member** (plus Alex and the TA) on every run, not just the run that creates
+  the meeting — before 2026-09-10 no code path did this at all and members were invited only when
+  someone remembered to run a script by hand, so a forgotten week was a week nobody was invited.
+  Running daily also picks up anyone who joins mid-week.
+  `POST /api/admin/credits` with `{"for":"office_hours"}` additionally registers a member as part of
+  burning their credit, and reports `zoomRegistered` so a failure is visible rather than silent.
+  `node scripts/zoom/create-office-hours-meeting.mjs` is the manual escape hatch; it's the same
+  idempotent function the cron calls.
+- **Standing attendees** (`STANDING_ATTENDEES` in [`lib/zoom.ts`](lib/zoom.ts)) — the TA, who attends
+  every session — are registered on office hours by the cron and on each new class by
+  `create-class-meeting.mjs`. Alex is deliberately *not* in that list: Zoom rejects the host's own
+  account address (code 3027 "Host can not register"), which is why his own calendar invite is
+  addressed to the `info@alexcoulombepresents.com` alias, which Zoom treats as a normal address.
+- **Re-registering is skipped, by design**: Zoom re-sends its confirmation email on every successful
+  registration, so `ensureZoomRegistrants()` diffs against Zoom's own registrant list first — that's
+  what makes a daily sweep safe instead of a daily inbox full of duplicate invites.
 - **Every Zoom call is best-effort and independently caught** — a Zoom outage can never fail an
   already-charged purchase or an already-spent credit.
 - `node scripts/zoom/audit-class-meeting-ids.mjs` pairs each class to its real meeting by

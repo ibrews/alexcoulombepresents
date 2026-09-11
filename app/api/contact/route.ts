@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
+import { ownerRecipients } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   if (!(await rateLimitAllows(`contact:${clientIp(req)}`, 5, 60))) {
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
 
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <noreply@alexcoulombepresents.com>",
-    to: "info@alexcoulombepresents.com",
+    to: ownerRecipients(),
     replyTo: email,
     subject: subject || `New inquiry from ${name || email}`,
     text: bodyText,

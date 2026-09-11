@@ -2,6 +2,7 @@
 // Deliberately not in lib/commerce/email.ts — that file is owned elsewhere.
 
 import { Resend } from "resend";
+import { ownerRecipients } from "./email.ts";
 
 export async function sendTestimonialPendingEmail(input: {
   id: number;
@@ -35,7 +36,7 @@ export async function sendTestimonialPendingEmail(input: {
 
   const { error } = await resend.emails.send({
     from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
-    to: "info@alexcoulombepresents.com",
+    to: ownerRecipients(),
     subject: "Testimonial pending approval",
     text,
   });

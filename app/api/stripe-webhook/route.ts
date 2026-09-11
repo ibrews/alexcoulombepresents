@@ -29,6 +29,8 @@ import { issueMagicLink } from "@/lib/commerce/tokens";
 import { recordCatalogOrder, markCatalogOrdersRefunded, getSeatsSold } from "@/lib/commerce/seats";
 import { sendTelegramNotice } from "@/lib/telegram";
 import { addZoomRegistrant } from "@/lib/zoom";
+import { classDriveFolderId, shareDriveFolder } from "@/lib/commerce/driveAccess";
+import { alreadyGrantedDriveAccess, recordDriveAccessGrant } from "@/lib/commerce/driveAccessGrants";
 import {
   handleMembershipEvent,
   type MembershipBillingDeps,
@@ -338,6 +340,27 @@ export async function POST(req: NextRequest) {
         // themselves, same as today.
         if (item?.zoomMeetingId) {
           await addZoomRegistrant(item.zoomMeetingId, { email, name });
+        }
+
+        // Share the class's Drive folder now instead of leaving the buyer to
+        // wait for the daily sync-drive-access cron (14:00 UTC): anyone who
+        // buys after that hour gets no materials until the next morning —
+        // up to ~24h after paying, and for a Wednesday class bought Tuesday
+        // night that's cutting it close. Same reasoning as (and precedent
+        // from) the membership branch's immediate xrsim provisioning below.
+        // Best-effort with its own try/catch: the daily cron is still the
+        // safety net, and a Drive hiccup must never fail an already-charged
+        // purchase or roll back the emails already sent above.
+        try {
+          const folderId = classDriveFolderId(slug);
+          if (folderId && !(await alreadyGrantedDriveAccess(folderId, email))) {
+            if (await shareDriveFolder(folderId, email)) {
+              await recordDriveAccessGrant(folderId, email);
+              console.log(`[drive] granted ${slug} folder → ${email}`);
+            }
+          }
+        } catch (err) {
+          console.error("[drive] immediate grant failed", err);
         }
 
         // Dated Wednesday-calendar classes only (not every catalog item —
