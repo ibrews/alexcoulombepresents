@@ -9,6 +9,7 @@ import {
   setStripeCustomerId,
   customerIdForStripeCustomer,
   grantOrRefreshMemberLicense,
+  membershipTierForStripeCustomer,
 } from "@/lib/commerce/entitlements";
 import { MEMBER_LICENSE_WINDOW_DAYS } from "@/lib/commerce/memberLicensing";
 import { decideRefund } from "@/lib/commerce/refunds";
@@ -21,6 +22,7 @@ import {
   sendOrderEmails,
   sendMembershipWelcomeEmail,
   sendMembershipOwnerNotification,
+  sendOwnerAlert,
 } from "@/lib/commerce/email";
 import { storeItems, wednesdayCalendar } from "@/lib/store";
 import { createVoucherCode } from "@/lib/commerce/vouchers";
@@ -124,6 +126,7 @@ function membershipDeps(): MembershipBillingDeps {
     checkoutSessionProcessed,
     recordCheckoutSession,
     linkMembershipCycleToOrder,
+    membershipTierForStripeCustomer,
   };
 }
 
@@ -396,6 +399,35 @@ export async function POST(req: NextRequest) {
       const result = await handleMembershipEvent(event, membershipDeps());
       if (result.handled) {
         console.log(`[membership] ${event.type} → ${result.action}`);
+
+        // A renewal we could only attribute via the member's existing tier
+        // means Stripe is charging them on a price this code doesn't know —
+        // honored here, but the price id needs adding or every *other* branch
+        // that reasons about tiers stays blind to it. Alert rather than log:
+        // the silent version of this cost an Unlimited member a day of access
+        // after she paid $300 (2026-09-10).
+        if (result.recognizedBy === "existing-membership") {
+          try {
+            await sendOwnerAlert({
+              subject: `ACTION NEEDED: ${result.email} renewed on an unrecognized Stripe price`,
+              body: [
+                `${result.email} just paid a renewal that matched NONE of the configured`,
+                `membership price ids. It was honored by falling back to the tier they already`,
+                `hold (${result.tier}), so their access is fine — but fix the config:`,
+                "",
+                `  1. Stripe Dashboard → this customer → subscription → copy its price_... id`,
+                `  2. Add it to LEGACY_MEMBERSHIP_PRICE_IDS.${result.tier} in`,
+                `     app/api/stripe-webhook/route.ts (or repoint the tier's`,
+                `     STRIPE_MEMBERSHIP_PRICE_ID_* env var if it is the new standard price)`,
+                "",
+                `Until then every renewal for them takes this fallback path.`,
+                `Event: ${event.id} · amount: $${((result.amountCents ?? 0) / 100).toFixed(2)}`,
+              ].join("\n"),
+            });
+          } catch (err) {
+            console.error("[membership] unrecognized-price alert failed", err);
+          }
+        }
         if (result.deduped) return NextResponse.json({ received: true, deduped: true });
 
         // Provision the member-perk xrsim license immediately, rather than
@@ -473,6 +505,30 @@ export async function POST(req: NextRequest) {
         }
       } else {
         console.log(`[membership] ${event.type} ignored — ${result.reason}`);
+        // Someone paid a subscription invoice we could not attribute to anyone.
+        // "Ignored" in a log is how a paying member lapses unnoticed, so this
+        // specific shape gets a real alert.
+        if (result.unattributedSubscriptionInvoice) {
+          try {
+            await sendOwnerAlert({
+              subject: "ACTION NEEDED: a paid subscription invoice matched no member",
+              body: [
+                "A subscription invoice was PAID and this app could not attribute it:",
+                "",
+                `  ${result.reason}`,
+                "",
+                "Nobody's entitlement was granted or extended. If this is a real member,",
+                "their access is lapsing right now. Check the Stripe Dashboard for this",
+                "invoice, then add its price id to LEGACY_MEMBERSHIP_PRICE_IDS for the",
+                "right tier in app/api/stripe-webhook/route.ts.",
+                "",
+                `Event: ${event.id}`,
+              ].join("\n"),
+            });
+          } catch (err) {
+            console.error("[membership] unattributed-invoice alert failed", err);
+          }
+        }
       }
     } catch (err) {
       console.error("[membership] webhook failed", err);

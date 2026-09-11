@@ -41,6 +41,9 @@ function fakeDeps(overrides: Partial<MembershipBillingDeps> = {}) {
       insider: [INSIDER_PRICE_ID],
     },
     findOrCreateCustomer: record("findOrCreateCustomer", 42),
+    // Default: this Stripe customer holds no membership, so the
+    // existing-membership fallback stays out of the way unless a test opts in.
+    membershipTierForStripeCustomer: record("membershipTierForStripeCustomer", null),
     setStripeCustomerId: record("setStripeCustomerId", undefined),
     customerIdForStripeCustomer: record("customerIdForStripeCustomer", 42),
     fetchStripeCustomer: record("fetchStripeCustomer", {
@@ -191,6 +194,118 @@ test("invoice.paid for a non-membership price is ignored", async () => {
   );
   assert.equal(result.handled, false);
   assert.equal(called("grantOrExtendMembership").length, 0);
+});
+
+// ── Unrecognized-price renewals (the 2026-09-10 Lynne Heller lapse) ─────────
+// A Stripe-dashboard reprice puts a paying member on a price id this code has
+// never seen. Before these tests it answered "no membership line on invoice"
+// and let the member's entitlement expire in silence.
+
+test("a subscription invoice on an unrecognized price still renews an existing member, keeping their tier", async () => {
+  const { deps, called } = fakeDeps({
+    membershipTierForStripeCustomer: async () => "unlimited",
+  });
+  const result = await handleMembershipEvent(
+    invoicePaid({
+      subscription: "sub_Repriced",
+      amount_paid: 30000,
+      lines: { data: [{ price: { id: "price_repriced_in_dashboard" }, period: { end: PERIOD_END } }] },
+    }),
+    deps
+  );
+  assert.equal(result.handled, true);
+  assert.ok(result.handled);
+  // Their EXISTING tier, not a guess from the unknown price.
+  assert.equal(result.tier, "unlimited");
+  assert.equal(result.recognizedBy, "existing-membership");
+  const grant = called("grantOrExtendMembership");
+  assert.equal(grant.length, 1);
+  assert.deepEqual(grant[0].args[1], PAID_THROUGH);
+  assert.equal(grant[0].args[2], "unlimited");
+  // Unlimited never mints pooled credits.
+  assert.equal(called("mintBookingCredits").length, 0);
+});
+
+test("the unrecognized-price fallback reads the API-2025 nested subscription id too", async () => {
+  const { deps, called } = fakeDeps({
+    membershipTierForStripeCustomer: async () => "insider",
+  });
+  const result = await handleMembershipEvent(
+    invoicePaid({
+      subscription: null,
+      parent: { subscription_details: { subscription: "sub_Nested" } },
+      lines: { data: [{ pricing: { price_details: { price: "price_unknown" } }, period: { end: PERIOD_END } }] },
+    }),
+    deps
+  );
+  assert.ok(result.handled);
+  assert.equal(result.tier, "insider");
+  assert.equal(called("grantOrExtendMembership").length, 1);
+});
+
+test("a recognized price is still attributed by price, never by the fallback", async () => {
+  const { deps } = fakeDeps({
+    // Would send them to the wrong tier if the fallback ever took precedence.
+    membershipTierForStripeCustomer: async () => "insider",
+  });
+  const result = await handleMembershipEvent(invoicePaid({ subscription: "sub_Normal" }), deps);
+  assert.ok(result.handled);
+  assert.equal(result.tier, "starter");
+  assert.equal(result.recognizedBy, "price");
+});
+
+test("an unattributable PAID subscription invoice is flagged for a loud alert, not quietly ignored", async () => {
+  const { deps, called } = fakeDeps({ membershipTierForStripeCustomer: async () => null });
+  const result = await handleMembershipEvent(
+    invoicePaid({
+      subscription: "sub_Mystery",
+      amount_paid: 50000,
+      lines: { data: [{ price: { id: "price_unknown" }, period: { end: PERIOD_END } }] },
+    }),
+    deps
+  );
+  assert.equal(result.handled, false);
+  assert.ok(!result.handled);
+  assert.equal(result.unattributedSubscriptionInvoice, true);
+  assert.match(result.reason, /UNATTRIBUTED/);
+  assert.equal(called("grantOrExtendMembership").length, 0);
+});
+
+test("a $0 or non-subscription unmatched invoice stays routine — no alert flag", async () => {
+  const { deps } = fakeDeps({ membershipTierForStripeCustomer: async () => null });
+  const zeroPaid = await handleMembershipEvent(
+    invoicePaid({
+      subscription: "sub_Zero",
+      amount_paid: 0,
+      lines: { data: [{ price: { id: "price_unknown" }, period: { end: PERIOD_END } }] },
+    }),
+    deps
+  );
+  assert.ok(!zeroPaid.handled);
+  assert.equal(zeroPaid.unattributedSubscriptionInvoice, undefined);
+
+  const oneOff = await handleMembershipEvent(
+    invoicePaid({
+      subscription: null,
+      amount_paid: 9900,
+      lines: { data: [{ price: { id: "price_unknown" }, period: { end: PERIOD_END } }] },
+    }),
+    deps
+  );
+  assert.ok(!oneOff.handled);
+  assert.equal(oneOff.unattributedSubscriptionInvoice, undefined);
+});
+
+test("the fallback never creates a customer for an invoice that is not a membership renewal", async () => {
+  const { deps, called } = fakeDeps({ membershipTierForStripeCustomer: async () => null });
+  await handleMembershipEvent(
+    invoicePaid({
+      subscription: "sub_Unknown",
+      lines: { data: [{ price: { id: "price_unknown" }, period: { end: PERIOD_END } }] },
+    }),
+    deps
+  );
+  assert.equal(called("findOrCreateCustomer").length, 0);
 });
 
 test("invoice.paid with no STRIPE_MEMBERSHIP_PRICE_ID_* configured is a no-op", async () => {

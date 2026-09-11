@@ -59,6 +59,8 @@ export type StripeInvoice = {
   payments?: { data?: Array<{ payment?: { payment_intent?: string | null } | null }> | null } | null; // API 2025+
   amount_paid?: number | null;
   lines?: { data?: StripeInvoiceLine[] | null } | null;
+  subscription?: string | null; // API ≤2024
+  parent?: { subscription_details?: { subscription?: string | null } | null } | null; // API 2025+
 };
 
 export type StripeEvent = {
@@ -102,10 +104,25 @@ export type MembershipBillingDeps = {
     amountCents: number;
   }): Promise<void>;
   linkMembershipCycleToOrder(customerId: number, invoiceId: string, expiresAt: Date): Promise<void>;
+  // The tier this Stripe customer already holds a membership entitlement for,
+  // or null. Lookup only — it must never create a customer, since it runs for
+  // invoices that may have nothing to do with membership.
+  membershipTierForStripeCustomer(stripeCustomerId: string): Promise<MembershipTierId | null>;
 };
 
+/** How a paid invoice was attributed to a tier. "existing-membership" means no
+ * configured price matched and we fell back to the member's current tier — it
+ * works, but the price id should be added to the config, so the caller alerts. */
+export type MembershipRecognition = "price" | "existing-membership";
+
 export type MembershipEventResult =
-  | { handled: false; reason: string }
+  | {
+      handled: false;
+      reason: string;
+      // A paid subscription invoice that matched no price AND no existing
+      // member — the shape of a silent lapse, so the caller alerts loudly.
+      unattributedSubscriptionInvoice?: boolean;
+    }
   | {
       handled: true;
       action: string;
@@ -121,6 +138,7 @@ export type MembershipEventResult =
       name?: string | null;
       tier?: MembershipTierId;
       amountCents?: number;
+      recognizedBy?: MembershipRecognition;
     };
 
 // Finds which configured tier (if any) an invoice's membership line or a
@@ -167,6 +185,10 @@ function invoicePaymentIntent(invoice: StripeInvoice): string | null {
   return invoice.payment_intent ?? invoice.payments?.data?.[0]?.payment?.payment_intent ?? null;
 }
 
+function invoiceSubscriptionId(invoice: StripeInvoice): string | null {
+  return invoice.subscription ?? invoice.parent?.subscription_details?.subscription ?? null;
+}
+
 // Resolves a Stripe customer id to our customers row, creating it from the
 // Stripe-side email if we've never seen this customer (e.g. the subscription
 // event arrives before its first invoice.paid).
@@ -194,8 +216,53 @@ export async function handleMembershipEvent(
   if (event.type === "invoice.paid") {
     if (!anyPriceConfigured) return { handled: false, reason: "no STRIPE_MEMBERSHIP_PRICE_ID_* set" };
     const invoice = event.data.object as StripeInvoice;
-    const match = membershipInvoiceLine(invoice, priceIds);
-    if (!match) return { handled: false, reason: "no membership line on invoice" };
+    let match = membershipInvoiceLine(invoice, priceIds);
+    let recognizedBy: MembershipRecognition = "price";
+
+    // ── Fallback: recognize a renewal by the member we already have ─────────
+    // Matching only against an allow-list of price ids means ANY repricing done
+    // in the Stripe dashboard silently stops honoring a paying subscriber:
+    // Stripe charges them, sends invoice.paid on a price this code has never
+    // seen, we log "no membership line on invoice", and their entitlement
+    // quietly expires. That is exactly what happened to the Unlimited member
+    // repriced by a subscription schedule on 2026-08-31 — she paid $300 on
+    // 2026-09-10 and lost access the same morning, with nothing anywhere
+    // reporting a problem.
+    //
+    // So: if a SUBSCRIPTION invoice is paid by a Stripe customer who already
+    // holds a membership entitlement, that is a renewal, whatever price it
+    // names. Keep their existing tier — a price we don't recognize tells us
+    // nothing about which tier to move them to, and silently changing someone's
+    // tier is worse than keeping it. The caller is told it came from here
+    // (`recognizedBy`) so it can alert and the price id can be added properly.
+    if (!match) {
+      const subscriptionId = invoiceSubscriptionId(invoice);
+      const stripeCustomer = typeof invoice.customer === "string" ? invoice.customer : null;
+      if (subscriptionId && stripeCustomer) {
+        const existingTier = await deps.membershipTierForStripeCustomer(stripeCustomer);
+        // Any line with a period works: on a single-item subscription invoice
+        // it IS the membership line, just priced unrecognizably.
+        const line = (invoice.lines?.data ?? []).find((candidate) => candidate.period?.end);
+        if (existingTier && line) {
+          match = { line, tier: existingTier };
+          recognizedBy = "existing-membership";
+        }
+      }
+    }
+
+    if (!match) {
+      // Worth distinguishing in the log: a paid subscription invoice we can't
+      // attribute is a possible silent lapse, not routine noise.
+      const subscriptionId = invoiceSubscriptionId(invoice);
+      if (subscriptionId && (invoice.amount_paid ?? 0) > 0) {
+        return {
+          handled: false,
+          reason: `UNATTRIBUTED paid subscription invoice ${invoice.id} (subscription ${subscriptionId}) — no configured price matched and no existing membership for this Stripe customer`,
+          unattributedSubscriptionInvoice: true,
+        };
+      }
+      return { handled: false, reason: "no membership line on invoice" };
+    }
     const { line, tier } = match;
 
     // Same idempotency pattern as the checkout branches: dedupe on the event
@@ -254,6 +321,7 @@ export async function handleMembershipEvent(
       name,
       tier,
       amountCents: invoice.amount_paid ?? 0,
+      recognizedBy,
     };
   }
 

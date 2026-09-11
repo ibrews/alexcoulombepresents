@@ -232,6 +232,32 @@ export async function activeMembersForLicensing(): Promise<MemberLicenseTarget[]
 // in-flight renewal, never a churned member.
 const INVITE_GRACE = "7 days";
 
+/** The membership tier this Stripe customer already holds, or null.
+ *
+ * Lookup only — deliberately never creates a customer, because the webhook
+ * calls it for invoices that may have nothing to do with membership. Expiry is
+ * NOT checked: the whole point is to recognize a renewal that arrives for a
+ * member whose entitlement has just lapsed. A revoked (cancelled/refunded)
+ * membership is excluded, so a cancelled subscription can't be resurrected by
+ * a stray invoice. See handleMembershipEvent's existing-membership fallback.
+ */
+export async function membershipTierForStripeCustomer(
+  stripeCustomerId: string
+): Promise<"starter" | "unlimited" | "insider" | null> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT e.tier
+    FROM entitlements e
+    JOIN customers c ON c.id = e.customer_id
+    WHERE c.stripe_customer_id = ${stripeCustomerId}
+      AND c.brand = 'acp'
+      AND e.sku = ${MEMBERSHIP_SKU}
+      AND e.status = 'active'
+  `) as { tier: string | null }[];
+  const tier = rows[0]?.tier;
+  return tier === "starter" || tier === "unlimited" || tier === "insider" ? tier : null;
+}
+
 export async function activeMemberContacts(): Promise<{ email: string; name: string | null }[]> {
   await ensureCommerceSchema();
   const rows = (await sql()`

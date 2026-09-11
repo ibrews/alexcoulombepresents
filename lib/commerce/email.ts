@@ -89,6 +89,27 @@ export async function sendFulfillmentEmail(input: {
   }
 }
 
+/**
+ * A plain operational alert to the owner — for conditions that need a human
+ * rather than a customer-facing template (e.g. a renewal paid on a price id
+ * this code doesn't recognize).
+ *
+ * Never throws: every caller is already past the point of having granted
+ * something or taken money, and failing a webhook over an alert would make
+ * Stripe retry work that already succeeded.
+ */
+export async function sendOwnerAlert(input: { subject: string; body: string }) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { error } = await resend.emails.send({
+    from: OWNER_ALERT_FROM,
+    to: ownerRecipients(),
+    subject: input.subject,
+    text: input.body,
+    html: brandedHtml(input.body),
+  });
+  if (error) console.error("owner alert failed:", error.message);
+}
+
 export async function sendMagicLinkEmail(input: { email: string; magicLinkUrl: string }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const __body = [
