@@ -45,6 +45,21 @@ async function accessToken(): Promise<string> {
   return json.access_token as string;
 }
 
+// Carries Zoom's own numeric error code so a caller can tell an expected,
+// permanent rejection apart from a real failure — see ZOOM_HOST_CANNOT_REGISTER.
+class ZoomApiError extends Error {
+  // Declared as a field rather than a constructor parameter property: Node's
+  // type-stripping test runner rejects parameter properties outright
+  // (ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX), which takes the whole test file down.
+  readonly code: number | undefined;
+
+  constructor(message: string, code: number | undefined) {
+    super(message);
+    this.name = "ZoomApiError";
+    this.code = code;
+  }
+}
+
 async function call(method: string, path: string, body?: Record<string, unknown>) {
   const token = await accessToken();
   const res = await fetch(`${API_BASE}${path}`, {
@@ -56,7 +71,12 @@ async function call(method: string, path: string, body?: Record<string, unknown>
     body: body ? JSON.stringify(body) : undefined,
   });
   const json = res.status === 204 ? null : await res.json().catch(() => null);
-  if (!res.ok) throw new Error(`Zoom ${method} ${path} failed (${res.status}): ${JSON.stringify(json)}`);
+  if (!res.ok) {
+    throw new ZoomApiError(
+      `Zoom ${method} ${path} failed (${res.status}): ${JSON.stringify(json)}`,
+      typeof json?.code === "number" ? json.code : undefined
+    );
+  }
   return json;
 }
 
@@ -112,18 +132,26 @@ export async function addZoomRegistrant(
   meetingId: string,
   registrant: { email: string; name?: string | null }
 ): Promise<boolean> {
-  const { firstName, lastName } = splitName(registrant.name);
   try {
-    await call("POST", `/meetings/${meetingId}/registrants`, {
-      email: registrant.email,
-      first_name: firstName,
-      last_name: lastName,
-    });
+    await postZoomRegistrant(meetingId, registrant);
     return true;
   } catch (err) {
     console.error(`[zoom] addZoomRegistrant failed for meeting ${meetingId}:`, err);
     return false;
   }
+}
+
+// The throwing form, so ensureZoomRegistrants can read Zoom's error code.
+async function postZoomRegistrant(
+  meetingId: string,
+  registrant: { email: string; name?: string | null }
+): Promise<void> {
+  const { firstName, lastName } = splitName(registrant.name);
+  await call("POST", `/meetings/${meetingId}/registrants`, {
+    email: registrant.email,
+    first_name: firstName,
+    last_name: lastName,
+  });
 }
 
 // Marshall TAs every class and every office hours, so he belongs on every
@@ -136,6 +164,10 @@ export async function addZoomRegistrant(
 export const STANDING_ATTENDEES: { email: string; name: string }[] = [
   { email: "marshall@agilelens.com", name: "Marshall Nowak" },
 ];
+
+/** Zoom's "Host can not register" — the meeting's own host account can never
+ * be a registrant. Permanent and harmless, so it's a skip, not a failure. */
+const ZOOM_HOST_CANNOT_REGISTER = 3027;
 
 /** Emails already registered on a meeting (approved + pending), lowercased.
  * Zoom's own registrant list is the source of truth rather than a local
@@ -175,8 +207,21 @@ export async function ensureZoomRegistrants(
       continue;
     }
     seen.add(key); // guard against a duplicate inside `people` itself
-    if (await addZoomRegistrant(meetingId, person)) registered.push(person.email);
-    else failed.push(person.email);
+    try {
+      await postZoomRegistrant(meetingId, person);
+      registered.push(person.email);
+    } catch (err) {
+      // The host is in the member list too (Alex holds a membership of his
+      // own), and Zoom will never accept the host account as a registrant.
+      // Counting that as a failure would report the same harmless error every
+      // morning forever, which is how a log stops being read.
+      if (err instanceof ZoomApiError && err.code === ZOOM_HOST_CANNOT_REGISTER) {
+        skipped.push(person.email);
+        continue;
+      }
+      console.error(`[zoom] registering ${person.email} on meeting ${meetingId} failed:`, err);
+      failed.push(person.email);
+    }
   }
   return { registered, skipped, failed };
 }
