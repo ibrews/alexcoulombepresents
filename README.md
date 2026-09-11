@@ -302,6 +302,12 @@ Note that `sendOrderEmails`'s buyer confirmation carries an owner `bcc` *in addi
 `FULFILL:` alert. The alert alone is not sufficient: its send failure is logged, never thrown or
 retried, so a sale could go unannounced with the webhook still returning 200.
 
+**Owner-only alerts send `from` `OWNER_ALERT_FROM` (`noreply@`), never the info@ address they're sent
+to.** `From == To` on mail arriving through an external relay reads as spoofing: on 2026-09-10 Gmail
+started filing these in Spam, so that day's two `FULFILL:` alerts were sitting in the spam folder
+while the identical Aug 12/19/26 ones had reached the inbox — the sale notification looked simply
+absent. Customer-facing mail keeps the info@ `from`; addressed to a customer, it was never affected.
+
 ### Class-materials Drive access sync
 
 [`lib/commerce/driveAccessSync.ts`](lib/commerce/driveAccessSync.ts) (decision logic,

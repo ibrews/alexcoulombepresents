@@ -12,7 +12,7 @@ import {
   bookingHours,
   type BookingRow,
 } from "./config";
-import { ownerRecipients } from "../email.ts";
+import { OWNER_ALERT_FROM, ownerRecipients } from "../email.ts";
 
 const FROM = "Alex Coulombe Presents <info@alexcoulombepresents.com>";
 
@@ -115,7 +115,7 @@ export async function sendBookingOwnerRequest(booking: BookingRow): Promise<void
     "They have NOT been charged. Nothing is collected until you confirm.",
   ].join("\n");
   const { error } = await resend.emails.send({
-    from: FROM,
+    from: OWNER_ALERT_FROM,
     to: ownerRecipients(),
     replyTo: booking.email,
     subject: `Booking request: ${booking.name} — ${when}${reduced ? " (reduced rate claimed)" : ""}`,

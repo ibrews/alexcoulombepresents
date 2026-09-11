@@ -4,7 +4,7 @@ import { Resend } from "resend";
 import { findDigitalProduct } from "./products";
 import { MEMBERSHIP_TIERS, membershipTier, type MembershipTierId } from "./membership";
 
-import { ownerRecipients } from "../email.ts";
+import { OWNER_ALERT_FROM, ownerRecipients } from "../email.ts";
 
 // Renders our plain-text email bodies as simple branded HTML: white card,
 // auto-linked URLs, and the ACP logo in the footer. Every sender passes the
@@ -127,7 +127,7 @@ export async function sendDonationNotification(input: {
       input.comment?.trim() || "(none)",
     ].join("\n");
   const { error } = await resend.emails.send({
-    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    from: OWNER_ALERT_FROM,
     to: ownerRecipients(),
     subject: `Lab donation: $${dollars} from ${input.name ?? input.email ?? "someone"}`,
     text: __body,
@@ -235,7 +235,7 @@ export async function sendOrderEmails(input: {
       "(voucher code / booking link / scheduling) by replying to them.",
     ].join("\n");
   const owner = await resend.emails.send({
-    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    from: OWNER_ALERT_FROM,
     to: ownerRecipients(),
     subject: `FULFILL: ${input.itemName} — $${dollars} from ${input.name ?? input.email}`,
     text: __ownerBody,
@@ -337,7 +337,7 @@ export async function sendMembershipOwnerNotification(input: {
       `Tier: ${tier?.name ?? input.tier} — $${dollars}/mo`,
     ].join("\n");
   const { error } = await resend.emails.send({
-    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    from: OWNER_ALERT_FROM,
     to: ownerRecipients(),
     subject: `New member: ${tier?.name ?? input.tier} — ${input.name ?? input.email}`,
     text: __body,

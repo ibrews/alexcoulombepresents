@@ -34,3 +34,16 @@ export function ownerRecipients(): string[] {
   const extra = process.env.OWNER_ALERT_EMAIL?.trim();
   return extra && isValidEmail(extra) ? [extra, OWNER_EMAIL] : [OWNER_EMAIL];
 }
+
+/**
+ * `from` for owner-only alerts — the ones whose every recipient is us.
+ *
+ * Deliberately NOT the info@ support address those alerts are sent *to*:
+ * From == To on mail arriving through an external relay is a spoofing
+ * signature, and on 2026-09-10 Gmail began filing these in Spam (the two
+ * `FULFILL:` alerts for that day's class sales landed there, while the
+ * otherwise-identical Aug 12/19/26 ones had reached the inbox). Customer-facing
+ * mail keeps the info@ `from` — it's addressed to the customer, so it never had
+ * this problem.
+ */
+export const OWNER_ALERT_FROM = "Alex Coulombe Presents <noreply@alexcoulombepresents.com>";
