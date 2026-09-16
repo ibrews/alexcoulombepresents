@@ -220,13 +220,21 @@ export const wednesdayCalendar: StoreItem[] = [
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/C2MxUYbAQyKMSY2HzsumCg",
     zoomMeetingId: "82747526686",
   }),
+  // Swapped calendar dates with wed-2026-09-30-intro-ar on 2026-09-15: Alex is
+  // at Meta Connect the week of 9/21, so this (Alex-led) class traded slots
+  // with Yu-Jun Yeh's guest-led Intro to AR instead of either being pushed or
+  // cancelled. Slug/materials folder intentionally still say "09-23" — slug
+  // is the purchase key (renaming would orphan Marshall's existing Zoom
+  // registration and any future order under the old slug) — sessionDateISO
+  // below is the real, current date. The real Zoom meeting (86937931870) was
+  // rescheduled to match via lib/zoom.ts's rescheduleZoomMeeting.
   wednesdayCalendarItem({
     slug: "wed-2026-09-23-usd-glb-export",
     name: "Exporting UE5 to OpenUSD to GLB",
     blurb:
       "A real cross-platform export pipeline: Unreal scenes out through OpenUSD and GLB without losing what matters. Then we'll see what they look like in Godot and ThreeJS.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
-    sessionDateISO: "2026-09-23T15:00:00Z",
+    sessionDateISO: "2026-09-30T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/ggxLvryiSFKKtA1Xp9enoQ",
     zoomMeetingId: "86937931870",
   }),
@@ -235,12 +243,17 @@ export const wednesdayCalendar: StoreItem[] = [
   // — the full pipeline, not the demo-day version." Alex asked to save that
   // topic for a future session and swap this slot for Intro to AR instead —
   // reuse the name/blurb/tier above if that masterclass gets scheduled later.
+  //
+  // Swapped calendar dates with wed-2026-09-23-usd-glb-export on 2026-09-15
+  // (see that entry's comment) — this class now runs 9/23, not 9/30. Helen
+  // Banner had already bought this one for the original 9/30 date; notified
+  // directly of the move (same order/slug/Zoom registration, just a new date).
   wednesdayCalendarItem({
     slug: "wed-2026-09-30-intro-ar",
     name: "Intro to AR",
     blurb: "Android and iOS, ARCore & ARKit, plane detection, light estimation, markers & more. Led by Yu-Jun Yeh.",
     priceCents: INTRO_SESSION_CENTS,
-    sessionDateISO: "2026-09-30T15:00:00Z",
+    sessionDateISO: "2026-09-23T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/XnHIYeiPTxCvS15x4aLNWw",
     zoomMeetingId: "85064862653",
   }),

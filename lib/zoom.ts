@@ -136,6 +136,20 @@ export async function createZoomMeeting(input: {
   };
 }
 
+// Moves an already-created meeting to a new date/time without touching its
+// ID, join URL, or existing registrants — used when two dated classes swap
+// calendar slots (e.g. Alex is traveling the week his class was scheduled,
+// so it trades dates with a guest-led one instead of either being cancelled).
+// Zoom keeps the same registrants across a reschedule; anyone already
+// registered still needs a direct heads-up, since their original
+// confirmation named the old date.
+export async function rescheduleZoomMeeting(meetingId: string, startTimeISO: string): Promise<void> {
+  await call("PATCH", `/meetings/${meetingId}`, {
+    start_time: startTimeISO,
+    timezone: DISPLAY_TIMEZONE,
+  });
+}
+
 // Registers a buyer/member directly — the buyer never has to click the
 // registration link themselves. Best-effort by design: every call site
 // treats a failure here as non-fatal (log and move on), the same way a

@@ -5,12 +5,15 @@ import { getSeatsSold } from "@/lib/commerce/seats";
 import { getCheckin, recordCheckinPrompt } from "@/lib/commerce/classCheckin";
 import { sendClassCheckinPrompt, sendTelegramAlert } from "@/lib/telegram";
 
-// Daily min-enrollment check-in for the Wednesday calendar (see vercel.json —
-// fires at the same 14:00 UTC / 10am ET slot as the other daily crons). For
-// each dated class, the one day this actually does anything is the Tuesday
-// before it: if paid seats are still under item.minEnrollment, Alex gets a
-// Telegram Yes/No prompt (app/api/telegram/webhook.ts handles the tap) —
-// "no" triggers coupon+email to every buyer, see that route.
+// Daily min-enrollment check-in for the Wednesday calendar. DISABLED
+// 2026-09-15 (Alex: "we never listen to it" — every real prompt got
+// confirmed regardless of headcount, see class_checkins) by removing this
+// route from vercel.json's cron list; the code is left in place rather than
+// deleted in case the go/no-go prompt is wanted again later. For each dated
+// class, the one day this would do anything is the Tuesday before it: if
+// paid seats are still under item.minEnrollment, Alex gets a Telegram
+// Yes/No prompt (app/api/telegram/webhook.ts handles the tap) — "no"
+// triggers coupon+email to every buyer, see that route.
 
 export const maxDuration = 30;
 

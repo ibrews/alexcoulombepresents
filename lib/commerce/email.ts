@@ -539,3 +539,43 @@ export async function sendClassCancelledEmail(input: {
   });
   if (error) throw new Error(`class-cancelled email failed: ${error.message}`);
 }
+
+export async function sendClassRescheduledEmail(input: {
+  email: string;
+  name?: string | null;
+  className: string;
+  oldDateLabel: string;
+  newDateLabel: string;
+  zoomRegistrationUrl?: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const first = input.name?.split(" ")[0];
+  const __body = [
+    `${first ? `Hey ${first}` : "Hey"} — a scheduling update on "${input.className}": it's moving`,
+    `from ${input.oldDateLabel} to ${input.newDateLabel}. Same class, same Zoom registration —`,
+    "just a different day (Alex is traveling that original week).",
+    "",
+    ...(input.zoomRegistrationUrl
+      ? [
+          "Nothing to re-register for — your spot carries over automatically. Your Zoom link:",
+          "",
+          `${input.zoomRegistrationUrl}`,
+          "",
+        ]
+      : []),
+    "If the new date doesn't work for you, just reply to this email and we'll sort out a coupon",
+    "or refund — no hassle.",
+    "",
+    "— Alex Coulombe Presents",
+    "https://www.alexcoulombepresents.com",
+  ].join("\n");
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    to: input.email,
+    replyTo: ownerRecipients(),
+    subject: `"${input.className}" moved to ${input.newDateLabel}`,
+    text: __body,
+    html: brandedHtml(__body),
+  });
+  if (error) throw new Error(`class-rescheduled email failed: ${error.message}`);
+}
