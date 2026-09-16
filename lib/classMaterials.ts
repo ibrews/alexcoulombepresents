@@ -181,9 +181,11 @@ export const classFolders: ClassFolder[] = [
     ],
   },
   {
+    // Date swapped with wed-2026-09-30-intro-ar on 2026-09-15 (lib/store.ts
+    // has the reason) — slug kept as-is, only the real date moved.
     slug: "wed-2026-09-23-usd-glb-export",
     title: "Exporting UE5 to OpenUSD to GLB",
-    date: "2026-09-23",
+    date: "2026-09-30",
     blurb:
       "Getting scenes out of Unreal and into the rest of the pipeline via OpenUSD and glTF/GLB.",
     materials: [
@@ -194,9 +196,11 @@ export const classFolders: ClassFolder[] = [
     ],
   },
   {
+    // Date swapped with wed-2026-09-23-usd-glb-export on 2026-09-15 (lib/store.ts
+    // has the reason) — slug kept as-is, only the real date moved.
     slug: "wed-2026-09-30-intro-ar",
     title: "Intro to AR",
-    date: "2026-09-30",
+    date: "2026-09-23",
     blurb:
       "Augmented reality fundamentals and building your first AR experience in Unreal.",
     materials: [
