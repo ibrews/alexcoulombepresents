@@ -13,6 +13,7 @@
  */
 import { readFileSync } from "node:fs";
 import { createZoomMeeting, ensureZoomRegistrants, STANDING_ATTENDEES } from "../../lib/zoom.ts";
+import { OWNER_EMAIL } from "../../lib/email.ts";
 
 function loadEnvLocal() {
   try {
@@ -60,9 +61,18 @@ async function main() {
   // The TA attends every class, so register him here rather than relying on
   // someone remembering to add him to each meeting by hand — which is how he
   // came to be missing from all three of the upcoming classes on 2026-09-10.
-  const invites = await ensureZoomRegistrants(meetingId, STANDING_ATTENDEES);
-  for (const email of invites.registered) console.log(`Registered standing attendee: ${email}`);
-  for (const email of invites.failed) console.error(`FAILED to register standing attendee: ${email}`);
+  // OWNER_EMAIL is registered too: Alex is this meeting's host, and Zoom
+  // never sends a host their own registrant confirmation, so without this
+  // he gets no calendar invite/join-link email at all for a class created
+  // by this script — exactly what happened on 2026-09-16 when the
+  // USD/GLB-export ↔ Intro to AR date swap created two replacement meetings
+  // by hand and only STANDING_ATTENDEES got registered.
+  const invites = await ensureZoomRegistrants(meetingId, [
+    { email: OWNER_EMAIL, name: "Alex Coulombe" },
+    ...STANDING_ATTENDEES,
+  ]);
+  for (const email of invites.registered) console.log(`Registered attendee: ${email}`);
+  for (const email of invites.failed) console.error(`FAILED to register attendee: ${email}`);
   console.log();
   console.log("Paste into the wednesdayCalendarItem() call in lib/store.ts:");
   console.log(`    zoomRegistrationUrl: "${registrationUrl}",`);
