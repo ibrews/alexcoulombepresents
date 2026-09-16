@@ -220,21 +220,51 @@ export const wednesdayCalendar: StoreItem[] = [
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/C2MxUYbAQyKMSY2HzsumCg",
     zoomMeetingId: "82747526686",
   }),
-  // Swapped calendar dates with wed-2026-09-30-intro-ar on 2026-09-15: Alex is
-  // at Meta Connect the week of 9/21, so this (Alex-led) class traded slots
-  // with Yu-Jun Yeh's guest-led Intro to AR instead of either being pushed or
-  // cancelled. Slug/materials folder intentionally still say "09-23" — slug
-  // is the purchase key — sessionDateISO below is the real, current date.
+  // Was "Apple Vision Pro Unreal Engine Masterclass — Part 1" (advanced/$200
+  // tier), blurb: "The deep dive: shipping real Unreal content to Vision Pro
+  // — the full pipeline, not the demo-day version." Alex asked to save that
+  // topic for a future session and swap this slot for Intro to AR instead —
+  // reuse the name/blurb/tier above if that masterclass gets scheduled later.
+  //
+  // Swapped calendar dates with wed-2026-09-23-usd-glb-export on 2026-09-15:
+  // Alex is at Meta Connect the week of 9/21, so this guest-led class (Yu-Jun
+  // Yeh) traded slots with Alex's own USD/GLB-export session instead of
+  // either being pushed or cancelled — this class now runs 9/23, not 9/30.
+  // Reordered ahead of the USD/GLB entry below so `wednesdayCalendar` stays
+  // chronological by sessionDateISO — TrainingCalendar.tsx renders this array
+  // in place (no sort) and also reads its LAST item's date to compute where
+  // the "TBD via voting" placeholders start, so an out-of-order array
+  // produces duplicate/misdated calendar cards, not just a cosmetic ordering
+  // glitch. Slug/materials folder intentionally still say "09-30" — slug is
+  // the purchase key — sessionDateISO below is the real, current date.
   // zoomMeetingId/zoomRegistrationUrl point at a brand-new meeting, not the
-  // original 86937931870 rescheduled in place: this Zoom S2S app has
+  // original 85064862653 rescheduled in place: this Zoom S2S app has
   // meeting:write:*/meeting:read:* but not meeting:update:meeting(:admin), so
   // PATCHing the existing meeting's start_time 400s ("Invalid access token,
-  // does not contain scopes"). Marshall (standing attendee) was re-registered
-  // on the new meeting; the old one (86937931870, still sitting on 9/23 with
-  // Marshall on it) is orphaned and needs a manual cancel in the Zoom web UI —
-  // this app has no delete scope either. Add meeting:update:meeting:admin in
-  // the Zoom marketplace (marketplace.zoom.us/develop/apps/<id>/scope) if
-  // in-place reschedules should work next time instead of this workaround.
+  // does not contain scopes"). Helen Banner had already bought this one for
+  // the original 9/30 date; re-registered on the new meeting and emailed the
+  // corrected date + new Zoom link directly. The old meeting (85064862653,
+  // still sitting on 9/30 with Helen + Marshall on it) is orphaned and needs
+  // a manual cancel in the Zoom web UI — this app has no delete scope either.
+  // Add meeting:update:meeting:admin in the Zoom marketplace
+  // (marketplace.zoom.us/develop/apps/<id>/scope) if in-place reschedules
+  // should work next time instead of this workaround.
+  wednesdayCalendarItem({
+    slug: "wed-2026-09-30-intro-ar",
+    name: "Intro to AR",
+    blurb: "Android and iOS, ARCore & ARKit, plane detection, light estimation, markers & more. Led by Yu-Jun Yeh.",
+    priceCents: INTRO_SESSION_CENTS,
+    sessionDateISO: "2026-09-23T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/vG6MIUpARB27U_r-HixLBA",
+    zoomMeetingId: "89384042556",
+  }),
+  // Swapped calendar dates with wed-2026-09-30-intro-ar on 2026-09-15 (see
+  // that entry's comment for the full reason and the new-meeting-vs-reschedule
+  // caveat) — this (Alex-led) class now runs 9/30, not 9/23. Slug/materials
+  // folder intentionally still say "09-23" — sessionDateISO below is the
+  // real, current date. Marshall (standing attendee) was re-registered on
+  // the new meeting; the old one (86937931870, still sitting on 9/23 with
+  // Marshall on it) is orphaned and needs a manual cancel in the Zoom web UI.
   wednesdayCalendarItem({
     slug: "wed-2026-09-23-usd-glb-export",
     name: "Exporting UE5 to OpenUSD to GLB",
@@ -244,28 +274,6 @@ export const wednesdayCalendar: StoreItem[] = [
     sessionDateISO: "2026-09-30T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/y5hDDFQ8Q82ZcpM_HJPlZA",
     zoomMeetingId: "85937826947",
-  }),
-  // Was "Apple Vision Pro Unreal Engine Masterclass — Part 1" (advanced/$200
-  // tier), blurb: "The deep dive: shipping real Unreal content to Vision Pro
-  // — the full pipeline, not the demo-day version." Alex asked to save that
-  // topic for a future session and swap this slot for Intro to AR instead —
-  // reuse the name/blurb/tier above if that masterclass gets scheduled later.
-  //
-  // Swapped calendar dates with wed-2026-09-23-usd-glb-export on 2026-09-15
-  // (see that entry's comment for why and for the new-meeting-vs-reschedule
-  // caveat) — this class now runs 9/23, not 9/30. Helen Banner had already
-  // bought this one for the original 9/30 date; re-registered on the new
-  // meeting and emailed the corrected date + new Zoom link directly. The old
-  // meeting (85064862653, still sitting on 9/30 with Helen + Marshall on it)
-  // is orphaned and needs a manual cancel in the Zoom web UI.
-  wednesdayCalendarItem({
-    slug: "wed-2026-09-30-intro-ar",
-    name: "Intro to AR",
-    blurb: "Android and iOS, ARCore & ARKit, plane detection, light estimation, markers & more. Led by Yu-Jun Yeh.",
-    priceCents: INTRO_SESSION_CENTS,
-    sessionDateISO: "2026-09-23T15:00:00Z",
-    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/vG6MIUpARB27U_r-HixLBA",
-    zoomMeetingId: "89384042556",
   }),
 ];
 
