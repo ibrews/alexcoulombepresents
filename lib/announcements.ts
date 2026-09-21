@@ -47,6 +47,29 @@ export const announcements: Announcement[] = [
     // cutoff, so keep the banner up through Aug 5.
     end: "2026-08-05",
   },
+  // Two entries below close out the Wednesday run. Both sit ahead of
+  // wed-calendar-launch because first-match-in-order wins and this window
+  // overlaps it — the generic "book any session" copy is true but vague once
+  // the run is down to its last two dates.
+  {
+    id: "wed-calendar-final",
+    text: "Last two classes of the run — Intro to AR Sep 23, UE5 to USD to GLB Sep 30, code UE5 for 50% off",
+    href: "/training#calendar",
+    cta: "Book a seat",
+    start: "2026-09-22",
+    end: "2026-09-30",
+  },
+  // Picks up the day after the last dated class, so the site isn't silent
+  // between the run ending and whatever the poll picks. No date claims — the
+  // calendar's own TBD slots and /vote carry that, and they can't go stale.
+  {
+    id: "vote-next-run",
+    text: "The Wednesday run just wrapped — what gets taught next is decided by vote",
+    href: "/vote",
+    cta: "Cast a vote",
+    start: "2026-10-01",
+    end: "2026-10-31",
+  },
   // Placed ahead of drainspotting-launch (order = priority) so the real
   // calendar — 8 dated, bookable Wednesday classes — takes over the banner
   // the moment it ships, through the last class in the run (Sep 30). No

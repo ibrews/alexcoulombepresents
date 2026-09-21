@@ -341,6 +341,26 @@ export const repos: Repo[] = [
     ],
   },
   {
+    slug: "ue-reseed",
+    name: "reseed",
+    tagline: "Keep Unreal's template content out of your git repo, and put it back on demand from your own engine install.",
+    category: "Unreal Engine",
+    stars: 1,
+    language: "Python",
+    story:
+      "Making a project from a UE Template copies Epic's own asset files straight into your Content/ folder, where they look exactly like your work in the Content Browser. Commit them once and you have a several-hundred-MB repo, binary-diff noise on every PR, and LFS quota burned on files that are byte-identical on every machine with the same engine installed. reseed finds precisely which files your Content/ folder shares with your Engine install, gitignores those, and writes a restore script that sources them from the cloner's own licensed engine — nothing is downloaded from anywhere, and nothing you authored is touched.",
+    highlights: [
+      "Sorts Content/ into engine-verbatim, engine-sourced-but-modified, name-collision, and your own work — only the first is ever ignored",
+      "Files you've modified from an Engine original are flagged for a decision, never split or overwritten",
+      "Every restored file is SHA-256 re-checked, so a bad copy is never silently trusted",
+      "`scan` writes nothing and `apply --out` works on a copy — in-place is opt-in, not the default",
+      "`reseed check` is a CI gate that fails the build if engine content is tracked again",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/ue-reseed",
+    wiki: "https://github.com/ibrews/ue-reseed/wiki",
+  },
+  {
     slug: "unreal-visionos-basics",
     name: "unreal-visionos-basics",
     tagline: "The UE 5.8 VR Template that actually renders opaque in mixed immersion on Apple Vision Pro.",
