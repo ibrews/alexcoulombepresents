@@ -1105,6 +1105,23 @@ export const appearances: Appearance[] = [
     location: "Google's Bay View campus, Mountain View, CA",
     url: "https://rsvp.withgoogle.com/events/android-dev-summit-bayview",
   },
+  // The `meta-connect-2026` banner in lib/announcements.ts already tells every
+  // visitor Alex is at Connect this week, but /appearances — the page that
+  // answers "where is Alex" — had no card for it, so the site contradicted
+  // itself on the one event running right now. Presence only, matching the
+  // banner's own claim: no session, demo, badge tier or speaking slot is
+  // implied. Dates and venue checked against meta.com/connect on 2026-09-22.
+  {
+    slug: "meta-connect-2026",
+    role: "Attending",
+    title: "Meta Connect 2026",
+    org: "Meta",
+    date: "Sep 23–24, 2026",
+    startsISO: "2026-09-23T07:00:00Z",
+    endsISO: "2026-09-25T06:59:59Z",
+    location: "Meta HQ, Menlo Park, CA",
+    url: "https://www.meta.com/connect/",
+  },
 ];
 
 
