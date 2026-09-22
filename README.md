@@ -7,6 +7,19 @@ Google Sites page with something interactive, dynamic, and worthy of the domain.
 Built with **Next.js 15, React 19, Tailwind CSS 4, and Three.js**. Deploys to Vercel;
 commerce and account features use the environment configuration described below.
 
+## Upcoming hellos
+
+The homepage `#appearances` section lists ASAI (October 7–9, Washington, DC),
+Augmented Enterprise Summit with PICO (October 13–15, Atlanta), Android Dev Summit
+(October 28–29, Mountain View), and PMRE (November 17–19, Las Vegas; Alex's talk is
+November 19, 11 a.m.–noon PST). Dates/venues were checked against organizer pages
+on September 22, 2026. The DC event is **ASAI**, not AIAS. Each card links its source.
+
+Edit `lib/appearances.ts`; `partitionAppearances` sorts by event date and moves finished
+events into history. Home and `/appearances` revalidate hourly on requests, so expiry
+does not require another deployment. `note` holds session details or participation context;
+attendance alone is not labeled as a speaking engagement.
+
 ## September 2026 refresh
 
 - `/#latest` features ue-reseed, gputrace, and Found Footage, with source-backed copy in

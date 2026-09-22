@@ -3,7 +3,7 @@
 // Feeds the homepage "What's next" section (#appearances) and the site-wide
 // announcement banner (lib/announcements.ts links here). Keep entries even
 // after they pass — they become the historical "featured in" record. Order:
-// soonest-first; the homepage section doesn't re-sort.
+// arbitrary; partitionAppearances sorts upcoming and historical cards by date.
 //
 // `endsISO` is what keeps the section honest: once it passes, the entry moves
 // itself out of "what's next" and into the "recently" row below — no manual
@@ -17,13 +17,15 @@ export type Appearance = {
   title: string;
   org: string;
   date: string; // human-readable range, e.g. "Jul 18–19, 2026"
+  startsISO?: string; // optional start used to order multi-day upcoming events
+  note?: string; // verified session detail or user-confirmed participation context
   endsISO: string; // instant the appearance is over; past this it reads as history
   location: string;
   // Link hierarchy, in order of preference: 1) video of the talk, 2) deck,
   // 3) conference listing for his specific session, 4) anything naming him
   // or Agile Lens by name. A generic org homepage that doesn't show what
-  // role he played is worse than no link — omit `url` rather than pad it
-  // with one.
+  // role he played is worse than no link. For user-confirmed attendance,
+  // the official event page verifies the date/venue without implying a speaking slot.
   url?: string;
   image?: string; // path under /public
 };
@@ -42,9 +44,8 @@ export function categoryForAppearance(a: Appearance): CardCategory {
 // Wayback Machine snapshot, and confirmed event emails — see the KB at
 // ~/knowledge/media/youtube/{speaking-engagements,past-talks-archive}.md and
 // ~/knowledge/context/team/team-alex-full-bio.md. Kept in ascending
-// chronological order so AppearancesSection's `.slice(-4).reverse()` "recently"
-// picker keeps working — new past entries belong just above this comment
-// block ends (i.e. right before the first upcoming/near-term entry below).
+// chronological order for readability; partitionAppearances handles display
+// order even when a newly researched event is appended later.
 export const appearances: Appearance[] = [
   {
     slug: "nyit-intersections-2014",
@@ -1021,9 +1022,11 @@ export const appearances: Appearance[] = [
     title: "Architect to XR-chitect: The Best Career Advice I Ever Ignored",
     org: "PMRE 2026 — Photo + Media for Real Estate Conference",
     date: "Nov 17–19, 2026",
-    endsISO: "2026-11-20T06:00:00Z",
+    startsISO: "2026-11-17T08:00:00Z",
+    endsISO: "2026-11-20T07:59:59Z",
+    note: "My talk: November 19, 11 a.m.–noon PST.",
     location: "Palms Casino Resort, Las Vegas",
-    url: "https://pmreconference.com/agenda",
+    url: "https://www.pmreconference.com/agenda",
   },
   {
     slug: "worlds-in-action-hack-la",
@@ -1066,4 +1069,52 @@ export const appearances: Appearance[] = [
     location: "Concourse Hall, Los Angeles",
     url: "https://doi.org/10.1145/3799822.3812463",
   },
+  // Dates and venues checked against each organizer's site on 2026-09-22.
+  // Alex confirmed attendance; these are not claims of speaking appearances.
+  {
+    slug: "asai-architecture-in-perspective-2026",
+    role: "Attending",
+    title: "Architecture in Perspective: Craft (re)Focused",
+    org: "ASAI — American Society of Architectural Illustrators",
+    date: "Oct 7–9, 2026",
+    startsISO: "2026-10-07T04:00:00Z",
+    endsISO: "2026-10-10T03:59:59Z",
+    location: "AIA Global Campus, Washington, DC",
+    url: "https://asai.org/conference/",
+  },
+  {
+    slug: "augmented-enterprise-summit-2026",
+    role: "Attending · with PICO",
+    title: "Augmented Enterprise Summit (AES)",
+    org: "Augmented Enterprise Summit 2026",
+    date: "Oct 13–15, 2026",
+    startsISO: "2026-10-13T04:00:00Z",
+    endsISO: "2026-10-16T03:59:59Z",
+    location: "Atlanta Marriott Marquis, Atlanta, GA",
+    note: "I'll be there in partnership with PICO.",
+    url: "https://augmentedenterprisesummit.com/",
+  },
+  {
+    slug: "android-dev-summit-2026",
+    role: "Attending",
+    title: "Android Dev Summit",
+    org: "Google",
+    date: "Oct 28–29, 2026",
+    startsISO: "2026-10-28T07:00:00Z",
+    endsISO: "2026-10-30T06:59:59Z",
+    location: "Google's Bay View campus, Mountain View, CA",
+    url: "https://rsvp.withgoogle.com/events/android-dev-summit-bayview",
+  },
 ];
+
+
+// Sort by time rather than insertion order: future conference cards may be
+// added after the historical archive. End-of-day boundaries use venue time.
+export function partitionAppearances(now = Date.now()) {
+  return {
+    upcoming: appearances.filter((a) => Date.parse(a.endsISO) >= now)
+      .sort((a, b) => Date.parse(a.startsISO ?? a.endsISO) - Date.parse(b.startsISO ?? b.endsISO)),
+    past: appearances.filter((a) => Date.parse(a.endsISO) < now)
+      .sort((a, b) => Date.parse(b.endsISO) - Date.parse(a.endsISO)),
+  };
+}
