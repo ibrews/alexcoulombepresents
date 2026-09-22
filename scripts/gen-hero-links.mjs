@@ -91,7 +91,7 @@ if (htmlFiles.length < MIN_PAGES || rendered.size < MIN_HREFS) {
   process.exit(1);
 }
 
-const { buildCuratedPool } = await import("../lib/heroLinkPool.ts");
+const { buildCuratedPool, shouldSuppressHeroLink } = await import("../lib/heroLinkPool.ts");
 const { appearances } = await import("../lib/appearances.ts");
 const APPEARANCE_URLS = new Set(appearances.map((a) => a.url).filter(Boolean));
 const pool = buildCuratedPool();
@@ -117,6 +117,7 @@ const skip = (href) =>
 
 const missing = [...rendered.entries()]
   .filter(([href]) => !skip(href))
+  .filter(([href]) => !shouldSuppressHeroLink(href))
   .filter(([href]) => !pooled.has(href) && !pooled.has(href.split("#")[0]))
   .sort();
 

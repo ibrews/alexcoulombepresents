@@ -34,7 +34,9 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
   const repo = repos.find((r) => r.slug === slug);
   if (!repo) notFound();
 
-  const siblings = repos.filter((r) => r.category === repo.category && r.slug !== repo.slug).slice(0, 3);
+  const siblings = repos
+    .filter((r) => r.category === repo.category && r.lifecycle === repo.lifecycle && r.slug !== repo.slug)
+    .slice(0, 3);
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-32">
@@ -48,6 +50,11 @@ export default async function RepoPage({ params }: { params: Promise<{ slug: str
           <StarCount repo={repo.slug} org={repo.org} fallback={repo.stars} />
         </div>
         <p className="mt-4 text-xl leading-relaxed text-mist">{renderBreaks(repo.tagline)}</p>
+        {repo.lifecycle === "archive" && (
+          <p className="mt-4 inline-flex rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-mist">
+            Portfolio archive · source and notes preserved
+          </p>
+        )}
         {repo.spaceSavedTally && <SpaceSavedTally />}
 
         <div className="mt-8 flex flex-wrap gap-3">

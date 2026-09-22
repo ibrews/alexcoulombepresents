@@ -11,6 +11,7 @@ import LatestVideo from "@/components/LatestVideo";
 import VenueMarquee from "@/components/VenueMarquee";
 import { repos, products, roles } from "@/lib/data";
 import { buildHeroLinkPool } from "@/lib/heroLinkPool";
+import { siteUpdates } from "@/lib/siteUpdates";
 import { renderBreaks } from "@/components/Lines";
 
 // Loads the three.js-based morphing point-cloud hero backdrop only in the
@@ -32,18 +33,18 @@ export default function Home() {
   // FaceField draws its dozen from this on the client, once per visit.
   const heroLinkPool = buildHeroLinkPool();
 
-  const featured = [...repos].sort((a, b) => b.stars - a.stars).slice(0, 6);
+  const featuredSlugs = ["unreal-custodian", "ue-reseed", "blueprint-auto-layout", "ue5-mcp", "godot-avp-cascade", "claude-fleet"];
+  const featured = featuredSlugs.map((slug) => repos.find((repo) => repo.slug === slug))
+    .filter((repo): repo is NonNullable<typeof repo> => Boolean(repo));
 
   // Hand-picked top 6 for the homepage teaser — the most mature, most
   // visually distinctive work, ahead of the internal-only Agile Lens tooling
   // further down the full /lab catalog. Order is deliberate, not alphabetical.
   const bubbling = [
-    "fabel-showcase",
     "unrealitykit-bridge",
-    "renderman-bridge",
-    "project-ion",
-    "forage",
     "avp-openxr",
+    "video-qa-workbench",
+    "scene-audit",
   ]
     .map((slug) => products.find((p) => p.slug === slug))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
@@ -90,10 +91,10 @@ export default function Home() {
           <div className="pointer-events-auto mt-10 flex flex-col gap-3">
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/lab"
+                href="/#latest"
                 className="rounded-full bg-snow px-6 py-3 font-semibold text-ink transition-transform hover:scale-[1.03]"
               >
-                See what&apos;s cooking →
+                Explore the latest work →
               </Link>
               <Link
                 href="/repos"
@@ -133,6 +134,33 @@ export default function Home() {
       </section>
 
       <VenueMarquee />
+
+      <section id="latest" className="relative border-b border-line bg-panel/40">
+        <div className="mx-auto max-w-6xl px-5 py-16 md:py-20">
+          <Reveal>
+            <div className="flex flex-wrap items-end justify-between gap-5">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-teal">Field notes / September 2026</p>
+                <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">Less friction. <span className="grad-text">More making.</span></h2>
+                <p className="mt-4 max-w-2xl text-mist">New tools from the workbench: smaller checkouts, readable GPU captures, and a second chance for a lost recording.</p>
+              </div>
+              <Link href="/lab" className="font-mono text-sm text-teal hover:underline">Inside the lab →</Link>
+            </div>
+          </Reveal>
+          <div className="mt-9 grid gap-5 md:grid-cols-3">
+            {siteUpdates.map((update, index) => (
+              <Reveal key={update.href} delay={index * 80}>
+                <Link href={update.href} className="group glass flex h-full flex-col rounded-2xl p-7 transition-colors hover:border-teal/50">
+                  <p className="font-mono text-[10px] tracking-widest text-teal">{update.label}</p>
+                  <h3 className="mt-5 text-2xl font-bold tracking-tight">{update.title}</h3>
+                  <p className="mb-7 mt-4 text-sm leading-relaxed text-mist">{update.description}</p>
+                  <span className="mt-auto text-sm font-semibold text-snow group-hover:text-teal">{update.cta} →</span>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <AppearancesSection />
 
@@ -218,7 +246,7 @@ export default function Home() {
         <Reveal>
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Fresh from the public repos</h2>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Open tools. Real problems solved.</h2>
               <p className="mt-3 text-mist">
                 Real tools built for{" "}
                 <a
@@ -257,7 +285,7 @@ export default function Home() {
               <div>
                 <p className="font-mono text-xs uppercase tracking-widest text-grape">The Lab</p>
                 <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-                  Here&apos;s <span className="grad-text">what&apos;s bubbling:</span>
+                  A few things <span className="grad-text">I&apos;m building.</span>
                 </h2>
               </div>
               <Link href="/lab" className="hidden font-mono text-sm text-teal hover:underline md:block">

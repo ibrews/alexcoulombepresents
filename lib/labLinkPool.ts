@@ -28,6 +28,9 @@ export function buildLabLinkPool(): HeroLink[] {
 
   // The page's own cards, as dots. Every one of these has a briefing page.
   for (const p of products) {
+    // Finished experiments and internal infrastructure now live in secondary
+    // sections; keep the constellation focused on products visitors can follow.
+    if (p.experiment || p.internal) continue;
     pool.push({
       href: `/lab/${p.slug}`,
       label: short(p.name),
@@ -47,6 +50,7 @@ export function buildLabLinkPool(): HeroLink[] {
   }
 
   for (const r of repos) {
+    if (r.lifecycle === "archive") continue;
     pool.push({
       href: `/repos/${r.slug}`,
       label: short(r.name),
