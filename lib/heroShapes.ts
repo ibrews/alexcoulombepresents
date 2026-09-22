@@ -527,9 +527,207 @@ export function genMonocle(R: number): FormData {
   return fill(pos, col);
 }
 
-export type HeroShapeKey = "scan" | "theater" | "headset" | "skyline" | "marquee" | "guitar" | "wave" | "globe" | "dominoes" | "monocle";
+/** A suited explorer, built as overlapping pressure-suit volumes. */
+export function genAstronaut(R: number): FormData {
+  const pos: number[] = [];
+  const col: number[] = [];
+  const s = R / 9.2;
+  const put = (x: number, y: number, z: number, c: RGB) => push(pos, col, x * s, (y - 1) * s, z * s, c);
+  const SUIT = hexToRgb(0xd9dce8);
+  const SHADOW = hexToRgb(0x596279);
+  const VISOR = hexToRgb(0x16364b);
 
-export const HERO_SHAPE_ORDER: HeroShapeKey[] = ["scan", "theater", "headset", "skyline", "marquee", "guitar", "wave", "globe", "dominoes", "monocle"];
+  // Helmet shell and a deep, cool visor. Keeping the rear hemisphere visible
+  // makes the head read as a pressure helmet after the cloud rotates.
+  for (let i = 0; i < 5200; i++) {
+    const th = rand(0, Math.PI * 2), ph = Math.acos(rand(-1, 1));
+    const rr = 2.55 + rand(-0.08, 0.08);
+    put(rr * Math.sin(ph) * Math.cos(th), 6.1 + rr * Math.cos(ph), rr * Math.sin(ph) * Math.sin(th), jitter(ph < 2.05 ? SUIT : SHADOW, 0.12));
+  }
+  for (let i = 0; i < 3000; i++) {
+    const x = rand(-1.85, 1.85), y = rand(4.75, 6.95);
+    const ellipse = (x / 1.9) ** 2 + ((y - 5.9) / 1.2) ** 2;
+    if (ellipse <= 1) put(x, y, 2.05 + 0.35 * (1 - ellipse) + rand(-0.04, 0.04), jitter(lerpRgb(VISOR, TEAL, (y - 4.7) / 2.5), 0.16));
+  }
+
+  // Torso, life-support pack, and control panel.
+  for (let i = 0; i < 4500; i++) {
+    const y = rand(-0.6, 3.9), half = 2.25 - Math.abs(y - 1.65) * 0.12;
+    const face = Math.floor(rand(0, 4));
+    const x = face < 2 ? (face === 0 ? -half : half) : rand(-half, half);
+    const z = face >= 2 ? (face === 2 ? -1.2 : 1.2) : rand(-1.2, 1.2);
+    put(x, y, z, jitter(face === 2 ? SHADOW : SUIT, 0.14));
+  }
+  for (let i = 0; i < 2100; i++) put(rand(-1.9, 1.9), rand(0, 3.55), -1.65 + rand(-0.22, 0.22), jitter(SHADOW, 0.18));
+  for (let i = 0; i < 1000; i++) {
+    const x = rand(-1.3, 1.3), y = rand(1.1, 2.45);
+    put(x, y, 1.35, jitter(Math.random() < 0.28 ? AMBER : hexToRgb(0x64748b), 0.12));
+  }
+
+  // Articulated arms and legs. Each limb is a capsule-like chain of discs,
+  // which preserves a readable bent pose from more angles than a thin tube.
+  const limbs: [[number, number, number], [number, number, number], number][] = [
+    [[-2.1, 3, 0], [-5.1, 0.3, 0.9], 1],
+    [[2.1, 3, 0], [5.25, 4.8, 0.45], 1],
+    [[-1.25, -0.35, 0], [-2.2, -6.7, 0.7], 1.18],
+    [[1.25, -0.35, 0], [2.65, -6.25, -0.55], 1.18],
+  ];
+  for (const [a, b, width] of limbs) {
+    for (let i = 0; i < 1850; i++) {
+      const t = Math.random(), bend = Math.sin(t * Math.PI) * (Math.abs(a[0]) > 2 ? 0.8 : 0.35);
+      const cx = a[0] + (b[0] - a[0]) * t + Math.sign(b[0]) * bend;
+      const cy = a[1] + (b[1] - a[1]) * t;
+      const cz = a[2] + (b[2] - a[2]) * t;
+      const angle = rand(0, Math.PI * 2), rr = width * (0.65 + 0.35 * Math.sin(Math.PI * t));
+      put(cx + Math.cos(angle) * rr, cy, cz + Math.sin(angle) * rr, jitter(i % 19 === 0 ? TEAL : SUIT, 0.14));
+    }
+  }
+  for (const [x, y, z] of [[-2.4, -7.1, 1.3], [2.9, -6.65, -0.1]]) {
+    for (let i = 0; i < 620; i++) put(x + rand(-1.05, 1.05), y + rand(-0.42, 0.42), z + rand(-1.25, 1.25), jitter(SHADOW, 0.15));
+  }
+  return fill(pos, col);
+}
+
+/** Twin-reel cinema camera with lens, viewfinder, and a planted tripod. */
+export function genCinemaCamera(R: number): FormData {
+  const pos: number[] = [];
+  const col: number[] = [];
+  const s = R / 12.2;
+  const put = (x: number, y: number, z: number, c: RGB) => push(pos, col, x * s, (y - 1.5) * s, z * s, c);
+  const BODY = hexToRgb(0x38435c), DARK = hexToRgb(0x151826), GLASS = hexToRgb(0x225f72);
+
+  // Camera body box.
+  for (let i = 0; i < 5600; i++) {
+    const face = Math.floor(rand(0, 6));
+    let x = rand(-4.4, 3.2), y = rand(0, 5.2), z = rand(-2.25, 2.25);
+    if (face === 0) x = -4.4; else if (face === 1) x = 3.2; else if (face === 2) y = 0; else if (face === 3) y = 5.2; else z = face === 4 ? -2.25 : 2.25;
+    put(x, y, z, jitter(face === 5 ? BODY : DARK, 0.17));
+  }
+  // Two reel canisters and their bright inner hubs.
+  for (const cy of [6.8, 10.15]) for (let i = 0; i < 3900; i++) {
+    const a = rand(0, Math.PI * 2), rr = 2.25 * Math.sqrt(Math.random());
+    const rim = rr > 1.92;
+    put(-0.65 + Math.cos(a) * rr, cy + Math.sin(a) * rr, 2.35 + rand(-0.16, 0.16), jitter(rim ? AMBER : BODY, 0.15));
+  }
+  for (const cy of [6.8, 10.15]) for (let i = 0; i < 420; i++) {
+    const a = rand(0, Math.PI * 2), rr = 0.5 * Math.sqrt(Math.random());
+    put(-0.65 + Math.cos(a) * rr, cy + Math.sin(a) * rr, 2.58, jitter(SNOW, 0.1));
+  }
+  // Lens barrel, front glass, and top viewfinder.
+  for (let i = 0; i < 3200; i++) {
+    const x = rand(3.15, 7.5), a = rand(0, Math.PI * 2), taper = 1.45 - (x - 3.15) * 0.09;
+    put(x, 2.9 + Math.cos(a) * taper, Math.sin(a) * taper, jitter(x > 6.9 ? AMBER : DARK, 0.14));
+  }
+  for (let i = 0; i < 850; i++) {
+    const a = rand(0, Math.PI * 2), rr = 1.05 * Math.sqrt(Math.random());
+    put(7.55, 2.9 + Math.cos(a) * rr, Math.sin(a) * rr, jitter(GLASS, 0.2));
+  }
+  for (let i = 0; i < 1350; i++) put(rand(1.1, 5.6), rand(7.9, 8.75), rand(-0.55, 0.55), jitter(DARK, 0.16));
+  // Tripod column and splayed legs.
+  for (let i = 0; i < 1400; i++) {
+    const a = rand(0, Math.PI * 2), rr = 0.32 * Math.sqrt(Math.random());
+    put(-0.5 + Math.cos(a) * rr, rand(-3.3, 0.2), Math.sin(a) * rr, jitter(MIST, 0.2));
+  }
+  for (const end of [[-6.6, -8, 3.8], [5.7, -8, 4.4], [0.8, -8, -6.2]]) {
+    for (let i = 0; i < 1150; i++) {
+      const t = Math.random(), a = rand(0, Math.PI * 2), rr = 0.22;
+      put(-0.5 + (end[0] + 0.5) * t + Math.cos(a) * rr, -2.8 + (end[1] + 2.8) * t, end[2] * t + Math.sin(a) * rr, jitter(MIST, 0.18));
+    }
+  }
+  return fill(pos, col);
+}
+
+/** A full 3D Ferris wheel: twin rims, spokes, suspended cars, and supports. */
+export function genFerrisWheel(R: number): FormData {
+  const pos: number[] = [];
+  const col: number[] = [];
+  const s = R / 12;
+  const put = (x: number, y: number, z: number, c: RGB) => push(pos, col, x * s, (y - 1.4) * s, z * s, c);
+  const STEEL = hexToRgb(0x61708e), CAB = hexToRgb(0x25324c);
+  const radius = 8.1;
+
+  for (const z of [-0.75, 0.75]) for (let i = 0; i < 3400; i++) {
+    const a = rand(0, Math.PI * 2), tube = rand(-0.16, 0.16);
+    put(Math.cos(a) * (radius + tube), 2.2 + Math.sin(a) * (radius + tube), z + rand(-0.1, 0.1), jitter(i % 17 === 0 ? AMBER : STEEL, 0.18));
+  }
+  for (let spoke = 0; spoke < 16; spoke++) {
+    const a = (spoke / 16) * Math.PI * 2;
+    for (let i = 0; i < 190; i++) {
+      const t = Math.random(), z = Math.random() < 0.5 ? -0.72 : 0.72;
+      put(Math.cos(a) * radius * t, 2.2 + Math.sin(a) * radius * t, z, jitter(TEAL, 0.22));
+    }
+  }
+  // Cars hang level even while their attachment points follow the wheel.
+  for (let car = 0; car < 12; car++) {
+    const a = (car / 12) * Math.PI * 2, cx = Math.cos(a) * radius, cy = 2.2 + Math.sin(a) * radius - 0.85;
+    for (let i = 0; i < 560; i++) {
+      const face = Math.floor(rand(0, 5));
+      let x = rand(-0.8, 0.8), y = rand(-0.65, 0.65), z = rand(-1.05, 1.05);
+      if (face === 0) x = -0.8; else if (face === 1) x = 0.8; else if (face === 2) y = -0.65; else z = face === 3 ? -1.05 : 1.05;
+      put(cx + x, cy + y, z, jitter(face >= 3 ? CAB : car % 3 === 0 ? GRAPE : AMBER, 0.18));
+    }
+    for (let i = 0; i < 85; i++) put(cx + rand(-0.08, 0.08), cy + rand(0.65, 1.55), rand(-0.06, 0.06), jitter(STEEL, 0.15));
+  }
+  // Hub, A-frame supports, and ground rail.
+  for (let i = 0; i < 1900; i++) {
+    const a = rand(0, Math.PI * 2), rr = 0.75 * Math.sqrt(Math.random());
+    put(Math.cos(a) * rr, 2.2 + Math.sin(a) * rr, rand(-1.6, 1.6), jitter(SNOW, 0.12));
+  }
+  for (const endX of [-6.2, 6.2]) for (const z of [-1.5, 1.5]) for (let i = 0; i < 900; i++) {
+    const t = Math.random(), a = rand(0, Math.PI * 2);
+    put(endX * t + Math.cos(a) * 0.16, 2.2 + (-7.7 - 2.2) * t, z + Math.sin(a) * 0.16, jitter(STEEL, 0.18));
+  }
+  for (let i = 0; i < 1300; i++) put(rand(-9.2, 9.2), -7.7 + rand(-0.12, 0.12), rand(-2.1, 2.1), jitter(MIST, 0.25));
+  return fill(pos, col);
+}
+
+/** A retro-future launch vehicle with fins, portholes, and a hot plume. */
+export function genRocket(R: number): FormData {
+  const pos: number[] = [];
+  const col: number[] = [];
+  const s = R / 13;
+  const put = (x: number, y: number, z: number, c: RGB) => push(pos, col, x * s, (y - 0.5) * s, z * s, c);
+  const HULL = hexToRgb(0xd7dbe8), PANEL = hexToRgb(0x4b5873), GLASS = hexToRgb(0x164e63);
+
+  for (let i = 0; i < 8200; i++) {
+    const y = rand(-4.8, 5.8), a = rand(0, Math.PI * 2), rr = 2.45 + rand(-0.06, 0.06);
+    const band = Math.abs(((y + 4.8) % 2.1) - 0.08) < 0.13;
+    put(Math.cos(a) * rr, y, Math.sin(a) * rr, jitter(band ? PANEL : HULL, 0.12));
+  }
+  // Ogive nose cone.
+  for (let i = 0; i < 3800; i++) {
+    const t = Math.random(), y = 5.8 + t * 5.4, rr = 2.45 * Math.sqrt(1 - t) * (1 - 0.24 * t), a = rand(0, Math.PI * 2);
+    put(Math.cos(a) * rr, y, Math.sin(a) * rr, jitter(t > 0.68 ? AMBER : HULL, 0.11));
+  }
+  // Four fins taper into the hull.
+  for (let fin = 0; fin < 4; fin++) {
+    const a = (fin / 4) * Math.PI * 2, ux = Math.cos(a), uz = Math.sin(a);
+    for (let i = 0; i < 1050; i++) {
+      const t = Math.random(), y = -5 + t * 5.2, extent = 2.45 + (1 - t) * 3.25 * Math.sqrt(Math.random());
+      put(ux * extent + rand(-0.12, 0.12), y, uz * extent + rand(-0.12, 0.12), jitter(fin % 2 ? GRAPE : TEAL, 0.14));
+    }
+  }
+  // Portholes around the upper hull.
+  for (const y of [1.65, 4]) for (let i = 0; i < 850; i++) {
+    const a = rand(-0.42, 0.42), r = 0.62 * Math.sqrt(Math.random());
+    put(Math.sin(a) * 2.5 + Math.cos(a) * r, y + Math.sin(rand(0, Math.PI * 2)) * r, Math.cos(a) * 2.5, jitter(Math.random() < 0.18 ? SNOW : GLASS, 0.16));
+  }
+  // Engine bells and a layered particle plume.
+  for (let i = 0; i < 1900; i++) {
+    const y = rand(-6, -4.65), a = rand(0, Math.PI * 2), rr = 1.7 + (-y - 4.65) * 0.55;
+    put(Math.cos(a) * rr, y, Math.sin(a) * rr, jitter(PANEL, 0.14));
+  }
+  for (let i = 0; i < 3600; i++) {
+    const t = Math.random(), y = -6 - t * 6.2, rr = (0.5 + t * 2.35) * Math.sqrt(Math.random()), a = rand(0, Math.PI * 2);
+    const hot = lerpRgb(SNOW, t < 0.55 ? AMBER : hexToRgb(0xfb7185), Math.min(1, t * 1.5));
+    put(Math.cos(a) * rr, y, Math.sin(a) * rr, jitter(hot, 0.2));
+  }
+  return fill(pos, col);
+}
+
+export type HeroShapeKey = "scan" | "theater" | "headset" | "skyline" | "marquee" | "guitar" | "wave" | "globe" | "dominoes" | "monocle" | "astronaut" | "camera" | "ferris" | "rocket";
+
+export const HERO_SHAPE_ORDER: HeroShapeKey[] = ["scan", "theater", "headset", "astronaut", "skyline", "camera", "marquee", "guitar", "ferris", "wave", "globe", "rocket", "dominoes", "monocle"];
 
 export const HERO_SHAPE_LABELS: Record<HeroShapeKey, string> = {
   scan: "Forest Scan",
@@ -542,6 +740,10 @@ export const HERO_SHAPE_LABELS: Record<HeroShapeKey, string> = {
   globe: "World Tour",
   dominoes: "Dominoes",
   monocle: "Monocle",
+  astronaut: "The Explorer",
+  camera: "Cinema Camera",
+  ferris: "Ferris Wheel",
+  rocket: "Launch Vehicle",
 };
 
 const GENERATORS: Record<HeroShapeKey, (R: number) => FormData> = {
@@ -555,6 +757,10 @@ const GENERATORS: Record<HeroShapeKey, (R: number) => FormData> = {
   skyline: genSkyline,
   dominoes: genDominoes,
   monocle: genMonocle,
+  astronaut: genAstronaut,
+  camera: genCinemaCamera,
+  ferris: genFerrisWheel,
+  rocket: genRocket,
 };
 
 export function generateHeroShape(key: HeroShapeKey, R: number): FormData {
