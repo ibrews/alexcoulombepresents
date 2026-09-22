@@ -5,8 +5,10 @@ import Reveal from "@/components/Reveal";
 import { Card } from "@/components/AppearancesSection";
 import HashScroll from "@/components/HashScroll";
 import AppearancesTimeline, { type TimelineItem } from "@/components/AppearancesTimeline";
-import { appearances } from "@/lib/appearances";
+import { appearances, partitionAppearances } from "@/lib/appearances";
 import { pressMentions } from "@/lib/press";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Appearances — Talks, Panels, Press & Podcasts",
@@ -16,9 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default function AppearancesPage() {
-  const now = Date.now();
-  const upcoming = appearances.filter((a) => new Date(a.endsISO).getTime() >= now);
-  const pastAppearances = appearances.filter((a) => new Date(a.endsISO).getTime() < now);
+  const { upcoming, past: pastAppearances } = partitionAppearances();
 
   const timeline: TimelineItem[] = [
     ...pastAppearances.map((a): TimelineItem => ({ kind: "appearance", ts: new Date(a.endsISO).getTime(), data: a })),

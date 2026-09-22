@@ -20,6 +20,9 @@ import { renderBreaks } from "@/components/Lines";
 // import keeps three.js entirely out of the server bundle and the build.
 import SplatHero from "@/components/SplatHeroLoader";
 
+// Allow hourly regeneration of dated appearances when the page is requested.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Alex Coulombe Presents · Unreal Engine Instructor & XR Developer",
   description:

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
-import { appearances, categoryForAppearance, type Appearance } from "@/lib/appearances";
+import { appearances, partitionAppearances, categoryForAppearance, type Appearance } from "@/lib/appearances";
 import { CATEGORY_STYLE } from "@/lib/categories";
 import { LinkTypeIcon, linkKindForUrl } from "@/components/LinkTypeIcon";
 
@@ -34,9 +34,10 @@ export function Card({ a, past }: { a: Appearance; past?: boolean }) {
         </span>
         <h3 className="mt-3 font-bold leading-snug text-snow">{a.title}</h3>
         <p className="mt-1 text-sm text-mist">{a.org}</p>
-        <p className="mt-2 font-mono text-xs text-mist">
+        <p className="mt-2 font-mono text-xs leading-relaxed text-mist">
           {a.date} · {a.location}
         </p>
+        {a.note && <p className="mt-3 text-sm leading-relaxed text-teal">{a.note}</p>}
       </div>
     </>
   );
@@ -61,9 +62,8 @@ export default function AppearancesSection() {
 
   // Split on each entry's own end time so a finished talk stops claiming to be
   // "what's next" the day after it happens — no manual edit required.
-  const now = Date.now();
-  const upcoming = appearances.filter((a) => new Date(a.endsISO).getTime() >= now);
-  const recent = appearances.filter((a) => new Date(a.endsISO).getTime() < now).slice(-4).reverse();
+  const { upcoming, past } = partitionAppearances();
+  const recent = past.slice(0, 4);
 
   return (
     <section id="appearances" className="mx-auto max-w-6xl px-5 py-24">
@@ -72,11 +72,11 @@ export default function AppearancesSection() {
           {upcoming.length > 0 ? "what's next" : "where he's been"}
         </p>
         <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-          Find Alex <span className="grad-text">in the wild.</span>
+          {upcoming.length > 0 ? <>Upcoming <span className="grad-text">hellos.</span></> : <>Find Alex <span className="grad-text">in the wild.</span></>}
         </h2>
         <p className="mt-3 max-w-2xl text-mist">
           {upcoming.length > 0
-            ? "Talks, workshops, judging, mentoring — where to catch him next."
+            ? "A few places we can cross paths this fall. Come say hello — I’d love to hear what you’re building."
             : "Talks, workshops, judging, mentoring. Nothing on the calendar right now — the next one lands here first."}
         </p>
       </Reveal>
