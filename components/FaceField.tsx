@@ -423,7 +423,7 @@ export default function FaceField({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
-          src="/alex-cutout.webp"
+          src="/alex-cutout-brown-eyes.webp"
           alt="Alex Coulombe"
           className="pointer-events-none block h-auto w-full select-none"
         />

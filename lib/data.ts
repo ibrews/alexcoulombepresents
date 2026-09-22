@@ -9,6 +9,12 @@ export type Repo = {
   org?: string; // GitHub org/owner — defaults to "ibrews" when omitted
   stars: number; // baked fallback — live count fetched client-side
   language: string;
+  // Portfolio curation only: archived entries keep their detail pages and
+  // GitHub links, but move below the current-work grid.
+  lifecycle?: "current" | "archive";
+  // Public release date for the small recent-work rail on /repos.
+  released?: string;
+  spotlight?: boolean;
   story: string;
   highlights: string[];
   links: { label: string; url: string }[];
@@ -43,7 +49,7 @@ export const repos: Repo[] = [
     name: "Blueprint Auto Layout",
     tagline: "Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.",
     category: "Unreal Engine",
-    stars: 41,
+    stars: 44,
     language: "C++",
     story:
       "Blueprint spaghetti is a rite of passage — and a productivity tax. This plugin rearranges any Blueprint graph into a readable left-to-right execution flow with one keystroke (Ctrl/Cmd+Shift+L). Under the hood it's a real layered-graph engine implemented from the published papers (Sugiyama et al.; Brandes & Köpf), not a naive tree walk — so cross-row connections, multi-consumer data pins, and long edges all route cleanly.",
@@ -147,7 +153,7 @@ export const repos: Repo[] = [
     name: "MetaHuman → Godot",
     tagline: "MetaHuman characters in stock Godot — look-dev sliders, full-body animation, and a stereo VR preview build.",
     category: "Godot × Vision Pro",
-    stars: 22,
+    stars: 24,
     language: "GDScript",
     story:
       "MetaHumans rendered in stock Godot 4.6/4.7 Forward+ — no engine fork, no custom build. Started as a look-dev turntable (dial in skin, lighting, hair, eyes with live sliders; drive all 52 ARKit facial blendshapes), now a full character viewer: v0.3.0 added a retargeted Mixamo motion library with planted feet; v0.4.0 landed pore detail, a grounded studio floor, and limbal ring eye shaders. The VR preview (v0.1.0, Godot 4.7-beta3) puts it in stereo room-scale on Quest — walk around the character at path quality. Bring your own MetaHuman (Epic EULA respected; assets aren't redistributed).",
@@ -193,7 +199,7 @@ export const repos: Repo[] = [
     name: "SplatStage",
     tagline: "Walk inside photoreal Gaussian-splat scenes on Vision Pro via visionOS 27's native splat API.",
     category: "visionOS & Spatial",
-    stars: 3,
+    stars: 4,
     language: "Swift",
     story:
       "Stand inside a photoreal Gaussian-splat environment on Apple Vision Pro, rendered by visionOS 27's native RealityKit GaussianSplatComponent — then light it like a film set with the new cinematic RealityKit stack: projective-texture spotlights, soft shadows, ray-traced reverb meshes. Built the day after WWDC 2026 against Xcode 27 beta 1, with the device-proven beta-1 recipe (chunking, buffer alignment, colorSpace) documented for everyone who hits the same walls.",
@@ -234,6 +240,7 @@ export const repos: Repo[] = [
     category: "visionOS & Spatial",
     stars: 0,
     language: "TypeScript",
+    lifecycle: "archive",
     story:
       "A WebXR demo built for FMX 2026 and NXT BLD 2026: an audience member points their phone at a QR code during the talk and is immediately walking through a virtual venue — Four Seasons Lake Austin, a Christmas Carol stage, more. Three pre-built scenes share one Babylon.js engine, and each exposes live design-option toggles (lighting, layout, materials) — which is the whole productization punchline.",
     highlights: [
@@ -307,7 +314,7 @@ export const repos: Repo[] = [
     name: "Unreal Custodian",
     tagline: "Reclaim the build caches your Unreal projects quietly hoard — without touching anything you authored.",
     category: "Unreal Engine",
-    stars: 67,
+    stars: 69,
     language: "Python",
     story:
       "A few years of Unreal projects on one machine means tens or hundreds of gigabytes of pure rebuild artifacts — Intermediate, Binaries, DerivedDataCache, cooked content, staged builds. The Windows box this was tested against held 539 projects, 14 engines, and 2.0 TB of reclaimable cache with 17 GB of headroom left. Custodian finds all of it and tells you exactly what goes, what shrinks, and what it will not touch, before it touches anything. Content, Config, and the .uproject always survive.",
@@ -339,6 +346,28 @@ export const repos: Repo[] = [
         image: "/unreal-custodian/testimonial-grhmrst.jpg",
       },
     ],
+  },
+  {
+    slug: "ue-reseed",
+    name: "reseed",
+    tagline: "Keep Unreal's template content out of your git repo, and put it back on demand from your own engine install.",
+    category: "Unreal Engine",
+    stars: 1,
+    language: "Python",
+    released: "2026-09-02",
+    spotlight: true,
+    story:
+      "Making a project from a UE Template copies Epic's own asset files straight into your Content/ folder, where they look exactly like your work in the Content Browser. Commit them once and you have a several-hundred-MB repo, binary-diff noise on every PR, and LFS quota burned on files that are byte-identical on every machine with the same engine installed. reseed finds precisely which files your Content/ folder shares with your Engine install, gitignores those, and writes a restore script that sources them from the cloner's own licensed engine — nothing is downloaded from anywhere, and nothing you authored is touched.",
+    highlights: [
+      "Sorts Content/ into engine-verbatim, engine-sourced-but-modified, name-collision, and your own work — only the first is ever ignored",
+      "Files you've modified from an Engine original are flagged for a decision, never split or overwritten",
+      "Every restored file is SHA-256 re-checked, so a bad copy is never silently trusted",
+      "`scan` writes nothing and `apply --out` works on a copy — in-place is opt-in, not the default",
+      "`reseed check` is a CI gate that fails the build if engine content is tracked again",
+    ],
+    links: [],
+    github: "https://github.com/ibrews/ue-reseed",
+    wiki: "https://github.com/ibrews/ue-reseed/wiki",
   },
   {
     slug: "unreal-visionos-basics",
@@ -421,6 +450,8 @@ export const repos: Repo[] = [
     category: "Tools",
     stars: 0,
     language: "Bash",
+    released: "2026-08-21",
+    spotlight: true,
     story:
       "When macOS screen recording fails with \"Could not save recording,\" the file is usually still on your disk. macOS writes the finished recording first and then copies it to wherever you asked it to go \u2014 and it is the copy that fails. The original survives, in a staging directory nobody thinks to look in. found-footage checks that directory and the five other places recordings get stranded, reports what it found and why the save probably failed, and moves nothing unless you ask it to. Its first real recovery was an 18-minute 4K60 recording macOS had already declared lost.",
     highlights: [
@@ -440,6 +471,8 @@ export const repos: Repo[] = [
     category: "Tools",
     stars: 0,
     language: "Python",
+    released: "2026-08-31",
+    spotlight: true,
     story:
       "Xcode's Metal GPU debugger writes a .gputrace package to disk, then makes you click through a GUI to ask it anything \u2014 is this array texture populated for both eyes, which encoder actually wrote that render target. gputrace parses the capture's record format directly, so the answer is a one-line command instead of a click-through session. Apple documents none of the format; the layout was derived byte-by-byte from a visionOS 26 capture and has since been exercised against UE 5.8.1 Metal captures. The README leads with the two ways a pixel dump silently lies to you \u2014 the payload sits at the tail of the file rather than a fixed offset, and depth+stencil dumps are planar, not row-interleaved, which produces a coherent-looking depth image whose bottom fifth is exactly zero.",
     highlights: [
@@ -488,6 +521,7 @@ export const repos: Repo[] = [
     category: "Games",
     stars: 0,
     language: "Swift",
+    lifecycle: "archive",
     story:
       "A complete platformer built from a single prompt — \"a full game with generated assets\" — with every sprite, animation, and tile generated on demand through the PixelLab MCP, none of it hand-drawn or licensed. Pip the fox runs, jumps, and stomps mushrooms across endless procedurally-generated levels cycling through forest, snow, and desert biomes, with a crowned boss, King Grumpcap, capping every 5th level. The whole build chain ran with no human in the loop for the core loop: PixelLab generated the character, enemy, and tileset art from roughly 7 of a 20-generation trial budget, SpriteKit assembled it into a physics-driven platformer with camera follow and parallax, an in-headless autopilot self-test caught a real level bug before a human ever touched a controller, and the same procedural level generator got ported line-for-line to a web build so the HTML5/Canvas version plays identically to the iOS original. Even the boss is a deliberately hand-coded placeholder — kept that way on purpose to conserve the PixelLab generation budget for the assets that mattered more.",
     highlights: [
@@ -507,6 +541,7 @@ export const repos: Repo[] = [
     category: "Games",
     stars: 1,
     language: "GDScript",
+    lifecycle: "archive",
     story:
       "Sit inside a one-man turret and physically operate it: flip the battery master, hold the starter until the engine catches, grab twin tillers to drive the tracks, work the turret joystick, cycle the breech lever to reload, arm the rocket console behind its safety cover. Every texture, sound, and voice line is procedurally generated — nothing imported — and every piece of geometry, cockpit included, is built at runtime in pure GDScript rather than loaded from a scene file. The physical cockpit controls were fully built and unit-tested from day one, and never actually worked in the headset for most of the project's life: the hand-proximity code read from a Godot group that, per a full git history search, no control had ever actually joined. Root-caused and fixed in the same session as an even bigger discovery — roughly 70% of the game's geometry had inverted face normals from the very first commit, because the custom mesh-building helper wound triangles counter-clockwise, the OpenGL convention, when Godot's front faces are clockwise. Alex caught it live in the headset before any tool did: \"I conservatively estimate about 70% of the normals are inverted. You need to trust me on this — I have depth perception.\" He was right, proven with a one-triangle test scene, not documentation. The team's own automated mesh-audit tool shared the same wrong assumption and had been validating broken geometry the whole time.",
     highlights: [
@@ -535,6 +570,7 @@ export const repos: Repo[] = [
     category: "Games",
     stars: 1,
     language: "Swift",
+    lifecycle: "archive",
     story:
       "Snake, reimagined as a neon synthwave grid: swipe to steer on iPhone/iPad, collect data orbs and neon bugs, unlock 14 skins through score milestones and trophy challenges — fire trails, rainbow cycling, circuit-board lines. The Vision Pro version is a genuinely different game: a full 3D snake living inside an 8×8×8 cube with six degrees of freedom, either shrunk to a tabletop volumetric puzzle or blown up to room-scale, where the snake winds through your actual living room and a game controller gives you precise 6-axis steering.",
     highlights: [
@@ -554,6 +590,7 @@ export const repos: Repo[] = [
     category: "Games",
     stars: 0,
     language: "Swift",
+    lifecycle: "archive",
     story:
       "Play a masked burglar breaking into four parody fast-food joints — Burger Barn, Queen Burger, Freckle's, Papa Rooster's — to steal as much food as you can carry while guards patrol and give chase. The core joke is also the core mechanic: finished food scores more than raw ingredients but fattens you up faster, and fatness is real physics — four visual stages, a growing collision radius, and a speed drop from sprint to waddle, until the final stage starts an 8-second countdown to get out before you're arrested. Rare veggie pickups heal and speed you up, which the burglar resents every time.",
     highlights: [
@@ -573,6 +610,7 @@ export const repos: Repo[] = [
     category: "Games",
     stars: 0,
     language: "C++",
+    lifecycle: "archive",
     story:
       "The last living wizard holds back endless zombie waves in this UE5.7 prototype. Every hit you take raises a corruption meter — your spells get stronger as it climbs, but at 1.0 you ragdoll and the level restarts. A capture-zone-style cleanse resets it to zero; a line-trace fireball kills enemies and claws corruption back down; a Niagara trail shifts from its base color to magenta in real time as a visual countdown to transformation. Built with Claude Code Game Studios, a sister framework that turns a single Claude Code session into a 49-agent, 73-skill studio — directors, department leads, specialists — so the prototype got design docs and QA passes instead of ad hoc vibe-coding.",
     highlights: [
@@ -632,6 +670,7 @@ export const repos: Repo[] = [
     category: "visionOS & Spatial",
     stars: 1,
     language: "GLSL",
+    lifecycle: "archive",
     story:
       "Most animated Mandelbulbs ping-pong their 'power' parameter on a single sine wave, so the shape visibly reverses and repeats. This one wanders quasi-periodically across two incommensurate sines instead, so it morphs organically and never obviously loops. One canonical GLSL core drives four variants — paste-and-go Shadertoy, a WebGL2 build that runs in any browser or WebXR headset, a LÖVR build you can walk around on Quest standalone, and an OpenXR/D3D11 port (a line-for-line HLSL translation of the same core) for SteamVR, WMR, or CloudXR streaming straight to Apple Vision Pro.",
     highlights: [

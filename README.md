@@ -4,8 +4,38 @@ The personal site of **Alex Coulombe** — Unreal Engine, Godot, Apple Vision Pr
 immersive theatre, and Manhattan's first Unreal Authorized Training Center. Replaces the old
 Google Sites page with something interactive, dynamic, and worthy of the domain.
 
-Built with **Next.js 15 + Tailwind CSS 4**, zero other runtime dependencies. Deploys to Vercel
-with no configuration.
+Built with **Next.js 15, React 19, Tailwind CSS 4, and Three.js**. Deploys to Vercel;
+commerce and account features use the environment configuration described below.
+
+## September 2026 refresh
+
+- `/#latest` features ue-reseed, gputrace, and Found Footage, with source-backed copy in
+  `lib/siteUpdates.ts`. The homepage also curates four current Lab projects.
+- The presence-only Meta Connect announcement runs September 22–24, 2026. Banners expire
+  client-side in America/New_York and wrap on phones; the fixed navigation follows their measured height.
+- `/repos` separates recent tools from a collapsible portfolio archive. `/lab` separates current
+  products, experiment field notes, and internal tooling. Existing project URLs remain valid.
+- The hero cycles through 14 original procedural point-cloud forms, including an astronaut,
+  cinema camera, Ferris wheel, and rocket. Its Next and Pause/Play controls support keyboard interaction; reduced-motion rendering stays static.
+- `public/alex-cutout-brown-eyes.webp` is the new portrait; `public/alex-cutout.webp` remains
+  the untouched original. The imagegen edit requested only natural chestnut-brown irises while
+  preserving identity, pose, clothing, crop, lighting, and transparency; the generated output
+  was resized/encoded as WebP for the site. The built-in imagegen tool produced the edit.
+
+### Reverting the refresh
+
+Content, point clouds, portrait, and QA fixes are separate commits on
+`codex/site-refresh-2026-09-22`, so any category can be reverted independently.
+To restore the portrait alone, switch the `FaceField` image source back to `/alex-cutout.webp`.
+To restore an archived repo to the main catalogue, remove its `lifecycle: "archive"` flag.
+Validation for the refresh: production build and TypeScript checks, the existing Node test suite,
+finite/bounded geometry checks for all 14 shapes, and browser checks at 390, 1440, and 2560 pixels.
+Public route/anchor checks cover the content pages; commerce, sign-in, and form submission were not exercised.
+External publishers that return bot/paywall restrictions are reported separately from broken links.
+
+The prior production deployment is
+`https://alexcoulombepresents-cwrin0rzv-ibrews-projects.vercel.app` (source `ebe3ae1`);
+`vercel rollback` can restore it while source changes are reverted and redeployed.
 
 ## Pages
 
@@ -69,11 +99,13 @@ npm run build && npm start
    product. Type "godot" and hit Enter.
 4. **Enter the Konami code** (`↑ ↑ ↓ ↓ ← → ← → B A`) — the site briefly enters immersive mode,
    locked at 90 fps, naturally.
-5. **Open a repo page** (e.g. `/repos/blueprint-auto-layout`) and watch the star count — it's
+5. **Browse the September field notes** at `/#latest`, try the hero’s Next control, then open
+   `/repos` and expand the portfolio archive. Archived detail links still work.
+6. **Open a repo page** (e.g. `/repos/blueprint-auto-layout`) and watch the star count — it's
    fetched live from the GitHub API with a baked fallback, so it's always current.
-6. **Visit `/links` and click "Visit anyway (brave)"** under the vintage alexcoulombe.com card.
+7. **Visit `/links` and click "Visit anyway (brave)"** under the vintage alexcoulombe.com card.
    You were warned.
-7. **Play a video on `/videos`** — embeds are click-to-load (zero YouTube JS until you press play),
+8. **Play a video on `/videos`** — embeds are click-to-load (zero YouTube JS until you press play),
    served via youtube-nocookie.
 
 ## Editing content

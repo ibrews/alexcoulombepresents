@@ -10,16 +10,16 @@ import type { HeroLink } from "@/lib/heroLinks";
 
 export const generatedHeroLinks: HeroLink[] = [
   {
+    "href": "/#latest",
+    "label": "Explore the latest work",
+    "kicker": "On this site · /",
+    "tier": "section"
+  },
+  {
     "href": "/account",
     "label": "My Account",
     "kicker": "On this site · /account",
     "tier": "section"
-  },
-  {
-    "href": "/lab/fabel-showcase/devlog#round-two",
-    "label": "Read the round-two devlog",
-    "kicker": "On this site · /lab/fabel-showcase/devlo…",
-    "tier": "deep"
   },
   {
     "href": "/lab/video-qa-workbench/beta-handbook",

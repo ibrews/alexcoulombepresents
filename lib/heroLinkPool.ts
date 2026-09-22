@@ -73,6 +73,38 @@ export function hostOf(url: string): string {
   }
 }
 
+const SUPPRESSED_HERO_LINKS = new Set<string>();
+const SUPPRESSED_HERO_PREFIXES: string[] = [];
+
+for (const repo of repos.filter((item) => item.lifecycle === "archive")) {
+  const route = `/repos/${repo.slug}`;
+  SUPPRESSED_HERO_LINKS.add(route);
+  SUPPRESSED_HERO_PREFIXES.push(`${route}/`);
+  SUPPRESSED_HERO_LINKS.add(repo.github);
+  if (repo.wiki) SUPPRESSED_HERO_LINKS.add(repo.wiki);
+  if (repo.devlog?.url) SUPPRESSED_HERO_LINKS.add(repo.devlog.url);
+  // External links attached to an archived entry are part of that retired
+  // project. Internal cross-links may point back to current work and stay.
+  for (const link of repo.links) {
+    if (/^https?:\/\//.test(link.url)) SUPPRESSED_HERO_LINKS.add(link.url);
+  }
+}
+
+for (const product of products.filter((item) => item.experiment || item.internal)) {
+  const route = `/lab/${product.slug}`;
+  SUPPRESSED_HERO_LINKS.add(route);
+  SUPPRESSED_HERO_PREFIXES.push(`${route}/`);
+  for (const link of product.links) {
+    if (/^https?:\/\//.test(link.url)) SUPPRESSED_HERO_LINKS.add(link.url);
+  }
+}
+
+/** Also used by the generator so rendered archive links stay out of its output. */
+export function shouldSuppressHeroLink(href: string): boolean {
+  const base = href.split("#")[0];
+  return SUPPRESSED_HERO_LINKS.has(href) || SUPPRESSED_HERO_LINKS.has(base) || SUPPRESSED_HERO_PREFIXES.some((prefix) => base.startsWith(prefix));
+}
+
 /**
  * The half modelled from the site's data modules.
  *
@@ -91,6 +123,9 @@ export function buildCuratedPool(): HeroLink[] {
   };
 
   for (const r of repos) {
+    // Archive routes remain reachable from /repos, but retired experiments do
+    // not compete with current work in the homepage's decorative constellation.
+    if (r.lifecycle === "archive") continue;
     deep.push({
       href: `/repos/${r.slug}`,
       label: short(r.name),
@@ -112,6 +147,7 @@ export function buildCuratedPool(): HeroLink[] {
   }
 
   for (const p of products) {
+    if (p.experiment || p.internal) continue;
     deep.push({
       href: `/lab/${p.slug}`,
       label: short(p.name),
@@ -175,6 +211,7 @@ export function buildCuratedPool(): HeroLink[] {
 export function buildHeroLinkPool(): HeroLink[] {
   const seen = new Set<string>();
   return [...buildCuratedPool(), ...generatedHeroLinks].filter((l) => {
+    if (shouldSuppressHeroLink(l.href)) return false;
     if (seen.has(l.href)) return false;
     seen.add(l.href);
     return true;

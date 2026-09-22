@@ -18,6 +18,38 @@ export type Announcement = {
 };
 
 export const announcements: Announcement[] = [
+  // Presence only. Alex confirmed he is attending; Meta's developer site is
+  // the source for the Sep 23–24 dates. This expires with the event and makes
+  // no claim about a session, demo, badge, or speaking slot.
+  {
+    id: "meta-connect-2026",
+    text: "Alex is at Meta Connect Sep 23–24 — say hello if you're there",
+    href: "/contact",
+    cta: "Say hello",
+    start: "2026-09-22",
+    end: "2026-09-24",
+  },
+  // Takes over when Connect ends. The Sep 23 class has passed by this point,
+  // so this names only the final bookable session instead of carrying stale
+  // "last two classes" copy forward.
+  {
+    id: "wed-calendar-final",
+    text: "Final class of the run — UE5 to USD to GLB Sep 30, code UE5 for 50% off",
+    href: "/training#calendar",
+    cta: "Book a seat",
+    start: "2026-09-25",
+    end: "2026-09-30",
+  },
+  // Picks up the day after the last dated class without guessing the next
+  // schedule. The vote page remains the source of truth for what comes next.
+  {
+    id: "vote-next-run",
+    text: "The Wednesday run just wrapped — what gets taught next is decided by vote",
+    href: "/vote",
+    cta: "Cast a vote",
+    start: "2026-10-01",
+    end: "2026-10-31",
+  },
   {
     id: "la-week-2026",
     text: "In LA this week — judging Worlds in Action Hack (Jul 18–19) + 3 SIGGRAPH talks (Jul 19–22)",

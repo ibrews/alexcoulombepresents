@@ -296,7 +296,7 @@ export const pressMentions: PressMention[] = [
     title: "RealTime Conference Kicks Off with Free Online Sessions",
     date: "2020",
     dateISO: "2020-04-15T00:00:00Z",
-    url: "https://finance.yahoo.com/news/realtime-conference-kicks-off-free-174449615.html",
+    url: "https://web.archive.org/web/20210513041000/https://finance.yahoo.com/news/realtime-conference-kicks-off-free-174449615.html",
   },
   {
     slug: "currents-new-media-interview-2020",
@@ -368,7 +368,7 @@ export const pressMentions: PressMention[] = [
     title: "5th Wall Forum Podcast",
     date: "2021",
     dateISO: "2021-06-15T00:00:00Z",
-    url: "https://podcasts.apple.com/us/podcast/5th-wall-forum/id1566627279",
+    url: "https://web.archive.org/web/20231203120626/https://podcasts.apple.com/us/podcast/5th-wall-forum/id1566627279",
   },
   {
     slug: "augmented-workforce-book-2021",

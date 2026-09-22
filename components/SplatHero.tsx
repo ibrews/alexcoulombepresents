@@ -13,7 +13,7 @@
  * ourselves (lib/parseSplat.ts) into a plain position/color point cloud and
  * render it as a THREE.Points cloud. That point cloud can morph: on a click
  * or a timer, it dissolves from the splat capture into one of a few
- * procedural shapes (lib/heroShapes.ts — a wave, a globe, a skyline) and
+ * procedural shapes (lib/heroShapes.ts) and
  * back, lerping every point's position AND color in lockstep because every
  * form is resampled to the exact same point count.
  *
@@ -138,12 +138,15 @@ export default function SplatHero() {
   const [active, setActive] = useState(false);
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [paused, setPaused] = useState(false);
   // Never starts on "splat" (the raw capture, "A Real 3D Capture") — Alex:
   // it reads oddly on the homepage. It stays a valid FormKey and cached
   // form (below) purely as morph-target backing data; HERO_SHAPE_ORDER[0]
   // is what's actually shown and cycled from.
   const [currentForm, setCurrentForm] = useState<FormKey>(HERO_SHAPE_ORDER[0]);
   const advanceRef = useRef<(() => void) | null>(null);
+  const pauseRef = useRef<((paused: boolean) => void) | null>(null);
+  const pausedValueRef = useRef(false);
   const rotateRef = useRef<((deltaX: number, deltaY: number) => void) | null>(null);
   const setDraggingRef = useRef<((isDragging: boolean) => void) | null>(null);
   const pointerStateRef = useRef<PointerState>(EMPTY_POINTER_STATE);
@@ -376,6 +379,9 @@ export default function SplatHero() {
 
       let formIndex = 0;
       let morphT = 1;
+      // Keep an explicit visitor pause across a live reduced-motion setting
+      // change, which remounts this renderer effect.
+      let cyclePaused = pausedValueRef.current;
       const targetPos = initialShape.pos.slice();
       const targetCol = initialShape.col.slice();
 
@@ -390,6 +396,7 @@ export default function SplatHero() {
         pulseHeroConstellation();
       };
       const scheduleNext = () => {
+        if (cyclePaused) return;
         timeoutHandle = setTimeout(() => {
           advance();
           scheduleNext();
@@ -399,6 +406,14 @@ export default function SplatHero() {
         if (timeoutHandle) clearTimeout(timeoutHandle);
         advance();
         scheduleNext();
+      };
+      pauseRef.current = (nextPaused) => {
+        cyclePaused = nextPaused;
+        if (timeoutHandle) {
+          clearTimeout(timeoutHandle);
+          timeoutHandle = undefined;
+        }
+        if (!cyclePaused) scheduleNext();
       };
       scheduleNext();
 
@@ -444,7 +459,7 @@ export default function SplatHero() {
         raf = requestAnimationFrame(loop);
         const dt = Math.min(0.05, clock.getDelta());
 
-        if (!isDragging) {
+        if (!cyclePaused && !isDragging) {
           const flinging = Math.abs(velX) > FLING_EPSILON || Math.abs(velY) > FLING_EPSILON;
           if (flinging) {
             group.rotation.y += velY * dt;
@@ -482,6 +497,7 @@ export default function SplatHero() {
     return () => {
       disposed = true;
       advanceRef.current = null;
+      pauseRef.current = null;
       rotateRef.current = null;
       setDraggingRef.current = null;
       if (raf) cancelAnimationFrame(raf);
@@ -497,6 +513,10 @@ export default function SplatHero() {
   }, [active, reducedMotion]);
 
   if (!hasAsset) return null;
+
+  const currentIndex = currentForm === "splat" ? -1 : HERO_SHAPE_ORDER.indexOf(currentForm);
+  const nextIndex = (Math.max(0, currentIndex) + 1) % HERO_SHAPE_ORDER.length;
+  const nextLabel = HERO_SHAPE_LABELS[HERO_SHAPE_ORDER[nextIndex]];
 
   const releasePointer = (element: HTMLDivElement, pointerId: number) => {
     if (element.hasPointerCapture(pointerId)) element.releasePointerCapture(pointerId);
@@ -576,13 +596,42 @@ export default function SplatHero() {
         style={active && ready ? { opacity: BACKDROP_OPACITY, touchAction: "pan-y" } : { touchAction: "pan-y" }}
       />
       {active && ready && (
-        // z-20: escapes the section's z-index:auto stacking bucket (shared
-        // with the portrait and headline) so this caption stays legible
-        // even where it falls over the portrait's bounding box.
-        <p className="pointer-events-none absolute bottom-4 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap font-mono text-xs text-mist">
-          {currentForm === "splat" ? "A Real 3D Capture" : HERO_SHAPE_LABELS[currentForm]}
-          {!reducedMotion && " · click to reshape"}
-        </p>
+        // z-20 escapes the section's z-index:auto stacking bucket. The
+        // explicit button makes the rotating gallery keyboard-operable and
+        // understandable without depending on the canvas's click gesture.
+        <div className="pointer-events-none absolute bottom-4 left-1/2 z-20 flex max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-2 whitespace-nowrap font-mono text-xs text-mist">
+          <span>
+            {currentForm === "splat" ? "A Real 3D Capture" : HERO_SHAPE_LABELS[currentForm]}
+            {currentIndex >= 0 && ` · ${String(currentIndex + 1).padStart(2, "0")}/${HERO_SHAPE_ORDER.length}`}
+            {reducedMotion && " · motion paused"}
+          </span>
+          {!reducedMotion && (
+            <>
+              <button
+                type="button"
+                className="pointer-events-auto rounded-full border border-line bg-ink/75 px-3 py-1.5 text-snow backdrop-blur-sm transition-colors hover:border-teal hover:text-teal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
+                aria-label={`Show next point-cloud model: ${nextLabel}`}
+                onClick={() => advanceRef.current?.()}
+              >
+                Next <span aria-hidden="true">→</span>
+              </button>
+              <button
+                type="button"
+                className="pointer-events-auto rounded-full border border-line bg-ink/75 px-3 py-1.5 text-snow backdrop-blur-sm transition-colors hover:border-amber hover:text-amber focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber"
+                aria-label={paused ? "Resume automatic point-cloud motion" : "Pause automatic point-cloud motion"}
+                aria-pressed={paused}
+                onClick={() => {
+                  const nextPaused = !paused;
+                  setPaused(nextPaused);
+                  pausedValueRef.current = nextPaused;
+                  pauseRef.current?.(nextPaused);
+                }}
+              >
+                {paused ? "Play" : "Pause"}
+              </button>
+            </>
+          )}
+        </div>
       )}
     </div>
   );

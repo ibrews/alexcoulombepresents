@@ -23,6 +23,10 @@ const accentText: Record<string, string> = {
 };
 
 export default function Lab() {
+  const activeProducts = products.filter((product) => !product.internal && !product.experiment);
+  const fieldNotes = products.filter((product) => product.experiment);
+  const internalSystems = products.filter((product) => product.internal && !product.experiment);
+
   return (
     <div className="pb-24 pt-32">
       <Ethereal variant="nebula" />
@@ -41,10 +45,9 @@ export default function Lab() {
               The private repos are <span className="grad-text">getting restless.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
-              {products.filter((p) => !p.internal).length} products in active development (plus a
-              peek at the internal tooling), all pointed at the same future: spatial computing where
-              the engines, the assets, and the AI agents finally cooperate. Hardware-verified,
-              demo-ready, and approaching the launch pad.
+              {activeProducts.length} products currently moving toward a release, pilot, or wider
+              access — plus field notes from finished experiments and a peek at the internal systems
+              behind the work. Each page says what exists today and what is still being tested.
             </p>
             <p className="mt-4 text-sm text-mist">
               Looking for what&apos;s already shipped?{" "}
@@ -57,8 +60,19 @@ export default function Lab() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl space-y-8 px-5">
-        {products.map((p, i) => (
+      <section className="mx-auto max-w-6xl space-y-8 px-5" aria-labelledby="active-lab-work">
+        <Reveal>
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-teal">Current work</p>
+              <h2 id="active-lab-work" className="mt-2 text-2xl font-bold tracking-tight">On the bench now</h2>
+            </div>
+            <p className="max-w-lg text-sm leading-relaxed text-mist">
+              Betas, design-partner previews, and tools with a concrete next release step.
+            </p>
+          </div>
+        </Reveal>
+        {activeProducts.map((p, i) => (
           <Reveal key={p.slug} delay={i * 80}>
             <Link href={`/lab/${p.slug}`} className="glass group block rounded-3xl p-8 md:p-12">
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -89,6 +103,63 @@ export default function Lab() {
           </Reveal>
         ))}
       </section>
+
+      {fieldNotes.length > 0 && (
+        <section className="mx-auto mt-20 max-w-6xl space-y-8 px-5" aria-labelledby="lab-field-notes">
+          <Reveal>
+            <div className="mb-8 border-b border-line pb-5">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber">Archive</p>
+              <h2 id="lab-field-notes" className="mt-2 text-2xl font-bold tracking-tight">Field notes &amp; finished experiments</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-mist">
+                Kept public because the build notes, captures, and mistakes are useful even after active development ends.
+              </p>
+            </div>
+          </Reveal>
+          {fieldNotes.map((p, i) => (
+            <Reveal key={p.slug} delay={i * 80}>
+              <Link href={`/lab/${p.slug}`} className="glass group block rounded-3xl p-8 md:p-12">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-baseline gap-4">
+                    <span className={`font-mono text-sm ${accentText[p.accent] ?? "text-teal"}`}>A{String(i + 1).padStart(2, "0")}</span>
+                    <h3 className="text-2xl font-bold tracking-tight transition-colors group-hover:text-teal md:text-3xl">{p.name}</h3>
+                  </div>
+                  <span className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-mist">{p.status}</span>
+                </div>
+                <p className="mt-4 max-w-3xl text-lg text-mist">{renderBreaks(p.tagline)}</p>
+                <p className="mt-6 font-mono text-sm text-teal opacity-0 transition-opacity group-hover:opacity-100">read the field notes →</p>
+              </Link>
+            </Reveal>
+          ))}
+        </section>
+      )}
+
+      {internalSystems.length > 0 && (
+        <section className="mx-auto mt-20 max-w-6xl px-5" aria-labelledby="internal-systems">
+          <Reveal>
+            <details className="group border-t border-line pt-8">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-xl py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal">
+                <span>
+                  <span className="block font-mono text-xs uppercase tracking-[0.22em] text-mist">Behind the scenes</span>
+                  <span id="internal-systems" className="mt-2 block text-xl font-bold">{internalSystems.length} internal systems</span>
+                </span>
+                <span className="font-mono text-sm text-teal group-open:rotate-45" aria-hidden="true">＋</span>
+              </summary>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-mist">
+                Production infrastructure shown for context. These are not public release promises or waitlist products.
+              </p>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {internalSystems.map((p) => (
+                  <Link key={p.slug} href={`/lab/${p.slug}`} className="glass rounded-2xl p-6 transition-colors hover:border-teal/40">
+                    <p className="font-bold">{p.name}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-mist">{renderBreaks(p.tagline)}</p>
+                    <p className="mt-4 font-mono text-[10px] uppercase tracking-wider text-mist">{p.status}</p>
+                  </Link>
+                ))}
+              </div>
+            </details>
+          </Reveal>
+        </section>
+      )}
 
       <Reveal>
         <div className="mt-16 text-center">

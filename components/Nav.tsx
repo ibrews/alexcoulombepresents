@@ -51,7 +51,7 @@ export default function Nav() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Primary navigation" className="hidden items-center gap-1 md:flex">
           {links.map((l) => {
             const active = pathname === l.href || (l.href !== "/" && pathname?.startsWith(l.href));
             return (
@@ -76,9 +76,12 @@ export default function Nav() {
         </nav>
 
         <button
+          type="button"
           className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden"
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen((current) => !current)}
           aria-label="Toggle menu"
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
         >
           <span className={`h-0.5 w-5 bg-snow transition-transform ${open ? "translate-y-1 rotate-45" : ""}`} />
           <span className={`h-0.5 w-5 bg-snow transition-transform ${open ? "-translate-y-1 -rotate-45" : ""}`} />
@@ -86,7 +89,11 @@ export default function Nav() {
       </div>
 
       {open && (
-        <nav className="border-b border-line bg-ink/95 px-5 pb-4 backdrop-blur-xl md:hidden">
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="border-b border-line bg-ink/95 px-5 pb-4 backdrop-blur-xl md:hidden"
+        >
           {links.map((l) => (
             <Link key={l.href} href={l.href} className="block py-2.5 text-mist hover:text-snow">
               {l.label}
