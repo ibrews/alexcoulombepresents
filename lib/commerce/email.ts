@@ -5,6 +5,7 @@ import { findDigitalProduct } from "./products";
 import { MEMBERSHIP_TIERS, membershipTier, type MembershipTierId } from "./membership";
 
 import { OWNER_ALERT_FROM, ownerRecipients } from "../email.ts";
+import { buildClassInviteIcs } from "../calendarInvite.ts";
 
 // Renders our plain-text email bodies as simple branded HTML: white card,
 // auto-linked URLs, and the ACP logo in the footer. Every sender passes the
@@ -108,6 +109,55 @@ export async function sendOwnerAlert(input: { subject: string; body: string }) {
     html: brandedHtml(input.body),
   });
   if (error) console.error("owner alert failed:", error.message);
+}
+
+// A plain sendOwnerAlert link isn't a calendar invite — no Accept/Decline,
+// doesn't land on the calendar. This is for the one case that genuinely
+// needs a real one: Alex is the Zoom host of every class meeting this app
+// creates, and Zoom refuses to let a host register as their own attendee
+// (code 3027) — there is no registrant-confirmation email for him to get,
+// alias workaround or not, for THIS specific address. Attaches an RFC 5545
+// VEVENT so his mail client renders a normal Accept/Decline invite.
+export async function sendOwnerCalendarInvite(input: {
+  meetingId: string;
+  className: string;
+  startISO: string;
+  durationMinutes: number;
+  joinUrl: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const recipients = ownerRecipients();
+  const ics = buildClassInviteIcs({
+    uid: input.meetingId,
+    summary: input.className,
+    description: `Start it here: ${input.joinUrl}`,
+    startISO: input.startISO,
+    durationMinutes: input.durationMinutes,
+    joinUrl: input.joinUrl,
+    organizerEmail: "info@alexcoulombepresents.com",
+    attendeeEmail: recipients[0],
+    attendeeName: "Alex Coulombe",
+  });
+  const __body = [
+    `Calendar invite attached for "${input.className}".`,
+    "",
+    `Start it here: ${input.joinUrl}`,
+  ].join("\n");
+  const { error } = await resend.emails.send({
+    from: OWNER_ALERT_FROM,
+    to: recipients,
+    subject: `Calendar invite: ${input.className}`,
+    text: __body,
+    html: brandedHtml(__body),
+    attachments: [
+      {
+        filename: "invite.ics",
+        content: Buffer.from(ics, "utf8").toString("base64"),
+        contentType: "text/calendar; method=REQUEST; charset=UTF-8",
+      },
+    ],
+  });
+  if (error) console.error("owner calendar invite failed:", error.message);
 }
 
 export async function sendMagicLinkEmail(input: { email: string; magicLinkUrl: string }) {

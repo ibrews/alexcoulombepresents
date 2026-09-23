@@ -14,6 +14,7 @@
 import { readFileSync } from "node:fs";
 import { createZoomMeeting, ensureZoomRegistrants, STANDING_ATTENDEES } from "../../lib/zoom.ts";
 import { OWNER_EMAIL } from "../../lib/email.ts";
+import { sendOwnerCalendarInvite } from "../../lib/commerce/email.ts";
 
 function loadEnvLocal() {
   try {
@@ -61,18 +62,27 @@ async function main() {
   // The TA attends every class, so register him here rather than relying on
   // someone remembering to add him to each meeting by hand — which is how he
   // came to be missing from all three of the upcoming classes on 2026-09-10.
-  // OWNER_EMAIL is registered too: Alex is this meeting's host, and Zoom
-  // never sends a host their own registrant confirmation, so without this
-  // he gets no calendar invite/join-link email at all for a class created
-  // by this script — exactly what happened on 2026-09-16 when the
-  // USD/GLB-export ↔ Intro to AR date swap created two replacement meetings
-  // by hand and only STANDING_ATTENDEES got registered.
+  // OWNER_EMAIL is registered too, but that's NOT Alex's own calendar
+  // invite: he's this meeting's host, and Zoom refuses to let a host
+  // register for their own meeting (code 3027 — confirmed live 2026-09-23
+  // for his real Zoom-login address, alex@agilelens.com). Registering the
+  // info@ alias instead works (it's a different address than the literal
+  // host login), but only gets a registrant-confirmation email to an inbox
+  // Alex doesn't watch. His actual calendar invite is the sendOwnerCalendarInvite
+  // call below — a real .ics sent to the address in OWNER_ALERT_EMAIL/lib/email.ts.
   const invites = await ensureZoomRegistrants(meetingId, [
     { email: OWNER_EMAIL, name: "Alex Coulombe" },
     ...STANDING_ATTENDEES,
   ]);
   for (const email of invites.registered) console.log(`Registered attendee: ${email}`);
   for (const email of invites.failed) console.error(`FAILED to register attendee: ${email}`);
+
+  try {
+    await sendOwnerCalendarInvite({ meetingId, className: topic, startISO: start, durationMinutes: duration, joinUrl });
+    console.log("Sent Alex a real calendar invite (.ics)");
+  } catch (err) {
+    console.error("FAILED to send Alex's calendar invite:", err);
+  }
   console.log();
   console.log("Paste into the wednesdayCalendarItem() call in lib/store.ts:");
   console.log(`    zoomRegistrationUrl: "${registrationUrl}",`);

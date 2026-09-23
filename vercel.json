@@ -17,6 +17,10 @@
       "schedule": "0 14 * * *"
     },
     {
+      "path": "/api/cron/class-member-invites",
+      "schedule": "0 14 * * *"
+    },
+    {
       "path": "/api/cron/membership-renewal-reminders",
       "schedule": "0 14 * * *"
     },

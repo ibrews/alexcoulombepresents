@@ -13,10 +13,19 @@ import { sendOwnerAlert } from "@/lib/commerce/email";
 // /users/me/meetings) but a host is never a registrant of their own meeting
 // by default, so he never got the registrant confirmation email Zoom sends
 // on registration — the one with the "Add to Calendar" links. Confirmed live
-// 2026-08-31 that Zoom's registrants API accepts the host's own email (201,
-// not the "can't register with host email" rejection some Zoom setups
-// report) — so registering him alongside real attendees is enough to get him
-// a calendar invite too, no separate .ics generation needed.
+// 2026-08-31 that Zoom's registrants API accepts info@alexcoulombepresents.com
+// (201, not the "can't register with host email" rejection some Zoom setups
+// report) — because it's a different address than his literal Zoom login,
+// not because Zoom accepts "the host's own email" generally. CORRECTION
+// 2026-09-23: registering his REAL login address (alex@agilelens.com) on a
+// class meeting does get the 3027 rejection — Zoom's host check is on the
+// literal account, not on "looks like Alex". info@ gets a real registrant
+// confirmation, but to an inbox he doesn't watch, so the sendOwnerAlert
+// below (to his real address) is still doing real work, not redundant belt-
+// and-suspenders — it's a plain link, not a calendar invite, though; see
+// lib/commerce/email.ts's sendOwnerCalendarInvite for a real .ics if this
+// ever needs an actual Accept/Decline invite the way the Wednesday class
+// cron (app/api/cron/class-member-invites) started giving him.
 const OWNER_EMAIL = "info@alexcoulombepresents.com";
 
 // Creates the week's Friday office-hours Zoom meeting (fresh each week —
