@@ -193,12 +193,21 @@ async function postZoomRegistrant(
 // Marshall TAs every class and every office hours, so he belongs on every
 // meeting this app creates — previously he was invited by hand from Alex's
 // Google Calendar, which silently skipped any meeting Alex forgot.
-// Alex himself is deliberately absent: Zoom rejects the host's own account
-// address with code 3027 ("Host can not register"), which is why his
-// office-hours calendar invite goes to info@alexcoulombepresents.com — an
-// alias Zoom treats as an ordinary, non-host address.
 export const STANDING_ATTENDEES: { email: string; name: string }[] = [
   { email: "marshall@agilelens.com", name: "Marshall Nowak" },
+];
+
+// Alex himself needs separate handling: Zoom rejects the host's own account
+// address with code 3027 ("Host can not register") — confirmed live
+// 2026-09-23 for his real Zoom login, alex@agilelens.com. Any OTHER address
+// registers fine (it's a literal-account check, not a "looks like the host"
+// one), so these two real inboxes he actually reads get a genuine Zoom
+// registrant confirmation — real "Add to Calendar" links plus Zoom's own
+// pre-meeting reminders — instead of the earlier info@alexcoulombepresents.com
+// alias (an inbox he doesn't watch) or a hand-built .ics.
+export const OWNER_INVITE_CONTACTS: { email: string; name: string }[] = [
+  { email: "alexcoulombepresents@gmail.com", name: "Alex Coulombe" },
+  { email: "alex.coulombe@gmail.com", name: "Alex Coulombe" },
 ];
 
 /** Zoom's "Host can not register" — the meeting's own host account can never

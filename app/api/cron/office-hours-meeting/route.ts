@@ -5,6 +5,7 @@ import {
   ensureZoomRegistrants,
   onePmEasternToUTC,
   STANDING_ATTENDEES,
+  OWNER_INVITE_CONTACTS,
 } from "@/lib/zoom";
 import { activeMemberContacts } from "@/lib/commerce/entitlements";
 import { sendOwnerAlert } from "@/lib/commerce/email";
@@ -12,21 +13,13 @@ import { sendOwnerAlert } from "@/lib/commerce/email";
 // Alex hosts these (the S2S app creates them under his own Zoom account via
 // /users/me/meetings) but a host is never a registrant of their own meeting
 // by default, so he never got the registrant confirmation email Zoom sends
-// on registration — the one with the "Add to Calendar" links. Confirmed live
-// 2026-08-31 that Zoom's registrants API accepts info@alexcoulombepresents.com
-// (201, not the "can't register with host email" rejection some Zoom setups
-// report) — because it's a different address than his literal Zoom login,
-// not because Zoom accepts "the host's own email" generally. CORRECTION
-// 2026-09-23: registering his REAL login address (alex@agilelens.com) on a
-// class meeting does get the 3027 rejection — Zoom's host check is on the
-// literal account, not on "looks like Alex". info@ gets a real registrant
-// confirmation, but to an inbox he doesn't watch, so the sendOwnerAlert
-// below (to his real address) is still doing real work, not redundant belt-
-// and-suspenders — it's a plain link, not a calendar invite, though; see
-// lib/commerce/email.ts's sendOwnerCalendarInvite for a real .ics if this
-// ever needs an actual Accept/Decline invite the way the Wednesday class
-// cron (app/api/cron/class-member-invites) started giving him.
-const OWNER_EMAIL = "info@alexcoulombepresents.com";
+// on registration — the one with the "Add to Calendar" links. Registering
+// OWNER_INVITE_CONTACTS (two real inboxes he reads, lib/zoom.ts) instead of
+// his literal Zoom login works because Zoom's host check is on the exact
+// account, not "looks like the host" — confirmed live 2026-09-23. The
+// sendOwnerAlert below still fires separately: it's an immediate plain-link
+// notice the moment the meeting is created, not redundant with Zoom's own
+// (slightly delayed) registrant confirmation.
 
 // Creates the week's Friday office-hours Zoom meeting (fresh each week —
 // Alex's call, 2026-08-12) so /api/admin/credits can auto-register members
@@ -111,7 +104,7 @@ export async function GET(req: NextRequest) {
     try {
       const members = await activeMemberContacts();
       invites = await ensureZoomRegistrants(result.meetingId, [
-        { email: OWNER_EMAIL, name: "Alex Coulombe" },
+        ...OWNER_INVITE_CONTACTS,
         ...STANDING_ATTENDEES,
         ...members,
       ]);

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { wednesdayCalendar } from "@/lib/store";
-import { ensureZoomRegistrants, STANDING_ATTENDEES } from "@/lib/zoom";
+import { ensureZoomRegistrants, STANDING_ATTENDEES, OWNER_INVITE_CONTACTS } from "@/lib/zoom";
 import { activeMemberContacts } from "@/lib/commerce/entitlements";
 
 // Daily member-invite sweep for every upcoming dated Wednesday class —
@@ -12,14 +12,10 @@ import { activeMemberContacts } from "@/lib/commerce/entitlements";
 // class despite membership including class access). ensureZoomRegistrants
 // skips anyone Zoom already has, so a daily re-run is safe: it doesn't
 // re-mail people already registered, and someone who joins mid-week (or buys
-// membership the same week as a class) is picked up the next morning.
-//
-// Deliberately does NOT register Alex (info@alexcoulombepresents.com or his
-// real Zoom login) — he's the host of every meeting this app creates, and
-// Zoom rejects a host registering for their own meeting (code 3027,
-// confirmed live 2026-09-23 for his real address; see lib/commerce/email.ts's
-// sendOwnerCalendarInvite for how he gets a real calendar invite instead —
-// sent once, at meeting-creation time, by scripts/zoom/create-class-meeting.mjs).
+// membership the same week as a class) is picked up the next morning. Also
+// registers OWNER_INVITE_CONTACTS (Alex's two real inboxes, lib/zoom.ts) so
+// a class created outside create-class-meeting.mjs — or created before this
+// cron existed — self-heals his invite too, not just members'.
 
 export const maxDuration = 30;
 
@@ -63,7 +59,11 @@ export async function GET(req: NextRequest) {
       continue;
     }
     try {
-      const invites = await ensureZoomRegistrants(item.zoomMeetingId, [...STANDING_ATTENDEES, ...members]);
+      const invites = await ensureZoomRegistrants(item.zoomMeetingId, [
+        ...OWNER_INVITE_CONTACTS,
+        ...STANDING_ATTENDEES,
+        ...members,
+      ]);
       if (invites.failed.length) {
         console.error(`[class-member-invites] invite FAILED for ${item.slug}: ${invites.failed.join(", ")}`);
       }
