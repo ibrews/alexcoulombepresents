@@ -1106,6 +1106,21 @@ export const appearances: Appearance[] = [
     note: "I'll be there in partnership with PICO.",
     url: "https://augmentedenterprisesummit.com/",
   },
+  // Confirmed by the MIA XR coordinator's invitation (2026-09-27). The title
+  // is provisional per the organizers; market dates checked on miamarket.it
+  // 2026-09-28. Rome is on CEST until Oct 25, so 6pm local = 16:00Z.
+  {
+    slug: "mia-2026-european-investment-hub",
+    role: "Panelist",
+    title: "Video Games and Monetizing Film IP in Different Ways",
+    org: "MIA | Mercato Internazionale Audiovisivo — European Investment Hub",
+    date: "Tue Oct 20, 2026, 6:00pm CEST",
+    startsISO: "2026-10-20T16:00:00Z",
+    endsISO: "2026-10-20T21:59:59Z",
+    location: "Rome, Italy",
+    note: "Title is provisional. Part of MIA's new European Investment Hub, on how game and film IP grows into a cross-media business.",
+    url: "https://www.miamarket.it/en/program/european-investment-hub/",
+  },
   {
     slug: "android-dev-summit-2026",
     role: "Attending",
