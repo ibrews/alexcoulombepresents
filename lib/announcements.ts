@@ -40,24 +40,13 @@ export const announcements: Announcement[] = [
     start: "2026-09-25",
     end: "2026-09-30",
   },
-  // Sits ahead of vote-next-run so it wins its window, and the vote banner
-  // resumes on Oct 21. Names only the confirmed panel date, not the whole
-  // Oct 19–23 market, since which days Alex is in Rome isn't settled.
-  {
-    id: "mia-rome-2026",
-    text: "Alex is on a game + film IP panel at MIA in Rome, Tue Oct 20",
-    href: "/appearances",
-    cta: "Details",
-    start: "2026-10-14",
-    end: "2026-10-20",
-  },
   // Picks up the day after the last dated class without guessing the next
   // schedule. The vote page remains the source of truth for what comes next.
   {
     id: "vote-next-run",
-    text: "The Wednesday run just wrapped — what gets taught next is decided by vote",
+    text: "New Unreal classes are coming — vote on what gets taught next",
     href: "/vote",
-    cta: "Cast a vote",
+    cta: "Cast your vote",
     start: "2026-10-01",
     end: "2026-10-31",
   },
