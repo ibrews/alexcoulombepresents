@@ -5,12 +5,13 @@ import { appearances, partitionAppearances } from "../lib/appearances.ts";
 test("fall hellos are chronological even when PMRE was inserted before October events", () => {
   assert.deepEqual(partitionAppearances(Date.parse("2026-09-22T12:00:00Z")).upcoming.map((a) => a.slug), [
     "meta-connect-2026", "asai-architecture-in-perspective-2026",
-    "augmented-enterprise-summit-2026", "android-dev-summit-2026", "pmre-2026-keynote",
+    "augmented-enterprise-summit-2026", "mia-2026-european-investment-hub",
+    "android-dev-summit-2026", "pmre-2026-keynote",
   ]);
 });
 
 test("multi-day events stay upcoming through their final local date and then move to history", () => {
-  for (const slug of ["meta-connect-2026", "asai-architecture-in-perspective-2026", "augmented-enterprise-summit-2026", "android-dev-summit-2026", "pmre-2026-keynote"]) {
+  for (const slug of ["meta-connect-2026", "asai-architecture-in-perspective-2026", "augmented-enterprise-summit-2026", "mia-2026-european-investment-hub", "android-dev-summit-2026", "pmre-2026-keynote"]) {
     const event = appearances.find((a) => a.slug === slug)!;
     const end = Date.parse(event.endsISO);
     assert.ok(partitionAppearances(end).upcoming.some((a) => a.slug === slug));
