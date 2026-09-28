@@ -1069,6 +1069,18 @@ export const appearances: Appearance[] = [
     location: "Concourse Hall, Los Angeles",
     url: "https://doi.org/10.1145/3799822.3812463",
   },
+  // Class guest panel, confirmed by the instructor's invite and thank-you
+  // email (2026-09-21). No public listing exists, so no url — per the link
+  // hierarchy above, a department homepage would be worse than none.
+  {
+    slug: "nyu-tandon-human-spatial-computing-2026",
+    role: "Guest Panelist",
+    title: "Human Spatial Computing: Ethics, Privacy + Public Data",
+    org: "NYU Tandon School of Engineering, Integrated Design & Media",
+    date: "Mon Sep 21, 2026, 4:00–4:40pm ET",
+    endsISO: "2026-09-21T20:40:00Z",
+    location: "Virtual (Zoom)",
+  },
   // Dates and venues checked against each organizer's site on 2026-09-22.
   // Alex confirmed attendance; these are not claims of speaking appearances.
   {
@@ -1104,6 +1116,23 @@ export const appearances: Appearance[] = [
     endsISO: "2026-10-30T06:59:59Z",
     location: "Google's Bay View campus, Mountain View, CA",
     url: "https://rsvp.withgoogle.com/events/android-dev-summit-bayview",
+  },
+  // The `meta-connect-2026` banner in lib/announcements.ts already tells every
+  // visitor Alex is at Connect this week, but /appearances — the page that
+  // answers "where is Alex" — had no card for it, so the site contradicted
+  // itself on the one event running right now. Presence only, matching the
+  // banner's own claim: no session, demo, badge tier or speaking slot is
+  // implied. Dates and venue checked against meta.com/connect on 2026-09-22.
+  {
+    slug: "meta-connect-2026",
+    role: "Attending",
+    title: "Meta Connect 2026",
+    org: "Meta",
+    date: "Sep 23–24, 2026",
+    startsISO: "2026-09-23T07:00:00Z",
+    endsISO: "2026-09-25T06:59:59Z",
+    location: "Meta HQ, Menlo Park, CA",
+    url: "https://www.meta.com/connect/",
   },
 ];
 

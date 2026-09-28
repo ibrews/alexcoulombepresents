@@ -465,6 +465,26 @@ export const repos: Repo[] = [
     github: "https://github.com/ibrews/found-footage",
   },
   {
+    slug: "xr-probe",
+    name: "XR Probe",
+    tagline: "Open it first on any new headset: a WebXR capability readout you can photograph.",
+    category: "Tools",
+    stars: 0,
+    language: "HTML",
+    released: "2026-09-24",
+    story:
+      "Every new headset browser raises the same questions before any real demo runs: what FOV and framebuffer does it hand you, which reference spaces exist, does it report hands or controllers, does select even fire. XR Probe answers them in one world-locked panel that is easy to photograph, then keeps a JSON snapshot you can copy after leaving XR for a side-by-side comparison. It needs no build step and is served straight from GitHub Pages. It was first used on the Meta VR Glasses the day after they were announced.",
+    highlights: [
+      "Display, view, reference-space, input-source, hand-tracking, and select-event data in one panel",
+      "Pinch or press Select to bring the panel back in front of your current head pose",
+      "Add ?ar=1 to make immersive AR the default where the browser supports it",
+      "Retained JSON snapshot for comparing devices, e.g. Quest 3 vs Vision Pro FOV and frame rate",
+      "Hand and controller runs tested headlessly with IWER and Playwright",
+    ],
+    links: [{ label: "Open XR Probe", url: "https://ibrews.github.io/xr-probe/" }],
+    github: "https://github.com/ibrews/xr-probe",
+  },
+  {
     slug: "gputrace",
     name: "gputrace",
     tagline: "Read an Xcode GPU capture from the command line \u2014 the format Apple never documented.",
