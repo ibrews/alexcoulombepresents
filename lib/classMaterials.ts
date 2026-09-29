@@ -187,7 +187,7 @@ export const classFolders: ClassFolder[] = [
     title: "Exporting UE5 to OpenUSD to GLB",
     date: "2026-09-30",
     blurb:
-      "Getting scenes out of Unreal and into the rest of the pipeline via OpenUSD and glTF/GLB.",
+      "A real cross-platform export pipeline: Unreal scenes out through OpenUSD and GLB without losing what matters. Then we'll see what they look like in Godot and ThreeJS.",
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1jXeYji2mo57tuR76jYjfG_1C0ppjbJzD",
