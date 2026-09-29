@@ -148,42 +148,43 @@
 - `[training.36]` ▸ Try the teaching first
 - `[training.37]` ▸ All
 - `[training.38]` ▸ talks on YouTube →
-- `[training.39]` ▸ Browse the curated collection →
-- `[training.40]` ▸ From the Epic Games archives
-- `[training.41]` ▸ Courses built for Epic Games.
-- `[training.42]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
-- `[training.43]` ▸ AI training · its own track
-- `[training.44]` ▸ Learn AI workflows, Unreal optional.
-- `[training.45]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
-- `[training.46]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
-- `[training.47]` ▸ AI classes are coming
-- `[training.48]` ▸ Watch the full talk →
-- `[training.49]` ▸ Learn AI
-- `[training.50]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
-- `[training.51]` ▸ Learn Unreal
-- `[training.52]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
-- `[training.53]` ▸ Why learn here and not from an on-demand video course?
-- `[training.54]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
-- `[training.55]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
-- `[training.56]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
-- `[training.57]` ▸ Book a class — instant checkout →
-- `[training.58]` ▸ Team / studio training
-- `[training.59]` ▸ Membership · shipping today
-- `[training.60]` ▸ Cheapest way in!
-- `[training.61]` ▸ Members save — and get more.
-- `[training.62]` ▸ Starter is for live-class credits — cheaper than buying them one at a time — plus every class recording, member pricing sitewide, and a vote that counts for more. On top of that: hands-on access to real internal tools Alex builds for production work — xrsim (test VR apps without a headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
-- `[training.63]` ▸ See tiers & join →
-- `[training.64]` ▸ Unreal NYC
-- `[training.65]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
-- `[training.66]` ▸ agilelens.com/unrealnyc ↗
-- `[training.67]` ▸ Epic community page ↗
-- `[training.68]` ▸ Free stuff first
-- `[training.69]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
-- `[training.70]` ▸ Podcast on all platforms ↗
-- `[training.71]` ▸ Request a team quote →
-- `[training.72]` ▸ Alex will follow up with a scoped quote — usually within a day.
-- `[training.73]` ▸ Tell me when this runs →
-- `[training.74]` ▸ You'll hear when this class is scheduled.
+- `[training.39]` ▸ Class recordings on YouTube →
+- `[training.40]` ▸ Browse the curated collection →
+- `[training.41]` ▸ From the Epic Games archives
+- `[training.42]` ▸ Courses built for Epic Games.
+- `[training.43]` ▸ Separate from Agile Lens, over eight years Alex collaborated on 50+ official Epic Games courses. Some of the once-gated ones are finally coming online to the public — here are a few worth your time.
+- `[training.44]` ▸ AI training · its own track
+- `[training.45]` ▸ Learn AI workflows, Unreal optional.
+- `[training.46]` ▸ This is its own thing — you don't need to care about Unreal Engine to take it. Agile Lens runs a fleet of machines with AI agents shipping real production work around the clock without breaking the bank, and the plan is to teach that the way the Unreal classes already do: live, hands-on, on your own project, whatever you're building.
+- `[training.47]` ▸ Learning Unreal with Alex? AI comes woven in. Here purely for AI? Unreal only shows up if your use case actually calls for it. Formal AI classes aren't scheduled yet — tell us what you'd want and you'll be first to know.
+- `[training.48]` ▸ AI classes are coming
+- `[training.49]` ▸ Watch the full talk →
+- `[training.50]` ▸ Learn AI
+- `[training.51]` ▸ Get notified the moment AI sessions open — and help shape what they cover.
+- `[training.52]` ▸ Learn Unreal
+- `[training.53]` ▸ Classes run now — but if you'd rather be pinged about upcoming cohorts than book today, hop on the Unreal list.
+- `[training.54]` ▸ Why learn here and not from an on-demand video course?
+- `[training.55]` ▸ It's alive. Classes adapt to your actual project. Bring your broken Blueprint, your janky lighting, your VR comfort problem — we fix real things in real time.
+- `[training.56]` ▸ It's current. The new AI for Unreal Engine class covers MCP servers and AI build agents — practical workflows that we stay on the cutting edge of.
+- `[training.57]` ▸ It's proven. The same techniques drove nine-figure real-estate sales, RSC rehearsals, and TestFlight-shipping Vision Pro apps. You're learning the production path, not the tutorial path.
+- `[training.58]` ▸ Book a class — instant checkout →
+- `[training.59]` ▸ Team / studio training
+- `[training.60]` ▸ Membership · shipping today
+- `[training.61]` ▸ Cheapest way in!
+- `[training.62]` ▸ Members save — and get more.
+- `[training.63]` ▸ Starter is for live-class credits — cheaper than buying them one at a time — plus every class recording, member pricing sitewide, and a vote that counts for more. On top of that: hands-on access to real internal tools Alex builds for production work — xrsim (test VR apps without a headset), Forage (an AI-first scout for the Unreal asset packs you already own), and Constellation (your own notes as a walk-in 3D star map on Vision Pro) are shipping today, with more landing as they're ready.
+- `[training.64]` ▸ See tiers & join →
+- `[training.65]` ▸ Unreal NYC
+- `[training.66]` ▸ Alex and Agile Lens lead the NYC Unreal Engine meetup — talks, demos, pizza, and swag. Come meet the community before committing to a class.
+- `[training.67]` ▸ agilelens.com/unrealnyc ↗
+- `[training.68]` ▸ Epic community page ↗
+- `[training.69]` ▸ Free stuff first
+- `[training.70]` ▸ iBrews ( YouTube / X ) and The (Unofficial) Unreal Engine Podcast are free. Start there, then bring your questions to class.
+- `[training.71]` ▸ Podcast on all platforms ↗
+- `[training.72]` ▸ Request a team quote →
+- `[training.73]` ▸ Alex will follow up with a scoped quote — usually within a day.
+- `[training.74]` ▸ Tell me when this runs →
+- `[training.75]` ▸ You'll hear when this class is scheduled.
 
 **List: SPELLED**  (9 items — add or remove lines freely)
 
@@ -1352,8 +1353,10 @@
 - `[data.featuredVideo.title]` ▸ Everything I've Built for Apple Vision Pro So Far
 - `[data.featuredVideo.blurb]` ▸ The grand tour: Unreal, Godot, RealityKit, Gaussian splats, hand tracking — every AVP experiment in one sitting.
 
-### playlists  (8 entries — add or remove whole entries)
+### playlists  (9 entries — add or remove whole entries)
 
+- `[data.playlists.PLEeiiIeoc4o4.title]` ▸ Alex Coulombe Presents Unreal Engine Training
+- `[data.playlists.PLEeiiIeoc4o4.blurb]` ▸ Every live class and office hours, recorded. Newest first.
 - `[data.playlists.PLBHPEwkDnRDemC1EPbDIyKhkXu5gPGWFN.title]` ▸ Alex Coulombe Unreal Engine Talks
 - `[data.playlists.PLBHPEwkDnRDemC1EPbDIyKhkXu5gPGWFN.blurb]` ▸ 46 conference talks: Unreal Fest, GDC, Inside Unreal.
 - `[data.playlists.PLBHPEwkDnRDfa4kxE7u4idWvBkbHoEkk-.title]` ▸ Alex Vision Pro

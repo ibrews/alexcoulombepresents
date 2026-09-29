@@ -14,7 +14,7 @@ import TrainingCalendar from "@/components/TrainingCalendar";
 import { STARTER_TIER } from "@/lib/commerce/membership";
 import { wednesdayCalendar, isPurchasable } from "@/lib/store";
 import { getCurriculumEntries } from "@/lib/curriculum";
-import { courses, taughtCatalog, trainingPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
+import { courses, taughtCatalog, trainingPlaylist, classRecordingsPlaylist, aiTopics, aiTalk, epicCourses } from "@/lib/data";
 import { renderBreaks } from "@/components/Lines";
 import { trainingCourse } from "@/lib/seo";
 
@@ -449,6 +449,14 @@ export default function Training() {
               className="mt-5 inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
             >
               All {trainingPlaylist.count} talks on YouTube →
+            </a>{" "}
+            <a
+              href={`https://www.youtube.com/playlist?list=${classRecordingsPlaylist.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+            >
+              Class recordings on YouTube →
             </a>{" "}
             <Link
               href="/videos"

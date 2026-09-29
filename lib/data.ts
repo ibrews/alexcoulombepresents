@@ -1873,7 +1873,15 @@ export const trainingPlaylist = {
   featuredVideoId: "M1J25jJ79U8",
 };
 
+// Recordings of the live Wednesday classes + Friday office hours — distinct
+// from trainingPlaylist above (conference talks), so /training links both.
+export const classRecordingsPlaylist = {
+  id: "PLEeiiIeoc4o4",
+  title: "Alex Coulombe Presents Unreal Engine Training",
+};
+
 export const playlists: { id: string; title: string; blurb: string }[] = [
+  { id: classRecordingsPlaylist.id, title: classRecordingsPlaylist.title, blurb: "Every live class and office hours, recorded. Newest first." },
   { id: "PLBHPEwkDnRDemC1EPbDIyKhkXu5gPGWFN", title: "Alex Coulombe Unreal Engine Talks", blurb: "46 conference talks: Unreal Fest, GDC, Inside Unreal." },
   { id: "PLBHPEwkDnRDfa4kxE7u4idWvBkbHoEkk-", title: "Alex Vision Pro", blurb: "Every Apple Vision Pro experiment, in order." },
   { id: "PLBHPEwkDnRDco-vxai_cyhnQII_sys5DI", title: "VR Talks, Tests & Tutorials", blurb: "The deep archive — a decade of headset honesty." },
