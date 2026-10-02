@@ -478,6 +478,46 @@ test("subscription.deleted with an unresolvable customer is reported, not thrown
 
 // ── everything else ─────────────────────────────────────────────────────────
 
+// ── Immediate invites (decision 2026-10-02) ─────────────────────────────────
+
+test("invoice.paid invites the member to upcoming sessions AFTER the grant is recorded", async () => {
+  const order: string[] = [];
+  const { deps } = fakeDeps({
+    grantOrExtendMembership: () => (order.push("grant"), Promise.resolve({ isNew: false })),
+    recordCheckoutSession: () => (order.push("record"), Promise.resolve()),
+    linkMembershipCycleToOrder: () => (order.push("link"), Promise.resolve()),
+    inviteMemberToUpcomingSessions: (email: string) => (order.push(`invite:${email}`), Promise.resolve()),
+  });
+  const result = await handleMembershipEvent(invoicePaid(), deps);
+  assert.equal(result.handled, true);
+  assert.deepEqual(order, ["grant", "record", "link", "invite:member@example.com"]);
+});
+
+test("an invite failure never fails or alters the billing result", async () => {
+  const { deps } = fakeDeps({
+    inviteMemberToUpcomingSessions: () => Promise.reject(new Error("zoom down")),
+  });
+  const result = await handleMembershipEvent(invoicePaid(), deps);
+  assert.equal(result.handled, true);
+  assert.equal(result.handled && result.email, "member@example.com");
+});
+
+test("a deduped invoice does not re-run invites", async () => {
+  let invited = 0;
+  const { deps } = fakeDeps({
+    checkoutSessionProcessed: () => Promise.resolve(true),
+    inviteMemberToUpcomingSessions: () => (invited++, Promise.resolve()),
+  });
+  await handleMembershipEvent(invoicePaid(), deps);
+  assert.equal(invited, 0);
+});
+
+test("no invite dep configured (Zoom unset) is a harmless no-op", async () => {
+  const { deps } = fakeDeps();
+  const result = await handleMembershipEvent(invoicePaid(), deps);
+  assert.equal(result.handled, true);
+});
+
 test("unrelated event types are ignored", async () => {
   const { deps, calls } = fakeDeps();
   const result = await handleMembershipEvent(

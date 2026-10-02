@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { wednesdayCalendar } from "@/lib/store";
-import { ensureZoomRegistrants, STANDING_ATTENDEES, OWNER_INVITE_CONTACTS } from "@/lib/zoom";
-import { activeMemberContacts } from "@/lib/commerce/entitlements";
+import { inviteMembersToUpcomingSessions } from "@/lib/memberInvites";
 
 // Daily member-invite sweep for every upcoming dated Wednesday class —
 // the class-calendar equivalent of app/api/cron/office-hours-meeting's
@@ -15,7 +13,10 @@ import { activeMemberContacts } from "@/lib/commerce/entitlements";
 // membership the same week as a class) is picked up the next morning. Also
 // registers OWNER_INVITE_CONTACTS (Alex's two real inboxes, lib/zoom.ts) so
 // a class created outside create-class-meeting.mjs — or created before this
-// cron existed — self-heals his invite too, not just members'.
+// cron existed — self-heals his invite too, not just members'. The sweep
+// itself lives in lib/memberInvites.ts, shared with the renewal webhook and
+// POST /api/admin/invite-members (schedule-publish trigger); this cron is the
+// safety net behind both. It now also covers the current office hours.
 
 export const maxDuration = 30;
 
@@ -38,44 +39,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, skipped: "no ZOOM_CLIENT_ID configured" });
   }
 
-  const now = new Date();
-  const results: { slug: string; action: string }[] = [];
-
-  let members: { email: string; name: string | null }[];
   try {
-    members = await activeMemberContacts();
+    const { ok, results } = await inviteMembersToUpcomingSessions();
+    return NextResponse.json({ ok, results });
   } catch (err) {
     console.error("[class-member-invites] active member lookup failed", err);
     return NextResponse.json({ ok: false, error: "active member lookup failed" }, { status: 500 });
   }
-
-  for (const item of wednesdayCalendar) {
-    if (!item.zoomMeetingId || !item.sessionDateISO) {
-      results.push({ slug: item.slug, action: "no-meeting" });
-      continue;
-    }
-    if (new Date(item.sessionDateISO) <= now) {
-      results.push({ slug: item.slug, action: "past" });
-      continue;
-    }
-    try {
-      const invites = await ensureZoomRegistrants(item.zoomMeetingId, [
-        ...OWNER_INVITE_CONTACTS,
-        ...STANDING_ATTENDEES,
-        ...members,
-      ]);
-      if (invites.failed.length) {
-        console.error(`[class-member-invites] invite FAILED for ${item.slug}: ${invites.failed.join(", ")}`);
-      }
-      results.push({
-        slug: item.slug,
-        action: `registered ${invites.registered.length}, skipped ${invites.skipped.length}, failed ${invites.failed.length}`,
-      });
-    } catch (err) {
-      console.error(`[class-member-invites] invite sweep failed for ${item.slug}`, err);
-      results.push({ slug: item.slug, action: "sweep-error" });
-    }
-  }
-
-  return NextResponse.json({ ok: true, results });
 }

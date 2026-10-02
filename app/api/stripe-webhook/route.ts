@@ -38,6 +38,7 @@ import {
   type MembershipBillingDeps,
   type MembershipTierId,
 } from "@/lib/commerce/membershipBilling";
+import { inviteMembersToUpcomingSessions } from "@/lib/memberInvites";
 import {
   grantOrExtendMembership,
   claimMembershipWelcome,
@@ -127,6 +128,10 @@ function membershipDeps(): MembershipBillingDeps {
     recordCheckoutSession,
     linkMembershipCycleToOrder,
     membershipTierForStripeCustomer,
+    // Only when Zoom is configured; otherwise the feature no-ops like the rest.
+    inviteMemberToUpcomingSessions: process.env.ZOOM_CLIENT_ID
+      ? (email: string) => inviteMembersToUpcomingSessions({ onlyEmails: [email] })
+      : undefined,
   };
 }
 
