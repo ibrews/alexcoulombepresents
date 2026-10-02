@@ -108,7 +108,34 @@ export type MembershipBillingDeps = {
   // or null. Lookup only — it must never create a customer, since it runs for
   // invoices that may have nothing to do with membership.
   membershipTierForStripeCustomer(stripeCustomerId: string): Promise<MembershipTierId | null>;
+  // Register this member on every upcoming class + the current office hours
+  // right now (decision 2026-10-02), instead of waiting for the daily cron.
+  // Optional so tests/callers without Zoom wiring are unaffected. Best-effort:
+  // handleMembershipEvent calls it only after the grant is recorded, bounds it
+  // with INVITE_TIMEOUT_MS and swallows any failure — it can never fail billing.
+  inviteMemberToUpcomingSessions?(email: string): Promise<unknown>;
 };
+
+// Upper bound on how long a webhook delivery waits for the invite sweep. The
+// daily cron is the safety net, so a slow Zoom is cut loose, not awaited.
+export const INVITE_TIMEOUT_MS = 8000;
+
+async function inviteBestEffort(deps: MembershipBillingDeps, email: string): Promise<void> {
+  if (!deps.inviteMemberToUpcomingSessions) return;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await Promise.race([
+      deps.inviteMemberToUpcomingSessions(email),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`invite sweep exceeded ${INVITE_TIMEOUT_MS}ms`)), INVITE_TIMEOUT_MS);
+      }),
+    ]);
+  } catch (err) {
+    console.error(`[membership] immediate invites failed for ${email} (daily cron will retry)`, err);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
 
 /** How a paid invoice was attributed to a tier. "existing-membership" means no
  * configured price matched and we fell back to the member's current tier — it
@@ -313,6 +340,10 @@ export async function handleMembershipEvent(
     // charge.refunded branch (revokeEntitlementsForPaymentIntent) revokes
     // them when THIS invoice is refunded.
     await deps.linkMembershipCycleToOrder(customerId, invoice.id, paidThrough);
+    // Last, after the grant is durably recorded: invite them to everything
+    // scheduled now. Deduped deliveries returned above, so a Stripe retry of an
+    // already-fulfilled invoice never re-runs this.
+    await inviteBestEffort(deps, email);
     return {
       handled: true,
       action: `granted ${tier} through ${paidThrough.toISOString()}${credits > 0 ? ` + ${credits} credits` : " (unlimited)"}`,

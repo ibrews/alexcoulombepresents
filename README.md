@@ -442,6 +442,21 @@ it existed.
   burning their credit, and reports `zoomRegistered` so a failure is visible rather than silent.
   `node scripts/zoom/create-office-hours-meeting.mjs` is the manual escape hatch; it's the same
   idempotent function the cron calls.
+- **Members are invited to everything scheduled, immediately** (rule from Alex, 2026-10-02). One
+  shared sweep, `inviteMembersToUpcomingSessions()` in [`lib/memberInvites.ts`](lib/memberInvites.ts),
+  registers paid-up members + Alex + the TA on every upcoming dated class (`zoomMeetingId` + future
+  `sessionDateISO`) and the current office hours. Three triggers:
+  1. **Membership grant/renewal** — the Stripe `invoice.paid` path invites that one member right after
+     the grant is recorded (`inviteMemberToUpcomingSessions` in `MembershipBillingDeps`). Best-effort
+     and time-boxed (8 s): a Zoom failure is logged and never fails or delays the webhook, and a
+     deduped/retried invoice never re-invites.
+  2. **Schedule published** — after adding the next weeks of classes to `wednesdayCalendar` (with
+     their `zoomMeetingId`s) and deploying, run
+     `ADMIN_KEY=… node scripts/zoom/invite-members-now.mjs` (optionally `--site <url>`,
+     `--email a@b.com`). It POSTs `/api/admin/invite-members` (auth: `ADMIN_KEY`, via `?key=` or
+     `x-admin-key`) and prints per-meeting registered/skipped/failed counts.
+  3. **Daily safety net** — `/api/cron/class-member-invites` runs the same sweep (now including
+     office hours) and picks up anything the first two missed.
 - **Standing attendees** (`STANDING_ATTENDEES` in [`lib/zoom.ts`](lib/zoom.ts)) — the TA, who attends
   every session — are registered on office hours by the cron and on each new class by
   `create-class-meeting.mjs`. Alex is deliberately *not* in that list: Zoom rejects the host's own
