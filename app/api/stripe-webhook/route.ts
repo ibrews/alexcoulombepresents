@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import crypto from "node:crypto";
 import {
   checkoutSessionProcessed,
@@ -130,7 +130,16 @@ function membershipDeps(): MembershipBillingDeps {
     membershipTierForStripeCustomer,
     // Only when Zoom is configured; otherwise the feature no-ops like the rest.
     inviteMemberToUpcomingSessions: process.env.ZOOM_CLIENT_ID
-      ? (email: string) => inviteMembersToUpcomingSessions({ onlyEmails: [email] })
+      ? async (email: string) => {
+          // Scheduled with next/server after(): runs once the 200 is on its way,
+          // so Stripe's delivery is never held up by Zoom (the 8 s cap in
+          // membershipBilling only bounds this hand-off now).
+          after(() =>
+            inviteMembersToUpcomingSessions({ onlyEmails: [email] }).catch((err) =>
+              console.error(`[membership] immediate invites failed for ${email} (daily cron will retry)`, err),
+            ),
+          );
+        }
       : undefined,
   };
 }
