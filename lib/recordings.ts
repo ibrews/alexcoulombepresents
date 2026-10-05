@@ -37,6 +37,87 @@ const materialHref = (folder: string, key: string) =>
   `/api/materials?class=${encodeURIComponent(folder)}&key=${encodeURIComponent(key)}`;
 
 export const recordings: Recording[] = [
+  // ── Aug–Sep 2026 Wednesday run + Friday office hours ──────────────────────
+  // Video ids come from the public class-recordings playlist
+  // (lib/data.ts classRecordingsPlaylist); the uploads themselves are
+  // unlisted, which is why this gated library is where members find them.
+  {
+    slug: "intro-to-ar-2026-09-23",
+    title: "Intro to AR in Unreal 5.8",
+    recordedAt: "2026-09-23",
+    description:
+      "Led by Yu-Jun Yeh. Augmented reality on Android and iOS from one Unreal project \u2014 ARCore and ARKit, plane detection, light estimation, markers, and getting a build onto a phone.",
+    url: yt("96fazT0OFO4"),
+    youtubeId: "96fazT0OFO4",
+    durationMin: 116,
+    topics: ["unreal", "ar", "ios", "android"],
+  },
+  {
+    slug: "office-hours-hand-tracking-2026-09-18",
+    title: "Office Hours \u2014 Hand Tracking",
+    recordedAt: "2026-09-18",
+    description:
+      "Friday office hours: OpenXR hand tracking in Unreal 5.8, then the open floor.",
+    url: yt("ac8eSSs5ErE"),
+    youtubeId: "ac8eSSs5ErE",
+    durationMin: 113,
+    topics: ["unreal", "xr", "office hours"],
+  },
+  {
+    slug: "unity-to-unreal-2026-09-16",
+    title: "Unity to Unreal",
+    recordedAt: "2026-09-16",
+    description:
+      "Led by Whitt Sellers. For anyone making the switch: the concepts that map over, the ones that don't, and why your Prefabs are now Blueprints.",
+    url: yt("QA_W9QvvIcU"),
+    youtubeId: "QA_W9QvvIcU",
+    durationMin: 120,
+    topics: ["unreal", "unity"],
+  },
+  {
+    slug: "intro-to-pcg-ai-2026-09-09",
+    title: "Intro to PCG & AI",
+    recordedAt: "2026-09-09",
+    description:
+      "Scattering a believable environment with the PCG framework instead of placing every mesh by hand, and where MCP tooling \u2014 including Epic's own Unreal MCP inside the editor \u2014 genuinely speeds up the work.",
+    url: yt("0UXNnU7NR80"),
+    youtubeId: "0UXNnU7NR80",
+    durationMin: 120,
+    topics: ["unreal", "pcg", "ai", "mcp"],
+  },
+  {
+    slug: "office-hours-cables-2026-09-04",
+    title: "Office Hours \u2014 Cables",
+    recordedAt: "2026-09-04",
+    description:
+      "Friday office hours: cables in Unreal 5.8, plus open-floor questions on project style guides and source control.",
+    url: yt("Gzzhtygszlc"),
+    youtubeId: "Gzzhtygszlc",
+    durationMin: 135,
+    topics: ["unreal", "office hours"],
+  },
+  {
+    slug: "intro-to-mocap-2026-09-02",
+    title: "Intro to Mocap in Unreal 5.8",
+    recordedAt: "2026-09-02",
+    description:
+      "Face and body motion capture into Unreal 5.8 \u2014 the capture options, including MetaHuman animation from a single video, then cleaning the data up and retargeting it onto a MetaHuman or a custom rig.",
+    url: yt("_1BvJC_He8Q"),
+    youtubeId: "_1BvJC_He8Q",
+    durationMin: 113,
+    topics: ["unreal", "mocap", "metahuman"],
+  },
+  {
+    slug: "office-hours-cloth-physics-2026-08-28",
+    title: "Office Hours \u2014 Cloth Physics",
+    recordedAt: "2026-08-28",
+    description:
+      "Friday office hours: Chaos cloth in Unreal 5.8 \u2014 setup, where the cost actually goes, and keeping a simulation affordable.",
+    url: yt("0WXmDuocXzc"),
+    youtubeId: "0WXmDuocXzc",
+    durationMin: 102,
+    topics: ["unreal", "physics", "office hours"],
+  },
   {
     slug: "intro-to-metahumans-2026-08-26",
     title: "Intro to MetaHumans in Unreal 5.8",

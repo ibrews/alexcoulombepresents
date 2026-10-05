@@ -145,6 +145,7 @@ export const classFolders: ClassFolder[] = [
     slug: "wed-2026-09-02-mocap",
     title: "Mocap in Unreal 5.8",
     date: "2026-09-02",
+    recordingSlug: "intro-to-mocap-2026-09-02",
     blurb:
       "Motion capture into Unreal — capture options, cleanup, and retargeting onto your character.",
     materials: [
@@ -158,6 +159,7 @@ export const classFolders: ClassFolder[] = [
     slug: "wed-2026-09-09-intro-pcg",
     title: "Intro to PCG & AI",
     date: "2026-09-09",
+    recordingSlug: "intro-to-pcg-ai-2026-09-09",
     blurb:
       "Procedural Content Generation in Unreal, and where AI tooling genuinely speeds up the work.",
     materials: [
@@ -171,6 +173,7 @@ export const classFolders: ClassFolder[] = [
     slug: "wed-2026-09-16-unity-to-unreal",
     title: "Unity to Unreal",
     date: "2026-09-16",
+    recordingSlug: "unity-to-unreal-2026-09-16",
     blurb:
       "The transition class: what maps across, what doesn't, and the habits worth unlearning.",
     materials: [
@@ -193,6 +196,14 @@ export const classFolders: ClassFolder[] = [
         url: "https://drive.google.com/drive/folders/1jXeYji2mo57tuR76jYjfG_1C0ppjbJzD",
         note: "Class assets land here around class time.",
       }),
+      // The deck is a public Spatial Deck on GitHub Pages
+      // (ibrews/data-interchange-ue5-class) — `external` on purpose, same
+      // honesty as the Drive folder above: gated here, shareable once seen.
+      {
+        key: "slides",
+        label: "Slides: Data Interchange in UE5 (FBX, OpenUSD, GLB)",
+        source: { kind: "external", url: "https://ibrews.github.io/data-interchange-ue5-class/" },
+      },
     ],
   },
   {
@@ -201,6 +212,7 @@ export const classFolders: ClassFolder[] = [
     slug: "wed-2026-09-30-intro-ar",
     title: "Intro to AR",
     date: "2026-09-23",
+    recordingSlug: "intro-to-ar-2026-09-23",
     blurb:
       "Augmented reality fundamentals and building your first AR experience in Unreal.",
     materials: [

@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import BuyButton from "@/components/BuyButton";
 import { wednesdayCalendar, officeHoursDropIn, consultationDropIn, formatPrice, isPurchasable } from "@/lib/store";
 import { STARTER_TIER } from "@/lib/commerce/membership";
+import { upcomingTbdWednesdays } from "@/lib/trainingCalendarDates";
 
 // How many "TBD via voting" placeholder Wednesdays to show after the named
 // 8-week run — the full back half of 2026 exists too, but listing all of it
@@ -16,23 +17,6 @@ function formatSessionDate(iso: string): { weekday: string; date: string; time: 
   const date = d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" }).toUpperCase();
   const time = d.toLocaleTimeString("en-US", { hour: "numeric", timeZone: "America/New_York" }).replace(" ", "").toLowerCase();
   return { weekday, date, time };
-}
-
-// Wednesdays strictly after the last dated item in `wednesdayCalendar`,
-// through the end of that same calendar year — the fixed schedule owns its
-// own run of weeks regardless of when this renders; this just continues the
-// sequence.
-function upcomingTbdWednesdays(afterISO: string, count: number): string[] {
-  const last = new Date(afterISO);
-  const year = last.getUTCFullYear();
-  const out: string[] = [];
-  const cursor = new Date(last);
-  while (out.length < count) {
-    cursor.setUTCDate(cursor.getUTCDate() + 7);
-    if (cursor.getUTCFullYear() !== year) break;
-    out.push(cursor.toISOString());
-  }
-  return out;
 }
 
 export default function TrainingCalendar() {
