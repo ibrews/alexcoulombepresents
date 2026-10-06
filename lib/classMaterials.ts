@@ -226,10 +226,10 @@ export const classFolders: ClassFolder[] = [
   // Empty until each class's Drive folder exists — add sharedFolder({ url })
   // the same way as the classes above once Alex creates it.
   {
-    slug: "wed-2026-10-14-metahuman-animation-physics",
-    title: "MetaHuman Animation & Physics in UE 5.8",
+    slug: "wed-2026-10-14-metahuman-clothing-physics",
+    title: "MetaHuman Clothing Physics in UE 5.8",
     date: "2026-10-14",
-    blurb: "Making MetaHumans move — performance, cloth, and physics — with guest instructor Franco Vilanova.",
+    blurb: "MetaHuman clothing and cloth physics with guest instructor Franco Vilanova.",
     materials: [],
   },
   {

@@ -22,7 +22,7 @@ export const announcements: Announcement[] = [
   // it airs, then the Oct–Nov lineup takes over through its last class.
   {
     id: "membership-tour-livestream",
-    text: "Free livestream Wed Oct 7, 9a ET — a live tour of every tool and plugin members get",
+    text: "Free livestream Wed Oct 7, 9a ET — AMA (yes, the Meta VR glasses) + a tour of every member tool",
     href: "/classes/2026-10-07-membership-tour-livestream",
     cta: "Set a reminder",
     start: "2026-10-06",
@@ -30,7 +30,7 @@ export const announcements: Announcement[] = [
   },
   {
     id: "oct-nov-run-2026",
-    text: "New live classes through Nov 18 — Lumen Lite, MetaHuman animation, VR cinematics, a Creative AI masterclass",
+    text: "New live classes through Nov 18 — VR cinematics, a Creative AI masterclass, Gaussian splats for VR, and more",
     href: "/classes",
     cta: "See the lineup",
     start: "2026-10-08",

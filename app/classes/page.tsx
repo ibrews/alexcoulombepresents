@@ -4,7 +4,6 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import { upcomingSessions, pastSessions, calendarBreaks, type ClassSession } from "@/lib/classSessions";
 import { instructorNames } from "@/lib/instructors";
-import { storeItems, formatPrice } from "@/lib/store";
 import { sessionWhen, newYorkParts } from "@/lib/sessionCalendar";
 
 export const revalidate = 3600;
@@ -16,10 +15,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/classes" },
 };
 
-function priceLabel(s: ClassSession): string {
-  if (s.kind === "livestream") return "Free";
-  const item = s.storeSlug ? storeItems.find((i) => i.slug === s.storeSlug) : undefined;
-  return item?.priceCents ? formatPrice(item.priceCents) : "";
+// No prices on the site for classes — Stripe Checkout shows them.
+function ctaLabel(s: ClassSession): string {
+  return s.kind === "livestream" ? "Free · Details →" : "Book a seat · Details →";
 }
 
 const KIND: Record<ClassSession["kind"], string> = {
@@ -43,7 +41,7 @@ function SessionCard({ s, past }: { s: ClassSession; past?: boolean }) {
       <span className="mt-1 text-xs text-snow">with {instructorNames(s.instructorIds)}</span>
       <span className="mt-2 flex-1 text-xs leading-relaxed text-mist">{s.blurb}</span>
       <span className="mt-4 font-mono text-xs text-grape">
-        {past ? (s.recordingSlug ? "What we covered →" : "Details →") : `${priceLabel(s)} · Details →`}
+        {past ? (s.recordingSlug ? "What we covered →" : "Details →") : ctaLabel(s)}
       </span>
     </Link>
   );
@@ -78,7 +76,7 @@ export default function ClassesPage() {
             href="/members"
             className="rounded-full border border-grape/50 px-5 py-2.5 text-sm font-semibold transition-colors hover:border-grape"
           >
-            Or join and come to all of them →
+            Or become a member to access everything!
           </Link>
         </div>
       </Reveal>

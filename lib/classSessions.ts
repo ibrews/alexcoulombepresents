@@ -12,6 +12,7 @@
 // recording's YouTube id in lib/classSummaries.ts.
 
 import type { InstructorId } from "./instructors.ts";
+import { storeItems } from "./store.ts";
 
 export type SessionKind = "class" | "office-hours" | "livestream";
 export type SessionLevel = "Intro" | "Intermediate" | "Expert" | "All levels";
@@ -34,6 +35,7 @@ export type ClassSession = {
   materialsSlug?: string; // lib/classMaterials.ts folder
   recordingSlug?: string; // lib/recordings.ts entry, once it exists
   watchUrl?: string; // free public sessions (livestreams)
+  youtubeId?: string; // free public video to embed on the page (livestreams only)
   related?: { label: string; url: string }[];
 };
 
@@ -233,43 +235,44 @@ export const classSessions: ClassSession[] = [
   {
     slug: "2026-10-07-membership-tour-livestream",
     kind: "livestream",
-    title: "Inside the Membership: Every Tool and Plugin, Live",
+    title: "Live AMA: Meta's VR Glasses, the Member Toolkit, and What's Next",
     startsISO: "2026-10-07T13:00:00Z",
     durationMin: 120,
     instructorIds: [ALEX],
     level: "All levels",
     blurb:
-      "A free livestream tour of everything members get — every tool, plugin, and perk, and how to actually use it. Free, on YouTube.",
+      "A free livestream: ask me anything (yes, including trying Meta's VR glasses at Connect), a tour of every tool and plugin members get, and the classes coming up.",
     description:
-      "No class this week — instead, a free livestream walking through every tool, plugin, and perk that comes with membership, and how to actually use each one. Members: treat it as the tutorial. Everyone else: it's the clearest look at what you'd get. Bring questions to the chat, and anything we don't finish, bring to Friday office hours.",
+      "No class this week. Instead, a free livestream that's part AMA, part show-and-tell. Ask me anything — including what it was like trying Meta's VR glasses at Meta Connect. Then a tour of every tool and plugin that comes with membership and how to actually use each one, some of what I'm building right now, and a first look at the classes coming up through November. Members: treat the tour as your tutorial. Everyone else: it's the clearest look at what you'd get.",
     learn: [
-      "What each member tool is for — xrsim, Forage, Constellation, Promptbook, and the plugins",
-      "How to install and start using them, step by step",
-      "Where the class recordings, materials, and Spatial Deck library live",
-      "How member voting and class credits work",
+      "What trying Meta's VR glasses at Connect was actually like — bring your questions",
+      "A tour of every member tool and plugin, and how to use each one",
+      "What I'm building right now, shown live",
+      "The classes coming up through November, and who's teaching them",
     ],
-    watchUrl: "https://www.youtube.com/@ibrews/live",
+    watchUrl: "https://www.youtube.com/watch?v=uYAjHLA3htU",
+    youtubeId: "uYAjHLA3htU",
   },
   {
-    slug: "2026-10-14-metahuman-animation-physics",
+    slug: "2026-10-14-metahuman-clothing-physics",
     kind: "class",
-    title: "MetaHuman Animation & Physics in UE 5.8",
+    title: "MetaHuman Clothing Physics in UE 5.8",
     startsISO: "2026-10-14T15:00:00Z",
     durationMin: 120,
     instructorIds: ["franco-vilanova"],
     level: "Intermediate",
     blurb:
-      "Guest instructor Franco Vilanova on making MetaHumans move — performance, cloth, and the physics that sell it.",
+      "Guest instructor Franco Vilanova on MetaHuman wardrobe that moves like real fabric — cloth setup, simulation, and the settings that sell it.",
     description:
-      "Gold Unreal Authorized Instructor Franco Vilanova on bringing MetaHumans to life in Unreal 5.8 — performance, clothing, and the physics that make a character read as real. It's a two-hour preview of his five-week MetaHuman Production & Performance course, so you'll see how a production-grade MetaHuman workflow fits together.",
+      "Gold Unreal Authorized Instructor Franco Vilanova on dressing MetaHumans in Unreal 5.8 so their clothes move like real fabric. You'll see how MetaHuman wardrobe and cloth are set up, how the simulation is driven, and which settings make the difference between stiff and believable. It's a two-hour preview of Franco's five-week MetaHuman Production & Performance course, so you'll also see where clothing fits in a production-grade MetaHuman pipeline.",
     learn: [
-      "Driving a MetaHuman's performance in Unreal 5.8",
-      "Wardrobe and cloth that move believably",
-      "Physics and secondary motion that sell a character",
-      "How a production MetaHuman pipeline is structured end to end",
+      "How MetaHuman wardrobe and clothing assets are structured in Unreal 5.8",
+      "Setting up cloth so garments simulate instead of sitting rigid",
+      "The physics and simulation settings that make fabric read as real",
+      "Where clothing fits in a production MetaHuman workflow",
     ],
-    storeSlug: "wed-2026-10-14-metahuman-animation-physics",
-    materialsSlug: "wed-2026-10-14-metahuman-animation-physics",
+    storeSlug: "wed-2026-10-14-metahuman-clothing-physics",
+    materialsSlug: "wed-2026-10-14-metahuman-clothing-physics",
     related: [
       {
         label: "Franco's MetaHuman Production & Performance course (Virtual Production Dojo)",
@@ -305,7 +308,6 @@ export const classSessions: ClassSession[] = [
     startsISO: "2026-10-28T15:00:00Z",
     durationMin: 120,
     instructorIds: [ALEX],
-    instructorNote: "Alex is at Android Dev Summit that week — Yu-Jun Yeh or Whitt Sellers may teach instead.",
     level: "Intermediate",
     blurb:
       "Record someone playing your VR game, re-shoot it from new angles, smooth the camera, and render a trailer-ready cinematic.",
@@ -370,7 +372,6 @@ export const classSessions: ClassSession[] = [
     startsISO: "2026-11-18T16:00:00Z",
     durationMin: 120,
     instructorIds: [ALEX],
-    instructorNote: "Alex is speaking at PMRE that week — Yu-Jun Yeh or Dante Cameron may teach instead.",
     level: "Intermediate",
     blurb:
       "Capture synthetic splats inside Unreal, train them, and get them rendering smoothly — in the editor and in VR, standalone and PCVR.",
@@ -404,10 +405,21 @@ export function isPast(s: ClassSession, now: number = Date.now()): boolean {
   return Date.parse(sessionEndsISO(s)) <= now;
 }
 
-export function upcomingSessions(now: number = Date.now()): ClassSession[] {
-  return classSessions.filter((s) => !isPast(s, now)).sort((a, b) => a.startsISO.localeCompare(b.startsISO));
+/** Unlisted = its store item is unlisted: reachable by link, kept out of listings. */
+export function isUnlisted(s: ClassSession): boolean {
+  return Boolean(s.storeSlug && storeItems.find((i) => i.slug === s.storeSlug)?.unlisted);
 }
 
-export function pastSessions(now: number = Date.now()): ClassSession[] {
-  return classSessions.filter((s) => isPast(s, now)).sort((a, b) => b.startsISO.localeCompare(a.startsISO));
+type ListOpts = { includeUnlisted?: boolean };
+
+export function upcomingSessions(now: number = Date.now(), opts: ListOpts = {}): ClassSession[] {
+  return classSessions
+    .filter((s) => !isPast(s, now) && (opts.includeUnlisted || !isUnlisted(s)))
+    .sort((a, b) => a.startsISO.localeCompare(b.startsISO));
+}
+
+export function pastSessions(now: number = Date.now(), opts: ListOpts = {}): ClassSession[] {
+  return classSessions
+    .filter((s) => isPast(s, now) && (opts.includeUnlisted || !isUnlisted(s)))
+    .sort((a, b) => b.startsISO.localeCompare(a.startsISO));
 }

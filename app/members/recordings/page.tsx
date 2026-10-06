@@ -5,6 +5,7 @@ import Reveal from "@/components/Reveal";
 import { customerFromSession } from "@/lib/commerce/tokens";
 import { isMember } from "@/lib/commerce/membership";
 import { recordings } from "@/lib/recordings";
+import { classRecordingsPlaylist } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Recording Library",
@@ -64,6 +65,16 @@ export default async function Recordings() {
           earlier free training, multi-day workshops, and conference talks. New recordings land here
           after each live class.
         </p>
+        {/* Members only: non-members return early above. The playlist's
+            videos are unlisted, so this link is the only door to it. */}
+        <a
+          href={`https://www.youtube.com/playlist?list=${classRecordingsPlaylist.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-block rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+        >
+          Watch them all as a YouTube playlist →
+        </a>
       </Reveal>
 
       {sorted.length === 0 ? (

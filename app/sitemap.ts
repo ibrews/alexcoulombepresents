@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { repos, products, site } from "@/lib/data";
-import { classSessions } from "@/lib/classSessions";
+import { classSessions, isUnlisted } from "@/lib/classSessions";
 
 // Static + dynamic routes for search engines. Uses the canonical production
 // domain (site.url) so it's correct once the domain is connected.
@@ -57,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const classEntries: MetadataRoute.Sitemap = classSessions.map((s) => ({
+  const classEntries: MetadataRoute.Sitemap = classSessions.filter((s) => !isUnlisted(s)).map((s) => ({
     url: `${base}/classes/${s.slug}`,
     lastModified: now,
     changeFrequency: "weekly",

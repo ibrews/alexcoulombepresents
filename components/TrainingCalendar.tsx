@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import BuyButton from "@/components/BuyButton";
-import { wednesdayCalendar, officeHoursDropIn, consultationDropIn, formatPrice, isPurchasable } from "@/lib/store";
+import { wednesdayCalendar, officeHoursDropIn, consultationDropIn, formatPrice, isPurchasable, isListed } from "@/lib/store";
 import { STARTER_TIER } from "@/lib/commerce/membership";
 import { upcomingTbdWednesdays } from "@/lib/trainingCalendarDates";
 import { upcomingSessions, sessionForStoreSlug, calendarBreaks, type ClassSession } from "@/lib/classSessions";
@@ -32,7 +32,7 @@ export default function TrainingCalendar() {
   type Entry = { at: string; item?: StoreItem; live?: ClassSession };
   const entries: Entry[] = [
     ...wednesdayCalendar
-      .filter((i) => Date.parse(i.sessionDateISO!) > now)
+      .filter((i) => Date.parse(i.sessionDateISO!) > now && isListed(i))
       .map((item) => ({ at: item.sessionDateISO!, item })),
     ...upcomingSessions(now)
       .filter((x) => x.kind === "livestream")
@@ -52,10 +52,6 @@ export default function TrainingCalendar() {
           isn&apos;t a webinar. Some sessions include reference files sent before class. Can&apos;t
           make it live? The price already includes all class material and a full recording of the
           session — nothing extra to buy.
-        </p>
-        <p className="mt-3 max-w-3xl rounded-xl border border-teal/40 bg-teal/10 px-4 py-3 text-sm font-bold text-snow">
-          Prices below are shown before the discount — enter code <span className="text-teal">UE5</span> at
-          checkout for 50% off.
         </p>
         <p className="mt-3 max-w-3xl leading-relaxed text-mist">
           After this run, what&apos;s taught next is decided by{" "}
@@ -168,7 +164,7 @@ export default function TrainingCalendar() {
                 <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{cls.blurb}</p>
                 {purchasable ? (
                   <>
-                    <p className="mt-3 text-lg font-bold text-snow">{formatPrice(cls.priceCents)}</p>
+                    {!cls.hidePrice && <p className="mt-3 text-lg font-bold text-snow">{formatPrice(cls.priceCents)}</p>}
                     <div className="mt-4 flex flex-wrap items-center gap-2">
                       <BuyButton slug={cls.slug} label="Book this class →" itemName={cls.name} />
                       {page && (

@@ -9,6 +9,7 @@ import {
   formatPrice,
   effectivePriceCents,
   isPurchasable,
+  isListed,
   STORE_LIVE,
   type StoreItem,
 } from "@/lib/store";
@@ -68,7 +69,7 @@ export default async function Gift({ searchParams }: { searchParams: Promise<{ s
   const now = new Date();
 
   const upcomingClasses = wednesdayCalendar.filter(
-    (c) => c.sessionDateISO && new Date(c.sessionDateISO) > now && isPurchasable(c, now)
+    (c) => c.sessionDateISO && new Date(c.sessionDateISO) > now && isPurchasable(c, now) && isListed(c)
   );
   const otherGifts = storeItems.filter((i) => !i.sessionDateISO && isGiftable(i) && isPurchasable(i, now));
 

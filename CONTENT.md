@@ -148,7 +148,7 @@
 - `[training.36]` ▸ Try the teaching first
 - `[training.37]` ▸ All
 - `[training.38]` ▸ talks on YouTube →
-- `[training.39]` ▸ Class recordings on YouTube →
+- `[training.39]` ▸ What past classes covered →
 - `[training.40]` ▸ Browse the curated collection →
 - `[training.41]` ▸ From the Epic Games archives
 - `[training.42]` ▸ Courses built for Epic Games.
@@ -1354,10 +1354,8 @@
 - `[data.featuredVideo.title]` ▸ Everything I've Built for Apple Vision Pro So Far
 - `[data.featuredVideo.blurb]` ▸ The grand tour: Unreal, Godot, RealityKit, Gaussian splats, hand tracking — every AVP experiment in one sitting.
 
-### playlists  (9 entries — add or remove whole entries)
+### playlists  (8 entries — add or remove whole entries)
 
-- `[data.playlists.PLEeiiIeoc4o4.title]` ▸ Alex Coulombe Presents Unreal Engine Training
-- `[data.playlists.PLEeiiIeoc4o4.blurb]` ▸ Every live class and office hours, recorded. Newest first.
 - `[data.playlists.PLBHPEwkDnRDemC1EPbDIyKhkXu5gPGWFN.title]` ▸ Alex Coulombe Unreal Engine Talks
 - `[data.playlists.PLBHPEwkDnRDemC1EPbDIyKhkXu5gPGWFN.blurb]` ▸ 46 conference talks: Unreal Fest, GDC, Inside Unreal.
 - `[data.playlists.PLBHPEwkDnRDfa4kxE7u4idWvBkbHoEkk-.title]` ▸ Alex Vision Pro
@@ -1532,13 +1530,13 @@
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closesAtISO]` ▸ 2026-09-30T15:00:00Z
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedList]` ▸ unreal
-- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.name]` ▸ MetaHuman Animation & Physics in UE 5.8
-- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.blurb]` ▸ Guest instructor Franco Vilanova on making MetaHumans move — performance, cloth, and the physics that sell it. A preview of his five-week MetaHuman Production & Performance course.
-- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
-- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.sessionDateISO]` ▸ 2026-10-14T15:00:00Z
-- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.saleWindow.closesAtISO]` ▸ 2026-10-14T15:00:00Z
-- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
-- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.name]` ▸ MetaHuman Clothing Physics in UE 5.8
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.blurb]` ▸ Guest instructor Franco Vilanova on MetaHuman wardrobe that moves like real fabric — cloth setup, simulation, and the settings that sell it. A preview of his five-week MetaHuman Production & Performance course.
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.sessionDateISO]` ▸ 2026-10-14T15:00:00Z
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.saleWindow.closesAtISO]` ▸ 2026-10-14T15:00:00Z
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.saleWindow.closedList]` ▸ unreal
 - `[store.storeItems.wed-2026-10-21-lumen-deep-dive.name]` ▸ Deep Dive with Lumen for UE 5.8
 - `[store.storeItems.wed-2026-10-21-lumen-deep-dive.blurb]` ▸ Guest instructor Sean Spitzer on Lumen in 5.8, including the new Lumen Lite: when to use it, how it holds up on mobile and standalone, and how it compares side by side.
 - `[store.storeItems.wed-2026-10-21-lumen-deep-dive.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.

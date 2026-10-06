@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { classSessions, calendarBreaks, upcomingSessions, pastSessions, sessionForStoreSlug } from "../lib/classSessions.ts";
+import { classSessions, calendarBreaks, upcomingSessions, pastSessions, sessionForStoreSlug, isUnlisted, isPast } from "../lib/classSessions.ts";
 import { instructors } from "../lib/instructors.ts";
 import { storeItems, wednesdayCalendar } from "../lib/store.ts";
 import { classFolders } from "../lib/classMaterials.ts";
@@ -85,9 +85,27 @@ test("a break never lands on a scheduled class", () => {
 
 test("past/upcoming split is by end time, newest past first", () => {
   const now = Date.parse("2026-10-14T16:00:00Z"); // an hour into the Oct 14 class
-  const upcoming = upcomingSessions(now).map((s) => s.slug);
-  const past = pastSessions(now).map((s) => s.slug);
-  assert.equal(upcoming[0], "2026-10-14-metahuman-animation-physics");
+  const upcoming = upcomingSessions(now, { includeUnlisted: true }).map((s) => s.slug);
+  const past = pastSessions(now, { includeUnlisted: true }).map((s) => s.slug);
+  assert.equal(upcoming[0], "2026-10-14-metahuman-clothing-physics");
   assert.equal(past[0], "2026-10-07-membership-tour-livestream");
   assert.equal(upcoming.length + past.length, classSessions.length);
+});
+
+test("unlisted classes stay out of listings but keep their pages", () => {
+  const now = Date.parse("2026-10-06T12:00:00Z");
+  const listed = upcomingSessions(now).map((s) => s.slug);
+  const all = upcomingSessions(now, { includeUnlisted: true }).map((s) => s.slug);
+  for (const s of classSessions.filter(isUnlisted)) {
+    assert.ok(!listed.includes(s.slug), `${s.slug} is unlisted but listed`);
+    assert.ok(all.includes(s.slug) || isPast(s, now), `${s.slug} vanished entirely`);
+  }
+});
+
+test("no class page shows a price — Stripe Checkout does", () => {
+  for (const s of classSessions.filter((x) => x.kind === "class" && x.storeSlug && Date.parse(x.startsISO) > Date.parse("2026-10-06T00:00:00Z"))) {
+    const item = storeItems.find((i) => i.slug === s.storeSlug)!;
+    assert.equal(item.hidePrice, true, `${s.slug} would show its price`);
+    assert.ok(!/UE5/.test(item.priceNote ?? ""), `${s.slug} advertises the UE5 code`);
+  }
 });

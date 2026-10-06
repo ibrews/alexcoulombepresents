@@ -5,7 +5,7 @@ import Ethereal from "@/components/Ethereal";
 import InquireButton from "@/components/InquireButton";
 import BuyButton from "@/components/BuyButton";
 import GiftButton from "@/components/GiftButton";
-import { storeItems, formatPrice, effectivePriceCents, isPurchasable, STORE_LIVE } from "@/lib/store";
+import { storeItems, formatPrice, effectivePriceCents, isPurchasable, isListed, STORE_LIVE } from "@/lib/store";
 import { isGiftable } from "@/lib/commerce/gifts";
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { renderBreaks } from "@/components/Lines";
@@ -132,7 +132,7 @@ export default async function Store() {
       </Reveal>
 
       <div className="mt-14 grid gap-5 md:grid-cols-2">
-        {storeItems.map((item, i) => {
+        {storeItems.filter(isListed).map((item, i) => {
           const price = effectivePriceCents(item);
           const purchasable = isPurchasable(item);
           const closed = item.priceCents !== null && !item.externalUrl && !purchasable;

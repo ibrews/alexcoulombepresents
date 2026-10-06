@@ -48,6 +48,11 @@ export type StoreItem = {
   // the line-item amount; that's Stripe's UI, not ours, so it can't be
   // hidden there too). Checkout still charges priceCents exactly as normal.
   hidePrice?: boolean;
+  // Reachable by direct link (its class page, checkout) but left out of
+  // every public listing — calendar, /classes, /store, /gift, sitemap —
+  // e.g. a guest instructor's class while they review its page. Flip off
+  // to announce it. Members' Zoom invites still include it.
+  unlisted?: boolean;
   blurb: string;
   delivery: string; // what the buyer receives, in plain words
   fulfillment: "email-manual" | "github-invite" | "download-link" | "booking";
@@ -97,6 +102,11 @@ export type StoreItem = {
 
 export const STORE_LIVE = process.env.NEXT_PUBLIC_STORE_LIVE === "1";
 
+/** False for an unlisted item: reachable by link, kept out of public listings. */
+export function isListed(item: Pick<StoreItem, "unlisted">): boolean {
+  return !item.unlisted;
+}
+
 // The base (non-introductory) price for open-enrollment sessions — single
 // source of truth so the voucher's and the calendar's crossed-out comparison
 // prices can never drift from the actual per-session prices. Three tiers:
@@ -127,12 +137,12 @@ const UE5_PROMO_NOTE =
   "under that by the Tuesday before, everyone gets a coupon worth 110% of what they paid or a full refund, their choice. " +
   "Student or between jobs? Email for a sliding-scale seat — no questions asked.";
 
-// Oct–Nov 2026 run. Same terms as the first run minus "this 8-week run",
-// which would be false here. Members attend free (unlimited tiers) or with a
-// credit (Starter), so the note says so — the calendar is where non-members
-// compare one-off seats against joining.
+// Oct–Nov 2026 run. Prices are hidden on the site (Stripe Checkout shows
+// them) and the UE5 code is no longer advertised — it still works at
+// checkout for people who have it (allow_promotion_codes stays on), Alex
+// 2026-10-06. Members attend with their membership.
 const FALL_RUN_PRICE_NOTE =
-  "Use code UE5 at checkout for 50% off. Members attend with their membership. Runs with 5+ signed up; " +
+  "Members attend with their membership. Runs with 5+ signed up; " +
   "under that by the Tuesday before, everyone gets a coupon worth 110% of what they paid or a full refund, their choice. " +
   "Student or between jobs? Email for a sliding-scale seat — no questions asked.";
 
@@ -145,6 +155,8 @@ function wednesdayCalendarItem(input: {
   zoomRegistrationUrl?: string;
   zoomMeetingId?: string;
   priceNote?: string;
+  hidePrice?: boolean;
+  unlisted?: boolean;
 }): StoreItem {
   return {
     slug: input.slug,
@@ -152,6 +164,8 @@ function wednesdayCalendarItem(input: {
     kind: "course",
     priceCents: input.priceCents,
     priceNote: input.priceNote ?? UE5_PROMO_NOTE,
+    hidePrice: input.hidePrice,
+    unlisted: input.unlisted,
     blurb: input.blurb,
     delivery: input.zoomRegistrationUrl
       ? "Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live."
@@ -287,24 +301,25 @@ export const wednesdayCalendar: StoreItem[] = [
   }),
 
   // ── Oct–Nov 2026 run (drafted 2026-10-06) ─────────────────────────────────
-  // Same 11a ET Wednesday slot and the same tier prices + UE5 code as the
-  // first run — flip FALL_RUN_PRICE_NOTE if the discount changes. No Zoom
-  // meetings yet: create them with scripts/zoom/create-class-meeting.mjs once
-  // the schedule is approved, then add zoomRegistrationUrl/zoomMeetingId
-  // here so buyers and members are auto-registered.
+  // Same 11a ET Wednesday slot and tier prices as the first run
+  // (intro $100 / intermediate $150 / advanced $200), with the price hidden
+  // on-site — buyers see it on Stripe Checkout. The two guest classes are
+  // unlisted until Franco and Sean sign off on their pages.
   //
   // Daylight saving ends Sun Nov 1, 2026: 11a ET is 15:00Z through Oct 28
   // and 16:00Z from Nov 4 on. Getting this wrong shifts the class an hour.
   //
   // Who teaches each one lives in lib/classSessions.ts (class pages).
   wednesdayCalendarItem({
-    slug: "wed-2026-10-14-metahuman-animation-physics",
-    name: "MetaHuman Animation & Physics in UE 5.8",
+    slug: "wed-2026-10-14-metahuman-clothing-physics",
+    name: "MetaHuman Clothing Physics in UE 5.8",
     blurb:
-      "Guest instructor Franco Vilanova on making MetaHumans move — performance, cloth, and the physics that sell it. A preview of his five-week MetaHuman Production & Performance course.",
+      "Guest instructor Franco Vilanova on MetaHuman wardrobe that moves like real fabric — cloth setup, simulation, and the settings that sell it. A preview of his five-week MetaHuman Production & Performance course.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-10-14T15:00:00Z",
     priceNote: FALL_RUN_PRICE_NOTE,
+    hidePrice: true,
+    unlisted: true,
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-10-21-lumen-deep-dive",
@@ -314,6 +329,8 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-10-21T15:00:00Z",
     priceNote: FALL_RUN_PRICE_NOTE,
+    hidePrice: true,
+    unlisted: true,
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-10-28-vr-cinematics",
@@ -323,6 +340,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-10-28T15:00:00Z",
     priceNote: FALL_RUN_PRICE_NOTE,
+    hidePrice: true,
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-11-04-creative-ai-masterclass-1",
@@ -332,6 +350,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-11-04T16:00:00Z",
     priceNote: FALL_RUN_PRICE_NOTE,
+    hidePrice: true,
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-11-11-creative-ai-masterclass-2",
@@ -341,6 +360,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-11-11T16:00:00Z",
     priceNote: FALL_RUN_PRICE_NOTE,
+    hidePrice: true,
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-11-18-gaussian-splatting-vr",
@@ -350,6 +370,7 @@ export const wednesdayCalendar: StoreItem[] = [
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-11-18T16:00:00Z",
     priceNote: FALL_RUN_PRICE_NOTE,
+    hidePrice: true,
   }),
 ];
 

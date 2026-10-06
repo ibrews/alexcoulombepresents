@@ -5,13 +5,13 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import BuyButton from "@/components/BuyButton";
 import LocalSessionTime from "@/components/LocalSessionTime";
-import { classSessions, sessionBySlug, sessionEndsISO, isPast, upcomingSessions, type ClassSession } from "@/lib/classSessions";
+import { classSessions, sessionBySlug, sessionEndsISO, isPast, isUnlisted, upcomingSessions, type ClassSession } from "@/lib/classSessions";
+import LiteVideo from "@/components/LiteVideo";
 import { instructorById, instructorNames } from "@/lib/instructors";
 import { storeItems, formatPrice, isPurchasable } from "@/lib/store";
 import { recordings } from "@/lib/recordings";
 import { sessionSummaries } from "@/lib/classSummaries";
 import { googleCalendarUrl, sessionWhen } from "@/lib/sessionCalendar";
-import { STARTER_TIER } from "@/lib/commerce/membership";
 
 // Pages flip from "book a seat" to "what we covered" on their own once a
 // session ends, so they can't be frozen at build time forever.
@@ -36,6 +36,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description: `${sessionWhen(s)}. ${s.blurb}`,
     alternates: { canonical: `/classes/${s.slug}` },
+    // Unlisted pages exist to be shared privately for review first.
+    ...(isUnlisted(s) ? { robots: { index: false, follow: false } } : {}),
     openGraph: { title, description: s.blurb, type: "website" },
     twitter: { card: "summary_large_image", title, description: s.blurb },
   };
@@ -68,6 +70,11 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
           ← all classes
         </Link>
 
+        {isUnlisted(s) && (
+          <p className="mt-6 rounded-xl border border-amber/40 bg-amber/10 px-4 py-2 text-sm text-snow">
+            Preview — this page isn&apos;t listed on the site yet. Thanks for taking a look.
+          </p>
+        )}
         <p className="mt-6 font-mono text-xs uppercase tracking-widest text-teal">
           {KIND_LABEL[s.kind]} · {s.level} · {s.durationMin / 60} hours{past ? " · Past session" : ""}
         </p>
@@ -101,7 +108,7 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
           <div className="mt-5 flex flex-wrap items-center gap-3">
             {purchasable && item && (
               <>
-                <span className="text-2xl font-bold text-snow">{formatPrice(item.priceCents)}</span>
+                {!item.hidePrice && <span className="text-2xl font-bold text-snow">{formatPrice(item.priceCents)}</span>}
                 <BuyButton slug={item.slug} label="Book your seat →" itemName={item.name} />
                 <Link
                   href="/members"
@@ -170,13 +177,21 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
             <p className="mt-2 text-xs leading-relaxed text-mist">
               Coming to more than one?{" "}
               <Link href="/members" className="underline decoration-grape/50 hover:decoration-grape">
-                Membership starts at {formatPrice(STARTER_TIER.priceCents)}/mo
+                Membership
               </Link>{" "}
-              and includes every recording.
+              covers live classes every month, plus every recording.
             </p>
           )}
         </div>
       </Reveal>
+
+      {s.youtubeId && (
+        <Reveal>
+          <div className="mt-10 overflow-hidden rounded-2xl border border-line">
+            <LiteVideo id={s.youtubeId} title={s.title} />
+          </div>
+        </Reveal>
+      )}
 
       <Reveal>
         <section className="mt-12">
