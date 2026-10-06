@@ -3,7 +3,16 @@ import { storeItems, STORE_LIVE, effectivePriceCents, isPurchasable, officeHours
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
 import { getSeatsSold } from "@/lib/commerce/seats";
-import { MEMBERSHIP_LIVE, membershipTier } from "@/lib/commerce/membership";
+import { MEMBERSHIP_LIVE, membershipTier, liveMembershipsForEmail } from "@/lib/commerce/membership";
+import {
+  applyGiftToStoreCheckout,
+  giftMembershipCheckoutParams,
+  giftMembershipRefusal,
+  isGiftable,
+  isGiftMembershipTerm,
+  validateGift,
+  type GiftInfo,
+} from "@/lib/commerce/gifts";
 
 // Creates a Stripe Checkout Session for a catalog item.
 // Talks to the Stripe REST API directly (form-encoded) — no SDK dependency.
@@ -20,6 +29,10 @@ import { MEMBERSHIP_LIVE, membershipTier } from "@/lib/commerce/membership";
 //
 // Body is either { slug } (manual-fulfillment catalog, lib/store.ts) or
 // { sku } (automated license+download catalog, lib/commerce/products.ts).
+// Gifts (lib/commerce/gifts.ts): { slug, gift } buys a giftable store item for
+// someone else, and { giftMembership: true, tier, months, gift } buys a
+// fixed-term membership for someone else. gift = { recipientEmail,
+// recipientName?, fromName?, message? }.
 
 export async function POST(req: NextRequest) {
   if (!(await rateLimitAllows(`checkout:${clientIp(req)}`, 10, 60))) {
@@ -33,7 +46,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let payload: { slug?: string; sku?: string; donationCents?: number; membership?: boolean; tier?: string };
+  let payload: {
+    slug?: string;
+    sku?: string;
+    donationCents?: number;
+    membership?: boolean;
+    tier?: string;
+    gift?: unknown;
+    giftMembership?: boolean;
+    months?: number;
+  };
   try {
     payload = await req.json();
   } catch {
@@ -91,6 +113,33 @@ export async function POST(req: NextRequest) {
       "automatic_tax[enabled]": "false", // TODO(alex): flip on after Stripe Tax setup (see business plan §2.8)
       allow_promotion_codes: "true", // promo codes created in the Stripe Dashboard (e.g. newsletter code)
     });
+  } else if (payload.giftMembership) {
+    // ── Gift membership: a one-time payment for a fixed 1- or 3-month term,
+    // granted to the recipient by the webhook (kind=gift-membership). Never a
+    // subscription — nothing renews and nobody is charged again.
+    if (!MEMBERSHIP_LIVE) {
+      return NextResponse.json({ error: "Membership isn't open yet." }, { status: 503 });
+    }
+    const tier = membershipTier(payload.tier);
+    if (!tier) {
+      return NextResponse.json({ error: "Unknown membership tier." }, { status: 400 });
+    }
+    const months = Number(payload.months);
+    if (!isGiftMembershipTerm(months)) {
+      return NextResponse.json({ error: "Gift memberships come in 1- or 3-month terms." }, { status: 400 });
+    }
+    const validated = validateGift(payload.gift);
+    if (!validated.ok) return NextResponse.json({ error: validated.error }, { status: 400 });
+    // Read-only, and fails OPEN: a DB hiccup should cost at worst a gift that
+    // merges into an existing membership (the webhook never shortens or
+    // downgrades), never a lost sale.
+    try {
+      const refusal = giftMembershipRefusal(await liveMembershipsForEmail(validated.gift.recipientEmail));
+      if (refusal) return NextResponse.json({ error: refusal }, { status: 409 });
+    } catch (err) {
+      console.error("[gift] recipient membership check failed — allowing the gift", err);
+    }
+    body = new URLSearchParams(giftMembershipCheckoutParams({ site, tier, months, gift: validated.gift }));
   } else if (payload.membership) {
     // ── Membership subscription (lib/commerce/membership.ts) — recurring,
     // so this is mode=subscription referencing the real Stripe Price object
@@ -134,6 +183,15 @@ export async function POST(req: NextRequest) {
     if (!item || !isPurchasable(item)) {
       return NextResponse.json({ error: "Unknown or non-purchasable item" }, { status: 404 });
     }
+    let gift: GiftInfo | null = null;
+    if (payload.gift !== undefined) {
+      if (!isGiftable(item)) {
+        return NextResponse.json({ error: "This item can't be given as a gift." }, { status: 400 });
+      }
+      const validated = validateGift(payload.gift);
+      if (!validated.ok) return NextResponse.json({ error: validated.error }, { status: 400 });
+      gift = validated.gift;
+    }
     // Hard capacity stop — checked server-side regardless of what the store
     // page shows, so a crafted/late POST can never oversell a capped item.
     if (item.capacity !== undefined) {
@@ -175,6 +233,7 @@ export async function POST(req: NextRequest) {
       params["custom_fields[0][type]"] = "text";
       params["custom_fields[0][optional]"] = "false";
     }
+    if (gift) applyGiftToStoreCheckout(params, { site, item, gift });
     body = new URLSearchParams(params);
   }
 

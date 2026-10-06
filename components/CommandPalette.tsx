@@ -32,6 +32,7 @@ export default function CommandPalette() {
       { label: "Videos", hint: "page", action: () => go("/videos") },
       { label: "The Lab", hint: "page", action: () => go("/lab") },
       { label: "Store", hint: "page", action: () => go("/store") },
+      { label: "Give a gift", hint: "page", action: () => go("/gift") },
       { label: "Members (coming soon)", hint: "page", action: () => go("/members") },
       { label: "Newsletter", hint: "page", action: () => go("/newsletter") },
       { label: "Contact", hint: "page", action: () => go("/contact") },
