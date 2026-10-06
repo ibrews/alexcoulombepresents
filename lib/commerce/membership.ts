@@ -2,12 +2,19 @@
 // The members program rides the EXISTING commerce rails: a membership is an
 // entitlement with sku "membership" (granted by the Stripe subscription
 // branches in app/api/stripe-webhook via lib/commerce/membershipBilling.ts,
-// or manually via SQL for comps). Nothing here sets a price or exposes a
+// or by grantCompMembership below for comps and gifts). Nothing here sets a price or exposes a
 // checkout — the public surface is a "coming soon" page with a
 // founding-member waitlist until NEXT_PUBLIC_MEMBERSHIP_LIVE=1.
 
 import { sql, ensureCommerceSchema } from "./schema";
 import { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU, type MembershipTierId } from "./membershipBilling";
+import {
+  applyMembershipGrant,
+  type ExistingMembership,
+  type GrantSource,
+  type MembershipGrantResult,
+} from "./membershipGrants";
+import type { RecipientMembership } from "./gifts";
 
 export { MEMBERSHIP_SKU, BOOKING_CREDIT_SKU };
 export type { MembershipTierId };
@@ -231,6 +238,18 @@ export async function memberTierForEmail(email: string): Promise<MembershipTierI
 // shows up as a new Stripe price on the next invoice.paid/subscription.updated,
 // and the member's row should reflect whichever price is actually current,
 // not whatever they first signed up at.
+//
+// Two additions for comps/gifts (2026-10-06, grant_source in schema.ts):
+//   - An ACTIVE LIFETIME comp/gift row is left exactly as it is. Without
+//     this, a comped instructor who also had (or later started) a
+//     subscription would have their lifetime Insider cut down to the
+//     subscription's tier and paid-through date by their next renewal —
+//     COALESCE(NULL → epoch) loses to any real date.
+//   - Any other row becomes subscription-backed again, so grant_source is
+//     cleared: a gift recipient who then subscribes must start getting
+//     renewal reminders, which skip rows with a grant_source.
+// No row had a grant_source before that date, so both are no-ops for every
+// membership that existed then.
 export async function grantOrExtendMembership(
   customerId: number,
   paidThrough: Date,
@@ -242,13 +261,26 @@ export async function grantOrExtendMembership(
     VALUES (${customerId}, ${MEMBERSHIP_SKU}, ${tier}, 'active', ${paidThrough.toISOString()})
     ON CONFLICT (customer_id) WHERE sku = 'membership'
     DO UPDATE SET
-      tier = EXCLUDED.tier,
+      tier = CASE
+        WHEN entitlements.status = 'active' AND entitlements.updates_until IS NULL AND entitlements.grant_source IS NOT NULL
+        THEN entitlements.tier
+        ELSE EXCLUDED.tier
+      END,
       status = 'active',
       revoked_at = NULL,
-      updates_until = GREATEST(
-        COALESCE(entitlements.updates_until, to_timestamp(0)),
-        EXCLUDED.updates_until
-      )
+      updates_until = CASE
+        WHEN entitlements.status = 'active' AND entitlements.updates_until IS NULL AND entitlements.grant_source IS NOT NULL
+        THEN NULL
+        ELSE GREATEST(
+          COALESCE(entitlements.updates_until, to_timestamp(0)),
+          EXCLUDED.updates_until
+        )
+      END,
+      grant_source = CASE
+        WHEN entitlements.status = 'active' AND entitlements.updates_until IS NULL AND entitlements.grant_source IS NOT NULL
+        THEN entitlements.grant_source
+        ELSE NULL
+      END
     RETURNING (xmax = 0) AS inserted
   `) as { inserted: boolean }[];
   return { isNew: rows[0]?.inserted ?? true };
@@ -291,6 +323,100 @@ export async function releaseMembershipWelcome(customerId: number): Promise<void
     UPDATE entitlements SET welcomed_at = NULL
     WHERE customer_id = ${customerId} AND sku = ${MEMBERSHIP_SKU}
   `;
+}
+
+// ── Comp + gift grants (logic + tests: lib/commerce/membershipGrants.ts) ────
+
+// The customer's membership row with a row-version token (xmin, which
+// Postgres bumps on every write) for grantCompMembership's compare-and-set.
+export async function readMembershipRow(customerId: number): Promise<ExistingMembership | null> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT tier, status, updates_until, grant_source, xmin::text AS version
+    FROM entitlements
+    WHERE customer_id = ${customerId} AND sku = ${MEMBERSHIP_SKU}
+    LIMIT 1
+  `) as { tier: string; status: string; updates_until: string | null; grant_source: string | null; version: string }[];
+  const r = rows[0];
+  if (!r) return null;
+  return {
+    tier: r.tier,
+    status: r.status,
+    updatesUntil: r.updates_until === null ? null : new Date(r.updates_until),
+    grantSource: r.grant_source,
+    version: r.version,
+  };
+}
+
+/**
+ * Grants a membership no subscription pays for — a comp (`until` null =
+ * lifetime) or a fixed-term gift — merged into the customer's single
+ * membership row: never shortens an existing date, never downgrades a higher
+ * tier, and records `source` in grant_source. `changed` is true for exactly
+ * one caller per actual change, which is what gates the notification email.
+ * welcomed_at is deliberately untouched, so claimMembershipWelcome still means
+ * "this member got the subscription welcome".
+ */
+export async function grantCompMembership(
+  customerId: number,
+  tier: MembershipTierId,
+  until: Date | null,
+  source: GrantSource
+): Promise<MembershipGrantResult> {
+  return applyMembershipGrant(
+    {
+      readMembership: readMembershipRow,
+      insertMembership: async (id, plan) => {
+        await ensureCommerceSchema();
+        const rows = (await sql()`
+          INSERT INTO entitlements (customer_id, sku, tier, status, updates_until, grant_source)
+          VALUES (${id}, ${MEMBERSHIP_SKU}, ${plan.tier}, 'active', ${plan.until?.toISOString() ?? null}, ${plan.source})
+          ON CONFLICT (customer_id) WHERE sku = 'membership' DO NOTHING
+          RETURNING id
+        `) as { id: number }[];
+        return rows.length > 0;
+      },
+      updateMembership: async (id, expectedVersion, plan) => {
+        await ensureCommerceSchema();
+        const rows = (await sql()`
+          UPDATE entitlements SET
+            tier = ${plan.tier},
+            status = 'active',
+            revoked_at = NULL,
+            updates_until = ${plan.until?.toISOString() ?? null},
+            grant_source = ${plan.source}
+          WHERE customer_id = ${id} AND sku = ${MEMBERSHIP_SKU} AND xmin::text = ${expectedVersion}
+          RETURNING id
+        `) as { id: number }[];
+        return rows.length > 0;
+      },
+    },
+    customerId,
+    { tier, until, source }
+  );
+}
+
+// Read-only: every live membership held under this email (any letter case —
+// customers.email keeps whatever case Stripe captured). Backs the checkout
+// route's "they already have a membership" refusal for gift memberships.
+export async function liveMembershipsForEmail(email: string): Promise<RecipientMembership[]> {
+  await ensureCommerceSchema();
+  const rows = (await sql()`
+    SELECT e.tier, e.updates_until, e.grant_source, c.stripe_customer_id
+    FROM entitlements e
+    JOIN customers c ON c.id = e.customer_id
+    WHERE lower(c.email) = lower(${email})
+      AND c.brand = 'acp'
+      AND e.sku = ${MEMBERSHIP_SKU}
+      AND e.status = 'active'
+      AND (e.updates_until IS NULL OR e.updates_until > now())
+  `) as { tier: string; updates_until: string | null; grant_source: string | null; stripe_customer_id: string | null }[];
+  return rows.map((r) => ({
+    tier: r.tier,
+    updatesUntil: r.updates_until === null ? null : new Date(r.updates_until),
+    grantSource: r.grant_source,
+    stripeCustomerId: r.stripe_customer_id,
+  }));
 }
 
 // Tops the cycle's credits up to `count` instead of blindly inserting, keyed
@@ -337,6 +463,10 @@ export async function mintBookingCredits(customerId: number, count: number, expi
 
 // Cancellation kills the membership AND any outstanding credits — credits are
 // a membership benefit, not a standalone purchase. Returns rows revoked.
+// A lifetime comp/gift membership row survives: this runs on a SUBSCRIPTION
+// ending, and no subscription paid for that row (see grantOrExtendMembership's
+// matching guard) — cancelling Stripe billing for a comped instructor must not
+// take their comp with it.
 export async function revokeMembership(customerId: number): Promise<number> {
   await ensureCommerceSchema();
   const rows = (await sql()`
@@ -344,6 +474,7 @@ export async function revokeMembership(customerId: number): Promise<number> {
     WHERE customer_id = ${customerId}
       AND sku = ANY(${[MEMBERSHIP_SKU, BOOKING_CREDIT_SKU]})
       AND status = 'active'
+      AND NOT (sku = ${MEMBERSHIP_SKU} AND updates_until IS NULL AND grant_source IS NOT NULL)
     RETURNING id
   `) as { id: number }[];
   return rows.length;
@@ -396,17 +527,19 @@ export type MembershipRenewalRow = {
   tier: string;
   updates_until: string;
   stripe_customer_id: string | null;
+  grant_source: string | null;
 };
 
 // Every currently-active member with a real paid-through date — the
 // candidate list for renewal reminders. A membership with no updates_until
-// (shouldn't happen — every grant sets one) is excluded rather than treated
-// as "never renews," since there's nothing to warn about a date that doesn't
-// exist.
+// (a lifetime comp) is excluded rather than treated as "never renews," since
+// there's nothing to warn about a date that doesn't exist. grant_source rides
+// along so renewalReminders.ts can skip fixed-term comps and gifts, which end
+// without renewing.
 export async function activeMembershipsForReminders(): Promise<MembershipRenewalRow[]> {
   await ensureCommerceSchema();
   return (await sql()`
-    SELECT e.customer_id, c.email, c.name, e.tier, e.updates_until, c.stripe_customer_id
+    SELECT e.customer_id, c.email, c.name, e.tier, e.updates_until, c.stripe_customer_id, e.grant_source
     FROM entitlements e
     JOIN customers c ON c.id = e.customer_id
     WHERE e.sku = ${MEMBERSHIP_SKU}

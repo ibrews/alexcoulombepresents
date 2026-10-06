@@ -10,9 +10,9 @@ export const metadata: Metadata = { title: "Thank you!" };
 export default async function Success({
   searchParams,
 }: {
-  searchParams: Promise<{ item?: string; sku?: string }>;
+  searchParams: Promise<{ item?: string; sku?: string; gift?: string }>;
 }) {
-  const { item: slug, sku } = await searchParams;
+  const { item: slug, sku, gift } = await searchParams;
   const item = storeItems.find((i) => i.slug === slug);
   const digital = sku ? findDigitalProduct(sku) : undefined;
 
@@ -31,6 +31,16 @@ export default async function Success({
               your account
             </Link>{" "}
             — the download button is there. Nothing in the inbox after a few minutes? Email{" "}
+            <a className="text-teal hover:underline" href="mailto:info@alexcoulombepresents.com">
+              info@alexcoulombepresents.com
+            </a>
+            .
+          </>
+        ) : item && gift === "1" ? (
+          <>
+            Your gift of <span className="text-snow">{item.name}</span> is on its way. They&apos;ll get an
+            email with everything they need (and your note) in a minute or two, and you&apos;ll get a
+            confirmation that it was sent. Anything look off? Email{" "}
             <a className="text-teal hover:underline" href="mailto:info@alexcoulombepresents.com">
               info@alexcoulombepresents.com
             </a>
