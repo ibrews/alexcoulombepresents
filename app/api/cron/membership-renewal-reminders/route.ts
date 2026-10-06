@@ -40,6 +40,7 @@ function deps(): RenewalReminderDeps {
         tier: r.tier as MembershipTierId,
         updatesUntil: new Date(r.updates_until),
         stripeCustomerId: r.stripe_customer_id,
+        grantSource: r.grant_source,
       }));
     },
     claimReminder: claimRenewalReminder,

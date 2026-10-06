@@ -47,7 +47,29 @@ import {
   revokeMembership,
   linkMembershipCycleToOrder,
   fetchStripeCustomer,
+  grantCompMembership,
+  membershipTier,
 } from "@/lib/commerce/membership";
+import {
+  GIFT_MEMBERSHIP_KIND,
+  VOUCHER_SLUG,
+  parseGiftMembershipMetadata,
+  parseGiftMetadata,
+  type GiftInfo,
+} from "@/lib/commerce/gifts";
+import {
+  fulfillCatalogGift,
+  fulfillGiftMembership,
+  type CatalogGiftDeps,
+  type GiftMembershipDeps,
+} from "@/lib/commerce/giftFulfillment";
+import {
+  sendGiftBuyerConfirmation,
+  sendGiftedItemEmail,
+  sendGiftedMembershipEmail,
+  sendGiftedVoucherEmail,
+} from "@/lib/commerce/email";
+import { officeHoursDropIn } from "@/lib/store";
 
 // Stripe webhook — fulfillment happens here.
 // Configure in Stripe Dashboard → Developers → Webhooks:
@@ -144,6 +166,63 @@ function membershipDeps(): MembershipBillingDeps {
   };
 }
 
+// Live wiring for gift fulfillment (logic + tests: lib/commerce/giftFulfillment.ts).
+// Every person-facing call here is pointed at the RECIPIENT by that module;
+// these deps are the same functions the non-gift branches below use.
+function catalogGiftDeps(): CatalogGiftDeps {
+  return {
+    checkoutSessionProcessed,
+    recordCheckoutSession,
+    getSeatsSold,
+    createVoucherCode,
+    sendGiftedVoucherEmail,
+    sendGiftedItemEmail,
+    sendGiftBuyerConfirmation,
+    sendOwnerAlert,
+    addZoomRegistrant,
+    // Same immediate grant as a regular class purchase (see the slug branch
+    // below for why it doesn't wait for the daily cron).
+    grantClassDriveAccess: async (slug, email) => {
+      const folderId = classDriveFolderId(slug);
+      if (folderId && !(await alreadyGrantedDriveAccess(folderId, email))) {
+        if (await shareDriveFolder(folderId, email)) {
+          await recordDriveAccessGrant(folderId, email);
+          console.log(`[drive] granted ${slug} folder → ${email} (gift)`);
+        }
+      }
+    },
+    sendTelegramNotice,
+  };
+}
+
+function giftMembershipDeps(): GiftMembershipDeps {
+  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
+  return {
+    checkoutSessionProcessed,
+    recordCheckoutSession,
+    findOrCreateCustomer,
+    grantCompMembership,
+    mintBookingCredits,
+    linkMembershipCycleToOrder,
+    issueMagicLinkUrl: async (customerId) => `${site}/api/account/verify?token=${await issueMagicLink(customerId)}`,
+    sendGiftedMembershipEmail: (input) => sendGiftedMembershipEmail({ ...input, variant: "gift" }),
+    sendGiftBuyerConfirmation,
+    sendOwnerAlert,
+    sendTelegramNotice,
+    // Scheduled with after(), as for a new subscriber: Stripe's delivery is
+    // never held up by Zoom, and the daily cron is the safety net.
+    inviteToUpcomingSessions: process.env.ZOOM_CLIENT_ID
+      ? async (email) => {
+          after(() =>
+            inviteMembersToUpcomingSessions({ onlyEmails: [email] }).catch((err) =>
+              console.error(`[gift] immediate invites failed for ${email} (daily cron will retry)`, err)
+            )
+          );
+        }
+      : undefined,
+  };
+}
+
 // Pulls one Stripe Checkout custom_field's text answer off a session by key —
 // shared by the donation "comment" field and any per-slug required field
 // (e.g. office hours' "preferred_friday").
@@ -191,20 +270,28 @@ export async function POST(req: NextRequest) {
     // Office hours' required "which Friday?" custom field (see checkout
     // route) — undefined for every other item, which is fine, it's optional.
     const preferredFriday = customFieldText(session, "preferred_friday");
+    // Gift metadata (lib/commerce/gifts.ts) — null for every non-gift
+    // session, which leaves all of the branches below exactly as they were.
+    const gift: GiftInfo | null = parseGiftMetadata(session.metadata);
 
     // ── Seat/order tracking (lib/commerce/seats.ts) — a real ledger backing
     // seat-count scarcity + the admin roster, covering every checkout kind
     // (catalog slug, voucher, donation, digital). Never let a DB hiccup here
     // break the existing email fulfillment below.
+    // A gifted seat belongs to the RECIPIENT: this row is what class-materials
+    // access, the Drive sync, and the class-cancellation emails key off. The
+    // note keeps who paid, for the roster.
     try {
       await recordCatalogOrder({
         stripeSessionId: session.id,
         paymentIntentId: session.payment_intent ?? null,
         slug: slug ?? null,
-        email: email ?? null,
-        name: name ?? null,
+        email: gift ? gift.recipientEmail : (email ?? null),
+        name: gift ? gift.recipientName : (name ?? null),
         amountCents: session.amount_total ?? null,
-        note: preferredFriday ?? null,
+        note: gift
+          ? [preferredFriday, `gift from ${name ? `${name} <${email}>` : (email ?? "unknown")}`].filter(Boolean).join(" · ")
+          : (preferredFriday ?? null),
       });
     } catch (err) {
       console.error("[seats] order record failed", err);
@@ -266,6 +353,91 @@ export async function POST(req: NextRequest) {
         console.error("[fulfill] digital purchase failed", err);
         // Return 500 so Stripe retries — fulfillment must not silently drop.
         return NextResponse.json({ error: "Fulfillment failed" }, { status: 500 });
+      }
+    } else if (kind === GIFT_MEMBERSHIP_KIND) {
+      // ── Gift membership: a fixed-term membership for the recipient, paid
+      // once by the buyer (lib/commerce/giftFulfillment.ts).
+      const term = parseGiftMembershipMetadata(session.metadata);
+      const tier = term ? membershipTier(term.tierId) : undefined;
+      if (!gift || !term || !tier || !email) {
+        // Only reachable if metadata was edited by hand — the checkout route
+        // validates all of it. A 500 would retry forever on the same bad
+        // data, so alert a human and acknowledge the event.
+        console.error(`[gift] unreadable gift-membership session ${session.id}`, session.metadata);
+        try {
+          await sendOwnerAlert({
+            subject: "ACTION NEEDED: a paid gift membership couldn't be fulfilled",
+            body: [
+              `Stripe session ${session.id} paid $${((session.amount_total ?? 0) / 100).toFixed(2)} for a gift membership,`,
+              "but its metadata (tier / months / recipient) is unreadable, so nothing was granted.",
+              `Buyer: ${name ?? "—"} <${email ?? "—"}>`,
+              `Metadata: ${JSON.stringify(session.metadata)}`,
+              "",
+              "Comp the recipient by hand (POST /api/admin/comp-membership with months) or refund.",
+            ].join("\n"),
+          });
+        } catch (err) {
+          console.error("[gift] unreadable-metadata alert failed", err);
+        }
+      } else {
+        try {
+          const result = await fulfillGiftMembership(
+            {
+              eventId: event.id,
+              sessionId: session.id,
+              paymentIntentId: session.payment_intent ?? null,
+              amountCents: session.amount_total ?? 0,
+              createdAt: new Date((session.created ?? event.created ?? Date.now() / 1000) * 1000),
+              buyer: { email, name: name ?? null },
+              gift,
+              tier,
+              months: term.months,
+            },
+            giftMembershipDeps()
+          );
+          if (result.deduped) return NextResponse.json({ received: true, deduped: true });
+          console.log(`[gift] ${result.action}`);
+        } catch (err) {
+          console.error("[gift] membership fulfillment failed", err);
+          // 500 so Stripe retries — every step is idempotent (merge-only
+          // grant, top-up credits, order recorded last).
+          return NextResponse.json({ error: "Gift membership fulfillment failed" }, { status: 500 });
+        }
+      }
+    } else if (gift && slug && email) {
+      // ── Gifted store item (class seat, office hours, consultation,
+      // voucher): the recipient is fulfilled, the buyer gets a short note.
+      const item = storeItems.find((i) => i.slug === slug);
+      try {
+        const result = await fulfillCatalogGift(
+          {
+            eventId: event.id,
+            sessionId: session.id,
+            paymentIntentId: session.payment_intent ?? null,
+            amountCents: session.amount_total ?? 0,
+            buyer: { email, name: name ?? null },
+            gift,
+            item: {
+              slug,
+              name: item?.name ?? slug,
+              sessionDateISO: item?.sessionDateISO,
+              zoomRegistrationUrl: item?.zoomRegistrationUrl,
+              zoomMeetingId: item?.zoomMeetingId,
+              schedulingUrl: item?.schedulingUrl,
+              minEnrollment: item?.minEnrollment,
+              isOfficeHours: slug === officeHoursDropIn.slug,
+              isVoucher: slug === VOUCHER_SLUG,
+              isWednesdayClass: wednesdayCalendar.some((c) => c.slug === slug),
+            },
+            bookingNote: preferredFriday ?? null,
+          },
+          catalogGiftDeps()
+        );
+        if (result.deduped) return NextResponse.json({ received: true, deduped: true });
+        console.log(`[gift] ${result.action}`);
+      } catch (err) {
+        console.error("[gift] store item fulfillment failed", err);
+        return NextResponse.json({ error: "Gift fulfillment failed" }, { status: 500 });
       }
     } else if (slug === "class-voucher" && email) {
       // ── Voucher: mint a one-time promo code and deliver it. Fully

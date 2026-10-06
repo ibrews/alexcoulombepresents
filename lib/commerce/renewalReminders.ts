@@ -26,6 +26,10 @@ export type MembershipRenewalTarget = {
   // in practice, but the type says what it says) — sendReminder must degrade
   // gracefully rather than assume this is always present.
   stripeCustomerId: string | null;
+  // Set ('comp' | 'gift') when no subscription backs this membership — see
+  // schema.ts's grant_source. Such a membership simply ends; there is no
+  // renewal or charge to warn about, so it never gets a reminder.
+  grantSource?: string | null;
 };
 
 export type RenewalReminderDeps = {
@@ -83,6 +87,7 @@ export async function sendDueRenewalReminders(
   const results: ReminderResult[] = [];
 
   for (const target of targets) {
+    if (target.grantSource) continue;
     const remaining = daysUntil(target.updatesUntil, now);
     if (remaining <= 0) continue;
 

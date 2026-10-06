@@ -5,6 +5,14 @@ import { findDigitalProduct } from "./products";
 import { MEMBERSHIP_TIERS, membershipTier, type MembershipTierId } from "./membership";
 
 import { OWNER_ALERT_FROM, ownerRecipients } from "../email.ts";
+import {
+  renderGiftBuyerConfirmation,
+  renderGiftedItemEmail,
+  renderGiftedMembershipEmail,
+  renderGiftedVoucherEmail,
+  type GiftedItemInfo,
+  type RenderedEmail,
+} from "./giftEmailCopy.ts";
 
 // Renders our plain-text email bodies as simple branded HTML: white card,
 // auto-linked URLs, and the ACP logo in the footer. Every sender passes the
@@ -578,4 +586,100 @@ export async function sendClassRescheduledEmail(input: {
     html: brandedHtml(__body),
   });
   if (error) throw new Error(`class-rescheduled email failed: ${error.message}`);
+}
+
+// ── Gifts and comps (copy: lib/commerce/giftEmailCopy.ts) ───────────────────
+// Every one of these BCCs the owner and routes replies to the owner, same as
+// the welcome email: "did the gift actually land?" should be answerable from
+// Alex's own inbox.
+
+async function sendCustomerEmail(to: string, rendered: RenderedEmail, label: string) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { error } = await resend.emails.send({
+    from: "Alex Coulombe Presents <info@alexcoulombepresents.com>",
+    to,
+    bcc: ownerRecipients(),
+    replyTo: ownerRecipients(),
+    subject: rendered.subject,
+    text: rendered.text,
+    html: brandedHtml(rendered.text),
+  });
+  if (error) throw new Error(`${label} email failed: ${error.message}`);
+}
+
+// The top tier by price — the instructor copy says "Insider is the top tier",
+// and this keeps that claim true if the tier list ever changes.
+const TOP_TIER_ID = [...MEMBERSHIP_TIERS].sort((a, b) => b.priceCents - a.priceCents)[0]?.id;
+
+export type GiftedMembershipEmailInput = {
+  email: string;
+  recipientName?: string | null;
+  tierId: MembershipTierId;
+  /** What they hold after the grant; null = lifetime. */
+  until: Date | null;
+  /** "instructor" = Alex's thank-you comp; "gift" = someone else's gift. */
+  variant: "instructor" | "gift";
+  months?: number | null;
+  credits?: number | null;
+  fromName?: string | null;
+  message?: string | null;
+  magicLinkUrl: string;
+};
+
+/** The exact subject/text sendGiftedMembershipEmail would send — also what
+ * the admin comp endpoint's dryRun returns. */
+export function renderGiftedMembership(input: GiftedMembershipEmailInput): RenderedEmail {
+  const tier = membershipTier(input.tierId) ?? MEMBERSHIP_TIERS[0];
+  return renderGiftedMembershipEmail({
+    variant: input.variant,
+    recipientName: input.recipientName,
+    tier,
+    topTier: tier.id === TOP_TIER_ID,
+    until: input.until,
+    months: input.months,
+    credits: input.credits,
+    fromName: input.fromName,
+    message: input.message,
+    magicLinkUrl: input.magicLinkUrl,
+    // Insider's Gumroad library is part of what the tier promises, so a comp
+    // or gift of it delivers the code exactly as the paid welcome does.
+    gumroad: tier.id === "insider" ? { code: INSIDER_GUMROAD_CODE, url: INSIDER_GUMROAD_URL } : null,
+  });
+}
+
+export async function sendGiftedMembershipEmail(input: GiftedMembershipEmailInput) {
+  await sendCustomerEmail(input.email, renderGiftedMembership(input), "gifted membership");
+}
+
+export async function sendGiftedItemEmail(input: {
+  email: string;
+  recipientName: string | null;
+  fromName: string | null;
+  message: string | null;
+  item: GiftedItemInfo;
+  bookingNote: string | null;
+  underMinimum: { seatsSold: number; minEnrollment: number } | null;
+}) {
+  await sendCustomerEmail(input.email, renderGiftedItemEmail(input), "gifted item");
+}
+
+export async function sendGiftedVoucherEmail(input: {
+  email: string;
+  recipientName: string | null;
+  fromName: string | null;
+  message: string | null;
+  code: string;
+}) {
+  await sendCustomerEmail(input.email, renderGiftedVoucherEmail(input), "gifted voucher");
+}
+
+export async function sendGiftBuyerConfirmation(input: {
+  email: string;
+  buyerName: string | null;
+  recipientEmail: string;
+  recipientName: string | null;
+  giftDescription: string;
+  amountCents: number;
+}) {
+  await sendCustomerEmail(input.email, renderGiftBuyerConfirmation(input), "gift buyer confirmation");
 }

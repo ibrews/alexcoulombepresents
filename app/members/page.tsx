@@ -5,6 +5,7 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import WaitlistForm from "@/components/WaitlistForm";
 import JoinMembershipButton from "@/components/JoinMembershipButton";
+import GiftButton from "@/components/GiftButton";
 import { customerFromSession } from "@/lib/commerce/tokens";
 import {
   isMember,
@@ -217,6 +218,15 @@ export default async function Members({
                             Switch to {tier.name} →
                           </a>
                         )}
+                        {MEMBERSHIP_LIVE && (
+                          <div className="mt-3">
+                            <GiftButton
+                              membershipTier={tier.id}
+                              priceCents={tier.priceCents}
+                              itemName={`${tier.name} membership`}
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -286,6 +296,13 @@ export default async function Members({
                     </ul>
                     <div className="mt-6">
                       <JoinMembershipButton tier={tier.id} label={`Join ${tier.name} →`} />
+                      <div className="mt-3">
+                        <GiftButton
+                          membershipTier={tier.id}
+                          priceCents={tier.priceCents}
+                          itemName={`${tier.name} membership`}
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}

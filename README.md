@@ -76,6 +76,7 @@ The prior production deployment is
 | `/lab/avp-openxr` | Apple Vision Pro + OpenXR engine work — punch-list fixes, Lumen, Nanite research (`/lab/unreal-visionos` redirects here) |
 | `/links` | Agile Lens, socials, podcast — and alexcoulombe.com, lovingly preserved in 2013 amber |
 | `/store` | Direct sales (courses, skills, templates) — Stripe Checkout, no marketplace cut. Rule of thumb: anything ready-to-deliver has a price + instant checkout; anything in-progress collects an email instead. Ships in preview mode (inquiry fallback) until `NEXT_PUBLIC_STORE_LIVE=1` |
+| `/gift` | Everything that can be gifted in one place: membership tiers (1 or 3 months, paid once), upcoming classes, the class voucher, office hours, the consultation. Each card opens the same inline "Give as a gift" form (`components/GiftButton.tsx`) that also sits under giftable `/store` items and the `/members` tier cards — see [Gifts and comped memberships](#gifts-and-comped-memberships) |
 | `/newsletter` | Archive of every newsletter issue (markdown files in `content/newsletters/`) + subscribe form |
 | `/support` | "Support the Lab" donations — Stripe Checkout with preset/custom amounts and an optional comment/request field |
 
@@ -331,6 +332,63 @@ surprise line on a card statement.
   welcome email.
 - Tests: [`tests/renewal-reminders.test.ts`](tests/renewal-reminders.test.ts), including the
   catch-up-after-an-outage case and the "don't double-send on a retried run" case.
+
+### Gifts and comped memberships
+
+Two ways someone gets a membership (or a seat) without paying for it themselves. Both land on the
+same single membership row per customer as a subscription, so a grant **merges** instead of
+overwriting: it never shortens an existing paid-through date (lifetime beats any date), never
+downgrades a higher tier, and treats a lapsed/revoked row as a fresh start. The merge rules and
+their compare-and-set write live in [`lib/commerce/membershipGrants.ts`](lib/commerce/membershipGrants.ts);
+`grantCompMembership` in [`lib/commerce/membership.ts`](lib/commerce/membership.ts) wires the SQL.
+The row's new `grant_source` column (`comp` / `gift`, NULL = subscription-backed) is what makes
+renewal reminders skip it, and what stops a subscription renewal or cancellation from touching an
+active **lifetime** comp.
+
+**Comped memberships — every guest instructor gets lifetime Insider** (Alex, 2026-10-06), once
+they've taught. One command, after the class:
+
+```bash
+node scripts/comp-membership.mjs --email jane@example.com --name "Jane Doe" --dry-run   # preview
+node scripts/comp-membership.mjs --email jane@example.com --name "Jane Doe"             # do it
+```
+
+It reads `ADMIN_KEY` (and optionally `SITE_URL`) from the environment or `.env.local` and POSTs
+[`/api/admin/comp-membership`](app/api/admin/comp-membership/route.ts) (`?key=ADMIN_KEY` or
+`x-admin-key`), which grants the membership, emails them "You've been gifted a membership to Alex
+Coulombe Presents!" with a magic sign-in link (copy in
+[`lib/commerce/giftEmailCopy.ts`](lib/commerce/giftEmailCopy.ts); the benefit list comes from
+`MEMBERSHIP_TIERS`, plus Insider's Gumroad code), and registers them on every upcoming class +
+office hours. Flags: `--tier`, `--months` (a term instead of lifetime), `--no-email`, `--force`.
+`--dry-run` touches nothing and prints the exact email. **Re-running is safe**: only the run that
+actually changes the row notifies, so a second run is a no-op unless `--force`. Comping someone
+who still has a paid subscription warns you that Stripe keeps billing them — cancel it in the
+Dashboard if the comp replaces it (a lifetime comp survives that cancellation). Instructor emails
+are passed at run time only; none are committed here.
+
+**Gifts — anyone can gift a class, office hours, the consultation, the voucher, or a membership.**
+`/api/checkout` accepts an optional `gift: { recipientEmail, recipientName?, fromName?, message? }`
+(validated in [`lib/commerce/gifts.ts`](lib/commerce/gifts.ts): real email, message ≤ 400
+characters, control characters stripped) and carries it as Stripe session metadata. The buyer pays
+and the receipt says "Gift: …"; the webhook then fulfills the **recipient**
+([`lib/commerce/giftFulfillment.ts`](lib/commerce/giftFulfillment.ts)): the order and
+`catalog_orders` row are recorded against them (so seat counts, class materials and the Drive sync
+see them), they get the gift-framed email with the note and the Zoom link or voucher code, and the
+Zoom registration and Drive share go to them. The buyer gets a short "your gift was sent" note, and
+the owner alert / Telegram notice say it was a gift. Non-gift purchases take exactly the same path
+as before: no gift metadata, no change.
+
+- **Gift memberships** are a one-time `mode=payment` checkout (`{ giftMembership: true, tier,
+  months, gift }`, 1 or 3 months, price = tier price × months, promo codes off) with
+  `metadata[kind]=gift-membership`. The webhook grants it via `grantCompMembership` (`gift`, ending
+  `months` after the session was created, so a retry lands on the same date), mints Starter's
+  credits for the whole term up front (expiring with it), emails a magic link, invites them to
+  upcoming sessions, and links it to the order so a full refund takes it back. Nothing renews.
+- **Refused at checkout** (read-only, fails open if the DB is unreachable): a recipient whose
+  membership a Stripe subscription is paying for, or who already has a lifetime one. They're told
+  to gift a class instead. Note this tells the buyer the recipient is a member.
+- Tests: [`tests/comp-membership.test.ts`](tests/comp-membership.test.ts),
+  [`tests/gifts.test.ts`](tests/gifts.test.ts).
 
 ### Emailing current members
 

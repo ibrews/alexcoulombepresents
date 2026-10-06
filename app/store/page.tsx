@@ -4,7 +4,9 @@ import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import InquireButton from "@/components/InquireButton";
 import BuyButton from "@/components/BuyButton";
-import { storeItems, formatPrice, effectivePriceCents, isPurchasable } from "@/lib/store";
+import GiftButton from "@/components/GiftButton";
+import { storeItems, formatPrice, effectivePriceCents, isPurchasable, STORE_LIVE } from "@/lib/store";
+import { isGiftable } from "@/lib/commerce/gifts";
 import { digitalProducts, DIGITAL_LIVE } from "@/lib/commerce/products";
 import { renderBreaks } from "@/components/Lines";
 import { getRemaining } from "@/lib/commerce/seats";
@@ -70,6 +72,13 @@ export default async function Store() {
           want to move fast and build real things. Anything with a price checks out instantly
           through Stripe; anything still cooking takes your email and pings you at launch.
         </p>
+        {STORE_LIVE && (
+          <p className="mt-4">
+            <Link href="/gift" className="text-sm font-semibold text-grape hover:underline">
+              🎁 Buying for someone else? Classes, vouchers, and memberships can all be gifted →
+            </Link>
+          </p>
+        )}
       </Reveal>
 
       {/* Company / team training — front and center */}
@@ -201,7 +210,14 @@ export default async function Store() {
                       successMessage={`You're on the list — you'll hear if a seat opens up for ${item.name}.`}
                     />
                   ) : item.priceCents !== null ? (
-                    <BuyButton slug={item.slug} label="Buy →" itemName={item.name} />
+                    <>
+                      <BuyButton slug={item.slug} label="Buy →" itemName={item.name} />
+                      {STORE_LIVE && isGiftable(item) && (
+                        <div className="mt-3">
+                          <GiftButton slug={item.slug} itemName={item.name} />
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <InquireButton
                       label={item.ctaLabel ?? "Inquire →"}
