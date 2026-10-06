@@ -304,7 +304,8 @@ export const wednesdayCalendar: StoreItem[] = [
   // Same 11a ET Wednesday slot and tier prices as the first run
   // (intro $100 / intermediate $150 / advanced $200), with the price hidden
   // on-site — buyers see it on Stripe Checkout. The two guest classes are
-  // unlisted until Franco and Sean sign off on their pages.
+  // unlisted until Franco and Sean sign off on their pages. Zoom meetings
+  // created 2026-10-06 with scripts/zoom/create-class-meeting.mjs.
   //
   // Daylight saving ends Sun Nov 1, 2026: 11a ET is 15:00Z through Oct 28
   // and 16:00Z from Nov 4 on. Getting this wrong shifts the class an hour.
@@ -317,6 +318,8 @@ export const wednesdayCalendar: StoreItem[] = [
       "Guest instructor Franco Vilanova on MetaHuman wardrobe that moves like real fabric — cloth setup, simulation, and the settings that sell it. A preview of his five-week MetaHuman Production & Performance course.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-10-14T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/C266FV9iTEuEdP8FHMijDQ",
+    zoomMeetingId: "84483012263",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
     unlisted: true,
@@ -328,6 +331,8 @@ export const wednesdayCalendar: StoreItem[] = [
       "Guest instructor Sean Spitzer on Lumen in 5.8, including the new Lumen Lite: when to use it, how it holds up on mobile and standalone, and how it compares side by side.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-10-21T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/DkjEakWxTyWHf6Tu_MWruQ",
+    zoomMeetingId: "87173237569",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
     unlisted: true,
@@ -339,6 +344,8 @@ export const wednesdayCalendar: StoreItem[] = [
       "Record someone playing your VR game, re-shoot it from new angles, smooth the camera, and render it out — Take Recorder, Replay, Meta XR Simulator, Sequencer, and Movie Render Graph.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-10-28T15:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/kY6MYfCfRh28S4mXn_zXPg",
+    zoomMeetingId: "87951342380",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
   }),
@@ -349,6 +356,8 @@ export const wednesdayCalendar: StoreItem[] = [
       "Not just for Unreal. Go from nothing to a working creative AI setup — agents, tool connections, and a memory that keeps them useful from one session to the next.",
     priceCents: INTRO_SESSION_CENTS,
     sessionDateISO: "2026-11-04T16:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/3uA8krPvR8CUMdL5mKqObQ",
+    zoomMeetingId: "88389014918",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
   }),
@@ -359,6 +368,8 @@ export const wednesdayCalendar: StoreItem[] = [
       "Once you're set up: get AI to package builds, run overnight, and make apps and videos without you holding its hand — and wake up to finished work, not a mess.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-11-11T16:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/qJSjNKBgTh6wdeCV0ibZzA",
+    zoomMeetingId: "88914479117",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
   }),
@@ -369,6 +380,8 @@ export const wednesdayCalendar: StoreItem[] = [
       "Capture synthetic splats inside Unreal, train them, and get them rendering smoothly — not just in the editor, but in VR on standalone and PCVR.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-11-18T16:00:00Z",
+    zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/KXZfY2EnQvuMnkkQ2-XciA",
+    zoomMeetingId: "84618043118",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
   }),
