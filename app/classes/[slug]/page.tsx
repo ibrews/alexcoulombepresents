@@ -89,9 +89,13 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
           <p className="text-lg font-bold text-snow">{sessionWhen(s)}</p>
           <LocalSessionTime startsISO={s.startsISO} endsISO={sessionEndsISO(s)} />
           <p className="mt-1 text-sm text-mist">
-            {s.kind === "livestream"
-              ? "Free and public on YouTube — no signup needed."
-              : "Live and interactive on Zoom. Every seat includes the recording and class materials."}
+            {past
+              ? s.kind === "livestream"
+                ? "Streamed live on YouTube."
+                : "Taught live on Zoom and recorded."
+              : s.kind === "livestream"
+                ? "Free and public on YouTube — no signup needed."
+                : "Live and interactive on Zoom. Every seat includes the recording and class materials."}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">

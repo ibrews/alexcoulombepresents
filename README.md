@@ -58,6 +58,7 @@ The prior production deployment is
 | `/about` | The architect → XR-chitect story, interactive career timeline, stats |
 | `/training` | The Unreal Authorized Training Center: 12 course tracks priced by tier ($99 intro / $200 advanced, booked via the store), a prominent company/team-training section (`#teams`), the full 50+ class ready-to-teach catalog (`#catalog`), and interest forms that ask "what would you like to learn?" |
 | `/members` | Membership program — full infrastructure (entitlement-backed via `lib/commerce/membership.ts`, Stripe subscription webhook branches wired via `lib/commerce/membershipBilling.ts`, real "Join the membership" checkout via `components/JoinMembershipButton.tsx`), publicly gated behind a "coming soon" banner with a founding waitlist until `NEXT_PUBLIC_MEMBERSHIP_LIVE=1` + the per-tier Stripe prices in `STRIPE_MEMBERSHIP_PRICE_ID_STARTER`/`_UNLIMITED`/`_INSIDER`. Live, it shows the three tier cards (Starter $200 / Unlimited $350 / Insider $500 per month) instead of the waitlist; post-checkout redirects to `/members?joined=1` |
+| `/classes`, `/classes/[slug]` | One shareable page per class, office hours, and livestream — past ones included — built for guest instructors to post their own class. Who teaches (`lib/instructors.ts`), when (New York time plus the visitor's own zone), booking, Google Calendar + `.ics`, and a dated social card. After a session runs, setting its `recordingSlug` flips the page to "What we covered" from `lib/classSummaries.ts` (Gemini summaries of the recording's YouTube captions; no attendee names). Editorial data lives in `lib/classSessions.ts`; price and checkout still come from `lib/store.ts`, and a test fails if the two disagree on the time |
 | `/members/recordings` | Members-only class-recording library (gated on the `membership` entitlement; entries in `lib/recordings.ts` — interim thumbnail + link list until the HLS player lands). Slide decks and handouts attach via `materials`, pointing at the class-materials registry |
 | `/materials` | Class-material folders — one per class. **Members see every folder; a single-class buyer sees the folder for the class they bought.** Access is derived, never granted by hand: `lib/commerce/materialAccess.ts` unions the `membership` entitlement with non-refunded `catalog_orders` rows, so a refund closes access on its own. Folder + file registry in `lib/classMaterials.ts` |
 | `/materials/[slug]` | One class's folder. Each file declares a `source`: `local` (streamed from `content/materials/`, never `public/`), `r2` (short-lived presigned URL), or `external` (an existing Dropbox/Drive link — the redirect is gated, the underlying URL is not). All three go through `/api/materials?class=…&key=…` so the access check lives in exactly one place |
@@ -118,7 +119,10 @@ npm run build && npm start
    fetched live from the GitHub API with a baked fallback, so it's always current.
 7. **Visit `/links` and click "Visit anyway (brave)"** under the vintage alexcoulombe.com card.
    You were warned.
-8. **Play a video on `/videos`** — embeds are click-to-load (zero YouTube JS until you press play),
+8. **Open `/classes` and pick a past session** — the page shows who taught it and a numbered
+   "What we covered" list. Pick an upcoming one and press "Add to Google Calendar": the event
+   lands at the right hour in your own time zone, even across the Nov 1 daylight-saving switch.
+9. **Play a video on `/videos`** — embeds are click-to-load (zero YouTube JS until you press play),
    served via youtube-nocookie.
 
 ## Editing content
