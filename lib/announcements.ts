@@ -18,6 +18,24 @@ export type Announcement = {
 };
 
 export const announcements: Announcement[] = [
+  // Order = priority: the livestream owns the banner for the two days before
+  // it airs, then the Oct–Nov lineup takes over through its last class.
+  {
+    id: "membership-tour-livestream",
+    text: "Free livestream Wed Oct 7, 9a ET — a live tour of every tool and plugin members get",
+    href: "/classes/2026-10-07-membership-tour-livestream",
+    cta: "Set a reminder",
+    start: "2026-10-06",
+    end: "2026-10-07",
+  },
+  {
+    id: "oct-nov-run-2026",
+    text: "New live classes through Nov 18 — Lumen Lite, MetaHuman animation, VR cinematics, a Creative AI masterclass",
+    href: "/classes",
+    cta: "See the lineup",
+    start: "2026-10-08",
+    end: "2026-11-18",
+  },
   // Presence only. Alex confirmed he is attending; Meta's developer site is
   // the source for the Sep 23–24 dates. This expires with the event and makes
   // no claim about a session, demo, badge, or speaking slot.

@@ -1457,7 +1457,7 @@
 ## Store catalog  ·  `lib/store.ts`
 <sub>Prices are placeholders until the store goes live; edit names, blurbs, and delivery text here.</sub>
 
-### storeItems  (22 entries — add or remove whole entries)
+### storeItems  (28 entries — add or remove whole entries)
 
 - `[store.storeItems.wed-2026-08-12-intro-vr.name]` ▸ Intro to VR in Unreal 5.8
 - `[store.storeItems.wed-2026-08-12-intro-vr.blurb]` ▸ Build your first VR experience! Headset optional (we've got a killer custom emulator!). OpenXR for the win. All the basics and your burning questions all answered.
@@ -1531,6 +1531,48 @@
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closesAtISO]` ▸ 2026-09-30T15:00:00Z
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.name]` ▸ MetaHuman Animation & Physics in UE 5.8
+- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.blurb]` ▸ Guest instructor Franco Vilanova on making MetaHumans move — performance, cloth, and the physics that sell it. A preview of his five-week MetaHuman Production & Performance course.
+- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.sessionDateISO]` ▸ 2026-10-14T15:00:00Z
+- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.saleWindow.closesAtISO]` ▸ 2026-10-14T15:00:00Z
+- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-10-14-metahuman-animation-physics.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-10-21-lumen-deep-dive.name]` ▸ Deep Dive with Lumen for UE 5.8
+- `[store.storeItems.wed-2026-10-21-lumen-deep-dive.blurb]` ▸ Guest instructor Sean Spitzer on Lumen in 5.8, including the new Lumen Lite: when to use it, how it holds up on mobile and standalone, and how it compares side by side.
+- `[store.storeItems.wed-2026-10-21-lumen-deep-dive.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-10-21-lumen-deep-dive.sessionDateISO]` ▸ 2026-10-21T15:00:00Z
+- `[store.storeItems.wed-2026-10-21-lumen-deep-dive.saleWindow.closesAtISO]` ▸ 2026-10-21T15:00:00Z
+- `[store.storeItems.wed-2026-10-21-lumen-deep-dive.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-10-21-lumen-deep-dive.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-10-28-vr-cinematics.name]` ▸ VR Cinematics for UE 5.8
+- `[store.storeItems.wed-2026-10-28-vr-cinematics.blurb]` ▸ Record someone playing your VR game, re-shoot it from new angles, smooth the camera, and render it out — Take Recorder, Replay, Meta XR Simulator, Sequencer, and Movie Render Graph.
+- `[store.storeItems.wed-2026-10-28-vr-cinematics.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-10-28-vr-cinematics.sessionDateISO]` ▸ 2026-10-28T15:00:00Z
+- `[store.storeItems.wed-2026-10-28-vr-cinematics.saleWindow.closesAtISO]` ▸ 2026-10-28T15:00:00Z
+- `[store.storeItems.wed-2026-10-28-vr-cinematics.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-10-28-vr-cinematics.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-11-04-creative-ai-masterclass-1.name]` ▸ Creative AI Workflow Masterclass, Part 1: Set Up From Scratch
+- `[store.storeItems.wed-2026-11-04-creative-ai-masterclass-1.blurb]` ▸ Not just for Unreal. Go from nothing to a working creative AI setup — agents, tool connections, and a memory that keeps them useful from one session to the next.
+- `[store.storeItems.wed-2026-11-04-creative-ai-masterclass-1.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-11-04-creative-ai-masterclass-1.sessionDateISO]` ▸ 2026-11-04T16:00:00Z
+- `[store.storeItems.wed-2026-11-04-creative-ai-masterclass-1.saleWindow.closesAtISO]` ▸ 2026-11-04T16:00:00Z
+- `[store.storeItems.wed-2026-11-04-creative-ai-masterclass-1.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-11-04-creative-ai-masterclass-1.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-11-11-creative-ai-masterclass-2.name]` ▸ Creative AI Workflow Masterclass, Part 2: Let It Run
+- `[store.storeItems.wed-2026-11-11-creative-ai-masterclass-2.blurb]` ▸ Once you're set up: get AI to package builds, run overnight, and make apps and videos without you holding its hand — and wake up to finished work, not a mess.
+- `[store.storeItems.wed-2026-11-11-creative-ai-masterclass-2.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-11-11-creative-ai-masterclass-2.sessionDateISO]` ▸ 2026-11-11T16:00:00Z
+- `[store.storeItems.wed-2026-11-11-creative-ai-masterclass-2.saleWindow.closesAtISO]` ▸ 2026-11-11T16:00:00Z
+- `[store.storeItems.wed-2026-11-11-creative-ai-masterclass-2.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-11-11-creative-ai-masterclass-2.saleWindow.closedList]` ▸ unreal
+- `[store.storeItems.wed-2026-11-18-gaussian-splatting-vr.name]` ▸ Gaussian Splatting for VR in UE 5.8
+- `[store.storeItems.wed-2026-11-18-gaussian-splatting-vr.blurb]` ▸ Capture synthetic splats inside Unreal, train them, and get them rendering smoothly — not just in the editor, but in VR on standalone and PCVR.
+- `[store.storeItems.wed-2026-11-18-gaussian-splatting-vr.delivery]` ▸ Order confirmation lands right away; Alex emails the Zoom link and calendar invite before class. The recording is yours afterward even if you can't make it live.
+- `[store.storeItems.wed-2026-11-18-gaussian-splatting-vr.sessionDateISO]` ▸ 2026-11-18T16:00:00Z
+- `[store.storeItems.wed-2026-11-18-gaussian-splatting-vr.saleWindow.closesAtISO]` ▸ 2026-11-18T16:00:00Z
+- `[store.storeItems.wed-2026-11-18-gaussian-splatting-vr.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
+- `[store.storeItems.wed-2026-11-18-gaussian-splatting-vr.saleWindow.closedList]` ▸ unreal
 - `[store.storeItems.office-hours-dropin.name]` ▸ Live office hours — drop-in seat
 - `[store.storeItems.office-hours-dropin.blurb]` ▸ Two live hours with Alex — bring your broken Blueprint, your pipeline question, your career fork. Small group, open floor.
 - `[store.storeItems.office-hours-dropin.delivery]` ▸ Tell us which Friday at checkout; order confirmation lands right away and Alex sends the Zoom link for that date.

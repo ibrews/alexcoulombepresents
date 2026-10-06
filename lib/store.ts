@@ -127,6 +127,15 @@ const UE5_PROMO_NOTE =
   "under that by the Tuesday before, everyone gets a coupon worth 110% of what they paid or a full refund, their choice. " +
   "Student or between jobs? Email for a sliding-scale seat — no questions asked.";
 
+// Oct–Nov 2026 run. Same terms as the first run minus "this 8-week run",
+// which would be false here. Members attend free (unlimited tiers) or with a
+// credit (Starter), so the note says so — the calendar is where non-members
+// compare one-off seats against joining.
+const FALL_RUN_PRICE_NOTE =
+  "Use code UE5 at checkout for 50% off. Members attend with their membership. Runs with 5+ signed up; " +
+  "under that by the Tuesday before, everyone gets a coupon worth 110% of what they paid or a full refund, their choice. " +
+  "Student or between jobs? Email for a sliding-scale seat — no questions asked.";
+
 function wednesdayCalendarItem(input: {
   slug: string;
   name: string;
@@ -135,13 +144,14 @@ function wednesdayCalendarItem(input: {
   sessionDateISO: string; // 11a ET start
   zoomRegistrationUrl?: string;
   zoomMeetingId?: string;
+  priceNote?: string;
 }): StoreItem {
   return {
     slug: input.slug,
     name: input.name,
     kind: "course",
     priceCents: input.priceCents,
-    priceNote: UE5_PROMO_NOTE,
+    priceNote: input.priceNote ?? UE5_PROMO_NOTE,
     blurb: input.blurb,
     delivery: input.zoomRegistrationUrl
       ? "Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live."
@@ -274,6 +284,72 @@ export const wednesdayCalendar: StoreItem[] = [
     sessionDateISO: "2026-09-30T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/y5hDDFQ8Q82ZcpM_HJPlZA",
     zoomMeetingId: "85937826947",
+  }),
+
+  // ── Oct–Nov 2026 run (drafted 2026-10-06) ─────────────────────────────────
+  // Same 11a ET Wednesday slot and the same tier prices + UE5 code as the
+  // first run — flip FALL_RUN_PRICE_NOTE if the discount changes. No Zoom
+  // meetings yet: create them with scripts/zoom/create-class-meeting.mjs once
+  // the schedule is approved, then add zoomRegistrationUrl/zoomMeetingId
+  // here so buyers and members are auto-registered.
+  //
+  // Daylight saving ends Sun Nov 1, 2026: 11a ET is 15:00Z through Oct 28
+  // and 16:00Z from Nov 4 on. Getting this wrong shifts the class an hour.
+  //
+  // Who teaches each one lives in lib/classSessions.ts (class pages).
+  wednesdayCalendarItem({
+    slug: "wed-2026-10-14-metahuman-animation-physics",
+    name: "MetaHuman Animation & Physics in UE 5.8",
+    blurb:
+      "Guest instructor Franco Vilanova on making MetaHumans move — performance, cloth, and the physics that sell it. A preview of his five-week MetaHuman Production & Performance course.",
+    priceCents: INTERMEDIATE_SESSION_CENTS,
+    sessionDateISO: "2026-10-14T15:00:00Z",
+    priceNote: FALL_RUN_PRICE_NOTE,
+  }),
+  wednesdayCalendarItem({
+    slug: "wed-2026-10-21-lumen-deep-dive",
+    name: "Deep Dive with Lumen for UE 5.8",
+    blurb:
+      "Guest instructor Sean Spitzer on Lumen in 5.8, including the new Lumen Lite: when to use it, how it holds up on mobile and standalone, and how it compares side by side.",
+    priceCents: INTERMEDIATE_SESSION_CENTS,
+    sessionDateISO: "2026-10-21T15:00:00Z",
+    priceNote: FALL_RUN_PRICE_NOTE,
+  }),
+  wednesdayCalendarItem({
+    slug: "wed-2026-10-28-vr-cinematics",
+    name: "VR Cinematics for UE 5.8",
+    blurb:
+      "Record someone playing your VR game, re-shoot it from new angles, smooth the camera, and render it out — Take Recorder, Replay, Meta XR Simulator, Sequencer, and Movie Render Graph.",
+    priceCents: INTERMEDIATE_SESSION_CENTS,
+    sessionDateISO: "2026-10-28T15:00:00Z",
+    priceNote: FALL_RUN_PRICE_NOTE,
+  }),
+  wednesdayCalendarItem({
+    slug: "wed-2026-11-04-creative-ai-masterclass-1",
+    name: "Creative AI Workflow Masterclass, Part 1: Set Up From Scratch",
+    blurb:
+      "Not just for Unreal. Go from nothing to a working creative AI setup — agents, tool connections, and a memory that keeps them useful from one session to the next.",
+    priceCents: INTRO_SESSION_CENTS,
+    sessionDateISO: "2026-11-04T16:00:00Z",
+    priceNote: FALL_RUN_PRICE_NOTE,
+  }),
+  wednesdayCalendarItem({
+    slug: "wed-2026-11-11-creative-ai-masterclass-2",
+    name: "Creative AI Workflow Masterclass, Part 2: Let It Run",
+    blurb:
+      "Once you're set up: get AI to package builds, run overnight, and make apps and videos without you holding its hand — and wake up to finished work, not a mess.",
+    priceCents: INTERMEDIATE_SESSION_CENTS,
+    sessionDateISO: "2026-11-11T16:00:00Z",
+    priceNote: FALL_RUN_PRICE_NOTE,
+  }),
+  wednesdayCalendarItem({
+    slug: "wed-2026-11-18-gaussian-splatting-vr",
+    name: "Gaussian Splatting for VR in UE 5.8",
+    blurb:
+      "Capture synthetic splats inside Unreal, train them, and get them rendering smoothly — not just in the editor, but in VR on standalone and PCVR.",
+    priceCents: INTERMEDIATE_SESSION_CENTS,
+    sessionDateISO: "2026-11-18T16:00:00Z",
+    priceNote: FALL_RUN_PRICE_NOTE,
   }),
 ];
 

@@ -1121,6 +1121,22 @@ export const appearances: Appearance[] = [
     note: "Title is provisional. Part of MIA's new European Investment Hub, on how game and film IP grows into a cross-media business.",
     url: "https://www.miamarket.it/en/program/european-investment-hub/",
   },
+  // Alex confirmed he is hosting the pitch competition (2026-10-06). Session
+  // title, day, time, and stage are from the UnitedXR agenda on awexr.com
+  // (session 2730), read 2026-10-06; Brussels is on CET by December, so
+  // 11:15 local = 10:15Z.
+  {
+    slug: "unitedxr-europe-2026-pitch",
+    role: "Host · Pitch Competition",
+    title: "Pitch Session — Startups",
+    org: "UnitedXR Europe 2026",
+    date: "Tue Dec 8, 2026, 11:15am–1:05pm CET",
+    startsISO: "2026-12-08T10:15:00Z",
+    endsISO: "2026-12-08T12:05:00Z",
+    location: "Maison de la Poste, Brussels, Belgium",
+    note: "Hosting the startup pitch competition on the Pitch Stage. Finalists are announced Oct 15; the winner is named Dec 9.",
+    url: "https://unitedxr.eu/2026-speakers#speaker=3758-alex-coulombe",
+  },
   {
     slug: "android-dev-summit-2026",
     role: "Attending",

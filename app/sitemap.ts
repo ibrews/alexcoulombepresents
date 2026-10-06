@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { repos, products, site } from "@/lib/data";
+import { classSessions } from "@/lib/classSessions";
 
 // Static + dynamic routes for search engines. Uses the canonical production
 // domain (site.url) so it's correct once the domain is connected.
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", priority: 1 },
     { path: "/about", priority: 0.9 },
     { path: "/training", priority: 0.9 },
+    { path: "/classes", priority: 0.8 },
     { path: "/repos", priority: 0.8 },
     { path: "/skills", priority: 0.8 },
     { path: "/videos", priority: 0.7 },
@@ -54,5 +56,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...repoEntries, ...devlogEntries, ...productEntries];
+  const classEntries: MetadataRoute.Sitemap = classSessions.map((s) => ({
+    url: `${base}/classes/${s.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...repoEntries, ...devlogEntries, ...productEntries, ...classEntries];
 }

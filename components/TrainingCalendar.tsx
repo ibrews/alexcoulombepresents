@@ -4,6 +4,9 @@ import BuyButton from "@/components/BuyButton";
 import { wednesdayCalendar, officeHoursDropIn, consultationDropIn, formatPrice, isPurchasable } from "@/lib/store";
 import { STARTER_TIER } from "@/lib/commerce/membership";
 import { upcomingTbdWednesdays } from "@/lib/trainingCalendarDates";
+import { upcomingSessions, sessionForStoreSlug, calendarBreaks, type ClassSession } from "@/lib/classSessions";
+import { instructorNames } from "@/lib/instructors";
+import type { StoreItem } from "@/lib/store";
 
 // How many "TBD via voting" placeholder Wednesdays to show after the named
 // 8-week run — the full back half of 2026 exists too, but listing all of it
@@ -22,6 +25,20 @@ function formatSessionDate(iso: string): { weekday: string; date: string; time: 
 export default function TrainingCalendar() {
   const lastDated = wednesdayCalendar[wednesdayCalendar.length - 1]?.sessionDateISO;
   const tbdDates = lastDated ? upcomingTbdWednesdays(lastDated, TBD_SLOTS_SHOWN) : [];
+  const now = Date.now();
+  // Only what's still ahead. Finished classes used to stay in this grid as
+  // "already happened" cards — eight of them, ahead of anything bookable.
+  // They now live on /classes, each with its own page and summary.
+  type Entry = { at: string; item?: StoreItem; live?: ClassSession };
+  const entries: Entry[] = [
+    ...wednesdayCalendar
+      .filter((i) => Date.parse(i.sessionDateISO!) > now)
+      .map((item) => ({ at: item.sessionDateISO!, item })),
+    ...upcomingSessions(now)
+      .filter((x) => x.kind === "livestream")
+      .map((live) => ({ at: live.startsISO, live })),
+  ].sort((a, b) => a.at.localeCompare(b.at));
+  const breakFor = (iso: string) => calendarBreaks.find((b) => iso.startsWith(b.dateISO));
 
   return (
     <Reveal delay={20}>
@@ -38,7 +55,7 @@ export default function TrainingCalendar() {
         </p>
         <p className="mt-3 max-w-3xl rounded-xl border border-teal/40 bg-teal/10 px-4 py-3 text-sm font-bold text-snow">
           Prices below are shown before the discount — enter code <span className="text-teal">UE5</span> at
-          checkout for 50% off this introductory run.
+          checkout for 50% off.
         </p>
         <p className="mt-3 max-w-3xl leading-relaxed text-mist">
           After this run, what&apos;s taught next is decided by{" "}
@@ -92,28 +109,77 @@ export default function TrainingCalendar() {
             </div>
           </div>
 
-          {wednesdayCalendar.map((item) => {
-            const { weekday, date, time } = formatSessionDate(item.sessionDateISO!);
-            const purchasable = isPurchasable(item);
+          {entries.map(({ item, live }) => {
+            if (live) {
+              const { weekday, date, time } = formatSessionDate(live.startsISO);
+              return (
+                <div
+                  key={live.slug}
+                  className="glass flex w-[85vw] shrink-0 snap-start flex-col rounded-2xl border border-amber/40 p-5 sm:w-auto"
+                >
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-amber">
+                    {weekday}, {date} · {time} ET · Free
+                  </p>
+                  <h3 className="mt-2 font-bold leading-snug">
+                    <Link href={`/classes/${live.slug}`} className="hover:text-teal">
+                      {live.title}
+                    </Link>
+                  </h3>
+                  <p className="mt-1 text-xs text-snow">Livestream on YouTube with {instructorNames(live.instructorIds)}</p>
+                  <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{live.blurb}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <a
+                      href={live.watchUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full bg-snow px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+                    >
+                      Watch live →
+                    </a>
+                    <Link href={`/classes/${live.slug}`} className="px-2 py-2.5 text-sm text-mist hover:text-teal">
+                      Details
+                    </Link>
+                  </div>
+                </div>
+              );
+            }
+            const cls = item!;
+            const { weekday, date, time } = formatSessionDate(cls.sessionDateISO!);
+            const purchasable = isPurchasable(cls);
+            const page = sessionForStoreSlug(cls.slug);
             return (
               <div
-                key={item.slug}
+                key={cls.slug}
                 className="glass flex w-[85vw] shrink-0 snap-start flex-col rounded-2xl border border-teal/20 p-5 sm:w-auto"
               >
                 <p className="font-mono text-[10px] uppercase tracking-widest text-teal">
                   {weekday}, {date} · {time} ET
                 </p>
-                <h3 className="mt-2 font-bold leading-snug">{item.name}</h3>
-                <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{item.blurb}</p>
+                <h3 className="mt-2 font-bold leading-snug">
+                  {page ? (
+                    <Link href={`/classes/${page.slug}`} className="hover:text-teal">
+                      {cls.name}
+                    </Link>
+                  ) : (
+                    cls.name
+                  )}
+                </h3>
+                {page && <p className="mt-1 text-xs text-snow">with {instructorNames(page.instructorIds)}</p>}
+                <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{cls.blurb}</p>
                 {purchasable ? (
                   <>
-                    <p className="mt-3 text-lg font-bold text-snow">{formatPrice(item.priceCents)}</p>
-                    <div className="mt-4">
-                      <BuyButton slug={item.slug} label="Book this class →" itemName={item.name} />
+                    <p className="mt-3 text-lg font-bold text-snow">{formatPrice(cls.priceCents)}</p>
+                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                      <BuyButton slug={cls.slug} label="Book this class →" itemName={cls.name} />
+                      {page && (
+                        <Link href={`/classes/${page.slug}`} className="px-2 py-2.5 text-sm text-mist hover:text-teal">
+                          Details
+                        </Link>
+                      )}
                     </div>
                   </>
                 ) : (
-                  <p className="mt-3 text-sm text-mist">{item.saleWindow?.closedNote}</p>
+                  <p className="mt-3 text-sm text-mist">{cls.saleWindow?.closedNote}</p>
                 )}
               </div>
             );
@@ -121,6 +187,21 @@ export default function TrainingCalendar() {
 
           {tbdDates.map((iso) => {
             const { weekday, date } = formatSessionDate(iso);
+            const off = breakFor(iso);
+            if (off) {
+              return (
+                <div
+                  key={iso}
+                  className="flex w-[85vw] shrink-0 snap-start flex-col rounded-2xl border border-dashed border-line p-5 sm:w-auto"
+                >
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-mist">
+                    {weekday}, {date}
+                  </p>
+                  <h3 className="mt-2 font-bold leading-snug text-mist">{off.title}</h3>
+                  <p className="mt-2 flex-1 text-xs leading-relaxed text-mist">{off.note}</p>
+                </div>
+              );
+            }
             return (
               <Link
                 key={iso}
@@ -140,6 +221,12 @@ export default function TrainingCalendar() {
           })}
         </div>
 
+        <Link
+          href="/classes"
+          className="mt-2 inline-block text-sm text-snow underline decoration-teal/50 hover:decoration-teal"
+        >
+          Missed one? Every past class has its own page — what we covered, and the recording for members →
+        </Link>
         <p className="mt-2 text-xs leading-relaxed text-mist">
           Dates and topics are subject to change — if a session moves, swap to any other class anytime or get a
           refund. Student or between jobs? Email for a sliding-scale seat, no questions asked.

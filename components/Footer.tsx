@@ -17,6 +17,7 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             <Link className="text-mist hover:text-snow" href="/about">About</Link>
             <Link className="text-mist hover:text-snow" href="/training">Training</Link>
+            <Link className="text-mist hover:text-snow" href="/classes">Classes</Link>
             <Link className="text-mist hover:text-snow" href="/repos">Open Source</Link>
             <Link className="text-mist hover:text-snow" href="/skills">AI Skills</Link>
             <Link className="text-mist hover:text-snow" href="/videos">Videos</Link>

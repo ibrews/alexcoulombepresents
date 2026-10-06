@@ -222,6 +222,51 @@ export const classFolders: ClassFolder[] = [
       }),
     ],
   },
+  // ── Oct–Nov 2026 run ─────────────────────────────────────────────────────
+  // Empty until each class's Drive folder exists — add sharedFolder({ url })
+  // the same way as the classes above once Alex creates it.
+  {
+    slug: "wed-2026-10-14-metahuman-animation-physics",
+    title: "MetaHuman Animation & Physics in UE 5.8",
+    date: "2026-10-14",
+    blurb: "Making MetaHumans move — performance, cloth, and physics — with guest instructor Franco Vilanova.",
+    materials: [],
+  },
+  {
+    slug: "wed-2026-10-21-lumen-deep-dive",
+    title: "Deep Dive with Lumen for UE 5.8",
+    date: "2026-10-21",
+    blurb: "Lumen and the new Lumen Lite in Unreal 5.8, with guest instructor Sean Spitzer.",
+    materials: [],
+  },
+  {
+    slug: "wed-2026-10-28-vr-cinematics",
+    title: "VR Cinematics for UE 5.8",
+    date: "2026-10-28",
+    blurb: "Recording VR gameplay and turning it into a rendered cinematic.",
+    materials: [],
+  },
+  {
+    slug: "wed-2026-11-04-creative-ai-masterclass-1",
+    title: "Creative AI Workflow Masterclass, Part 1",
+    date: "2026-11-04",
+    blurb: "Setting up a creative AI workflow from scratch.",
+    materials: [],
+  },
+  {
+    slug: "wed-2026-11-11-creative-ai-masterclass-2",
+    title: "Creative AI Workflow Masterclass, Part 2",
+    date: "2026-11-11",
+    blurb: "Letting AI agents run long jobs unattended.",
+    materials: [],
+  },
+  {
+    slug: "wed-2026-11-18-gaussian-splatting-vr",
+    title: "Gaussian Splatting for VR in UE 5.8",
+    date: "2026-11-18",
+    blurb: "Synthetic splats captured in Unreal, trained, and rendered in VR.",
+    materials: [],
+  },
   {
     slug: "members-library",
     title: "The members' library",
