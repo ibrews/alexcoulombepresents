@@ -328,6 +328,41 @@ surprise line on a card statement.
 - Tests: [`tests/renewal-reminders.test.ts`](tests/renewal-reminders.test.ts), including the
   catch-up-after-an-outage case and the "don't double-send on a retried run" case.
 
+### Gifts and comped memberships
+
+Two ways someone gets a membership (or a seat) without paying for it themselves. Both land on the
+same single membership row per customer as a subscription, so a grant **merges** instead of
+overwriting: it never shortens an existing paid-through date (lifetime beats any date), never
+downgrades a higher tier, and treats a lapsed/revoked row as a fresh start. The merge rules and
+their compare-and-set write live in [`lib/commerce/membershipGrants.ts`](lib/commerce/membershipGrants.ts);
+`grantCompMembership` in [`lib/commerce/membership.ts`](lib/commerce/membership.ts) wires the SQL.
+The row's new `grant_source` column (`comp` / `gift`, NULL = subscription-backed) is what makes
+renewal reminders skip it, and what stops a subscription renewal or cancellation from touching an
+active **lifetime** comp.
+
+**Comped memberships — every guest instructor gets lifetime Insider** (Alex, 2026-10-06), once
+they've taught. One command, after the class:
+
+```bash
+node scripts/comp-membership.mjs --email jane@example.com --name "Jane Doe" --dry-run   # preview
+node scripts/comp-membership.mjs --email jane@example.com --name "Jane Doe"             # do it
+```
+
+It reads `ADMIN_KEY` (and optionally `SITE_URL`) from the environment or `.env.local` and POSTs
+[`/api/admin/comp-membership`](app/api/admin/comp-membership/route.ts) (`?key=ADMIN_KEY` or
+`x-admin-key`), which grants the membership, emails them "You've been gifted a membership to Alex
+Coulombe Presents!" with a magic sign-in link (copy in
+[`lib/commerce/giftEmailCopy.ts`](lib/commerce/giftEmailCopy.ts); the benefit list comes from
+`MEMBERSHIP_TIERS`, plus Insider's Gumroad code), and registers them on every upcoming class +
+office hours. Flags: `--tier`, `--months` (a term instead of lifetime), `--no-email`, `--force`.
+`--dry-run` touches nothing and prints the exact email. **Re-running is safe**: only the run that
+actually changes the row notifies, so a second run is a no-op unless `--force`. Comping someone
+who still has a paid subscription warns you that Stripe keeps billing them — cancel it in the
+Dashboard if the comp replaces it (a lifetime comp survives that cancellation). Instructor emails
+are passed at run time only; none are committed here.
+
+Tests: [`tests/comp-membership.test.ts`](tests/comp-membership.test.ts).
+
 ### Emailing current members
 
 `--list current-members` reaches everyone who currently pays for a membership:

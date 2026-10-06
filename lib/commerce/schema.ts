@@ -86,6 +86,16 @@ export async function ensureCommerceSchema() {
   // once per member no matter which event wins the race.
   await db`ALTER TABLE entitlements ADD COLUMN IF NOT EXISTS welcomed_at TIMESTAMPTZ`;
 
+  // Provenance of a membership row that no Stripe subscription backs: 'comp'
+  // (granted by Alex, e.g. lifetime Insider for guest instructors, via
+  // POST /api/admin/comp-membership) or 'gift' (a one-time gift-membership
+  // checkout). NULL means the row is subscription-backed, as every row was
+  // before 2026-10-06. Renewal reminders skip non-NULL rows (there is no
+  // subscription to renew), and lib/commerce/membership.ts's subscription
+  // writers keep their hands off an active lifetime comp. See
+  // lib/commerce/membershipGrants.ts.
+  await db`ALTER TABLE entitlements ADD COLUMN IF NOT EXISTS grant_source TEXT`;
+
   // Partial unique index: at most one tier='member' row per (customer_id,
   // sku) — mirrors entitlements_one_membership_per_customer above, but
   // scoped to member-perk product licenses (e.g. xrsim, see
