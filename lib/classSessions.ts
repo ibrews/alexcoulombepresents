@@ -291,7 +291,7 @@ export const classSessions: ClassSession[] = [
     blurb:
       "Guest instructor Sean Spitzer on Lumen in 5.8 and the new Lumen Lite — when to use it, mobile and standalone, and side-by-side comparisons.",
     description:
-      "Unreal Authorized Instructor Sean Spitzer goes deep on Lumen in Unreal 5.8, with special attention to the new Lumen Lite — a faster, medium-quality global illumination mode, in Beta in 5.8. When should you reach for it instead of full Lumen? How does it hold up on mobile and standalone hardware? And what does it actually look like side by side?",
+      "Sean Spitzer, who spent seven years teaching Unreal to studios like Pixar, DreamWorks, and Blizzard as a senior instructor at Epic Games, goes deep on Lumen in Unreal 5.8, with special attention to the new Lumen Lite — a faster, medium-quality global illumination mode, in Beta in 5.8. When should you reach for it instead of full Lumen? How does it hold up on mobile and standalone hardware? And what does it actually look like side by side?",
     learn: [
       "How Lumen lights your scene in 5.8, and where the cost goes",
       "What Lumen Lite is and when to choose it over full Lumen",

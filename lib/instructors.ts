@@ -76,30 +76,36 @@ export const instructors = [
     bioApproved: false,
   },
   {
-    // Spelled with one "l" on every source (VPD course page, CG Pro). Facts
-    // below are from virtualproductiondojo.com/metahuman-production and
-    // becomecgpro.com/instructors, read 2026-10-06.
+    // From Franco's LinkedIn experience + the VPD course page, read
+    // 2026-10-06. Photo: VPD's course page (LinkedIn's has an #OpenToWork
+    // frame). Spelled with one "l" everywhere.
     id: "franco-vilanova",
     name: "Franco Vilanova",
-    role: "Gold Unreal Engine Authorized Instructor",
+    role: "Lead Specialty Faculty, Virtual Production Dojo",
     bio:
-      "Senior CG artist specializing in MetaHumans, animation, cinematic production, and real-time character workflows. Leads Unreal animation and MetaHuman production teaching at Virtual Production Dojo and teaches Unreal filmmaking at CG Pro.",
+      "Gold Unreal Authorized Instructor who teaches Unreal animation and MetaHuman production — lead specialty faculty at Virtual Production Dojo and Unreal animation instructor at Image Campus. Taught filmmaking in Unreal at CG Pro for four years and has instructed on Epic Games' animation and games fellowships, after years as a 3D generalist and VFX artist at Malditomaus in Buenos Aires.",
+    photo: "/instructors/franco-vilanova.jpg",
     links: [
       { label: "MetaHuman Production & Performance course", url: "https://virtualproductiondojo.com/metahuman-production/" },
+      { label: "YouTube", url: "https://www.youtube.com/@NovaEffectus" },
       { label: "LinkedIn", url: "https://www.linkedin.com/in/franco-vilanova-65058978/" },
     ],
     bioApproved: false,
   },
   {
-    // Credits from the Vertex School podcast page (2022) and his public
-    // LinkedIn headline (Unreal Authorized Instructor). Current employer is
-    // deliberately left out until Sean confirms how he wants it billed.
+    // From Sean's LinkedIn experience, read 2026-10-06 (he started Otter Mob
+    // Studios that week). Photo: his LinkedIn headshot — the only current
+    // one; it's 100px, fine at the 80px avatar size.
     id: "sean-spitzer",
     name: "Sean Spitzer",
-    role: "Unreal Authorized Instructor",
+    role: "Chief Creative Officer, Otter Mob Studios",
     bio:
-      "Real-time artist and longtime Unreal educator — an Epic Games Unreal Enterprise senior instructor and master mentor — with credits spanning Enter the Matrix, Frozen's MYTH VR, and Love, Death & Robots. Has also taught at Academy of Art University.",
-    links: [{ label: "LinkedIn", url: "https://www.linkedin.com/in/seanspitzer3d" }],
+      "Founder and Chief Creative Officer of Otter Mob Studios, a production house for original game and animation IP. Spent seven years at Epic Games as a senior Unreal Engine instructor, training studios including Pixar, Disney Animation, DreamWorks, Blizzard, Riot Games, WETA, and Netflix, and did lighting and shading on Love, Death & Robots' \"Vaulted Halls Entombed.\" Most recently did previz in Unreal at Sony Pictures Animation.",
+    photo: "/instructors/sean-spitzer.jpg",
+    links: [
+      { label: "Otter Mob Studios", url: "https://www.ottermobstudios.com/" },
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/seanspitzer3d" },
+    ],
     bioApproved: false,
   },
 ] as const satisfies readonly Instructor[];
