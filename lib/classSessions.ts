@@ -238,7 +238,7 @@ export const classSessions: ClassSession[] = [
     title: "Live AMA: Meta's VR Glasses, the Member Toolkit, and What's Next",
     // Moved to 11a ET to match the YouTube schedule (Alex, 2026-10-07).
     startsISO: "2026-10-07T15:00:00Z",
-    durationMin: 120,
+    durationMin: 60, // one hour — Alex has meetings right after (2026-10-07)
     instructorIds: [ALEX],
     level: "All levels",
     blurb:
