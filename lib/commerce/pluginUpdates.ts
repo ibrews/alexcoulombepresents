@@ -18,9 +18,13 @@ export type PluginUpdateInfo = {
 };
 
 export const PLUGIN_UPDATES: Record<PluginProduct, PluginUpdateInfo> = {
+  // Real versions, 2026-10-07 (the 1.0.0s here were never built — found by
+  // the member-tools fleet lane). URMBridge 0.2.0 is a DRAFT GitHub release
+  // (ibrews/UnrealRenderManBridge, 2026-10-01) delivered by Alex directly
+  // until he publishes it; Blueprint Anti-Pasta 0.6.9 is published.
   URMBridge: {
-    latest: "1.0.0",
-    released: "2026-08-06",
+    latest: "0.2.0",
+    released: "2026-10-01",
     notes_url: "https://www.alexcoulombepresents.com/plugins/urmbridge/releases",
     min_ue: "5.6",
   },
@@ -37,8 +41,8 @@ export const PLUGIN_UPDATES: Record<PluginProduct, PluginUpdateInfo> = {
     min_ue: "5.8",
   },
   BPAutoLayout: {
-    latest: "1.0.0",
-    released: "2026-08-06",
+    latest: "0.6.9",
+    released: "2026-06-03",
     notes_url: "https://www.alexcoulombepresents.com/plugins/bpautolayout/releases",
     min_ue: "4.27",
   },

@@ -495,7 +495,7 @@
 
 ### repos  (34 entries — add or remove whole entries)
 
-- `[data.repos.blueprint-auto-layout.name]` ▸ Blueprint Auto Layout
+- `[data.repos.blueprint-auto-layout.name]` ▸ Blueprint Anti-Pasta
 - `[data.repos.blueprint-auto-layout.tagline]` ▸ Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.
 - `[data.repos.blueprint-auto-layout.story]` ▸ Blueprint spaghetti is a rite of passage — and a productivity tax. This plugin rearranges any Blueprint graph into a readable left-to-right execution flow with one keystroke (Ctrl/Cmd+Shift+L). Under the hood it's a real layered-graph engine implemented from the published papers (Sugiyama et al.; Brandes & Köpf), not a naive tree walk — so cross-row connections, multi-consumer data pins, and long edges all route cleanly.
 

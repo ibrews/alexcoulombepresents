@@ -46,7 +46,9 @@ export type Repo = {
 export const repos: Repo[] = [
   {
     slug: "blueprint-auto-layout",
-    name: "Blueprint Auto Layout",
+    // Renamed by the plugin itself in v0.6.9 (.uplugin FriendlyName + README);
+    // the repo slug stays blueprint-auto-layout.
+    name: "Blueprint Anti-Pasta",
     tagline: "Pin-aware auto-layout for Unreal Blueprint graphs. Or as it should be called: ANTI-PASTA.",
     category: "Unreal Engine",
     stars: 44,

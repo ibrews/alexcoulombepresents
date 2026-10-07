@@ -7,7 +7,7 @@ import type { PluginProduct } from "@/lib/commerce/pluginLicensing";
 export const metadata: Metadata = {
   title: "Unreal Engine Plugins — Licensing",
   description:
-    "Five Unreal Engine plugins Alex builds and ships: SceneAudit, URMBridge, Forage, Blueprint Auto Layout, and URKPreviewer. Educational and commercial licensing.",
+    "Five Unreal Engine plugins Alex builds and ships: SceneAudit, URMBridge, Forage, Blueprint Anti-Pasta, and URKPreviewer. Educational and commercial licensing.",
   alternates: { canonical: "/plugins" },
 };
 
@@ -44,7 +44,7 @@ const PLUGINS: PluginEntry[] = [
   },
   {
     product: "BPAutoLayout",
-    displayName: "Blueprint Auto Layout",
+    displayName: "Blueprint Anti-Pasta",
     pitch: "Rearranges any Blueprint graph into a clean, readable left-to-right execution flow.",
     oss: { label: "Free & open source on GitHub", url: "https://github.com/ibrews/blueprint-auto-layout" },
   },
