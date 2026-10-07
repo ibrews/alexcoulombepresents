@@ -59,7 +59,7 @@ export const classSessions: ClassSession[] = [
     title: "Live Unreal Training — the first class",
     startsISO: "2026-08-05T15:00:00Z",
     durationMin: 120,
-    instructorIds: [ALEX, "yu-jun-yeh"],
+    instructorIds: [ALEX], // Alex taught it (2026-10-07: Yu-Jun attended, didn't teach)
     level: "All levels",
     blurb: "The free kickoff: the curriculum, the AI philosophy behind it, and a live MetaHuman build from a webcam.",
     description:
