@@ -236,7 +236,8 @@ export const classSessions: ClassSession[] = [
     slug: "2026-10-07-membership-tour-livestream",
     kind: "livestream",
     title: "Live AMA: Meta's VR Glasses, the Member Toolkit, and What's Next",
-    startsISO: "2026-10-07T13:00:00Z",
+    // Moved to 11a ET to match the YouTube schedule (Alex, 2026-10-07).
+    startsISO: "2026-10-07T15:00:00Z",
     durationMin: 120,
     instructorIds: [ALEX],
     level: "All levels",

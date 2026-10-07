@@ -22,7 +22,7 @@ export const announcements: Announcement[] = [
   // it airs, then the Oct–Nov lineup takes over through its last class.
   {
     id: "membership-tour-livestream",
-    text: "Free livestream Wed Oct 7, 9a ET — AMA (yes, the Meta VR glasses) + a tour of every member tool",
+    text: "Free livestream Wed Oct 7, 11a ET — AMA (yes, the Meta VR glasses) + a tour of every member tool",
     href: "/classes/2026-10-07-membership-tour-livestream",
     cta: "Set a reminder",
     start: "2026-10-06",
