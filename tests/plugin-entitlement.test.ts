@@ -17,11 +17,22 @@ const SECRET = "test-secret-not-real";
 // Mirrors computeSignature() in lib/commerce/pluginLicensing.ts — deliberately
 // reimplemented here (not imported) so the test proves the route's algorithm
 // against an independent implementation of the documented spec, not just
-// against itself.
+// against itself. The "ACPL2" header is part of the signed payload — it
+// must match the vendored plugin checkers' own compute_signature()
+// (python/acp_license.py, native/ACPLicense.h), which sign
+// "ACPL2|product|licensee|email|tier|seats|expiry", not just the field tail.
+// See tests/plugin-licensing.test.ts for the round-trip proof against a
+// faithful port of the checker itself.
 function sign(fields: PluginLicenseFields, secret = SECRET): string {
-  const message = [fields.product, fields.licensee, fields.email, fields.tier, fields.seats, fields.expiry].join(
-    "|"
-  );
+  const message = [
+    "ACPL2",
+    fields.product,
+    fields.licensee,
+    fields.email,
+    fields.tier,
+    fields.seats,
+    fields.expiry,
+  ].join("|");
   return crypto.createHmac("sha256", secret).update(message).digest("hex");
 }
 

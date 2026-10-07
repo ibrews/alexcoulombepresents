@@ -6,7 +6,7 @@
 //
 //   ACPL2|<product>|<licensee>|<email>|<tier>|<seats>|<expiry>|<signature>
 //
-//   signature = HMAC-SHA256(product|licensee|email|tier|seats|expiry, SECRET)
+//   signature = HMAC-SHA256(ACPL2|product|licensee|email|tier|seats|expiry, SECRET)
 //               hex-encoded
 //
 // The plugin's own HTTP client sends the parsed fields of a license file it
@@ -48,11 +48,26 @@ function isPluginTier(v: unknown): v is PluginTier {
   return v === "edu" || v === "com";
 }
 
-/** Recompute the HMAC-SHA256 hex signature for the pipe-joined license fields. */
+/**
+ * Recompute the HMAC-SHA256 hex signature for the pipe-joined license
+ * fields, PREFIXED with the "ACPL2" header — this must exactly match every
+ * vendored plugin checker's own computation (python/acp_license.py::
+ * compute_signature(), native/ACPLicense.h's ComputeSignature()), both of
+ * which sign "ACPL2|product|licensee|email|tier|seats|expiry", not just the
+ * field tail. Omitting the prefix here made every site-issued key fail
+ * validation in the plugin (2026-10-06 finding, see
+ * intelligence/decisions/2026-10-06-acpl2-native-secret-public-exposure.md).
+ */
 function computeSignature(fields: PluginLicenseFields, secret: string): string {
-  const message = [fields.product, fields.licensee, fields.email, fields.tier, fields.seats, fields.expiry].join(
-    "|"
-  );
+  const message = [
+    "ACPL2",
+    fields.product,
+    fields.licensee,
+    fields.email,
+    fields.tier,
+    fields.seats,
+    fields.expiry,
+  ].join("|");
   return crypto.createHmac("sha256", secret).update(message).digest("hex");
 }
 
