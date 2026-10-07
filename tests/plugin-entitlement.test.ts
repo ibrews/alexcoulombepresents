@@ -10,7 +10,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
-import { verifyPluginLicense, type PluginLicenseFields } from "../lib/commerce/pluginLicensing.ts";
+import {
+  PLUGIN_LANES,
+  pluginLane,
+  requirePluginLicenseSecret,
+  verifyPluginLicense,
+  type PluginLicenseFields,
+} from "../lib/commerce/pluginLicensing.ts";
 
 const SECRET = "test-secret-not-real";
 
@@ -162,5 +168,85 @@ test("bad signature, wrong secret, expired, and unknown product all return byte-
   const shapes = [badSignature, wrongSecret, expired, unknownProduct, malformed];
   for (const shape of shapes) {
     assert.deepEqual(shape, { entitled: false });
+  }
+});
+
+// ── Lane separation: py and native plugins sign with DIFFERENT secrets ─────
+// Mirrors acp-dist-tools/secrets/secrets.py's `_SECRET_PY` / `_SECRET_NATIVE`
+// split. The site used to verify all five products against one
+// `ACP_PLUGIN_LICENSE_SECRET`, which both discarded the lane isolation (a
+// trivially-decompilable .pyc leak would have minted licenses for the
+// symbol-stripped native plugins too) and could never have worked — whichever
+// lane that one value belonged to, the other lane's licenses would all fail.
+
+const PY_SECRET = "py-lane-secret-not-real";
+const NATIVE_SECRET = "native-lane-secret-not-real";
+
+test("PLUGIN_LANES matches acp-dist-tools' lane assignment exactly", () => {
+  assert.deepEqual(PLUGIN_LANES, {
+    URMBridge: "py",
+    SceneAudit: "py",
+    Forage: "native",
+    BPAutoLayout: "native",
+    URKPreviewer: "native",
+  });
+});
+
+test("a license signed with its own lane's secret verifies", () => {
+  for (const product of ["URMBridge", "SceneAudit", "Forage", "BPAutoLayout", "URKPreviewer"] as const) {
+    const secret = pluginLane(product) === "py" ? PY_SECRET : NATIVE_SECRET;
+    const fields = baseFields({ product });
+    const result = verifyPluginLicense({ ...fields, signature: sign(fields, secret) }, secret);
+    assert.equal(result.entitled, true, `${product} should verify against its own lane secret`);
+  }
+});
+
+test("a license signed by the OTHER lane's secret is rejected", () => {
+  for (const product of ["URMBridge", "SceneAudit", "Forage", "BPAutoLayout", "URKPreviewer"] as const) {
+    const own = pluginLane(product) === "py" ? PY_SECRET : NATIVE_SECRET;
+    const other = own === PY_SECRET ? NATIVE_SECRET : PY_SECRET;
+    // Signed with the wrong lane, verified with the right one.
+    const fields = baseFields({ product });
+    const result = verifyPluginLicense({ ...fields, signature: sign(fields, other) }, own);
+    assert.equal(result.entitled, false, `${product} must not accept a cross-lane signature`);
+  }
+});
+
+test("requirePluginLicenseSecret reads the env var for the product's lane", () => {
+  const prevPy = process.env.ACP_PLUGIN_LICENSE_SECRET_PY;
+  const prevNative = process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE;
+  try {
+    process.env.ACP_PLUGIN_LICENSE_SECRET_PY = PY_SECRET;
+    process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE = NATIVE_SECRET;
+    assert.equal(requirePluginLicenseSecret("URMBridge"), PY_SECRET);
+    assert.equal(requirePluginLicenseSecret("SceneAudit"), PY_SECRET);
+    assert.equal(requirePluginLicenseSecret("Forage"), NATIVE_SECRET);
+    assert.equal(requirePluginLicenseSecret("BPAutoLayout"), NATIVE_SECRET);
+    assert.equal(requirePluginLicenseSecret("URKPreviewer"), NATIVE_SECRET);
+  } finally {
+    process.env.ACP_PLUGIN_LICENSE_SECRET_PY = prevPy;
+    process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE = prevNative;
+    if (prevPy === undefined) delete process.env.ACP_PLUGIN_LICENSE_SECRET_PY;
+    if (prevNative === undefined) delete process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE;
+  }
+});
+
+test("requirePluginLicenseSecret fails closed, naming the missing lane var", () => {
+  const prev = process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE;
+  const prevLegacy = process.env.ACP_PLUGIN_LICENSE_SECRET;
+  try {
+    delete process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE;
+    // A legacy single-secret value must NOT satisfy a lane: silently using it
+    // would reject every license of the other lane as if it were forged.
+    process.env.ACP_PLUGIN_LICENSE_SECRET = "legacy-single-secret";
+    assert.throws(
+      () => requirePluginLicenseSecret("Forage"),
+      /ACP_PLUGIN_LICENSE_SECRET_NATIVE is not set/
+    );
+  } finally {
+    if (prev === undefined) delete process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE;
+    else process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE = prev;
+    if (prevLegacy === undefined) delete process.env.ACP_PLUGIN_LICENSE_SECRET;
+    else process.env.ACP_PLUGIN_LICENSE_SECRET = prevLegacy;
   }
 });

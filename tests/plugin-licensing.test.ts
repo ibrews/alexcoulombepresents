@@ -56,7 +56,9 @@ function parseLicenseFile(licenseFile: string) {
 }
 
 test("a license issued by the site's pluginLicensing.ts validates against the vendored plugin checker's own HMAC", async () => {
-  process.env.ACP_PLUGIN_LICENSE_SECRET = TEST_SECRET;
+  // URKPreviewer is a native-lane product, so it signs with the native lane's
+  // secret (see PLUGIN_LANES in lib/commerce/pluginLicensing.ts).
+  process.env.ACP_PLUGIN_LICENSE_SECRET_NATIVE = TEST_SECRET;
 
   const { licenseFile } = await mintPluginLicenseIfApplicable({
     product: "URKPreviewer",

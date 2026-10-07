@@ -16,9 +16,12 @@
 // is sufficient — see verifyPluginLicense's docstring for the one caveat
 // (com-tier expiry) that's a known simplification, not a gap in this logic.
 //
-// Secret: ACP_PLUGIN_LICENSE_SECRET (env only, never hardcoded — see
-// requirePluginLicenseSecret, which fails closed with a thrown error rather
-// than silently treating every license as valid when unset).
+// Secrets: TWO, split by lane, matching acp-dist-tools/secrets/secrets.py.
+// `ACP_PLUGIN_LICENSE_SECRET_PY` signs the pure-Python plugins and
+// `ACP_PLUGIN_LICENSE_SECRET_NATIVE` the compiled C++ ones — see
+// PLUGIN_LANES below for why one shared value would be a downgrade. Env
+// only, never hardcoded; requirePluginLicenseSecret fails closed with a
+// thrown error rather than silently treating every license as valid.
 
 import crypto from "node:crypto";
 
@@ -26,6 +29,35 @@ export const PLUGIN_PRODUCTS = ["URMBridge", "SceneAudit", "Forage", "BPAutoLayo
 export type PluginProduct = (typeof PLUGIN_PRODUCTS)[number];
 
 export type PluginTier = "edu" | "com";
+
+export type PluginLane = "py" | "native";
+
+/**
+ * Which secret signs which product. This MUST stay in lockstep with
+ * `acp-dist-tools/secrets/secrets.py` (`_SECRET_PY` / `_SECRET_NATIVE`),
+ * which is the issuing side of the same HMAC.
+ *
+ * Why two secrets and not one: the `py` plugins embed their key in compiled
+ * `.pyc` bytecode, which `uncompyle6` reverses close to trivially. The
+ * `native` plugins embed theirs in a symbol-stripped `.dylib`/`.dll`, a far
+ * harder target. If one value signed all five, cracking the EASY target
+ * would mint valid licenses for the HARD ones — so a Python-side leak must
+ * cap its damage at the two Python plugins. Verifying every product against
+ * a single `ACP_PLUGIN_LICENSE_SECRET` silently threw that property away,
+ * and additionally could never have worked: whichever lane the one value
+ * belonged to, every license from the other lane would fail to verify.
+ */
+export const PLUGIN_LANES: Record<PluginProduct, PluginLane> = {
+  URMBridge: "py",
+  SceneAudit: "py",
+  Forage: "native",
+  BPAutoLayout: "native",
+  URKPreviewer: "native",
+};
+
+export function pluginLane(product: PluginProduct): PluginLane {
+  return PLUGIN_LANES[product];
+}
 
 export type PluginLicenseFields = {
   product: PluginProduct;
@@ -40,7 +72,7 @@ export type PluginEntitlementResult =
   | { entitled: true; product: PluginProduct; tier: PluginTier; expiry: string }
   | { entitled: false };
 
-function isPluginProduct(v: unknown): v is PluginProduct {
+export function isPluginProduct(v: unknown): v is PluginProduct {
   return typeof v === "string" && (PLUGIN_PRODUCTS as readonly string[]).includes(v);
 }
 
@@ -85,9 +117,30 @@ function signaturesMatch(a: string, b: string): boolean {
   return crypto.timingSafeEqual(bufA, bufB);
 }
 
-export function requirePluginLicenseSecret(): string {
-  const secret = process.env.ACP_PLUGIN_LICENSE_SECRET;
-  if (!secret) throw new Error("ACP_PLUGIN_LICENSE_SECRET is not set");
+const LANE_ENV_VAR: Record<PluginLane, string> = {
+  py: "ACP_PLUGIN_LICENSE_SECRET_PY",
+  native: "ACP_PLUGIN_LICENSE_SECRET_NATIVE",
+};
+
+/**
+ * The signing secret for `product`'s lane.
+ *
+ * Deliberately NO fallback to a single legacy `ACP_PLUGIN_LICENSE_SECRET`:
+ * one value cannot be correct for both lanes, so a fallback would silently
+ * reject every license of whichever lane it did not belong to — a failure
+ * that looks identical to "this customer's license is forged." Throwing
+ * names the exact variable to set instead.
+ */
+export function requirePluginLicenseSecret(product: PluginProduct): string {
+  const lane = pluginLane(product);
+  const varName = LANE_ENV_VAR[lane];
+  const secret = process.env[varName];
+  if (!secret) {
+    throw new Error(
+      `${varName} is not set (required to verify ${lane}-lane plugin licenses, ` +
+        `i.e. ${PLUGIN_PRODUCTS.filter((p) => PLUGIN_LANES[p] === lane).join(", ")})`
+    );
+  }
   return secret;
 }
 
@@ -176,7 +229,7 @@ export async function mintPluginLicenseIfApplicable(input: {
   seats: number;
   expiryDays: number;
 }): Promise<{ licenseFile: string }> {
-  const secret = requirePluginLicenseSecret();
+  const secret = requirePluginLicenseSecret(input.product);
   const expiry = new Date(Date.now() + input.expiryDays * 86_400_000).toISOString().slice(0, 10);
   const fields: PluginLicenseFields = {
     product: input.product,

@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limit";
-import { requirePluginLicenseSecret, verifyPluginLicense } from "@/lib/commerce/pluginLicensing";
+import {
+  isPluginProduct,
+  requirePluginLicenseSecret,
+  verifyPluginLicense,
+} from "@/lib/commerce/pluginLicensing";
 import { PLUGIN_UPDATES } from "@/lib/commerce/pluginUpdates";
 
 // Verifies a UE plugin's own HMAC-signed license file (the plugin sends the
@@ -23,17 +27,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: RATE_LIMITED_MESSAGE }, { status: 429 });
   }
 
+  const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
+
+  // Which secret signs this license depends on the product's lane (py vs
+  // native), so the body has to be read before the secret can be chosen.
+  // An unrecognized product takes the ordinary `{ entitled: false }` path —
+  // identical to what verifyPluginLicense would have returned for it — so
+  // this reordering adds no new distinguishing signal.
+  const { product } = body;
+  if (!isPluginProduct(product)) {
+    return NextResponse.json({ entitled: false });
+  }
+
   let secret: string;
   try {
-    secret = requirePluginLicenseSecret();
+    secret = requirePluginLicenseSecret(product);
   } catch (err) {
     // Fail closed: never fall through and treat every license as valid just
-    // because the secret isn't configured yet.
-    console.error("[plugin-entitlement] ACP_PLUGIN_LICENSE_SECRET is not set", err);
+    // because that lane's secret isn't configured yet.
+    console.error("[plugin-entitlement] lane signing secret is not set", err);
     return NextResponse.json({ error: "Entitlement service not configured" }, { status: 500 });
   }
 
-  const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const result = verifyPluginLicense(body, secret);
 
   if (!result.entitled) {
