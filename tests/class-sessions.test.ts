@@ -87,7 +87,7 @@ test("past/upcoming split is by end time, newest past first", () => {
   const now = Date.parse("2026-10-14T16:00:00Z"); // an hour into the Oct 14 class
   const upcoming = upcomingSessions(now, { includeUnlisted: true }).map((s) => s.slug);
   const past = pastSessions(now, { includeUnlisted: true }).map((s) => s.slug);
-  assert.equal(upcoming[0], "2026-10-14-metahuman-clothing-physics");
+  assert.equal(upcoming[0], "2026-10-14-metahuman-wardrobes");
   assert.equal(past[0], "2026-10-07-membership-tour-livestream");
   assert.equal(upcoming.length + past.length, classSessions.length);
 });

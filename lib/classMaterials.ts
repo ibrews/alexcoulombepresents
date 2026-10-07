@@ -227,9 +227,9 @@ export const classFolders: ClassFolder[] = [
   // acp-drive-access service account (writer), same as the classes above.
   {
     slug: "wed-2026-10-14-metahuman-clothing-physics",
-    title: "MetaHuman Clothing Physics in UE 5.8",
+    title: "MetaHuman Wardrobes: Infinite Possibilities",
     date: "2026-10-14",
-    blurb: "MetaHuman clothing and cloth physics with guest instructor Franco Vilanova.",
+    blurb: "Extracting garments from characters and cloth assets into a MetaHuman Wardrobe workflow, with guest instructor Franco Vilanova.",
     materials: [
       sharedFolder({
         url: "https://drive.google.com/drive/folders/17UTJEgAj8_-0ZttRG-WeBNXN1kc3_FtH",

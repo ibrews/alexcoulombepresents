@@ -30,7 +30,7 @@ export const announcements: Announcement[] = [
   },
   {
     id: "oct-nov-run-2026",
-    text: "New live classes through Nov 18 — VR cinematics, a Creative AI masterclass, Gaussian splats for VR, and more",
+    text: "New live classes — MetaHuman wardrobes with Franco Vilanova (Oct 14), Lumen Lite with Sean Spitzer (Oct 21), and more",
     href: "/classes",
     cta: "See the lineup",
     start: "2026-10-08",

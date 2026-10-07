@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/lab/unrealitykit", destination: "/lab/unrealitykit-bridge", permanent: true },
+      // Franco's class was reviewed at its temp-title URL (2026-10-06).
+      { source: "/classes/2026-10-14-metahuman-clothing-physics", destination: "/classes/2026-10-14-metahuman-wardrobes", permanent: true },
       { source: "/urk", destination: "/lab/unrealitykit-bridge", permanent: true },
       // Renamed 2026-09-05 to reflect the OpenXR foundation, not just Vision
       // Pro — the old slug is already live in submitted Epic MegaGrant

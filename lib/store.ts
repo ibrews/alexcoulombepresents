@@ -313,16 +313,17 @@ export const wednesdayCalendar: StoreItem[] = [
   // Who teaches each one lives in lib/classSessions.ts (class pages).
   wednesdayCalendarItem({
     slug: "wed-2026-10-14-metahuman-clothing-physics",
-    name: "MetaHuman Clothing Physics in UE 5.8",
+    // Franco's title, 2026-10-06. Slug still says "clothing-physics" (the
+    // temp title) — it's the purchase key and Drive/materials folder key.
+    name: "MetaHuman Wardrobes: Infinite Possibilities",
     blurb:
-      "Guest instructor Franco Vilanova on MetaHuman wardrobe that moves like real fabric — cloth setup, simulation, and the settings that sell it. A preview of his five-week MetaHuman Production & Performance course.",
+      "Guest instructor Franco Vilanova on extracting pieces from characters and other cloth assets into a MetaHuman Wardrobe workflow — expanding your MetaHuman customization library.",
     priceCents: INTERMEDIATE_SESSION_CENTS,
     sessionDateISO: "2026-10-14T15:00:00Z",
     zoomRegistrationUrl: "https://us06web.zoom.us/meeting/register/C266FV9iTEuEdP8FHMijDQ",
     zoomMeetingId: "84483012263",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
-    unlisted: true,
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-10-21-lumen-deep-dive",
@@ -335,7 +336,6 @@ export const wednesdayCalendar: StoreItem[] = [
     zoomMeetingId: "87173237569",
     priceNote: FALL_RUN_PRICE_NOTE,
     hidePrice: true,
-    unlisted: true,
   }),
   wednesdayCalendarItem({
     slug: "wed-2026-10-28-vr-cinematics",

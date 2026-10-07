@@ -254,22 +254,25 @@ export const classSessions: ClassSession[] = [
     youtubeId: "uYAjHLA3htU",
   },
   {
-    slug: "2026-10-14-metahuman-clothing-physics",
+    // Title + description from Franco (2026-10-06). The old URL
+    // /classes/2026-10-14-metahuman-clothing-physics redirects here
+    // (next.config.ts) — it went out in review links.
+    slug: "2026-10-14-metahuman-wardrobes",
     kind: "class",
-    title: "MetaHuman Clothing Physics in UE 5.8",
+    title: "MetaHuman Wardrobes: Infinite Possibilities",
     startsISO: "2026-10-14T15:00:00Z",
     durationMin: 120,
     instructorIds: ["franco-vilanova"],
     level: "Intermediate",
     blurb:
-      "Guest instructor Franco Vilanova on MetaHuman wardrobe that moves like real fabric — cloth setup, simulation, and the settings that sell it.",
+      "Guest instructor Franco Vilanova on extracting pieces from characters and other cloth assets into a MetaHuman Wardrobe workflow — expanding your MetaHuman customization library.",
     description:
-      "Gold Unreal Authorized Instructor Franco Vilanova on dressing MetaHumans in Unreal 5.8 so their clothes move like real fabric. You'll see how MetaHuman wardrobe and cloth are set up, how the simulation is driven, and which settings make the difference between stiff and believable. It's a two-hour preview of Franco's five-week MetaHuman Production & Performance course, so you'll also see where clothing fits in a production-grade MetaHuman pipeline.",
+      "In this session we will go over how to extract pieces from characters, or other cloth assets, to add to a MetaHuman Wardrobe workflow, enhancing and expanding our MetaHuman customization library. Taught by Gold Unreal Authorized Instructor Franco Vilanova — and a preview of his five-week MetaHuman Production & Performance course.",
     learn: [
-      "How MetaHuman wardrobe and clothing assets are structured in Unreal 5.8",
-      "Setting up cloth so garments simulate instead of sitting rigid",
-      "The physics and simulation settings that make fabric read as real",
-      "Where clothing fits in a production MetaHuman workflow",
+      "Extracting garments and pieces from existing characters",
+      "Bringing other cloth assets into a MetaHuman Wardrobe workflow",
+      "Building out a reusable MetaHuman customization library",
+      "Where wardrobe fits in a production MetaHuman pipeline",
     ],
     storeSlug: "wed-2026-10-14-metahuman-clothing-physics",
     materialsSlug: "wed-2026-10-14-metahuman-clothing-physics",

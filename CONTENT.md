@@ -1530,8 +1530,8 @@
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closesAtISO]` ▸ 2026-09-30T15:00:00Z
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedNote]` ▸ This session has already happened — the next one's on the calendar above.
 - `[store.storeItems.wed-2026-09-23-usd-glb-export.saleWindow.closedList]` ▸ unreal
-- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.name]` ▸ MetaHuman Clothing Physics in UE 5.8
-- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.blurb]` ▸ Guest instructor Franco Vilanova on MetaHuman wardrobe that moves like real fabric — cloth setup, simulation, and the settings that sell it. A preview of his five-week MetaHuman Production & Performance course.
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.name]` ▸ MetaHuman Wardrobes: Infinite Possibilities
+- `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.blurb]` ▸ Guest instructor Franco Vilanova on extracting pieces from characters and other cloth assets into a MetaHuman Wardrobe workflow — expanding your MetaHuman customization library.
 - `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.delivery]` ▸ Order confirmation lands right away with your Zoom registration link — register and Zoom handles the calendar invite and reminders. The recording is yours afterward even if you can't make it live.
 - `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.sessionDateISO]` ▸ 2026-10-14T15:00:00Z
 - `[store.storeItems.wed-2026-10-14-metahuman-clothing-physics.zoomRegistrationUrl]` ▸ https://us06web.zoom.us/meeting/register/C266FV9iTEuEdP8FHMijDQ

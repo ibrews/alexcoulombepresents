@@ -77,8 +77,8 @@ export const instructors = [
   },
   {
     // From Franco's LinkedIn experience + the VPD course page, read
-    // 2026-10-06. Photo: VPD's course page (LinkedIn's has an #OpenToWork
-    // frame). Spelled with one "l" everywhere.
+    // 2026-10-06. Headshot sent by Franco via Alex 2026-10-06. Spelled with
+    // one "l" everywhere.
     id: "franco-vilanova",
     name: "Franco Vilanova",
     role: "Lead Specialty Faculty, Virtual Production Dojo",
@@ -93,20 +93,19 @@ export const instructors = [
     bioApproved: false,
   },
   {
-    // From Sean's LinkedIn experience, read 2026-10-06 (he started Otter Mob
-    // Studios that week). Photo: his LinkedIn headshot — the only current
-    // one; it's 100px, fine at the 80px avatar size.
+    // Bio in Sean's own words (sent to Alex 2026-10-06; "a Unreal" and
+    // "Sony Pictures animation" corrected). Headshot also from Sean via Alex.
     id: "sean-spitzer",
     name: "Sean Spitzer",
-    role: "Chief Creative Officer, Otter Mob Studios",
+    role: "Unreal Technical Director · Art Director",
     bio:
-      "Founder and Chief Creative Officer of Otter Mob Studios, a production house for original game and animation IP. Spent seven years at Epic Games as a senior Unreal Engine instructor, training studios including Pixar, Disney Animation, DreamWorks, Blizzard, Riot Games, WETA, and Netflix, and did lighting and shading on Love, Death & Robots' \"Vaulted Halls Entombed.\" Most recently did previz in Unreal at Sony Pictures Animation.",
+      "Sean Spitzer is an Unreal Technical Director, Art Director, and Unreal Engine specialist with over two decades of experience across gaming, film, broadcast, AR/VR, and virtual production. He has worked with industry leaders including Sony Pictures Animation, Epic Games, Unity Technologies, and The Famous Group, supporting major studios such as Blizzard, Riot Games, Pixar, Disney Animation, DreamWorks, and Netflix. Sean's expertise spans Unreal Engine pipelines, lighting, materials, virtual production, technical art, and team leadership, with a strong background in mentoring artists. He has developed training programs and created cutting-edge real-time experiences for games, film, and live broadcast environments.",
     photo: "/instructors/sean-spitzer.jpg",
     links: [
       { label: "Otter Mob Studios", url: "https://www.ottermobstudios.com/" },
       { label: "LinkedIn", url: "https://www.linkedin.com/in/seanspitzer3d" },
     ],
-    bioApproved: false,
+    bioApproved: true,
   },
 ] as const satisfies readonly Instructor[];
 
