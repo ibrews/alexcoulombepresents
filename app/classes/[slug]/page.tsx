@@ -131,6 +131,16 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
                 Watch live on YouTube →
               </a>
             )}
+            {s.watchUrl && past && (
+              <a
+                href={s.watchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-snow px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
+              >
+                Watch the replay on YouTube →
+              </a>
+            )}
             {!past && (
               <>
                 <a
@@ -165,7 +175,7 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
                 </Link>
               </>
             )}
-            {past && !recording && <span className="text-sm text-mist">The recording is being edited — it lands in the members&apos; library soon.</span>}
+            {past && !recording && !s.youtubeId && <span className="text-sm text-mist">The recording is being edited — it lands in the members&apos; library soon.</span>}
             {past && s.materialsSlug && (
               <Link
                 href={`/materials/${s.materialsSlug}`}
