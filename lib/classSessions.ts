@@ -242,9 +242,9 @@ export const classSessions: ClassSession[] = [
     instructorIds: [ALEX],
     level: "All levels",
     blurb:
-      "A free livestream: ask me anything (yes, including trying Meta's VR glasses at Connect), a tour of every tool and plugin members get, and the classes coming up.",
+      "A free livestream: I answered anything (yes, including trying Meta's VR glasses at Connect), gave a tour of every tool and plugin members get, and previewed the classes coming up.",
     description:
-      "No class this week. Instead, a free livestream that's part AMA, part show-and-tell. Ask me anything — including what it was like trying Meta's VR glasses at Meta Connect. Then a tour of every tool and plugin that comes with membership and how to actually use each one, some of what I'm building right now, and a first look at the classes coming up through November. Members: treat the tour as your tutorial. Everyone else: it's the clearest look at what you'd get.",
+      "No class ran this week — instead, a free livestream that was part AMA, part show-and-tell. I answered questions, including what it was like trying Meta's VR glasses at Meta Connect, then gave a tour of every tool and plugin that comes with membership and how to actually use each one, showed some of what I'm building right now, and previewed the classes coming up through November. Members: treat the tour as your tutorial. Everyone else: it's the clearest look at what you'd get.",
     learn: [
       "What trying Meta's VR glasses at Connect was actually like — bring your questions",
       "A tour of every member tool and plugin, and how to use each one",
