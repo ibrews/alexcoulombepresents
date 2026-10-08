@@ -21,6 +21,7 @@ export type ClassSession = {
   slug: string; // URL: /classes/<slug>
   kind: SessionKind;
   title: string;
+  subtitle?: string; // a smaller line under the page title, e.g. a show's tagline
   startsISO: string;
   durationMin: number;
   instructorIds: InstructorId[];
@@ -235,16 +236,19 @@ export const classSessions: ClassSession[] = [
   {
     slug: "2026-10-07-membership-tour-livestream",
     kind: "livestream",
-    title: "Live AMA: Meta's VR Glasses, the Member Toolkit, and What's Next",
+    // Same title as the YouTube replay, with its parenthetical as the subtitle,
+    // so people clicking through land on a page that matches the video.
+    title: "Alex Coulombe Sitting & Talking",
+    subtitle: "At a computer with a bunch of XR & AI stuff he's working on",
     // Moved to 11a ET to match the YouTube schedule (Alex, 2026-10-07).
     startsISO: "2026-10-07T15:00:00Z",
     durationMin: 60, // one hour — Alex has meetings right after (2026-10-07)
     instructorIds: [ALEX],
     level: "All levels",
     blurb:
-      "A free livestream: I answered anything (yes, including trying Meta's VR glasses at Connect), gave a tour of every tool and plugin members get, and previewed the classes coming up.",
+      "A free, unscripted hour at my desk: Meta Connect and the new Meta VR glasses, a tour of what's running in the Lab right now, and the six classes coming up through November.",
     description:
-      "No class ran this week — instead, a free livestream that was part AMA, part show-and-tell. I answered questions, including what it was like trying Meta's VR glasses at Meta Connect, then gave a tour of every tool and plugin that comes with membership and how to actually use each one, showed some of what I'm building right now, and previewed the classes coming up through November. Members: treat the tour as your tutorial. Everyone else: it's the clearest look at what you'd get.",
+      "No class this week, so I went live from my desk and talked through whatever was on it. Meta Connect and what 45 minutes in the new Meta VR glasses was actually like, then a tour of what's running in the Lab right now: the XR simulator, Forage, Constellation, Scene Audit, RenderMan next to Unreal, and streaming Unreal into RealityKit with UnrealityKit. After that, a look back at nine weeks of classes, what membership gets you, the six classes coming up through November (two with guest instructors), what Agile Lens has been up to, and where I'm speaking next. The deck from the stream is public, so you can explore every tool and trailer at your own pace.",
     learn: [
       "What trying Meta's VR glasses at Connect was actually like — bring your questions",
       "A tour of every member tool and plugin, and how to use each one",

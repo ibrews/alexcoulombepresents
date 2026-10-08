@@ -31,7 +31,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const s = sessionBySlug(slug);
   if (!s) return {};
-  const title = `${s.title} — with ${instructorNames(s.instructorIds)}`;
+  const names = instructorNames(s.instructorIds);
+  // A show title that already carries the host's name doesn't need "— with" too.
+  const title = s.title.includes(names) ? s.title : `${s.title} — with ${names}`;
   return {
     title,
     description: `${sessionWhen(s)}. ${s.blurb}`,
@@ -76,9 +78,10 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
           </p>
         )}
         <p className="mt-6 font-mono text-xs uppercase tracking-widest text-teal">
-          {KIND_LABEL[s.kind]} · {s.level} · {s.durationMin / 60} hours{past ? " · Past session" : ""}
+          {KIND_LABEL[s.kind]} · {s.level} · {s.durationMin / 60} {s.durationMin === 60 ? "hour" : "hours"}{past ? " · Past session" : ""}
         </p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">{s.title}</h1>
+        {s.subtitle && <p className="mt-2 text-xl text-mist md:text-2xl">{s.subtitle}</p>}
         <p className="mt-3 text-lg text-snow">
           with{" "}
           {people.map((p, i) => (
