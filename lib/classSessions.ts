@@ -251,8 +251,10 @@ export const classSessions: ClassSession[] = [
       "What I'm building right now, shown live",
       "The classes coming up through November, and who's teaching them",
     ],
-    watchUrl: "https://www.youtube.com/watch?v=uYAjHLA3htU",
-    youtubeId: "uYAjHLA3htU",
+    // The scheduled broadcast (uYAjHLA3htU) never aired; Alex went live on a new
+    // broadcast at 11:12 ET and that is where the replay lives.
+    watchUrl: "https://www.youtube.com/watch?v=p6oVG1B-Uns",
+    youtubeId: "p6oVG1B-Uns",
   },
   {
     // Title + description from Franco (2026-10-06). The old URL
