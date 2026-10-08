@@ -82,9 +82,13 @@ function renderInline(text: string, siteUrl: string): string {
       const href = absolutize(m[9], siteUrl);
       out += `<a href="${href}" style="color:${TEAL};text-decoration:underline">${escapeHtml(m[8])}</a>`;
     } else if (m[10] !== undefined) {
-      out += `<strong style="color:${INK}">${escapeHtml(m[10])}</strong>`;
+      // Recurse, don't escape: bold's contents are markdown too, so
+      // **text [link](url)** has to keep the link. Terminates because the
+      // inner text is strictly shorter than the match, and `[^*]+` means
+      // bold/italic can't nest inside itself.
+      out += `<strong style="color:${INK}">${renderInline(m[10], siteUrl)}</strong>`;
     } else {
-      out += `<em>${escapeHtml(m[11])}</em>`;
+      out += `<em>${renderInline(m[11], siteUrl)}</em>`;
     }
     last = m.index + m[0].length;
   }

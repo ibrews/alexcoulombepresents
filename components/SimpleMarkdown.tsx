@@ -77,13 +77,18 @@ function renderInline(text: string, keyBase: string): React.ReactNode[] {
         </a>
       );
     } else if (m[10] !== undefined) {
+      // Recurse, don't just line-break: bold's contents are markdown too, so
+      // **text [link](url)** has to keep the link. Terminates because the
+      // inner text is strictly shorter than the match, and `[^*]+` means
+      // bold/italic can't nest inside itself. renderInline still runs plain
+      // text through withLineBreaks, so single newlines inside bold survive.
       out.push(
         <strong key={`${keyBase}-${i++}`} className="text-snow">
-          {withLineBreaks(m[10], `${keyBase}-b${i}`)}
+          {renderInline(m[10], `${keyBase}-b${i}`)}
         </strong>
       );
     } else {
-      out.push(<em key={`${keyBase}-${i++}`}>{withLineBreaks(m[11], `${keyBase}-i${i}`)}</em>);
+      out.push(<em key={`${keyBase}-${i++}`}>{renderInline(m[11], `${keyBase}-i${i}`)}</em>);
     }
     last = m.index + m[0].length;
   }
