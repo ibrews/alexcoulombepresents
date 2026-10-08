@@ -17,6 +17,12 @@ export type PluginUpdateInfo = {
   min_ue: string;
 };
 
+// There are no per-product release-notes pages yet; /plugins is the one live page that lists every
+// plugin with its current version. The old /plugins/<slug>/releases URLs were never built and
+// returned 404 from every plugin's update toast. Swap a row to a real page once one exists
+// (tests/plugin-updates-manifest.test.ts fails if a same-origin URL has no page behind it).
+const PLUGINS_PAGE = "https://www.alexcoulombepresents.com/plugins";
+
 export const PLUGIN_UPDATES: Record<PluginProduct, PluginUpdateInfo> = {
   // Real versions, 2026-10-07 (the 1.0.0s here were never built — found by
   // the member-tools fleet lane). URMBridge 0.2.0 is a DRAFT GitHub release
@@ -25,31 +31,31 @@ export const PLUGIN_UPDATES: Record<PluginProduct, PluginUpdateInfo> = {
   URMBridge: {
     latest: "0.2.0",
     released: "2026-10-01",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/urmbridge/releases",
+    notes_url: PLUGINS_PAGE,
     min_ue: "5.6",
   },
   SceneAudit: {
     latest: "0.1.0",
     released: "2026-08-10",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/sceneaudit/releases",
+    notes_url: PLUGINS_PAGE,
     min_ue: "5.6",
   },
   Forage: {
     latest: "0.1.0",
     released: "2026-08-07",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/forage/releases",
+    notes_url: PLUGINS_PAGE,
     min_ue: "5.8",
   },
   BPAutoLayout: {
     latest: "0.6.9",
     released: "2026-06-03",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/bpautolayout/releases",
+    notes_url: PLUGINS_PAGE,
     min_ue: "4.27",
   },
   URKPreviewer: {
     latest: "0.1.0",
     released: "2026-08-09",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/urkpreviewer/releases",
+    notes_url: PLUGINS_PAGE,
     min_ue: "5.7",
   },
 };
