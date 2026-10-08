@@ -19,7 +19,10 @@ export type Announcement = {
 
 export const announcements: Announcement[] = [
   // Order = priority: the livestream owns the banner for the two days before
-  // it airs, then the Oct–Nov lineup takes over through its last class.
+  // it airs, then the Oct–Nov run takes over. After the livestream, one
+  // window per class, each ending on its class day, so the banner always
+  // names the next class rather than one that has already happened.
+  // Titles must match lib/classSessions.ts (tests/announcements.test.ts).
   {
     id: "membership-tour-livestream",
     text: "Free livestream Wed Oct 7, 11a ET — AMA (yes, the Meta VR glasses) + a tour of every member tool",
@@ -30,10 +33,50 @@ export const announcements: Announcement[] = [
   },
   {
     id: "oct-nov-run-2026",
-    text: "New live classes — MetaHuman wardrobes with Franco Vilanova (Oct 14), Lumen Lite with Sean Spitzer (Oct 21), and more",
+    text: "New live classes through November — starting Wed Oct 14 with MetaHuman Wardrobes: Infinite Possibilities, taught by Franco Vilanova",
     href: "/classes",
     cta: "See the lineup",
     start: "2026-10-08",
+    end: "2026-10-14",
+  },
+  {
+    id: "next-class-2026-10-21",
+    text: "Next live class: Deep Dive with Lumen for UE 5.8 with guest Sean Spitzer — Wed Oct 21, 11a ET",
+    href: "/classes/2026-10-21-lumen-deep-dive",
+    cta: "Details",
+    start: "2026-10-15",
+    end: "2026-10-21",
+  },
+  {
+    id: "next-class-2026-10-28",
+    text: "Next live class: VR Cinematics for UE 5.8 — Wed Oct 28, 11a ET",
+    href: "/classes/2026-10-28-vr-cinematics",
+    cta: "Details",
+    start: "2026-10-22",
+    end: "2026-10-28",
+  },
+  {
+    id: "next-class-2026-11-04",
+    text: "Next live class: Creative AI Workflow Masterclass, Part 1: Set Up From Scratch — Wed Nov 4, 11a ET, beginner-friendly",
+    href: "/classes/2026-11-04-creative-ai-masterclass-part-1",
+    cta: "Details",
+    start: "2026-10-29",
+    end: "2026-11-04",
+  },
+  {
+    id: "next-class-2026-11-11",
+    text: "Next live class: Creative AI Workflow Masterclass, Part 2: Let It Run — Wed Nov 11, 11a ET",
+    href: "/classes/2026-11-11-creative-ai-masterclass-part-2",
+    cta: "Details",
+    start: "2026-11-05",
+    end: "2026-11-11",
+  },
+  {
+    id: "next-class-2026-11-18",
+    text: "Last class of the run: Gaussian Splatting for VR in UE 5.8 — Wed Nov 18, 11a ET",
+    href: "/classes/2026-11-18-gaussian-splatting-vr",
+    cta: "Details",
+    start: "2026-11-12",
     end: "2026-11-18",
   },
   // Presence only. Alex confirmed he is attending; Meta's developer site is
