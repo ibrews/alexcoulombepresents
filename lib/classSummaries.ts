@@ -210,7 +210,7 @@ export const sessionSummaries: Record<string, SessionSummary> = {
   // own youtubeId rather than a recording's -- see summaryForSession below.
   "p6oVG1B-Uns": {
     overview:
-      "This free livestream mixed an open question-and-answer session with a tour of the tools and plugins that come with membership. Alex Coulombe discussed recent extended-reality hardware he had tried and the stagecraft behind a mixed-reality demo on Apple Vision Pro, then demonstrated several in-house utilities covering asset sourcing, Blueprint graph layout, scene auditing, and streaming Unreal Engine scenes into RealityKit. The session closed with a look at the six classes scheduled through November and the two guest instructors teaching the next two.",
+      "This free livestream mixed an open question-and-answer session with a tour of the tools and plugins that come with membership, following nine weeks of classes at the training center. Alex Coulombe discussed recent extended-reality hardware he had tried and the stagecraft behind a mixed-reality demo on Apple Vision Pro, then demonstrated several in-house utilities covering asset sourcing, Blueprint graph layout, scene auditing, and streaming Unreal Engine scenes into RealityKit. The session closed with a look at the six classes scheduled through November and the two guest instructors teaching the next two.",
     covered: [
       "Reviewing the hardware characteristics and software constraints of the Meta virtual reality glasses shown at Meta Connect.",
       "Discussing why stagecraft and showmanship carry a mixed-reality demo on Apple Vision Pro as much as the underlying trick does.",
