@@ -10,7 +10,7 @@ import LiteVideo from "@/components/LiteVideo";
 import { instructorById, instructorNames } from "@/lib/instructors";
 import { storeItems, formatPrice, isPurchasable } from "@/lib/store";
 import { recordings } from "@/lib/recordings";
-import { sessionSummaries } from "@/lib/classSummaries";
+import { summaryForSession } from "@/lib/classSummaries";
 import { googleCalendarUrl, sessionWhen } from "@/lib/sessionCalendar";
 
 // Pages flip from "book a seat" to "what we covered" on their own once a
@@ -56,7 +56,7 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
   const item = s.storeSlug ? storeItems.find((i) => i.slug === s.storeSlug) : undefined;
   const purchasable = !past && s.kind === "class" && item ? isPurchasable(item) : false;
   const recording = recordingFor(s);
-  const summary = recording?.youtubeId ? sessionSummaries[recording.youtubeId] : undefined;
+  const summary = summaryForSession(s, recording?.youtubeId);
   const people = s.instructorIds.map(instructorById);
   const more = upcomingSessions()
     .filter((x) => x.slug !== s.slug)

@@ -1,8 +1,12 @@
 // ── "What we covered" summaries for past sessions ─────────────────────────
 //
-// Generated from each recording's YouTube auto-captions (yt-dlp, English
-// original track) and summarized by Gemini Flash with instructions to
-// describe only what the transcript shows and never to name attendees.
+// Generated from a transcript of the recording and summarized by Gemini Flash
+// with instructions to describe only what the transcript shows and never to
+// name attendees. `source` records which transcript: most entries come from
+// YouTube auto-captions (yt-dlp, English original track); "whisper-local"
+// means the audio was transcribed on-device with whisper large-v3, which is
+// the only option for a post-live broadcast whose caption fragments YouTube
+// no longer serves (see the Oct 7 2026 livestream, p6oVG1B-Uns).
 // Keyed by YouTube video id so a summary can't attach to the wrong class.
 // Shown on /classes/[slug] with a visible "AI summary of the recording"
 // label. Edit freely — this is data, not a cache; regenerating is a manual
@@ -12,7 +16,7 @@ export type SessionSummary = {
   overview: string;
   covered: string[];
   tools: string[];
-  source: "youtube-captions" | "zoom-transcript";
+  source: "youtube-captions" | "zoom-transcript" | "whisper-local";
   generatedOn: string; // YYYY-MM-DD
 };
 
@@ -201,4 +205,37 @@ export const sessionSummaries: Record<string, SessionSummary> = {
     source: "youtube-captions",
     generatedOn: "2026-10-06",
   },
+  // The Oct 7 2026 membership-tour livestream. This is a free public broadcast
+  // with no members' recording entry, so the summary is keyed by the session's
+  // own youtubeId rather than a recording's -- see summaryForSession below.
+  "p6oVG1B-Uns": {
+    overview:
+      "This free livestream mixed an open question-and-answer session with a tour of the tools and plugins that come with membership. Alex Coulombe discussed recent extended-reality hardware he had tried and the stagecraft behind a mixed-reality demo on Apple Vision Pro, then demonstrated several in-house utilities covering asset sourcing, Blueprint graph layout, scene auditing, and streaming Unreal Engine scenes into RealityKit. The session closed with a look at the six classes scheduled through November and the two guest instructors teaching the next two.",
+    covered: [
+      "Reviewing the hardware characteristics and software constraints of the Meta virtual reality glasses shown at Meta Connect.",
+      "Discussing why stagecraft and showmanship carry a mixed-reality demo on Apple Vision Pro as much as the underlying trick does.",
+      "Demonstrating an XR simulator for testing gestures, hand tracking, and physics without a headset.",
+      "Explaining Forage, an asset scout that searches an Unreal Engine library in plain English and imports only the dependencies a chosen asset needs.",
+      "Presenting Blueprint Auto Layout, which restructures node graphs and generates comment blocks automatically.",
+      "Outlining Scene Audit for diagnosing position and scale discrepancies in 3D scene data numerically rather than by eye.",
+      "Streaming an Unreal Engine scene directly into RealityKit to inspect it across visionOS display modes while still editing.",
+      "Summarizing export routes from Unreal Engine to RenderMan, OpenUSD, and glTF.",
+      "Walking through what membership includes: live classes, Friday office hours, the recording library, the plugin lab, and a vote on what gets taught next.",
+      "Previewing the six upcoming classes, including MetaHuman wardrobes, Lumen in Unreal Engine 5.8, creative AI workflows, and Gaussian splatting for virtual reality.",
+    ],
+    tools: ["Unreal Engine 5.8", "Apple Vision Pro", "RealityKit", "MetaHuman", "Lumen", "OpenUSD", "RenderMan", "Forage", "Constellation", "Blueprint Auto Layout", "Scene Audit", "Pinchwork", "Spatial Deck", "Blueprint Immersive", "Fab", "Godot", "Obsidian", "PicoSpace Pro", "OBS"],
+    source: "whisper-local",
+    generatedOn: "2026-10-08",
+  },
 };
+
+// A session's summary: a recorded class resolves through its recording's
+// youtubeId, but a free public broadcast (a livestream) has no recording entry
+// and carries its own youtubeId instead. Both paths land in the same table.
+export function summaryForSession(
+  s: { youtubeId?: string },
+  recordingYoutubeId?: string,
+): SessionSummary | undefined {
+  const id = recordingYoutubeId ?? s.youtubeId;
+  return id ? sessionSummaries[id] : undefined;
+}

@@ -5,7 +5,7 @@ import { instructors } from "../lib/instructors.ts";
 import { storeItems, wednesdayCalendar } from "../lib/store.ts";
 import { classFolders } from "../lib/classMaterials.ts";
 import { recordings } from "../lib/recordings.ts";
-import { sessionSummaries } from "../lib/classSummaries.ts";
+import { sessionSummaries, summaryForSession } from "../lib/classSummaries.ts";
 
 test("session page slugs are unique and URL-safe", () => {
   const slugs = classSessions.map((s) => s.slug);
@@ -68,6 +68,38 @@ test("every recorded session has a summary", () => {
     const rec = recordings.find((r) => r.slug === s.recordingSlug)!;
     assert.ok(rec.youtubeId && sessionSummaries[rec.youtubeId], `${s.slug} has a recording but no summary`);
   }
+});
+
+test("a past free broadcast shows a summary via its own youtubeId, with no recording entry", () => {
+  // Regression: the class page used to key the summary off recording.youtubeId
+  // only, so a livestream -- which has a youtubeId but never a recordingSlug --
+  // rendered the embed with no "what we covered" section underneath it.
+  const free = classSessions.filter((s) => s.youtubeId && !s.recordingSlug && isPast(s));
+  assert.ok(free.length > 0, "expected at least one past free broadcast with its own youtubeId");
+  for (const s of free) {
+    // No recording entry exists for these, so the page passes no recording id
+    // and the summary has to resolve from the session's own youtubeId.
+    assert.ok(
+      !recordings.some((r) => r.youtubeId === s.youtubeId),
+      `${s.slug} unexpectedly has a recording entry`,
+    );
+    assert.ok(
+      summaryForSession(s, undefined),
+      `${s.slug} is a past free broadcast but resolves no summary`,
+    );
+  }
+});
+
+test("summaryForSession prefers the recording's id and falls back to the session's", () => {
+  // The recording's id wins when both exist, so a class whose replay lives in
+  // the members' library can never pick up a public video's summary by mistake.
+  const ids = Object.keys(sessionSummaries);
+  assert.ok(ids.length >= 2, "need two summaries to test precedence");
+  const [a, b] = ids;
+  assert.equal(summaryForSession({ youtubeId: b }, a), sessionSummaries[a]);
+  assert.equal(summaryForSession({ youtubeId: b }, undefined), sessionSummaries[b]);
+  assert.equal(summaryForSession({}, undefined), undefined);
+  assert.equal(summaryForSession({ youtubeId: "not-a-real-id" }, undefined), undefined);
 });
 
 test("upcoming sessions describe what you'll learn; free ones say where to watch", () => {
