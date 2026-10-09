@@ -4,7 +4,10 @@
     {
       "name": "acp-site",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "cwd": ".",
       "port": 3000,
       "autoPort": true
@@ -12,9 +15,27 @@
     {
       "name": "newsletter-studio",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "studio"],
+      "runtimeArgs": [
+        "run",
+        "studio"
+      ],
       "cwd": ".",
       "port": 4848
+    },
+    {
+      "name": "acp-site-live",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "NEXT_PUBLIC_MEMBERSHIP_LIVE=1",
+        "npm",
+        "run",
+        "dev",
+        "--",
+        "-p",
+        "3001"
+      ],
+      "cwd": ".",
+      "port": 3001
     }
   ]
 }
