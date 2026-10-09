@@ -777,6 +777,7 @@ export type Product = {
   links: { label: string; url: string }[];
   accent: string; // tailwind-friendly hue token
   video?: string; // primary / featured YouTube id
+  clips?: string[]; // self-hosted clips from lib/trailers.ts (public/trailers/<slug>.mp4)
   videos?: { id: string; title: string }[]; // additional updates, newest first
   // A big, prominent image right under the tagline — for products with no
   // video but a real screenshot worth leading with. A real capture, not a
@@ -1368,6 +1369,38 @@ export const products: Product[] = [
       { label: "Get a license →", url: "/store#xrsim" },
     ],
     accent: "teal",
+  },
+  {
+    slug: "ultimate-openxr-template",
+    name: "Ultimate OpenXR Template",
+    status: "Unreal Engine 5.8 template · in development",
+    tagline: "One Unreal project.<br>Every headset, hands included.",
+    pitch:
+      "Every new XR project I start used to begin the same way: OpenXR loaders, Android packaging, a visionOS configuration, and hand tracking that only behaved on one headset. The Ultimate OpenXR Template is the project I start from instead. It's Blueprint-only Unreal Engine 5.8, it runs on Quest, PICO, Android XR and Apple Vision Pro, and hand tracking and gestures are built in. Every fix my XR projects find goes back into it.",
+    sections: [
+      {
+        heading: "One project, every headset",
+        body: "Android OpenXR packaging, a visionOS mixed-immersion configuration, and a passthrough blend mode chosen at runtime from what the device supports, so a new app starts on device instead of starting with setup. Hand tracking and gesture plugins ship precompiled, so a Blueprint-only project never needs a C++ toolchain to use them.",
+      },
+      {
+        heading: "Hands first, everything else too",
+        body: "Pinch to select with either hand, rays that stay steady while you pinch, and a two-hand hold that opens the comfort menu. Losing tracking releases whatever you were holding. Controllers, keyboard and gamepad all work the same map, and the comfort menu covers teleport, walk or fly, and snap or smooth turning.",
+      },
+      {
+        heading: "Tested by AI, no headset on",
+        body: "Changes run through xrsim and the Meta XR Simulator: scripted hand poses drive the real Blueprint controls, and the checks read back actual game state instead of trusting a screenshot. The clips below are continuous, real-time takes of exactly that.",
+      },
+    ],
+    bullets: [
+      "Unreal Engine 5.8, Blueprint-only",
+      "Quest, PICO, Android XR and Apple Vision Pro from one project",
+      "Hand tracking and pinch gestures built in, with controller, keyboard and gamepad fallbacks",
+      "Comfort menu: teleport, walk or fly; snap or smooth turning",
+      "Tested in xrsim and the Meta XR Simulator, no headset needed",
+    ],
+    links: [],
+    accent: "teal",
+    clips: ["uoxr-menu-selection", "uoxr-pinch-gestures"],
   },
   {
     slug: "roomscanpro",

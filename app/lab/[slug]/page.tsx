@@ -8,6 +8,8 @@ import WaitlistForm from "@/components/WaitlistForm";
 import LiteVideo from "@/components/LiteVideo";
 import VideoUpdates from "@/components/VideoUpdates";
 import { products } from "@/lib/data";
+import { trailer } from "@/lib/trailers";
+import TrailerVideo from "@/components/TrailerVideo";
 import { isListSlug } from "@/lib/lists";
 import { renderBreaks, plainText } from "@/components/Lines";
 
@@ -153,6 +155,20 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.videos && product.videos.length > 0 && (
               <VideoUpdates videos={product.videos} />
             )}
+          </div>
+        </Reveal>
+      )}
+
+      {product.clips && product.clips.length > 0 && (
+        <Reveal>
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {product.clips.map(trailer).map((t) => (
+              <div key={t.slug}>
+                <TrailerVideo slug={t.slug} title={t.title} />
+                <h3 className="mt-4 font-bold">{t.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-mist">{t.tagline}</p>
+              </div>
+            ))}
           </div>
         </Reveal>
       )}

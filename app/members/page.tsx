@@ -428,7 +428,10 @@ export default async function Members({
               One Blueprint-only Unreal Engine 5.8 project for Quest, PICO, Android XR and Apple Vision Pro,
               with hand tracking and gestures built in. It&apos;s the starting point for Alex&apos;s XR
               projects, and every fix those projects find goes back into it. Below, an AI drives both hands
-              in a simulator — no headset on, every check passing.
+              in a simulator — no headset on, every check passing.{" "}
+              <Link href="/lab/ultimate-openxr-template" className="text-teal hover:underline">
+                More about the template →
+              </Link>
             </p>
             <div className="mt-8 grid gap-6 md:grid-cols-2">
               {trailersFor("template").map((t) => (
