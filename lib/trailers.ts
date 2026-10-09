@@ -9,6 +9,7 @@ export type TrailerAccess =
   | "members-lab" // a shipping tool members get today
   | "coming-to-lab" // in progress; Insider early access
   | "plugin" // an Unreal plugin still in development
+  | "template" // the Ultimate OpenXR Template (UOXR), in development
   | "open-source"; // free for everyone
 
 export type Trailer = {
@@ -25,6 +26,7 @@ export const ACCESS_LABEL: Record<TrailerAccess, string> = {
   "members-lab": "In the members' Lab",
   "coming-to-lab": "Coming to the Lab · Insider early access",
   plugin: "Unreal plugin · in development",
+  template: "Unreal XR template · in development",
   "open-source": "Free & open source",
 };
 
@@ -109,6 +111,23 @@ export const trailers: Trailer[] = [
     durationSec: 22,
     access: "open-source",
     href: "https://github.com/ibrews/blueprint-auto-layout",
+  },
+  // UOXR clips: real-time, silent captures Fort recorded on 2026-10-09 (xrsim
+  // 0.7.13 + Meta XR Simulator 207 + UE 5.8), labels added after, no cuts.
+  // Provenance and hashes: KB projects/ultimate-openxr-template/2026-10-09-overnight-simulator-qa.md.
+  {
+    slug: "uoxr-menu-selection",
+    title: "AI drives both hands through the menu",
+    tagline: "Left and right hand selection, stable rays while pinching, real button presses — 18 of 18 checks, no headset.",
+    durationSec: 18,
+    access: "template",
+  },
+  {
+    slug: "uoxr-pinch-gestures",
+    title: "Pinch gestures, tested by AI",
+    tagline: "A single pinch is ignored, a one-second two-hand hold opens the menu, a second hold closes it — 9 of 9 checks.",
+    durationSec: 14,
+    access: "template",
   },
 ];
 

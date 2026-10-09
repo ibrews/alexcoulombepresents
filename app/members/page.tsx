@@ -419,6 +419,30 @@ export default async function Members({
         </div>
 
         <Reveal>
+          <div className="glass mt-20 rounded-3xl p-6 md:p-10">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-teal">{ACCESS_LABEL.template}</p>
+            <h3 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">
+              The Ultimate OpenXR <span className="grad-text">Template</span>
+            </h3>
+            <p className="mt-3 max-w-3xl leading-relaxed text-mist">
+              One Blueprint-only Unreal Engine 5.8 project for Quest, PICO, Android XR and Apple Vision Pro,
+              with hand tracking and gestures built in. It&apos;s the starting point for Alex&apos;s XR
+              projects, and every fix those projects find goes back into it. Below, an AI drives both hands
+              in a simulator — no headset on, every check passing.
+            </p>
+            <div className="mt-8 grid gap-6 md:grid-cols-2">
+              {trailersFor("template").map((t) => (
+                <div key={t.slug}>
+                  <TrailerVideo slug={t.slug} title={t.title} />
+                  <h4 className="mt-4 font-bold">{t.title}</h4>
+                  <p className="mt-1 text-sm leading-relaxed text-mist">{t.tagline}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal>
           <h3 className="mt-20 text-2xl font-bold tracking-tight">Coming next</h3>
           <p className="mt-2 max-w-2xl text-mist">
             Insiders get in-progress tools early. The Unreal plugins are still in development — the plugins
