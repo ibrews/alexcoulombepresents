@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import TrailerVideo from "@/components/TrailerVideo";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import { PLUGIN_UPDATES } from "@/lib/commerce/pluginUpdates";
@@ -23,34 +24,40 @@ type PluginEntry = {
   displayName: string;
   pitch: string;
   oss?: { label: string; url: string };
+  trailer: string; // public/trailers/<slug>.mp4 — see lib/trailers.ts
 };
 
 const PLUGINS: PluginEntry[] = [
   {
     product: "SceneAudit",
     displayName: "SceneAudit",
+    trailer: "sceneaudit",
     pitch:
       "Numeric verdicts on 3D placement in Unreal — because the viewport is not a measuring instrument. Catches floating and misplaced objects a screenshot can't.",
   },
   {
     product: "URMBridge",
     displayName: "URMBridge",
+    trailer: "urmbridge",
     pitch: "Export an Unreal level to Pixar RenderMan. One menu click, no manual re-authoring.",
   },
   {
     product: "Forage",
     displayName: "Forage",
+    trailer: "forage",
     pitch: "Search and install your own Fab asset library from a CLI or right inside the editor.",
   },
   {
     product: "BPAutoLayout",
     displayName: "Blueprint Anti-Pasta",
+    trailer: "blueprint-anti-pasta",
     pitch: "Rearranges any Blueprint graph into a clean, readable left-to-right execution flow.",
     oss: { label: "Free & open source on GitHub", url: "https://github.com/ibrews/blueprint-auto-layout" },
   },
   {
     product: "URKPreviewer",
     displayName: "URKPreviewer (UnRealityKit Live Link)",
+    trailer: "urkpreviewer",
     pitch: "Live-streams an Unreal scene straight into Apple RealityKit and visionOS — no export round-trip.",
   },
 ];
@@ -90,6 +97,7 @@ export default function Plugins() {
           return (
             <Reveal key={p.product} delay={Math.min(i * 70, 280)}>
               <div className="glass flex h-full flex-col rounded-2xl p-7">
+                <TrailerVideo slug={p.trailer} title={`${p.displayName} trailer`} className="mb-5" />
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h2 className="font-bold leading-snug">{p.displayName}</h2>
                   <span className="shrink-0 rounded-full border border-teal/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-teal">
