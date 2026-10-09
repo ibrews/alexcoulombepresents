@@ -1398,9 +1398,58 @@ export const products: Product[] = [
       "Comfort menu: teleport, walk or fly; snap or smooth turning",
       "Tested in xrsim and the Meta XR Simulator, no headset needed",
     ],
-    links: [],
+    links: [{ label: "Built with it: Echo Cathedral", url: "/lab/echo-cathedral" }],
     accent: "teal",
     clips: ["uoxr-menu-selection", "uoxr-pinch-gestures"],
+  },
+  {
+    slug: "echo-cathedral",
+    name: "Echo Cathedral",
+    status: "XR instrument · in development",
+    tagline: "Draw a line in VR.<br>Then play the room.",
+    pitch:
+      "Could drawing, composing and designing architecture be the same physical act? In Echo Cathedral you draw a curve with your hand and it becomes a porcelain-and-brass rib you can play. Pluck it, and the room answers: your shape echoes into new voices and grows into a vault over your head.",
+    sections: [
+      {
+        heading: "A line becomes an instrument",
+        body: "Draw with your right hand and the curve becomes real geometry. Reach for it, pull and release: the height of the point you grab sets the note, and how far you pull sets its strength and a slight bend. Away from the curve, taps play in your own rhythm.",
+      },
+      {
+        heading: "The room answers",
+        body: "Every copy of your shape joins an arrangement that keeps evolving: nine spatial voices across string, glass and breath. The ribs climb into a vault overhead and panels open between them, leaving gaps for light. Hold both grips to start over.",
+      },
+      {
+        heading: "An atelier, not a toy",
+        body: "Save and reload your motifs, undo freely, and record phrases to play back. Architecture studies inspired by Florence's ribbed dome, Notre-Dame's pointed nave and Gaudí's branching canopies reshape your own curve. They're teaching models, not reconstructions. An audience view gives someone else a composed camera and records the music.",
+      },
+      {
+        heading: "Built on the Ultimate OpenXR Template",
+        body: "Echo Cathedral started from my Ultimate OpenXR Template, so hands and controllers both work and the same project builds for Quest, PICO and Android XR. The first build was confirmed on Quest and PICO; newer builds are still being tested on device.",
+      },
+    ],
+    bullets: [
+      "Draw, pluck, echo: a gesture becomes geometry becomes music",
+      "Hands or controllers",
+      "Nine spatial voices across string, glass and breath",
+      "Save, undo and reload your sketchbook; record phrases",
+      "Architecture studies after Florence, Notre-Dame and Gaudí",
+    ],
+    links: [{ label: "Built on the Ultimate OpenXR Template", url: "/lab/ultimate-openxr-template" }],
+    accent: "amber",
+    heroImage: { src: "/lab/echo-cathedral/vault.jpg", alt: "Nine porcelain ribs arching overhead in Echo Cathedral" },
+    screenshots: [
+      { src: "/lab/echo-cathedral/first-arch.jpg", alt: "A single drawn arch in Echo Cathedral", caption: "One drawn curve, ready to pluck." },
+      {
+        src: "/lab/echo-cathedral/florence-dome-study.jpg",
+        alt: "The Florence ribbed dome study in the Echo Cathedral atelier",
+        caption: "Atelier: the Florence ribbed dome study, applied to a drawn curve.",
+      },
+      {
+        src: "/lab/echo-cathedral/florence-dome-audience-camera.jpg",
+        alt: "Wide audience-camera view of the dome study",
+        caption: "The audience camera's wide view of the same study.",
+      },
+    ],
   },
   {
     slug: "roomscanpro",
