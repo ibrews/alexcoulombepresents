@@ -101,6 +101,51 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   },
 ];
 
+// ── Side-by-side comparison for /members ───────────────────────────────────
+// One row per thing a member gets, one cell per tier (true = included,
+// false = not, string = the specific amount). Credits and vote weight come
+// from the tier records above so the table can't drift from billing.
+export type ComparisonRow = { label: string; detail?: string; cells: (boolean | string)[] };
+
+export const TIER_COMPARISON: ComparisonRow[] = [
+  {
+    label: "Live Wednesday classes",
+    cells: MEMBERSHIP_TIERS.map((t) =>
+      t.monthlyCredits === "unlimited" ? "Unlimited" : `${t.monthlyCredits} credits / month`
+    ),
+  },
+  {
+    label: "Friday office hours",
+    detail: "Two live hours with Alex, every Friday at 1p ET",
+    cells: MEMBERSHIP_TIERS.map((t) => (t.monthlyCredits === "unlimited" ? "Unlimited" : "Uses a credit")),
+  },
+  { label: "Every class recording", cells: MEMBERSHIP_TIERS.map(() => true) },
+  {
+    label: "The members' Lab",
+    detail: "xrsim, Forage, Constellation, Promptbook",
+    cells: MEMBERSHIP_TIERS.map(() => true),
+  },
+  { label: "Spatial Deck presentation library", cells: MEMBERSHIP_TIERS.map(() => true) },
+  {
+    label: "Vote on what's taught next",
+    cells: MEMBERSHIP_TIERS.map((t) => `${t.voteWeight}x weight`),
+  },
+  {
+    label: "Early access to in-progress tools and betas",
+    detail: "Like Pinchwork, before it opens to everyone",
+    cells: MEMBERSHIP_TIERS.map((t) => t.id === "insider"),
+  },
+  {
+    label: "The full back catalog",
+    detail: "Sessions that don't surface anywhere else",
+    cells: MEMBERSHIP_TIERS.map((t) => t.id === "insider"),
+  },
+  {
+    label: "The Gumroad course library",
+    cells: MEMBERSHIP_TIERS.map((t) => t.id === "insider"),
+  },
+];
+
 export function membershipTier(id: MembershipTierId | string | null | undefined): MembershipTier | undefined {
   return MEMBERSHIP_TIERS.find((t) => t.id === id);
 }
