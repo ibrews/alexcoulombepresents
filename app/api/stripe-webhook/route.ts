@@ -109,10 +109,15 @@ const LEGACY_MEMBERSHIP_PRICE_IDS: Record<MembershipTierId, string[]> = {
   // price_1U3UGIDALxplFYNoEu5zvTur: the $350/mo price from the 2026-08-12
   // increase, retired 2026-08-31 in favor of $300/mo (Alex's call — 0 active
   // subscriptions on it at the time of the change).
+  // price_1UAd71DALxplFYNoIPcAwIJe: the $300/mo price that Aug 31 subscription
+  // schedule created for Lynne Heller (inactive, on the old "ACP Membership"
+  // product, not the standard Unlimited price). Her Oct 10 renewal
+  // (evt_1UOzwUDALxplFYNo7MNWQPJb) matched nothing until this was added.
   unlimited: [
     "price_1U1fjUDALxplFYNoDJ5gOq0e",
     "price_1U362gDALxplFYNoYhKjt94Q",
     "price_1U3UGIDALxplFYNoEu5zvTur",
+    "price_1UAd71DALxplFYNoIPcAwIJe",
   ],
   // price_1U364pDALxplFYNobtfMb3mO: Jan Solarski's active subscription (2026-08-12 price increase)
   insider: ["price_1U1fk5DALxplFYNowUUbzkqi", "price_1U364pDALxplFYNobtfMb3mO"],
