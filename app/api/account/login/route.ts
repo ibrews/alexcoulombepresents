@@ -1,3 +1,4 @@
+import { loginDestination } from "@/lib/commerce/loginDestination";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureCommerceSchema, sql } from "@/lib/commerce/schema";
 import { issueMagicLink } from "@/lib/commerce/tokens";
@@ -9,8 +10,9 @@ import { clientIp, rateLimitAllows, RATE_LIMITED_MESSAGE } from "@/lib/rate-limi
 // avoids leaking which addresses have purchased.
 export async function POST(req: NextRequest) {
   let email: string | undefined;
+  let next: unknown;
   try {
-    ({ email } = await req.json());
+    ({ email, next } = await req.json());
   } catch {
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }
@@ -33,7 +35,7 @@ export async function POST(req: NextRequest) {
   if (customerId) {
     const token = await issueMagicLink(customerId);
     const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexcoulombepresents.com";
-    const magicLinkUrl = `${site}/api/account/verify?token=${token}`;
+    const magicLinkUrl = `${site}/api/account/verify?token=${token}&next=${encodeURIComponent(loginDestination(next))}`;
     await sendMagicLinkEmail({ email, magicLinkUrl });
   }
 

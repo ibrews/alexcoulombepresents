@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 
-export default function LoginForm() {
+export default function LoginForm({ next = "/account" }: { next?: string }) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("sending");
-    await fetch("/api/account/login", {
+    const response = await fetch("/api/account/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    }).catch(() => {});
-    setStatus("sent");
+      body: JSON.stringify({ email, next }),
+    }).catch(() => null);
+    setStatus(response?.ok ? "sent" : "error");
   }
 
   if (status === "sent") {
@@ -22,6 +22,8 @@ export default function LoginForm() {
   }
 
   return (
+    <>
+      {status === "error" && <p role="alert" className="mt-4 text-sm">Could not send the link. Please try again shortly.</p>}
     <form onSubmit={submit} className="mt-6 flex w-full max-w-sm gap-2">
       <input
         type="email"
@@ -39,5 +41,6 @@ export default function LoginForm() {
         {status === "sending" ? "Sending…" : "Send link"}
       </button>
     </form>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+import { KIT_OBJECT_KEY } from "./secondBrain/course.ts";
+
 // ── Class materials — one shareable folder per class ───────────────────────
 //
 // Two audiences, one structure (Alex, 2026-08-14):
@@ -79,7 +81,22 @@ export type ClassFolder = {
   materials: ClassMaterial[];
 };
 
+const secondBrainKit: ClassMaterial = {
+  key: "second-brain-kit",
+  label: "ACP Second Brain — first course kit",
+  source: { kind: "r2", key: KIT_OBJECT_KEY },
+  sizeLabel: "96 KB",
+  note: "Candidate 0.1.0-alpha.1. Start with README.md and start-here/README.md. Optional feedback lives at /members/second-brain.",
+};
+
 export const classFolders: ClassFolder[] = [
+  {
+    slug: "acp-second-brain",
+    title: "ACP Second Brain",
+    membersOnly: true,
+    blurb: "Your first AI workflow course kit: private memory, verified output, and a safe restart exercise.",
+    materials: [secondBrainKit],
+  },
   {
     slug: "wed-2026-08-12-intro-vr",
     title: "Intro to VR in Unreal 5.8",
@@ -267,6 +284,7 @@ export const classFolders: ClassFolder[] = [
     date: "2026-11-04",
     blurb: "Setting up a creative AI workflow from scratch.",
     materials: [
+      secondBrainKit,
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1yJu7Oiwigdw3CeESI2DTuwatWwCB83F0",
         note: "Class assets land here around class time.",
@@ -279,6 +297,7 @@ export const classFolders: ClassFolder[] = [
     date: "2026-11-11",
     blurb: "Letting AI agents run long jobs unattended.",
     materials: [
+      secondBrainKit,
       sharedFolder({
         url: "https://drive.google.com/drive/folders/1KRlqQv1tcr6ADRweYq-Z56itprH5UknJ",
         note: "Class assets land here around class time.",
@@ -353,7 +372,7 @@ export function findMaterial(
 // a Download button that 500s, which is worse than saying "not up yet".
 export function materialAvailable(material: ClassMaterial): boolean {
   if (material.source.kind !== "r2") return true;
-  return Boolean(process.env.R2_ACCOUNT_ID && process.env.R2_BUCKET);
+  return ["R2_ACCOUNT_ID", "R2_BUCKET", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY"].every(key => Boolean(process.env[key]) && process.env[key] !== "[SENSITIVE]");
 }
 
 export function materialHref(folderSlug: string, key: string): string {

@@ -1,3 +1,4 @@
+import { loginDestination } from "@/lib/commerce/loginDestination";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
@@ -14,12 +15,13 @@ export const metadata: Metadata = { title: "My account" };
 export default async function Account({
   searchParams,
 }: {
-  searchParams: Promise<{ portal?: string }>;
+  searchParams: Promise<{ portal?: string; next?: string }>;
 }) {
   const sessionToken = (await cookies()).get("acp_session")?.value;
   const customerId = await customerFromSession(sessionToken);
 
   if (!customerId) {
+    const destination = loginDestination((await searchParams).next);
     return (
       <div className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-5 pt-32 text-center">
         <p className="font-mono text-sm text-teal">/account</p>
@@ -27,7 +29,7 @@ export default async function Account({
         <p className="mt-4 text-sm text-mist">
           Enter the email you purchased with — we&apos;ll send a sign-in link.
         </p>
-        <LoginForm />
+        <LoginForm next={destination} />
       </div>
     );
   }
@@ -85,6 +87,8 @@ export default async function Account({
           Open your folders →
         </Link>
       </div>
+
+      <Link href="/members/second-brain" className="mt-6 inline-block text-teal hover:underline">Open ACP Second Brain →</Link>
 
       {membership && (
         <div

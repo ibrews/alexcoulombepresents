@@ -25,3 +25,6 @@ next-env.d.ts
 .newsletter-sends.jsonl
 .manual-send/
 .wrangler/
+
+# Isolated synthetic account rehearsal, never production data
+/.rehearsal/

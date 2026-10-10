@@ -80,6 +80,43 @@ The prior production deployment is
 | `/newsletter` | Archive of every newsletter issue (markdown files in `content/newsletters/`) + subscribe form |
 | `/support` | "Support the Lab" donations — Stripe Checkout with preset/custom amounts and an optional comment/request field |
 
+## ACP Second Brain pilot
+
+`/members/second-brain` opens the candidate course kit for active ACP members of every
+tier and non-refunded buyers of either November AI masterclass. Account sign-in returns
+directly to the portal. The ZIP lives in private R2, outside this public repository;
+ `/api/materials` checks current access before issuing a five-minute signed download.
+
+Optional feedback defaults off. Learners review a versioned notice, opt in, preview a
+structured result, then explicitly send it. No prompts, transcripts, files or automatic
+usage events are collected by this feature. Self export and withdrawal/deletion remain
+available to signed-in accounts after access lapses. Records expire after 90 days;
+`/api/cron/second-brain-feedback-retention` runs daily using the existing `CRON_SECRET`.
+POST writes are limited to 30 per account/hour; withdrawal is never rate limited.
+The database lazily creates three dedicated feedback tables. Operational hosting/download
+logs remain separate. This is a course pilot; engine and XR packs are not included.
+
+### Rehearse before invitations
+
+```bash
+npm ci
+node scripts/second-brain-rehearsal.mjs start --reset --port 8771
+# In another terminal:
+node scripts/second-brain-rehearsal.mjs fixtures
+node scripts/second-brain-rehearsal.mjs link active-starter
+node scripts/second-brain-rehearsal.mjs restart
+node scripts/second-brain-rehearsal.mjs checkpoint
+node scripts/second-brain-rehearsal.mjs stop
+```
+
+The harness uses persistent PGlite with synthetic accounts, captures email locally and
+blocks outbound fetches. It never reads production customer data. Local database/state
+and fake tokens stay under ignored `.rehearsal/`. Download transport can use a local ZIP
+fixture; that is distinct from verifying the real private R2 upload. See the script's
+usage for fixture controls. After starting with `--artifact .rehearsal/r2-roundtrip.zip`, run
+`node scripts/second-brain-rehearsal-check.mjs` for the full access/consent/retention matrix. Do not grant production comps or run member-invite crons to
+create rehearsal accounts.
+
 ## Quickstart
 
 ```bash

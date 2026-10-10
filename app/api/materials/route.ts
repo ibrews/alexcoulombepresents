@@ -19,6 +19,13 @@ export const runtime = "nodejs";
 const MATERIALS_DIR = path.join(process.cwd(), "content", "materials");
 
 export async function GET(req: NextRequest) {
+  const response = await deliver(req).catch(() => NextResponse.json({ error: "Download unavailable. Please try again shortly." }, { status: 503 }));
+  response.headers.set("Cache-Control", "private, no-store");
+  response.headers.set("Referrer-Policy", "no-referrer");
+  return response;
+}
+
+async function deliver(req: NextRequest) {
   const folderSlug = req.nextUrl.searchParams.get("class");
   const key = req.nextUrl.searchParams.get("key");
   if (!folderSlug || !key) {

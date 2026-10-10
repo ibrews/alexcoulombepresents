@@ -198,6 +198,7 @@ export default async function Members({
                 ; more member perks unlock as the program rolls out.
               </p>
               <div className="mt-5 flex flex-wrap justify-center gap-3">
+                <Link href="/members/second-brain" className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold hover:border-teal/60">ACP Second Brain →</Link>
                 <Link
                   href="/members/recordings"
                   className="rounded-full bg-snow px-6 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"

@@ -1,3 +1,4 @@
+import { loginDestination } from "@/lib/commerce/loginDestination";
 import { NextRequest, NextResponse } from "next/server";
 import { redeemMagicLink } from "@/lib/commerce/tokens";
 
@@ -11,7 +12,8 @@ export async function GET(req: NextRequest) {
   const sessionToken = await redeemMagicLink(token);
   if (!sessionToken) return NextResponse.redirect(`${site}/account?error=invalid_or_expired`);
 
-  const res = NextResponse.redirect(`${site}/account`);
+  const res = NextResponse.redirect(`${site}${loginDestination(req.nextUrl.searchParams.get("next"))}`);
+  res.headers.set("Cache-Control", "private, no-store");
   res.cookies.set("acp_session", sessionToken, {
     httpOnly: true,
     secure: true,

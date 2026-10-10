@@ -2,7 +2,7 @@
   "name": "alexcoulombepresents",
   "version": "1.0.0",
   "private": true,
-  "description": "Alex Coulombe Presents \u2014 Unreal Engine, Godot, visionOS, AI, and training. The personal site.",
+  "description": "Alex Coulombe Presents — Unreal Engine, Godot, visionOS, AI, and training. The personal site.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -27,6 +27,7 @@
     "three": "^0.185.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/postcss": "^4.1.8",
     "@types/node": "^22.15.29",
     "@types/react": "^19.1.6",
