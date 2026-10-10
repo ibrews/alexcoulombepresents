@@ -1,7 +1,7 @@
 # ACP Second Brain member pilot progress
 
 ## Current Status
-Member access, optional feedback and synthetic onboarding verified. Production deployment pending.
+Member access, optional feedback and synthetic onboarding verified. Production portal deployed and signed-out gates checked.
 
 ## Completed
 - Existing membership and non-refunded November class purchases govern kit access.
@@ -18,7 +18,6 @@ Member access, optional feedback and synthetic onboarding verified. Production d
 - Rehearsal Neon timestamps require PostgreSQL text format. ISO T/Z caused null/epoch in the adapter; corrected in the test harness.
 
 ## Next Up
-- Publish verified website code and check deployed signed-out gates.
 - Invite only after human learner acceptance and explicit invitation authorization.
 
 ## Needs Human Input
