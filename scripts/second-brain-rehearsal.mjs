@@ -16,6 +16,7 @@ const databaseDir = path.join(rehearsalDir, "pglite");
 const stateFile = path.join(rehearsalDir, "state.json");
 const preloadFile = path.join(scriptDir, "second-brain-rehearsal-preload.mjs");
 const authSecret = "second-brain-rehearsal-fixture-auth-secret-v1";
+const cronSecret = "rehearsal-cron-secret";
 const databaseUrl = "postgresql://rehearsal:rehearsal@rehearsal.invalid/rehearsal";
 
 export const fixtures = Object.freeze({
@@ -78,7 +79,15 @@ function rawValue(value, dataTypeID) {
   if (dataTypeID === 16) return value ? "t" : "f";
   if (dataTypeID === 17 && value instanceof Uint8Array) return `\\x${Buffer.from(value).toString("hex")}`;
   if (dataTypeID === 1082 && value instanceof Date) return value.toISOString().slice(0, 10);
-  if (value instanceof Date) return value.toISOString();
+  if (value instanceof Date) {
+    const iso = value.toISOString();
+    // The Neon client parses PostgreSQL's text representation for temporal
+    // OIDs. Keep the ISO precision, but use the space-delimited PostgreSQL
+    // wire form so timestamptz values do not parse as null/Unix epoch.
+    if (dataTypeID === 1114) return iso.replace("T", " ").replace("Z", "");
+    if (dataTypeID === 1184) return iso.replace("T", " ").replace("Z", "+00");
+    return iso;
+  }
   if ((dataTypeID === 114 || dataTypeID === 3802) && typeof value !== "string") return JSON.stringify(value);
   if (Array.isArray(value)) return postgresArray(value);
   return String(value);
@@ -290,7 +299,9 @@ async function controlRequest(command, fixture) {
   if (!response.ok) throw new Error(`${response.status} ${body}`);
   process.stdout.write(`${body}\n`);
   if (command === "stop") {
-    for (let attempt = 0; attempt < 50; attempt += 1) {
+    for (let attempt = 0; attempt < 100; attempt += 1) {
+      const currentState = await readState().catch(() => null);
+      if (!currentState) return;
       try {
         process.kill(state.harnessPid, 0);
       } catch (error) {
@@ -299,7 +310,7 @@ async function controlRequest(command, fixture) {
       }
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    throw new Error(`Harness PID ${state.harnessPid} did not stop within 5 seconds`);
+    throw new Error(`Harness PID ${state.harnessPid} did not stop within 10 seconds`);
   }
 }
 
@@ -370,6 +381,7 @@ async function startHarness(options) {
       NODE_OPTIONS: `--import=${preloadFile}`,
       DATABASE_URL: databaseUrl,
       AUTH_SECRET: authSecret,
+      CRON_SECRET: cronSecret,
       RESEND_API_KEY: "rehearsal_resend_key",
       NEXT_PUBLIC_SITE_URL: baseUrl,
       NEXT_PUBLIC_MEMBERSHIP_LIVE: "1",
