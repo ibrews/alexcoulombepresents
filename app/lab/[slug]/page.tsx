@@ -15,7 +15,7 @@ import { renderBreaks, plainText } from "@/components/Lines";
 
 export function generateStaticParams() {
   // Dedicated routes own their HTML; generating the same path here overwrites it.
-  return products.filter((p) => p.slug !== "scene-audit").map((p) => ({ slug: p.slug }));
+  return products.filter((p) => p.slug !== "scene-audit" && p.slug !== "harborfolk").map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

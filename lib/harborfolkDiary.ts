@@ -2,7 +2,24 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
   {
-    id: "a-building-that-grows", title: "An upgrade you can watch being built", date: "October 11, 2026", version: "v0.2 · shipped",
+    id: "from-a-dock-to-a-working-town", title: "From a dock to a working town", date: "2026-10-11", version: "v0.3 · shipped",
+    paragraphs: [
+      "The harbor now has a small city economy. Villagers walk to building sites, raise their structures, tend farms, and quarry stone. Cottages add room for more people. A warehouse trades food for timber and stone, so the settlement can keep growing after the nearby trees are gone.",
+      "Settlement, Harbor, and Citadel ages give that growth a direction. Eight technologies form a prerequisite tree, with useful changes to harvests, construction, ships, and defense. An academy and barracks are buildings you need to finish, rather than menu unlocks that appear by themselves.",
+      "Guards, archers, and watchtowers add the first land battles. Peaceful mode lets you choose when to try a raid. Adventure mode allows automatic raids but gives damaged buildings a way to recover; Hard mode allows destruction. The opening screen also lets you name the harbor, choose its banner, and change the landscape.",
+      "Two browsers can now command the same settlement through direct co-op. One browser runs the simulation; the other sends orders and receives updates, with its own camera and selection. Moving people and ships ease between those updates. Joining currently means exchanging invitation and answer codes, and some networks will need a relay we have not added yet.",
+      "There is also a WebXR tabletop view for compatible VR browsers, with a scale control and controller selection. Automated checks cover entering, leaving, and restoring the desktop view. Headset comfort and controller feel still need a physical playtest.",
+      "This build passed 43 automated tests, the original cargo and naval browser playtests, a complete city progression playtest, and a real two-browser co-op test. The city captures below come from ordinary game orders with the actual simulation advanced for testing. No resources or units were injected. The next verdict belongs to my kid."
+    ],
+    images: [
+      { src: "/lab/harborfolk/city-farm.webp", alt: "Villagers tending a newly constructed Harborfolk farm", caption: "Food comes from assigned people who have reached the farm." },
+      { src: "/lab/harborfolk/city-research.webp", alt: "Harborfolk's Citadel Age and technology research panel", caption: "Three ages and a technology tree with real prerequisites." },
+      { src: "/lab/harborfolk/city-battle.webp", alt: "Guards defending the Harborfolk settlement from land raiders", caption: "The first land raid, with selected defenders and visible opponents." },
+      { src: "/lab/harborfolk/city-town.webp", alt: "A working Harborfolk town with placed buildings", caption: "A settlement built through play, ready for the next human playtest." }
+    ]
+  },
+  {
+    id: "a-building-that-grows", title: "An upgrade you can watch being built", date: "2026-10-11", version: "v0.2 · shipped",
     paragraphs: [
       "The next experiment was a workshop that changes while villagers work on it. Polyfork supplies a parameterized building: the upgrade adds another bay and steepens the roof in visible stages. Doors stay people-sized as the building grows.",
       "Paint, roof color, and weathering are separate controls. They are there to play with, without spending the resources needed for a functional upgrade. The finished workshop earns fishing supplies.",
@@ -17,7 +34,7 @@ export const harborfolkDiary: DiaryEntry[] = [
     ]
   },
   {
-    id: "people-make-the-harbor", title: "Start with a boat that needs people", date: "October 11, 2026", version: "v0 · shipped",
+    id: "people-make-the-harbor", title: "Start with a boat that needs people", date: "2026-10-11", version: "v0 · shipped",
     paragraphs: [
       "My kid loves Age of Empires and keeps asking for a version where people, ships, and buildings share a believable scale. He also wants to see who is actually operating the vehicles. Harborfolk starts with that question.",
       "The first small loop has eight villagers, a wooded shoreline, and a boat. Villagers chop timber and carry it home, build a dock, load supplies, and deliver them across the water. The cargo boat needs two people, visibly rowing and steering. A cart has an operator too.",

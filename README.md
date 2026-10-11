@@ -13,6 +13,9 @@ commerce and account features use the environment configuration described below.
 `/lab/harborfolk/devlog` uses dated, shipped-build entries from
 `lib/harborfolkDiary.ts` and real captures in `public/lab/harborfolk/`.
 Append verified milestones to that data file; label unfinished work explicitly.
+Keep `harborfolk` excluded from the generic Lab route's `generateStaticParams()`:
+its dedicated overview owns that URL. Verify its distinctive play/diary controls
+on a production build, as well as the diary images and mobile layout.
 
 Things to try: open the diary, follow an entry permalink, inspect its screenshots,
 then use **Open Harborfolk** to play. The Lab catalogue and sitemap link the pages.
