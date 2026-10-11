@@ -9,6 +9,12 @@ commerce and account features use the environment configuration described below.
 
 ## Upcoming hellos
 
+The UOXR Lab page now includes actual gallery/Workshop screenshots and links to
+the separate public demo repository and Android preview release. Template source
+remains private. Its copy distinguishes starting device quality presets from
+continuous performance adaptation and directs readers to the release's tested
+device list and installation limits.
+
 The homepage `#appearances` section lists ASAI (October 7–9, Washington, DC),
 Augmented Enterprise Summit with PICO (October 13–15, Atlanta), Android Dev Summit
 (October 28–29, Mountain View), and PMRE (November 17–19, Las Vegas; Alex's talk is

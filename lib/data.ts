@@ -1374,13 +1374,13 @@ export const products: Product[] = [
     slug: "ultimate-openxr-template",
     name: "Ultimate OpenXR Template",
     status: "Unreal Engine 5.8 template · in development",
-    tagline: "One Unreal project.<br>Every headset, hands included.",
+    tagline: "Start building XR.<br>Try the template in your headset.",
     pitch:
-      "Every new XR project I start used to begin the same way: OpenXR loaders, Android packaging, a visionOS configuration, and hand tracking that only behaved on one headset. The Ultimate OpenXR Template is the project I start from instead. It's Blueprint-only Unreal Engine 5.8, it runs on Quest, PICO, Android XR and Apple Vision Pro, and hand tracking and gestures are built in. Every fix my XR projects find goes back into it.",
+      "Every new XR project I start used to begin the same way: OpenXR loaders, Android packaging, and hand tracking that only behaved on one headset. The Ultimate OpenXR Template is the project I start from instead. Its Unreal Engine 5.8 core uses Blueprints, with shared controls for hands, controllers, keyboard and gamepad. Download the Android preview to explore the tutorial and three practice rooms without installing Unreal or downloading the project.",
     sections: [
       {
-        heading: "One project, every headset",
-        body: "Android OpenXR packaging, a visionOS mixed-immersion configuration, and a passthrough blend mode chosen at runtime from what the device supports, so a new app starts on device instead of starting with setup. Hand tracking and gesture plugins ship precompiled, so a Blueprint-only project never needs a C++ toolchain to use them.",
+        heading: "One Android preview, automatic starting quality",
+        body: "Device profiles choose render scale and shadows for Quest, PICO and Android XR. The rooms use mobile forward rendering and simple materials, with warm architectural lighting and clear station markers. These are starting quality budgets; sustained performance and runtime compatibility still need checking on each headset. The release notes list what was tested. PCVR and Apple Vision Pro require separate builds.",
       },
       {
         heading: "Hands first, everything else too",
@@ -1393,14 +1393,23 @@ export const products: Product[] = [
     ],
     bullets: [
       "Unreal Engine 5.8, Blueprint-only",
-      "Quest, PICO, Android XR and Apple Vision Pro from one project",
+      "Android OpenXR preview with automatic headset quality presets",
       "Hand tracking and pinch gestures built in, with controller, keyboard and gamepad fallbacks",
       "Comfort menu: teleport, walk or fly; snap or smooth turning",
       "Tested in xrsim and the Meta XR Simulator, no headset needed",
     ],
-    links: [{ label: "Built with it: Echo Cathedral", url: "/lab/echo-cathedral" }],
+    links: [
+      { label: "Download the Android preview APK", url: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-10" },
+      { label: "Install guide, tested devices & known limits", url: "https://github.com/ibrews/uoxr-demo" },
+      { label: "Built with it: Echo Cathedral", url: "/lab/echo-cathedral" },
+    ],
     accent: "teal",
     clips: ["uoxr-menu-selection", "uoxr-pinch-gestures"],
+    heroImage: { src: "/lab/uoxr/gallery-preview.jpg", alt: "UOXR tutorial gallery with warm ceiling lights, oak frames and a limestone walkway" },
+    screenshots: [
+      { src: "/lab/uoxr/gallery-preview.jpg", alt: "The UOXR tutorial gallery", caption: "Explore six guided stations, then choose another room from the comfort menu." },
+      { src: "/lab/uoxr/workshop-preview.jpg", alt: "The UOXR Power Workshop puzzle", caption: "Pick up a power cell, open the door and bring the workshop to life." },
+    ],
   },
   {
     slug: "echo-cathedral",
