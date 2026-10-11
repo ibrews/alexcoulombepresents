@@ -686,3 +686,5 @@ If you like seeing this kind of thing get built and shared, [donations are alway
 ---
 
 Built by [Alex Coulombe Presents](https://github.com/ibrews) — with an AI co-pilot, naturally.
+
+Harborfolk’s latest diary milestone records contextual mouse orders, chosen building sites, and the controller-first WebXR building palette. Physical headset playtesting remains pending.

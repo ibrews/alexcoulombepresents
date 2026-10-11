@@ -2,6 +2,17 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
   {
+    id: "click-a-person-give-them-a-job", title: "Click a person, give them a job", date: "2026-10-11", version: "v0.3 controls · shipped",
+    paragraphs: [
+      "The next request was the familiar strategy-game gesture: click a person, then right-click the thing they should work on. Trees mean gathering; a farm means food; a quarry means stone; an unfinished building means construction. A boat takes the selected people as its crew, and the cart takes an operator. Empty ground still means move.",
+      "Farm and quarry workers can switch jobs directly. Small construction and income crews now stand at offset work positions, making individual villagers easier to select. Resuming a building does not charge for its materials again. Co-op uses those same orders; a tree-click coordinate also needed a fix to pass the shared command validation.",
+      "You choose sites for all seven settlement building types through Build. A footprint checks explored land, water, obstacles, and people before the villagers walk there. Right-click or Escape cancels placement. The original dock and workshop still use their fixed locations.",
+      "For WebXR, Little Cities is a reference for a calmer tabletop interface. The controller prototype now has a labeled building bubble palette inside the headset, age locks, selection and resource feedback, and buttons to scale or rotate the table. Trigger selects or places; squeeze gives a contextual order or cancels the active placement. A green or red footprint previews the site.",
+      "Automated checks cover controller callbacks and restoring the desktop camera. The browser playtests use actual mouse selection, farm and quarry orders, construction placement, and boarding a cutter with three occupied roles. Physical headset comfort and controller feel remain untested; this update does not add hand tracking."
+    ],
+    images: [{ src: "/lab/harborfolk/contextual-farming.webp", alt: "Selected villagers working at separated stations around a Harborfolk farm", caption: "A working farm from the mouse playtest, with people selected and assigned in the world." }]
+  },
+  {
     id: "from-a-dock-to-a-working-town", title: "From a dock to a working town", date: "2026-10-11", version: "v0.3 · shipped",
     paragraphs: [
       "The harbor now has a small city economy. Villagers walk to building sites, raise their structures, tend farms, and quarry stone. Cottages add room for more people. A warehouse trades food for timber and stone, so the settlement can keep growing after the nearby trees are gone.",
