@@ -799,6 +799,15 @@ export type Product = {
 
 export const products: Product[] = [
   {
+    slug: "harborfolk", name: "Harborfolk", status: "Playable browser prototype · active diary",
+    tagline: "A little world at human scale, with people at every station.",
+    pitch: "A 3D browser strategy experiment for my kid: villagers gather, build, and operate boats at a believable scale.",
+    sections: [{ heading: "Follow the build", body: "The development diary records working releases with screenshots and testing notes." }],
+    bullets: ["Visible workers and ship crews", "Parameterized building upgrades", "Fog of war and a first ship battle"],
+    links: [{ label: "Play Harborfolk", url: "https://harborfolk-sam.ibrews.chatgpt.site" }, { label: "Development diary", url: "/lab/harborfolk/devlog" }],
+    accent: "teal", experiment: true,
+  },
+  {
     slug: "scene-audit",
     name: "SceneAudit",
     status: "Unreal Engine plugin · contact for access",

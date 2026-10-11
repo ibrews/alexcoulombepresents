@@ -46,7 +46,7 @@ export default function Lab() {
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
               {activeProducts.length} products currently moving toward a release, pilot, or wider
-              access — plus field notes from finished experiments and a peek at the internal systems
+              access — plus field notes from experiments and a peek at the internal systems
               behind the work. Each page says what exists today and what is still being tested.
             </p>
             <p className="mt-4 text-sm text-mist">
@@ -108,10 +108,10 @@ export default function Lab() {
         <section className="mx-auto mt-20 max-w-6xl space-y-8 px-5" aria-labelledby="lab-field-notes">
           <Reveal>
             <div className="mb-8 border-b border-line pb-5">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber">Archive</p>
-              <h2 id="lab-field-notes" className="mt-2 text-2xl font-bold tracking-tight">Field notes &amp; finished experiments</h2>
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber">Build notes</p>
+              <h2 id="lab-field-notes" className="mt-2 text-2xl font-bold tracking-tight">Field notes &amp; experiments</h2>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-mist">
-                Kept public because the build notes, captures, and mistakes are useful even after active development ends.
+                Playable experiments and finished investigations, with captures and notes from the work.
               </p>
             </div>
           </Reveal>

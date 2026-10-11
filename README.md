@@ -7,6 +7,16 @@ Google Sites page with something interactive, dynamic, and worthy of the domain.
 Built with **Next.js 15, React 19, Tailwind CSS 4, and Three.js**. Deploys to Vercel;
 commerce and account features use the environment configuration described below.
 
+## Harborfolk diary
+
+`/lab/harborfolk` links to the playable browser strategy prototype. Its diary at
+`/lab/harborfolk/devlog` uses dated, shipped-build entries from
+`lib/harborfolkDiary.ts` and real captures in `public/lab/harborfolk/`.
+Append verified milestones to that data file; label unfinished work explicitly.
+
+Things to try: open the diary, follow an entry permalink, inspect its screenshots,
+then use **Open Harborfolk** to play. The Lab catalogue and sitemap link the pages.
+
 ## Upcoming hellos
 
 The UOXR Lab page now includes actual gallery/Workshop screenshots and links to

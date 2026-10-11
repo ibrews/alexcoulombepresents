@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/videos", priority: 0.7 },
     { path: "/appearances", priority: 0.7 },
     { path: "/lab", priority: 0.8 },
+    { path: "/lab/harborfolk/devlog", priority: 0.6 },
     { path: "/store", priority: 0.7 },
     { path: "/gift", priority: 0.6 },
     { path: "/members", priority: 0.6 },
