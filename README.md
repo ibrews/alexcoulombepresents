@@ -687,4 +687,4 @@ If you like seeing this kind of thing get built and shared, [donations are alway
 
 Built by [Alex Coulombe Presents](https://github.com/ibrews) — with an AI co-pilot, naturally.
 
-Harborfolk’s latest diary milestone records contextual mouse orders, chosen building sites, and the controller-first WebXR building palette. Physical headset playtesting remains pending.
+Harborfolk’s latest diary milestone records a movable timber cart, logs appearing as villagers fill it, and chat between two connected co-op players. Five diary entries use thirteen actual gameplay screenshots. Physical headset playtesting remains pending.

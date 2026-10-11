@@ -2,6 +2,19 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
   {
+    id: "bring-the-cart-to-the-woods", title: "Bring the cart to the woods", date: "2026-10-11", version: "v0.3 cart and chat · shipped",
+    paragraphs: [
+      "The cart can now go where the work is. Click it and right-click clear land near the woods. An available villager walks to its handles and pulls it along a land route. Nearby gatherers use the cart when it is closer than the storehouse.",
+      "Each deposited log appears on the cart, up to a stack of twenty-four. That timber stays on board until the operator brings it home and unloads it. Deliver timber sends it to the storehouse; each unloaded log becomes spendable. Redirecting or stopping the cart preserves its load. The original supply voyage still works, with crates appearing as the cart is loaded.",
+      "Connected co-op players also have a collapsible chat window and an unread badge. Typing stays separate from game shortcuts. Messages travel over the same direct connection as orders, with the latest fifty kept in the current page. This is chat with one invited partner; joining still uses the invitation and answer codes.",
+      "The combined build passed fifty-one automated tests, fourteen cart browser checks, and a real co-op playtest in two separate browsers. That playtest sent cart orders from the guest, exchanged messages in both directions, checked narrow controls and disconnect behavior, and confirmed that message text renders literally. The cart captures use actual gathering and delivery orders, with the real simulation advanced for testing. Human playtesting is the next check."
+    ],
+    images: [
+      { src: "/lab/harborfolk/timber-cart.webp", alt: "A Harborfolk cart parked near the woods with a stack of twenty-four individually rendered logs", caption: "A full cart beside the woods. Its visible logs match the timber waiting to be delivered." },
+      { src: "/lab/harborfolk/coop-chat.webp", alt: "Two connected Harborfolk players coordinating timber gathering through the chat panel", caption: "An actual two-browser co-op conversation, carried by the game's direct connection." }
+    ]
+  },
+  {
     id: "click-a-person-give-them-a-job", title: "Click a person, give them a job", date: "2026-10-11", version: "v0.3 controls · shipped",
     paragraphs: [
       "The next request was the familiar strategy-game gesture: click a person, then right-click the thing they should work on. Trees mean gathering; a farm means food; a quarry means stone; an unfinished building means construction. A boat takes the selected people as its crew, and the cart takes an operator. Empty ground still means move.",
