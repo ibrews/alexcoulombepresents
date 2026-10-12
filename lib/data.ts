@@ -573,7 +573,7 @@ export const repos: Repo[] = [
       "~70% of the game's geometry had inverted normals from commit one — caught in headset, confirmed with a custom test scene",
       "10 battlefields, 5 vehicles, on-foot mode, and LAN co-op with fully procedural Rec-Room-style avatars",
     ],
-    links: [{ label: "Get it on App Lab", url: "https://www.meta.com/s/6mSdrdXX6" }],
+    links: [{ label: "Get it on App Lab", url: "https://www.meta.com/s/53lmhEPTk" }],
     github: "https://github.com/ibrews/TankCommanderVR",
     nativeVideo: {
       src: "https://github.com/ibrews/TankCommanderVR/releases/download/v0.6.28/tank_commander_vr_trailer.mp4",
