@@ -799,6 +799,42 @@ export type Product = {
 
 export const products: Product[] = [
   {
+    slug: "surreal-minds",
+    name: "Surreal Minds",
+    status: "Prototype study · in progress",
+    tagline: "Four small Unreal worlds learning to react to photos, wishes, gestures, and keys.",
+    pitch:
+      "Memory Portal, Impossible Conservatory, Creature Home, and Living Tabletop are a connected prototype study for spatial AI on standalone headsets. The work compares what can run on the headset, what benefits from a nearby studio PC, and what—if anything—earns a cloud call. The development diary keeps editor, emulator, and headset evidence separate, including the ideas that did not survive a wearer test.",
+    sections: [
+      {
+        heading: "The reaction has to be visible",
+        body: "A correct model response is not enough. Each result needs readable confirmation, sound, and a dramatic change in the world: a garden transforms, a memory assembles, a creature reacts, or a tabletop grows.",
+      },
+      {
+        heading: "Three AI routes, measured on the same work",
+        body: "The study compares fully on-device inference, a stronger model on a nearby studio computer, and a remote cloud API. The first diary entry has real on-device and LAN measurements; cloud remains explicitly unrun.",
+      },
+      {
+        heading: "Unreal is part of the point",
+        body: "Lighting, atmosphere, material response, animation and in-world typography are not decoration after the AI. They are how a model result becomes a moment worth wearing and filming.",
+      },
+    ],
+    bullets: [
+      "Real captures from Unreal desktop preview, the PICO emulator, and a Quest 3 headset",
+      "On-device caption and wish inference alongside a studio-PC depth route",
+      "Hands and keyboard remain the primary interaction paths",
+      "Open defects and rejected directions stay in the public record",
+    ],
+    links: [],
+    accent: "amber",
+    experiment: true,
+    guide: { href: "/lab/surreal-minds/devlog", label: "Read the development diary" },
+    heroImage: {
+      src: "/lab/surreal-minds/memory-editor-photo-world.webp",
+      alt: "Memory Portal's sunset photo-world in an Unreal desktop preview",
+    },
+  },
+  {
     slug: "harborfolk", name: "Harborfolk", status: "Playable browser prototype · active diary",
     tagline: "A little world at human scale, with people at every station.",
     pitch: "A 3D browser strategy experiment for my kid: villagers gather, build, and operate boats at a believable scale.",

@@ -20,6 +20,17 @@ on a production build, as well as the diary images and mobile layout.
 Things to try: open the diary, follow an entry permalink, inspect its screenshots,
 then use **Open Harborfolk** to play. The Lab catalogue and sitemap link the pages.
 
+## Surreal Minds diary
+
+`/lab/surreal-minds` introduces the four Unreal prototypes without presenting them as a
+release. Its diary at `/lab/surreal-minds/devlog` keeps desktop preview, PICO emulator,
+and Quest headset evidence visibly separate. Append only measured milestones; leave an
+unrun backend or device test labeled as unrun instead of filling the gap with an estimate.
+
+Media lives in `public/lab/surreal-minds/`. Keep stills as compressed WebP and short,
+web-ready H.264 MP4 excerpts with poster frames. Captions must name the capture surface,
+and old review cuts remain labeled as process evidence rather than current acceptance.
+
 ## Upcoming hellos
 
 The UOXR Lab page now includes actual gallery/Workshop screenshots and links to
