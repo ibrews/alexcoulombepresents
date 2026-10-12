@@ -688,3 +688,5 @@ If you like seeing this kind of thing get built and shared, [donations are alway
 Built by [Alex Coulombe Presents](https://github.com/ibrews) — with an AI co-pilot, naturally.
 
 Harborfolk’s latest diary milestone records six new free Polyfork assets, Scout Lodge/Market/Infirmary gameplay, scouts and medics, usability controls, and primary-source RTS research. Seven diary entries use nineteen actual gameplay screenshots; the latest includes linked sources and measured asset provenance for a possible independent case study. Physical headset playtesting remains pending.
+
+The eighth Harborfolk diary milestone adds optional saved co-op plans, patrol and escort duties, and three real gameplay captures. The diary now has eight entries and twenty-two screenshots; headset-native tactical controls and physical XR playtesting remain future work.

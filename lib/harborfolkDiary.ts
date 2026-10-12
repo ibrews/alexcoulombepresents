@@ -2,6 +2,36 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
   {
+    "id": "small-plans-and-people-to-follow",
+    "title": "Small plans, and people to follow",
+    "date": "2026-10-12",
+    "version": "v0.3 plans and patrols · shipped",
+    "paragraphs": [
+      "Plans turns the sandbox into three small optional adventures. First crossing guides a dock, crew, and twenty-supply outpost delivery. Woodland Supply follows a farm and an extra cart through its first timber run. Coastal Watch asks for a scout, a mainland discovery, two guards, and a raid victory. The next goal and a practical hint stay in view.",
+      "Each plan keeps its checklist, elapsed simulation time, and completion badge with the saved harbor. Existing accomplishments count, and returning to free play preserves the village. The opening customization screen can choose a plan. Two co-op players share the same progress, so one can build while the other explores.",
+      "Units also have duties that continue after a single move. Select a guard, scout, archer, or medic, press P, and right-click the far end of a patrol route. Press E and right-click a villager, cart, or friendly unit to escort it. A selected unit shows a dashed route or connecting line. Guards and archers respond to nearby threats and resume their duty; scouts stay out of combat until ordered, and medics still heal nearby wounded allies.",
+      "Escorts follow actual positions and use land paths. They wait and retry if a route is blocked, rather than jumping through buildings or water. Stop or an ordinary move or attack clears the routine. Saved routines and guest orders use the same validated state as the rest of the game. Headset-native patrol and escort buttons remain future work; the target resolver is shared with the controller adapter.",
+      "The build passed 76 automated tests, a browser adventure using real gathering, construction, crewing and cargo delivery, and real two-browser co-op checks for shared plans and guest patrol and escort orders. The captures below come from gameplay, with the simulation advanced for testing. Physical headset comfort and performance on the child's computer remain unmeasured."
+    ],
+    "images": [
+      {
+        "src": "/lab/harborfolk/harbor-plans.webp",
+        "alt": "Harborfolk's Plans panel after a real cargo delivery completed the First crossing adventure",
+        "caption": "A first crossing, completed through gathering, building, boarding, and an outpost delivery."
+      },
+      {
+        "src": "/lab/harborfolk/scout-patrol.webp",
+        "alt": "A selected Harborfolk scout following a dashed patrol route",
+        "caption": "A scout patrols between its starting position and the chosen endpoint."
+      },
+      {
+        "src": "/lab/harborfolk/villager-escort.webp",
+        "alt": "A Harborfolk scout escorting a moving villager with a visible connecting line",
+        "caption": "The escort follows a person who is actually walking, with a land route and room to stop nearby."
+      }
+    ]
+  },
+  {
     id: "more-places-more-useful-people", title: "More places, more useful people", date: "2026-10-12", version: "v0.3 Polyfork expansion · shipped",
     paragraphs: [
       "A Scout Lodge, Harbor Market, and Infirmary give the next group of people useful jobs. Scouts move faster and reveal more coast, with an attack order needed before they engage. A market trader has to reach a stall before exchanging food for timber or stone. Medics train at the infirmary and heal nearby living allies after a fight.",
