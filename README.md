@@ -625,6 +625,19 @@ cd /Users/alex/GH/alexcoulombepresents
 npm run studio        # → http://localhost:4848
 ```
 
+To keep it running without a terminal (it used to die whenever the terminal or
+a Claude preview pane that started it closed), install it as a LaunchAgent:
+
+```bash
+/Users/alex/GH/alexcoulombepresents/scripts/studio-agent.sh install
+```
+
+That starts it at login and restarts it if it exits, and adds a **Newsletter
+Studio** app to `~/Applications` (Dock / Spotlight) that opens the studio,
+waking the service first if needed. `studio-agent.sh restart` picks up changes
+to `newsletter-studio.mjs`; `status` and `uninstall` do what they say. Logs:
+`~/Library/Logs/newsletter-studio.log`.
+
 - **Dashboard** — every issue (draft/scheduled/sent + open/click stats),
   audience counts per list; sends completed by the production cron reconcile
   back into the local issue files automatically
