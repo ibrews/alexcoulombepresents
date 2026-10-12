@@ -635,7 +635,8 @@ a Claude preview pane that started it closed), install it as a LaunchAgent:
 That starts it at login and restarts it if it exits, and adds a **Newsletter
 Studio** app to `~/Applications` (Dock / Spotlight) that opens the studio,
 waking the service first if needed. `studio-agent.sh restart` picks up changes
-to `newsletter-studio.mjs`; `status` and `uninstall` do what they say. Logs:
+to `newsletter-studio.mjs` (or click **↻ Restart** in the studio's header, which
+runs the same command); `status` and `uninstall` do what they say. Logs:
 `~/Library/Logs/newsletter-studio.log`.
 
 - **Dashboard** — every issue (draft/scheduled/sent + open/click stats),
