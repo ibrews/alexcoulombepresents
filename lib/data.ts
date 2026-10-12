@@ -808,6 +808,18 @@ export const products: Product[] = [
     accent: "teal", experiment: true,
   },
   {
+    slug: "nightbloom", name: "Nightbloom", status: "UE 5.8 experiment · private, in development",
+    tagline: "Procedural fireworks in your real sky.",
+    pitch: "A one-hour challenge from my wife: make an app that produces amazing fireworks, procedural so no show repeats, with great sound, from one codebase across iOS, Android, OpenXR headsets and visionOS. Nightbloom is that app, built on the Ultimate OpenXR Template's device profiles.",
+    sections: [
+      { heading: "Never the same twice", body: "Stars are simulated in code and the explosion sounds are synthesized at runtime, so every show is generated rather than played back. Burst families include multi-break, color-change, heart and crackle shells." },
+      { heading: "Honest about each device", body: "On iPhone and Android it uses ARKit and ARCore depth for occlusion. On OpenXR headsets it uses passthrough where the runtime offers it. A device log on XREAL Aura showed full shows holding a median of 72 fps. Headset and phone testing is still ongoing, and the Vision Pro build is not finished." },
+    ],
+    bullets: ["One Unreal Engine 5.8 codebase", "Procedural shows with synthesized sound", "Targets iOS, Android, Quest, PICO, Android XR and visionOS"],
+    links: [{ label: "Built on: Ultimate OpenXR Template", url: "/lab/ultimate-openxr-template" }],
+    accent: "teal", experiment: true,
+  },
+  {
     slug: "scene-audit",
     name: "SceneAudit",
     status: "Unreal Engine plugin · contact for access",

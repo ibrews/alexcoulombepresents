@@ -291,15 +291,15 @@
 **On the page**
 
 - `[lab.1]` ▸ The private repos are getting restless.
-- `[lab.2]` ▸ products currently moving toward a release, pilot, or wider access — plus field notes from finished experiments and a peek at the internal systems behind the work. Each page says what exists today and what is still being tested.
+- `[lab.2]` ▸ products currently moving toward a release, pilot, or wider access — plus field notes from experiments and a peek at the internal systems behind the work. Each page says what exists today and what is still being tested.
 - `[lab.3]` ▸ Looking for what's already shipped? Licensed Unreal Engine plugins are live now.
 - `[lab.4]` ▸ Current work
 - `[lab.5]` ▸ On the bench now
 - `[lab.6]` ▸ Betas, design-partner previews, and tools with a concrete next release step.
 - `[lab.7]` ▸ full briefing →
-- `[lab.8]` ▸ Archive
-- `[lab.9]` ▸ Field notes & finished experiments
-- `[lab.10]` ▸ Kept public because the build notes, captures, and mistakes are useful even after active development ends.
+- `[lab.8]` ▸ Build notes
+- `[lab.9]` ▸ Field notes & experiments
+- `[lab.10]` ▸ Playable experiments and finished investigations, with captures and notes from the work.
 - `[lab.11]` ▸ read the field notes →
 - `[lab.12]` ▸ Behind the scenes internal systems ＋
 - `[lab.13]` ▸ Production infrastructure shown for context. These are not public release promises or waitlist products.
@@ -866,8 +866,33 @@
   - Install via git clone into ~/.claude/skills/usage-audit, or copy SKILL.md directly
   - Scriptable to run monthly as a standing self-audit
 
-### products  (16 entries — add or remove whole entries)
+### products  (20 entries — add or remove whole entries)
 
+- `[data.products.harborfolk.name]` ▸ Harborfolk
+- `[data.products.harborfolk.tagline]` ▸ A little world at human scale, with people at every station.
+- `[data.products.harborfolk.pitch]` ▸ A 3D browser strategy experiment for my kid: villagers gather, build, and operate boats at a believable scale.
+- `[data.products.harborfolk.sections.0.heading]` ▸ Follow the build
+- `[data.products.harborfolk.sections.0.body]` ▸ The development diary records working releases with screenshots and testing notes.
+
+  **list: bullets** (3 items — add or remove lines freely)
+  - Visible workers and ship crews
+  - Parameterized building upgrades
+  - Fog of war and a first ship battle
+- `[data.products.harborfolk.links.0.label]` ▸ Play Harborfolk
+- `[data.products.harborfolk.links.1.label]` ▸ Development diary
+- `[data.products.nightbloom.name]` ▸ Nightbloom
+- `[data.products.nightbloom.tagline]` ▸ Procedural fireworks in your real sky.
+- `[data.products.nightbloom.pitch]` ▸ A one-hour challenge from my wife: make an app that produces amazing fireworks, procedural so no show repeats, with great sound, from one codebase across iOS, Android, OpenXR headsets and visionOS. Nightbloom is that app, built on the Ultimate OpenXR Template's device profiles.
+- `[data.products.nightbloom.sections.0.heading]` ▸ Never the same twice
+- `[data.products.nightbloom.sections.0.body]` ▸ Stars are simulated in code and the explosion sounds are synthesized at runtime, so every show is generated rather than played back. Burst families include multi-break, color-change, heart and crackle shells.
+- `[data.products.nightbloom.sections.1.heading]` ▸ Honest about each device
+- `[data.products.nightbloom.sections.1.body]` ▸ On iPhone and Android it uses ARKit and ARCore depth for occlusion. On OpenXR headsets it uses passthrough where the runtime offers it. A device log on XREAL Aura showed full shows holding a median of 72 fps. Headset and phone testing is still ongoing, and the Vision Pro build is not finished.
+
+  **list: bullets** (3 items — add or remove lines freely)
+  - One Unreal Engine 5.8 codebase
+  - Procedural shows with synthesized sound
+  - Targets iOS, Android, Quest, PICO, Android XR and visionOS
+- `[data.products.nightbloom.links.0.label]` ▸ Built on: Ultimate OpenXR Template
 - `[data.products.scene-audit.name]` ▸ SceneAudit
 - `[data.products.scene-audit.tagline]` ▸ Measure the gap your viewport hides.
 - `[data.products.scene-audit.pitch]` ▸ A panel can look flush in perspective and still float above its surface. I built SceneAudit to turn that guess into a measurement: a placement verdict, a signed offset in centimeters, and orthographic views you can inspect. It gives artists and AI agents a concrete way to check their work.
@@ -1176,6 +1201,67 @@
 - `[data.products.xrsim.links.1.label]` ▸ Download for Windows (installer)
 - `[data.products.xrsim.links.2.label]` ▸ Documentation & full command reference
 - `[data.products.xrsim.links.3.label]` ▸ Get a license →
+- `[data.products.ultimate-openxr-template.name]` ▸ Ultimate OpenXR Template
+- `[data.products.ultimate-openxr-template.tagline]` ▸ Start building XR.<br>Try the template in your headset.
+- `[data.products.ultimate-openxr-template.pitch]` ▸ Every new XR project I start used to begin the same way: OpenXR loaders, Android packaging, and hand tracking that only behaved on one headset. The Ultimate OpenXR Template is the project I start from instead. Its Unreal Engine 5.8 core uses Blueprints, with shared controls for hands, controllers, keyboard and gamepad. Download the Android preview to explore the tutorial and three practice rooms without installing Unreal or downloading the project.
+- `[data.products.ultimate-openxr-template.sections.0.heading]` ▸ One Android preview, automatic starting quality
+- `[data.products.ultimate-openxr-template.sections.0.body]` ▸ Device profiles choose render scale and shadows for Quest, PICO and Android XR. The rooms use mobile forward rendering and simple materials, with warm architectural lighting and clear station markers. These are starting quality budgets; sustained performance and runtime compatibility still need checking on each headset. The release notes list what was tested. PCVR and Apple Vision Pro require separate builds.
+- `[data.products.ultimate-openxr-template.sections.1.heading]` ▸ Hands first, everything else too
+- `[data.products.ultimate-openxr-template.sections.1.body]` ▸ Pinch to select with either hand, rays that stay steady while you pinch, and a two-hand hold that opens the comfort menu. Losing tracking releases whatever you were holding. Controllers, keyboard and gamepad all work the same map, and the comfort menu covers teleport, walk or fly, and snap or smooth turning.
+- `[data.products.ultimate-openxr-template.sections.2.heading]` ▸ Tested by AI, no headset on
+- `[data.products.ultimate-openxr-template.sections.2.body]` ▸ Changes run through xrsim and the Meta XR Simulator: scripted hand poses drive the real Blueprint controls, and the checks read back actual game state instead of trusting a screenshot. The clips below are continuous, real-time takes of exactly that.
+
+  **list: bullets** (5 items — add or remove lines freely)
+  - Unreal Engine 5.8, Blueprint-only
+  - Android OpenXR preview with automatic headset quality presets
+  - Hand tracking and pinch gestures built in, with controller, keyboard and gamepad fallbacks
+  - Comfort menu: teleport, walk or fly; snap or smooth turning
+  - Tested in xrsim and the Meta XR Simulator, no headset needed
+- `[data.products.ultimate-openxr-template.links.0.label]` ▸ Download the Android preview APK
+- `[data.products.ultimate-openxr-template.links.1.label]` ▸ Install guide, tested devices & known limits
+- `[data.products.ultimate-openxr-template.links.2.label]` ▸ Built with it: Echo Cathedral
+
+  **list: clips** (2 items — add or remove lines freely)
+  - uoxr-menu-selection
+  - uoxr-pinch-gestures
+- `[data.products.ultimate-openxr-template.heroImage.src]` ▸ /lab/uoxr/gallery-preview.jpg
+- `[data.products.ultimate-openxr-template.heroImage.alt]` ▸ UOXR tutorial gallery with warm ceiling lights, oak frames and a limestone walkway
+- `[data.products.ultimate-openxr-template.screenshots.0.src]` ▸ /lab/uoxr/gallery-preview.jpg
+- `[data.products.ultimate-openxr-template.screenshots.0.alt]` ▸ The UOXR tutorial gallery
+- `[data.products.ultimate-openxr-template.screenshots.0.caption]` ▸ Explore six guided stations, then choose another room from the comfort menu.
+- `[data.products.ultimate-openxr-template.screenshots.1.src]` ▸ /lab/uoxr/workshop-preview.jpg
+- `[data.products.ultimate-openxr-template.screenshots.1.alt]` ▸ The UOXR Power Workshop puzzle
+- `[data.products.ultimate-openxr-template.screenshots.1.caption]` ▸ Pick up a power cell, open the door and bring the workshop to life.
+- `[data.products.echo-cathedral.name]` ▸ Echo Cathedral
+- `[data.products.echo-cathedral.tagline]` ▸ Draw a line in VR.<br>Then play the room.
+- `[data.products.echo-cathedral.pitch]` ▸ Could drawing, composing and designing architecture be the same physical act? In Echo Cathedral you draw a curve with your hand and it becomes a porcelain-and-brass rib you can play. Pluck it, and the room answers: your shape echoes into new voices and grows into a vault over your head.
+- `[data.products.echo-cathedral.sections.0.heading]` ▸ A line becomes an instrument
+- `[data.products.echo-cathedral.sections.0.body]` ▸ Draw with your right hand and the curve becomes real geometry. Reach for it, pull and release: the height of the point you grab sets the note, and how far you pull sets its strength and a slight bend. Away from the curve, taps play in your own rhythm.
+- `[data.products.echo-cathedral.sections.1.heading]` ▸ The room answers
+- `[data.products.echo-cathedral.sections.1.body]` ▸ Every copy of your shape joins an arrangement that keeps evolving: nine spatial voices across string, glass and breath. The ribs climb into a vault overhead and panels open between them, leaving gaps for light. Hold both grips to start over.
+- `[data.products.echo-cathedral.sections.2.heading]` ▸ An atelier, not a toy
+- `[data.products.echo-cathedral.sections.2.body]` ▸ Save and reload your motifs, undo freely, and record phrases to play back. Architecture studies inspired by Florence's ribbed dome, Notre-Dame's pointed nave and Gaudí's branching canopies reshape your own curve. They're teaching models, not reconstructions. An audience view gives someone else a composed camera and records the music.
+- `[data.products.echo-cathedral.sections.3.heading]` ▸ Built on the Ultimate OpenXR Template
+- `[data.products.echo-cathedral.sections.3.body]` ▸ Echo Cathedral started from my Ultimate OpenXR Template, so hands and controllers both work and the same project builds for Quest, PICO and Android XR. The first build was confirmed on Quest and PICO; newer builds are still being tested on device.
+
+  **list: bullets** (5 items — add or remove lines freely)
+  - Draw, pluck, echo: a gesture becomes geometry becomes music
+  - Hands or controllers
+  - Nine spatial voices across string, glass and breath
+  - Save, undo and reload your sketchbook; record phrases
+  - Architecture studies after Florence, Notre-Dame and Gaudí
+- `[data.products.echo-cathedral.links.0.label]` ▸ Built on the Ultimate OpenXR Template
+- `[data.products.echo-cathedral.heroImage.src]` ▸ /lab/echo-cathedral/vault.jpg
+- `[data.products.echo-cathedral.heroImage.alt]` ▸ Nine porcelain ribs arching overhead in Echo Cathedral
+- `[data.products.echo-cathedral.screenshots.0.src]` ▸ /lab/echo-cathedral/first-arch.jpg
+- `[data.products.echo-cathedral.screenshots.0.alt]` ▸ A single drawn arch in Echo Cathedral
+- `[data.products.echo-cathedral.screenshots.0.caption]` ▸ One drawn curve, ready to pluck.
+- `[data.products.echo-cathedral.screenshots.1.src]` ▸ /lab/echo-cathedral/florence-dome-study.jpg
+- `[data.products.echo-cathedral.screenshots.1.alt]` ▸ The Florence ribbed dome study in the Echo Cathedral atelier
+- `[data.products.echo-cathedral.screenshots.1.caption]` ▸ Atelier: the Florence ribbed dome study, applied to a drawn curve.
+- `[data.products.echo-cathedral.screenshots.2.src]` ▸ /lab/echo-cathedral/florence-dome-audience-camera.jpg
+- `[data.products.echo-cathedral.screenshots.2.alt]` ▸ Wide audience-camera view of the dome study
+- `[data.products.echo-cathedral.screenshots.2.caption]` ▸ The audience camera's wide view of the same study.
 - `[data.products.roomscanpro.name]` ▸ RoomScanPro
 - `[data.products.roomscanpro.tagline]` ▸ Collaborative room scanning and real-world measurement for Apple Vision Pro and iPhone.
 - `[data.products.roomscanpro.pitch]` ▸ Before XR, Alex trained as an architect — and a tool that scans a real room, measures it precisely, and hands back an exportable 3D model is the most direct descendant of that on this whole site. Multiple people scan the same room together over SharePlay, mesh data streams live between every device, and the result is measurable and exportable, not just a pretty capture.
