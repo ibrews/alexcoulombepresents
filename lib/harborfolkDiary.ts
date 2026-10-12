@@ -2,6 +2,43 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "a-world-to-return-to",
+  "title": "A world to return to",
+  "date": "2026-10-12",
+  "version": "v0.3 saves, scenarios and editor · shipped",
+  "paragraphs": [
+    "The next request was less about another building and more about keeping a world: build a civilization together, save it, and return to it. The Saves library now keeps named harbors beside the automatic browser save. Jobs, crews, trade routes, paid construction, technology and explored terrain return with the people who were doing the work.",
+    "Scenarios gives you three starting points: a busy working harbor, a defended Citadel, and a maritime city with the enormous Hall and Great Warship. These are authored starting civilizations, with deliberately supplied resources and completed projects. Their farmers, merchants and crews run the actual simulation. They are useful places to explore what the prototype can become, rather than claims that every screenshot was earned from an empty map.",
+    "The Map Editor opens an isolated, paused copy. Paint land and water, place buildings and people, move objects by their coordinates, staff a vessel, and choose starting resources, age and fog. Terrain uses an eight-metre authoring grid; navigation, ordinary city construction and the rendered coastline use the same data. The town can grow beyond the starter harbor and onto an authored island when builders can reach it. Buildings, ships and villagers retain their metre dimensions.",
+    "Undo and Redo keep the recent edit history. Validate checks the draft, and Play test runs a disposable copy with ordinary game controls. Back to editor restores the draft. Return to harbor restores the original settlement and camera, leaving its autosave intact. The fixed starter harbor and infrastructure corridors remain protected, and the existing population and fleet caps still apply.",
+    "A custom scenario or saved civilization can be exported as a JSON file and imported in another browser. For co-op, the host loads that world first and creates a fresh invitation; the other player joins its restored state. You can save the shared progress and repeat that process next time. The file preserves the civilization, while the direct connection and local camera are recreated. There is still one guest, manual invitation exchange and no relay service.",
+    "A reported endless loading screen also prompted recovery work. Asset progress now shows what is opening, and bounded loading offers retry and export of the retained save. A separate guard covers the case where the main application script never finishes opening. A fresh public browser loaded successfully during investigation; that did not by itself reproduce the reported failure.",
+    "The screenshots are actual captures of the published build. It passed 152 automated tests, browser checks for edited terrain, save files, developed worlds and return-from-play-test recovery, plus three deliberate loading-failure checks. Two independent browsers also joined an edited civilization, issued a shared order, saved the job in progress, reloaded and reconnected to finish it. Physical headset comfort, performance on the child’s computer and the next family playtest remain open checks."
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/scenario-grand-maritime.webp",
+      "alt": "A huge Hall and launched warship overlook a developed Harborfolk town",
+      "caption": "An authored civilization, with the same human and building scale as a new settlement."
+    },
+    {
+      "src": "/lab/harborfolk/named-harbor-saves.webp",
+      "alt": "Harborfolk save library showing named saved worlds and export controls",
+      "caption": "Named moments, portable files and a previous harbor kept for recovery."
+    },
+    {
+      "src": "/lab/harborfolk/scenario-editor-inspector.webp",
+      "alt": "A full-size cottage selected in the Harborfolk map editor with coordinate controls",
+      "caption": "The editor moves a footprint through the world; it does not shrink the building."
+    },
+    {
+      "src": "/lab/harborfolk/scenario-editor-mobile.webp",
+      "alt": "Narrow Harborfolk screen with the map editor occupying its lower half",
+      "caption": "A compact editor leaves the upper playfield available for painting and placement."
+    }
+  ]
+},
+{
   "id": "wait-it-is-that-big",
   "title": "Wait… it’s that big?",
   "date": "2026-10-12",
