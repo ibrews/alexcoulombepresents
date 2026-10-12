@@ -23,7 +23,7 @@
  */
 import { createServer } from "node:http";
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync, unlinkSync, statSync } from "node:fs";
-import { execSync } from "node:child_process";
+import { execSync, spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderNewsletterEmail } from "../lib/newsletterEmail.ts";
@@ -47,6 +47,12 @@ const NEWSLETTER_DIR = path.join(ROOT, "content", "newsletters");
 const IMAGE_DIR = path.join(ROOT, "public", "newsletter");
 const SEND_LOG = path.join(ROOT, ".newsletter-sends.jsonl");
 const PORT = Number(process.env.STUDIO_PORT ?? 4848);
+// Set by launchd when scripts/studio-agent.sh's LaunchAgent runs us. Restarting
+// only works in that mode (launchd brings the process back); from a terminal
+// there's nothing to bring it back.
+const AGENT_LABEL = "com.alexcoulombepresents.newsletter-studio";
+const UNDER_AGENT = process.env.XPC_SERVICE_NAME === AGENT_LABEL;
+const STARTED_AT = new Date().toISOString();
 
 mkdirSync(IMAGE_DIR, { recursive: true });
 loadEnvLocal();
@@ -341,7 +347,28 @@ function chips() {
     ${chip(s.db, "audience db ✓", "audience db missing")}
     ${chip(s.resend, "resend ✓", "resend key missing")}
     ${chip(s.auth, "auth ✓", "AUTH_SECRET missing")}
-  </div>`;
+    <button type="button" class="chip" id="restart-studio" title="Restart the studio server (picks up code changes)" style="cursor:pointer;background:transparent;color:inherit;font:inherit">↻ Restart</button>
+  </div>
+  <script>
+  document.getElementById('restart-studio').addEventListener('click', async (e) => {
+    const b = e.currentTarget;
+    b.disabled = true; b.textContent = 'Restarting…';
+    const before = await fetch('/health', { cache: 'no-store' }).then((r) => r.json()).catch(() => ({}));
+    const r = await fetch('/restart', { method: 'POST' });
+    if (!r.ok) {
+      const j = await r.json().catch(() => ({}));
+      alert(j.error || 'Restart failed');
+      b.disabled = false; b.textContent = '↻ Restart';
+      return;
+    }
+    for (let i = 0; i < 60; i++) {
+      await new Promise((res) => setTimeout(res, 500));
+      const h = await fetch('/health', { cache: 'no-store' }).then((r) => r.json()).catch(() => null);
+      if (h && h.pid !== before.pid) return location.reload();
+    }
+    b.textContent = 'Restart timed out — see ~/Library/Logs/newsletter-studio.log';
+  });
+  </script>`;
 }
 
 function layout(title, body, { active = "" } = {}) {
@@ -1192,6 +1219,24 @@ const server = createServer(async (req, res) => {
     const url = new URL(req.url, `http://localhost:${PORT}`);
     const p = url.pathname;
 
+    // Any other site open in this browser could POST to localhost; only the
+    // studio's own pages may change anything (Sec-Fetch-Site is sent by every
+    // current browser; curl and other tools omit it).
+    const site = req.headers["sec-fetch-site"];
+    if (req.method === "POST" && site && site !== "same-origin" && site !== "none") {
+      return sendJson({ error: "Cross-site request refused" }, 403);
+    }
+
+    if (req.method === "GET" && p === "/health") return sendJson({ pid: process.pid, startedAt: STARTED_AT, agent: UNDER_AGENT });
+    if (req.method === "POST" && p === "/restart") {
+      if (!UNDER_AGENT) {
+        return sendJson({ error: "This studio was started from a terminal, so nothing would bring it back. Restart it there, or install the background service: scripts/studio-agent.sh install" }, 409);
+      }
+      sendJson({ ok: true, pid: process.pid });
+      // Its own session (detached), so it survives launchd killing this process.
+      setTimeout(() => spawn("/bin/bash", [path.join(ROOT, "scripts/studio-agent.sh"), "restart"], { detached: true, stdio: "ignore" }).unref(), 200);
+      return;
+    }
     if (req.method === "GET" && p === "/") return sendHtml(await dashboardPage());
     if (req.method === "GET" && p === "/audience") return sendHtml(await audiencePage(url.searchParams.get("list") || undefined, url.searchParams.get("q") || undefined));
     if (req.method === "GET" && p === "/images") return sendHtml(imagesPage(url.searchParams.get("notice") || undefined));
@@ -1463,6 +1508,9 @@ server.listen(PORT, "127.0.0.1", () => {
   const url = `http://localhost:${PORT}`;
   console.log(`✦ Newsletter Studio — ${url}`);
   console.log("Ctrl+C to stop.");
+  // Under the LaunchAgent this runs at every login and restart; a new tab each
+  // time would be noise. The Newsletter Studio app opens the page instead.
+  if (UNDER_AGENT) return;
   try {
     execSync(`open "${url}"`);
   } catch {

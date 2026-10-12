@@ -141,6 +141,16 @@ export default async function ClassPage({ params }: { params: Promise<{ slug: st
                 Watch the replay on YouTube →
               </a>
             )}
+            {s.slidesUrl && (
+              <a
+                href={s.slidesUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold transition-colors hover:border-teal/60"
+              >
+                Explore the presentation →
+              </a>
+            )}
             {!past && (
               <>
                 <a

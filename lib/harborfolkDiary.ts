@@ -2,6 +2,116 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "a-world-to-return-to",
+  "title": "A world to return to",
+  "date": "2026-10-12",
+  "version": "v0.3 saves, scenarios and editor · shipped",
+  "paragraphs": [
+    "The next request was less about another building and more about keeping a world: build a civilization together, save it, and return to it. The Saves library now keeps named harbors beside the automatic browser save. Jobs, crews, trade routes, paid construction, technology and explored terrain return with the people who were doing the work.",
+    "Scenarios gives you three starting points: a busy working harbor, a defended Citadel, and a maritime city with the enormous Hall and Great Warship. These are authored starting civilizations, with deliberately supplied resources and completed projects. Their farmers, merchants and crews run the actual simulation. They are useful places to explore what the prototype can become, rather than claims that every screenshot was earned from an empty map.",
+    "The Map Editor opens an isolated, paused copy. Paint land and water, place buildings and people, move objects by their coordinates, staff a vessel, and choose starting resources, age and fog. Terrain uses an eight-metre authoring grid; navigation, ordinary city construction and the rendered coastline use the same data. The town can grow beyond the starter harbor and onto an authored island when builders can reach it. Buildings, ships and villagers retain their metre dimensions.",
+    "Undo and Redo keep the recent edit history. Validate checks the draft, and Play test runs a disposable copy with ordinary game controls. Back to editor restores the draft. Return to harbor restores the original settlement and camera, leaving its autosave intact. The fixed starter harbor and infrastructure corridors remain protected, and the existing population and fleet caps still apply.",
+    "A custom scenario or saved civilization can be exported as a JSON file and imported in another browser. For co-op, the host loads that world first and creates a fresh invitation; the other player joins its restored state. You can save the shared progress and repeat that process next time. The file preserves the civilization, while the direct connection and local camera are recreated. There is still one guest, manual invitation exchange and no relay service.",
+    "A reported endless loading screen also prompted recovery work. Asset progress now shows what is opening, and bounded loading offers retry and export of the retained save. A separate guard covers the case where the main application script never finishes opening. A fresh public browser loaded successfully during investigation; that did not by itself reproduce the reported failure.",
+    "The screenshots are actual captures of the published build. It passed 152 automated tests, browser checks for edited terrain, save files, developed worlds and return-from-play-test recovery, plus three deliberate loading-failure checks. Two independent browsers also joined an edited civilization, issued a shared order, saved the job in progress, reloaded and reconnected to finish it. Physical headset comfort, performance on the child’s computer and the next family playtest remain open checks."
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/scenario-grand-maritime.webp",
+      "alt": "A huge Hall and launched warship overlook a developed Harborfolk town",
+      "caption": "An authored civilization, with the same human and building scale as a new settlement."
+    },
+    {
+      "src": "/lab/harborfolk/named-harbor-saves.webp",
+      "alt": "Harborfolk save library showing named saved worlds and export controls",
+      "caption": "Named moments, portable files and a previous harbor kept for recovery."
+    },
+    {
+      "src": "/lab/harborfolk/scenario-editor-inspector.webp",
+      "alt": "A full-size cottage selected in the Harborfolk map editor with coordinate controls",
+      "caption": "The editor moves a footprint through the world; it does not shrink the building."
+    },
+    {
+      "src": "/lab/harborfolk/scenario-editor-mobile.webp",
+      "alt": "Narrow Harborfolk screen with the map editor occupying its lower half",
+      "caption": "A compact editor leaves the upper playfield available for painting and placement."
+    }
+  ]
+},
+{
+  "id": "wait-it-is-that-big",
+  "title": "Wait… it’s that big?",
+  "date": "2026-10-12",
+  "version": "v0.3 full-scale landmarks · shipped",
+  "paragraphs": [
+    "The next rule was simple: keep everything at scale, even when it gets inconvenient. The playable map now spans 640 by 480 metres. The camera can inspect a doorway or pull back over the coast. Fog follows that larger geography, and a Great Warship needs open sea instead of squeezing through the little cargo channel.",
+    "The Great Hall takes its roof plan from Westminster Hall: 73.2 by 20.7 metres. Villagers stay about 1.72 metres tall. You choose a surveyed, clear site and pay its actual material cost. Stone courses, thirteen timber trusses, roof bays and coverings appear as separate full-size pieces. The total height and exterior treatment are prototype choices; this is a stylized reference building rather than a complete historical reconstruction.",
+    "Construction depends on people reaching the site. Builders walk to work stations and climb to the stage they are working on. Stopping sends them safely down; resuming keeps the paid materials and existing parts. Small city buildings now assemble by courses and bays too. Dock production uses arrived shipwrights, with the keel, ribs and hull appearing as work progresses.",
+    "The Great Warship takes its main dimensions from Vasa: 69 metres overall, an 11.3-metre hull beam, and 52.4 metres from keel to mainmast top. Its broader yards need more space than the hull alone. Building starts with a bottom shell before inserted frames, then planking, decks, masts, rigging and sails—a simplified nod to the documented Dutch construction method. A finished ship launches once, lowers into the water and joins the fleet.",
+    "Eight actual villagers occupy playable duties: helmsman, lookout, two gunners, sail trimmer, rigger, carpenter and quartermaster. Vasa was designed for roughly 145 sailors and 300 soldiers. Those eight stations are a gameplay crew, not a claim to reproduce that entire complement. No extra decorative people are spawned to suggest a staffed ship.",
+    "The Scale panel fits a project in view, takes you close to the Hall doorway, and offers stone and sailcloth colours. A cutaway reveals the timber structure without changing its size. Cosmetic changes stay local and cost nothing. Two co-op players can place and build the same Hall while keeping their own camera views.",
+    "The build passed 119 automated tests, plus browser checks for earned materials, surveyed footprints, stopped and saved construction, launch, occupied duties and repeated convoy trips. Two independent browsers also exercised guest placement, safe descent and resumed Hall construction over the real direct connection. The pictures are gameplay captures with the actual simulation advanced for testing. Physical headset comfort and performance on the child’s computer remain unmeasured."
+  ],
+  "sources": [
+    {
+      "title": "UK Parliament: Westminster Hall roof dimensions",
+      "url": "https://www.parliament.uk/about/living-heritage/building/palace/westminsterhall/architecture/the-hammer-beam-roof-/"
+    },
+    {
+      "title": "Vasa Museum: the ship’s overall length",
+      "url": "https://www.vasamuseet.se/en/explore/vasa-history/timeline"
+    },
+    {
+      "title": "Vasa Museum: keel-to-mainmast height",
+      "url": "https://faq.vasamuseet.se/category/45/article/4707?lang=en"
+    },
+    {
+      "title": "Vasa Museum: hull beam",
+      "url": "https://www.vasamuseet.se/en/explore/collections/find-in-focus/espingen---vasas-longboat"
+    },
+    {
+      "title": "Vasa Museum: Dutch construction method",
+      "url": "https://faq.vasamuseet.se/category/45/article/24515?lang=en"
+    },
+    {
+      "title": "Vasa Museum: planned crew and soldiers",
+      "url": "https://www.vasamuseet.se/besok/utstallningar/livet-ombord"
+    }
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/hall-construction.webp",
+      "alt": "Harborfolk villagers on scaffold ladders while separate full-size Great Hall roof trusses appear",
+      "caption": "Reached work stations, stone courses and separate trusses. The people keep their height as the Hall takes shape."
+    },
+    {
+      "src": "/lab/harborfolk/hall-full-scale.webp",
+      "alt": "A completed enormous Great Hall with several small human-sized villagers beside it",
+      "caption": "A long roof and tiny-looking people, sharing the same metre scale."
+    },
+    {
+      "src": "/lab/harborfolk/hall-doorway.webp",
+      "alt": "A close view of the Great Hall entrance steps with two villagers beside its fixed-size door",
+      "caption": "Getting close brings the doorway and people back into view. Their dimensions stay fixed."
+    },
+    {
+      "src": "/lab/harborfolk/great-warship-construction.webp",
+      "alt": "A Vasa-inspired Great Warship under construction with masts and real assigned builders",
+      "caption": "The hull, decks and masts assemble as separate parts, with actual builders at their stations."
+    },
+    {
+      "src": "/lab/harborfolk/hall-cutaway.webp",
+      "alt": "A narrow browser view of the Great Hall with its roof covering hidden to reveal the timber structure",
+      "caption": "Peek inside changes visibility, leaving the structure’s scale intact."
+    },
+    {
+      "src": "/lab/harborfolk/great-warship-launched.webp",
+      "alt": "A launched full-size Great Warship with towering masts and villagers visible at occupied deck stations",
+      "caption": "The finished hull joins the fleet with eight occupied roles. The spars and rigging tower over the crew."
+    }
+  ]
+},
+{
   "id": "ships-with-jobs-and-company",
   "title": "Ships with jobs, and company",
   "date": "2026-10-12",

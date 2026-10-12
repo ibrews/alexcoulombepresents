@@ -12,7 +12,7 @@ commerce and account features use the environment configuration described below.
 `/lab/harborfolk` links to the playable browser strategy prototype. Its diary at
 `/lab/harborfolk/devlog` uses dated, shipped-build entries from
 `lib/harborfolkDiary.ts` and real captures in `public/lab/harborfolk/`.
-Append verified milestones to that data file; label unfinished work explicitly.
+The latest entry documents named saves, shareable scenarios, an isolated map editor and co-op resumption, with four actual browser captures. Append verified milestones to that data file; label unfinished work explicitly.
 Keep `harborfolk` excluded from the generic Lab route's `generateStaticParams()`:
 its dedicated overview owns that URL. Verify its distinctive play/diary controls
 on a production build, as well as the diary images and mobile layout.
@@ -653,6 +653,20 @@ cd /Users/alex/GH/alexcoulombepresents
 npm run studio        # → http://localhost:4848
 ```
 
+To keep it running without a terminal (it used to die whenever the terminal or
+a Claude preview pane that started it closed), install it as a LaunchAgent:
+
+```bash
+/Users/alex/GH/alexcoulombepresents/scripts/studio-agent.sh install
+```
+
+That starts it at login and restarts it if it exits, and adds a **Newsletter
+Studio** app to `~/Applications` (Dock / Spotlight) that opens the studio,
+waking the service first if needed. `studio-agent.sh restart` picks up changes
+to `newsletter-studio.mjs` (or click **↻ Restart** in the studio's header, which
+runs the same command); `status` and `uninstall` do what they say. Logs:
+`~/Library/Logs/newsletter-studio.log`.
+
 - **Dashboard** — every issue (draft/scheduled/sent + open/click stats),
   audience counts per list; sends completed by the production cron reconcile
   back into the local issue files automatically
@@ -718,3 +732,5 @@ Built by [Alex Coulombe Presents](https://github.com/ibrews) — with an AI co-p
 Harborfolk’s latest diary milestone records six new free Polyfork assets, Scout Lodge/Market/Infirmary gameplay, scouts and medics, usability controls, and primary-source RTS research. Seven diary entries use nineteen actual gameplay screenshots; the latest includes linked sources and measured asset provenance for a possible independent case study. Physical headset playtesting remains pending.
 
 The eighth Harborfolk diary milestone adds optional saved co-op plans, patrol and escort duties, and three real gameplay captures. The diary now has eight entries and twenty-two screenshots; headset-native tactical controls and physical XR playtesting remain future work.
+
+The tenth Harborfolk diary milestone follows the convoy release with a 640 × 480 metre world, a Westminster Hall-inspired Great Hall, and a launchable Vasa-inspired Great Warship. Arrived builders assemble fixed-size parts and descend safely when stopped; the ship has eight visible playable duties, with the historical crew complement identified separately. Ten entries now contain thirty-one real gameplay captures, including construction, a close doorway view and a cutaway, with primary sources and prototype dimension limits.
