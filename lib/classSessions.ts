@@ -37,6 +37,7 @@ export type ClassSession = {
   recordingSlug?: string; // lib/recordings.ts entry, once it exists
   watchUrl?: string; // free public sessions (livestreams)
   youtubeId?: string; // free public video to embed on the page (livestreams only)
+  slidesUrl?: string; // the session's public presentation (e.g. its Spatial Deck)
   related?: { label: string; url: string }[];
 };
 
@@ -259,6 +260,7 @@ export const classSessions: ClassSession[] = [
     // broadcast at 11:12 ET and that is where the replay lives.
     watchUrl: "https://www.youtube.com/watch?v=p6oVG1B-Uns",
     youtubeId: "p6oVG1B-Uns",
+    slidesUrl: "https://ibrews.github.io/acp-livestream-2026-10-07/",
   },
   {
     // Title + description from Franco (2026-10-06). The old URL
