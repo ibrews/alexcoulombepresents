@@ -23,9 +23,9 @@ export const surrealMindsBackendRows: BackendRow[] = [
   },
   {
     route: "Studio PC over LAN",
-    measured: "Depth Anything V2 Small: 0.5–0.7 s after a one-time model load of about 25 s",
-    result: "The bridge returned the 96×72 depth grid used by the Quest photo-world test. A full matched caption comparison is still pending.",
-    status: "partial",
+    measured: "Same three Memory fixtures: 3.9–7.4 s captions and 0.85–1.07 s depth; Conservatory wishes: 0.53–0.78 s typed, 1.07 s warm voice",
+    result: "The Fort bridge completed the matched caption and depth fixtures and made the Conservatory response feel conversational. Cloud remains untested.",
+    status: "measured",
   },
   {
     route: "Remote cloud API",

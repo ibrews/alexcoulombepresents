@@ -258,7 +258,7 @@ export default function SurrealMindsDevlogPage() {
             <h2 id="next-entry" className="mt-3 text-3xl font-bold tracking-tight">What still has to become true</h2>
             <ul className="mt-7 grid gap-4 md:grid-cols-2">
               {[
-                "Run the same fixture through on-device, LAN and cloud backends, with stage-by-stage latency, quality and cost.",
+                "Complete the cloud leg of the matched backend study, then capture the three routes side by side with stage-by-stage latency, quality and cost.",
                 "Replace Memory Portal's literal depth sheet with a charming primitive-built diorama and test it again in the headset.",
                 "Make every AI result land with readable text, a chime and an unmistakable visual change.",
                 "Measure frame time and GPU cost on a real target headset; editor and emulator numbers do not answer that question.",
