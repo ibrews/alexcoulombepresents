@@ -54,9 +54,9 @@ export default function SurrealMindsDevlogPage() {
               <p className="font-mono text-xs uppercase tracking-[0.18em] text-amber">October 12, 2026</p>
               <p className="mt-3 text-2xl font-bold">In progress</p>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                Quest 3 testing is real. Swan performance is not measured. The AI backend comparison
-                is incomplete, and the current Memory Portal visual direction was rejected after a
-                wearer test.
+                Quest 3 testing is real. Swan performance is not measured. The three backend routes
+                now have honest timing evidence, while matched native video and the revised Memory
+                Portal headset direction still need their acceptance passes.
               </p>
             </aside>
           </div>
@@ -171,13 +171,13 @@ export default function SurrealMindsDevlogPage() {
 
         <Reveal>
           <section className="mt-20" aria-labelledby="backend-comparison">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-amber">Study in progress</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-amber">Measured, capture pass pending</p>
             <h2 id="backend-comparison" className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
               Three ways to run the AI, one honest scorecard
             </h2>
             <p className="mt-4 max-w-3xl leading-relaxed text-mist">
-              The target comparison is the same photo or wish through on-device, LAN and cloud
-              routes. Today&apos;s evidence is not a complete A/B/C test, so the missing row remains missing.
+              The same authored fixtures now have results through on-device, LAN and cloud routes.
+              The numbers are real; a single matched headset-video pass across all three is still pending.
             </p>
             <div className="mt-8 overflow-hidden rounded-3xl border border-line">
               {surrealMindsBackendRows.map((row) => (
@@ -258,7 +258,7 @@ export default function SurrealMindsDevlogPage() {
             <h2 id="next-entry" className="mt-3 text-3xl font-bold tracking-tight">What still has to become true</h2>
             <ul className="mt-7 grid gap-4 md:grid-cols-2">
               {[
-                "Complete the cloud leg of the matched backend study, then capture the three routes side by side with stage-by-stage latency, quality and cost.",
+                "Capture the three measured backend routes side by side in one matched native-video pass.",
                 "Replace Memory Portal's literal depth sheet with a charming primitive-built diorama and test it again in the headset.",
                 "Make every AI result land with readable text, a chime and an unmistakable visual change.",
                 "Measure frame time and GPU cost on a real target headset; editor and emulator numbers do not answer that question.",

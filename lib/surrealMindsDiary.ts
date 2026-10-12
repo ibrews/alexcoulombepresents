@@ -24,14 +24,14 @@ export const surrealMindsBackendRows: BackendRow[] = [
   {
     route: "Studio PC over LAN",
     measured: "Same three Memory fixtures: 3.9–7.4 s captions and 0.85–1.07 s depth; Conservatory wishes: 0.53–0.78 s typed, 1.07 s warm voice",
-    result: "The Fort bridge completed the matched caption and depth fixtures and made the Conservatory response feel conversational. Cloud remains untested.",
+    result: "The Fort bridge completed the matched caption and depth fixtures and made the Conservatory response feel conversational.",
     status: "measured",
   },
   {
     route: "Remote cloud API",
-    measured: "Not run yet",
-    result: "No latency, cost, or image-quality result exists yet. This row stays empty until the same fixture is tested.",
-    status: "not-run",
+    measured: "Same three images: 11.9–20.0 s; matching purple wish: 2.68 s; about $0.006–$0.011 per image and $0.00028 per wish at the paid rate",
+    result: "Server-held Gemini 3.8 Flash produced the strongest grounded toy-object layouts. Its relative object depth is not a dense depth map, and the key never enters either app.",
+    status: "measured",
   },
 ];
 
