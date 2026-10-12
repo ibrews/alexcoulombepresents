@@ -31,6 +31,17 @@ Media lives in `public/lab/surreal-minds/`. Keep stills as compressed WebP and s
 web-ready H.264 MP4 excerpts with poster frames. Captions must name the capture surface,
 and old review cuts remain labeled as process evidence rather than current acceptance.
 
+The October 12 diary includes the original emulator interaction, a sampled typed-wish
+AI demonstration, a single-eye Quest excerpt, and native v15 toy-diorama progress.
+Its same-photo backend cards visualize recorded captions, palettes and cloud grounding;
+they are not a matched headset-render comparison. Timing labels distinguish CLI,
+in-app, client and bridge measurements. The tools section separates emulator/desktop
+coverage from wearer-only acceptance. Source and edit provenance is in
+`public/lab/surreal-minds/PROVENANCE.md`.
+
+Try the diary's chapter links, play all three labeled clips, and compare the same-photo
+cards at desktop and phone widths. Videos load on demand and preserve visible controls.
+
 ## Upcoming hellos
 
 The UOXR Lab page now includes actual gallery/Workshop screenshots and links to
@@ -167,6 +178,12 @@ npm run build && npm start
    auto-detects as Next.js, no settings needed.
 2. Once happy, point the `alexcoulombepresents.com` domain at the Vercel project
    (Project → Settings → Domains).
+
+The existing `ibrews-projects/alexcoulombepresents` Vercel project is connected to
+GitHub: pushing the publishing branch `main` deploys production. Validate the production
+build and tests before merging an authorized publication, then verify the deployment
+is Ready and curl the live route and every referenced media file. A branch push alone
+does not establish that production changed.
 
 ## Things to Try
 

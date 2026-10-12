@@ -17,19 +17,19 @@ export type BackendRow = {
 export const surrealMindsBackendRows: BackendRow[] = [
   {
     route: "On the headset",
-    measured: "Memory Portal: 20.0 s on Quest 3 in v13; 26.4 s in the later v14b run",
-    result: "SmolVLM-500M produced the right sunset caption. The image encoder, not text generation, dominated the wait.",
+    measured: "Memory caption: 20.0–26.4 s in the Quest app. Conservatory voice: 10.9–12.4 s after recording (speech 1.4–2.8 s + model about 9.5 s).",
+    result: "SmolVLM-500M caption; Whisper tiny.en + Qwen3-0.6B wishes. Offline with bundled models. No learned on-device depth. Correct wish recipes did not establish a visible leaf-color change.",
     status: "measured",
   },
   {
     route: "Studio PC over LAN",
     measured: "Same three Memory fixtures: 3.9–7.4 s captions and 0.85–1.07 s depth; Conservatory wishes: 0.53–0.78 s typed, 1.07 s warm voice",
-    result: "The Fort bridge completed the matched caption and depth fixtures and made the Conservatory response feel conversational.",
+    result: "Gemma 3 4B on Archie through the Fort bridge; Depth Anything V2 Small on Fort CPU. No internet needed after caching, but both PCs and the network must be available. Device tests used USB port forwarding; untethered Wi-Fi is unproven here.",
     status: "measured",
   },
   {
     route: "Remote cloud API",
-    measured: "Same three images: 11.9–20.0 s; matching purple wish: 2.68 s; about $0.006–$0.011 per image and $0.00028 per wish at the paid rate",
+    measured: "Same three images: 11.9–20.0 s; matching purple wish: 2.68 s (typed text, no speech recognition).",
     result: "Server-held Gemini 3.8 Flash produced the strongest grounded toy-object layouts. Its relative object depth is not a dense depth map, and the key never enters either app.",
     status: "measured",
   },
@@ -55,7 +55,7 @@ export const surrealMindsImages: DiaryImage[] = [
     surface: "Quest 3 headset",
     alt: "A native Quest 3 eye render of Memory Portal turned toward the edge of a sunset photo world, with the source photo and result text visible",
     caption:
-      "Native Quest 3 eye evidence from v14b. The read completed in 26.4 seconds, but turning about 45 degrees exposed the photo mesh's hard edge, black void and leftover template scenery.",
+      "Native Quest 3 eye evidence from v14b. Caption: SmolVLM-500M on headset; depth: Depth Anything V2 on the studio PC. The read completed in 26.4 seconds, but turning about 45 degrees exposed the photo mesh's hard edge, black void and leftover template scenery.",
   },
   {
     src: "/lab/surreal-minds/tabletop-es31-editor-sheet.webp",

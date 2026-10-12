@@ -812,7 +812,7 @@ export const products: Product[] = [
       },
       {
         heading: "Three AI routes, measured on the same work",
-        body: "The study compares fully on-device inference, a stronger model on a nearby studio computer, and a remote cloud API. The first diary entry has real on-device and LAN measurements; cloud remains explicitly unrun.",
+        body: "The diary compares on-device, LAN and cloud results for the same synthetic photo, with measured latency and explicit test conditions. Cloud vision now supplies grounded object layouts for a toy diorama. Desktop, emulator and headset evidence remain separately labeled; a controlled three-backend headset comparison is still open.",
       },
       {
         heading: "Unreal is part of the point",
@@ -830,8 +830,8 @@ export const products: Product[] = [
     experiment: true,
     guide: { href: "/lab/surreal-minds/devlog", label: "Read the development diary" },
     heroImage: {
-      src: "/lab/surreal-minds/memory-editor-photo-world.webp",
-      alt: "Memory Portal's sunset photo-world in an Unreal desktop preview",
+      src: "/lab/surreal-minds/memory-v15-toy-snow.webp",
+      alt: "Memory Portal v15 toy diorama, native Unreal desktop render driven by cloud vision via a studio PC; headset test pending",
     },
   },
   {
