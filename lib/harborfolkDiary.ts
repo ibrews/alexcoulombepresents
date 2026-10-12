@@ -2,6 +2,79 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "wait-it-is-that-big",
+  "title": "Wait… it’s that big?",
+  "date": "2026-10-12",
+  "version": "v0.3 full-scale landmarks · shipped",
+  "paragraphs": [
+    "The next rule was simple: keep everything at scale, even when it gets inconvenient. The playable map now spans 640 by 480 metres. The camera can inspect a doorway or pull back over the coast. Fog follows that larger geography, and a Great Warship needs open sea instead of squeezing through the little cargo channel.",
+    "The Great Hall takes its roof plan from Westminster Hall: 73.2 by 20.7 metres. Villagers stay about 1.72 metres tall. You choose a surveyed, clear site and pay its actual material cost. Stone courses, thirteen timber trusses, roof bays and coverings appear as separate full-size pieces. The total height and exterior treatment are prototype choices; this is a stylized reference building rather than a complete historical reconstruction.",
+    "Construction depends on people reaching the site. Builders walk to work stations and climb to the stage they are working on. Stopping sends them safely down; resuming keeps the paid materials and existing parts. Small city buildings now assemble by courses and bays too. Dock production uses arrived shipwrights, with the keel, ribs and hull appearing as work progresses.",
+    "The Great Warship takes its main dimensions from Vasa: 69 metres overall, an 11.3-metre hull beam, and 52.4 metres from keel to mainmast top. Its broader yards need more space than the hull alone. Building starts with a bottom shell before inserted frames, then planking, decks, masts, rigging and sails—a simplified nod to the documented Dutch construction method. A finished ship launches once, lowers into the water and joins the fleet.",
+    "Eight actual villagers occupy playable duties: helmsman, lookout, two gunners, sail trimmer, rigger, carpenter and quartermaster. Vasa was designed for roughly 145 sailors and 300 soldiers. Those eight stations are a gameplay crew, not a claim to reproduce that entire complement. No extra decorative people are spawned to suggest a staffed ship.",
+    "The Scale panel fits a project in view, takes you close to the Hall doorway, and offers stone and sailcloth colours. A cutaway reveals the timber structure without changing its size. Cosmetic changes stay local and cost nothing. Two co-op players can place and build the same Hall while keeping their own camera views.",
+    "The build passed 118 automated tests, plus browser checks for earned materials, surveyed footprints, stopped and saved construction, launch, occupied duties and repeated convoy trips. Two independent browsers also exercised guest placement, safe descent and resumed Hall construction over the real direct connection. The pictures are gameplay captures with the actual simulation advanced for testing. Physical headset comfort and performance on the child’s computer remain unmeasured."
+  ],
+  "sources": [
+    {
+      "title": "UK Parliament: Westminster Hall roof dimensions",
+      "url": "https://www.parliament.uk/about/living-heritage/building/palace/westminsterhall/architecture/the-hammer-beam-roof-/"
+    },
+    {
+      "title": "Vasa Museum: the ship’s overall length",
+      "url": "https://www.vasamuseet.se/en/explore/vasa-history/timeline"
+    },
+    {
+      "title": "Vasa Museum: keel-to-mainmast height",
+      "url": "https://faq.vasamuseet.se/category/45/article/4707?lang=en"
+    },
+    {
+      "title": "Vasa Museum: hull beam",
+      "url": "https://www.vasamuseet.se/en/explore/collections/find-in-focus/espingen---vasas-longboat"
+    },
+    {
+      "title": "Vasa Museum: Dutch construction method",
+      "url": "https://faq.vasamuseet.se/category/45/article/24515?lang=en"
+    },
+    {
+      "title": "Vasa Museum: planned crew and soldiers",
+      "url": "https://www.vasamuseet.se/besok/utstallningar/livet-ombord"
+    }
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/hall-construction.webp",
+      "alt": "Harborfolk villagers on scaffold ladders while separate full-size Great Hall roof trusses appear",
+      "caption": "Reached work stations, stone courses and separate trusses. The people keep their height as the Hall takes shape."
+    },
+    {
+      "src": "/lab/harborfolk/hall-full-scale.webp",
+      "alt": "A completed enormous Great Hall with several small human-sized villagers beside it",
+      "caption": "A long roof and tiny-looking people, sharing the same metre scale."
+    },
+    {
+      "src": "/lab/harborfolk/hall-doorway.webp",
+      "alt": "A close view of the Great Hall entrance steps with two villagers beside its fixed-size door",
+      "caption": "Getting close brings the doorway and people back into view. Their dimensions stay fixed."
+    },
+    {
+      "src": "/lab/harborfolk/great-warship-construction.webp",
+      "alt": "A Vasa-inspired Great Warship under construction with masts and real assigned builders",
+      "caption": "The hull, decks and masts assemble as separate parts, with actual builders at their stations."
+    },
+    {
+      "src": "/lab/harborfolk/hall-cutaway.webp",
+      "alt": "A narrow browser view of the Great Hall with its roof covering hidden to reveal the timber structure",
+      "caption": "Peek inside changes visibility, leaving the structure’s scale intact."
+    },
+    {
+      "src": "/lab/harborfolk/great-warship-launched.webp",
+      "alt": "A launched full-size Great Warship with towering masts and villagers visible at occupied deck stations",
+      "caption": "The finished hull joins the fleet with eight occupied roles. The spars and rigging tower over the crew."
+    }
+  ]
+},
+{
   "id": "ships-with-jobs-and-company",
   "title": "Ships with jobs, and company",
   "date": "2026-10-12",
