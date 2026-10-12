@@ -1,6 +1,31 @@
 export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
-export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; images: { src: string; alt: string; caption: string }[] };
+export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
+  {
+    id: "more-places-more-useful-people", title: "More places, more useful people", date: "2026-10-12", version: "v0.3 Polyfork expansion · shipped",
+    paragraphs: [
+      "A Scout Lodge, Harbor Market, and Infirmary give the next group of people useful jobs. Scouts move faster and reveal more coast, with an attack order needed before they engage. A market trader has to reach a stall before exchanging food for timber or stone. Medics train at the infirmary and heal nearby living allies after a fight.",
+      "The expansion uses six additional free Polyfork models: a tool shed and trail-map kiosk for the lodge, an oven and drying-net rack for the market, a hand axe for the scout, and potion bottles for the medic and clinic. Existing stalls, barrels, sacks, and the Beach Hut generator supply the remaining bases. The animated people remain the original humanoids, with Polyfork equipment attached. Everything is placed in meters; doors, props, and people keep their scale.",
+      "For a possible Polyfork case study, the build retains each source page, free-status check, license check, file hash, measured dimensions, and geometry budget. The six new source models total 2,777 triangles, with one material and no textures each. Those are asset figures, not a claim about the game's frame rate. Models ship inside the game. This is an independent prototype; no Polyfork partnership or endorsement is claimed.",
+      "The RTS research points toward readability, guidance, co-op scenarios, and distinctive rosters. The Age of Empires team highlights tree and wall visibility, idle-worker warnings, and guided build orders among its popular mods. Forgotten Empires reports over a million official downloads before becoming official game content, while Mental Omega pairs a distinctive roster with extensive solo and co-op missions. These are directional signals from named projects and platforms, rather than a representative survey of all RTS players.",
+      "This batch applies the smaller lessons first: an Idle button and I shortcut, local selection groups on Ctrl plus 1–4, and optional see-through trees without shrinking them. Decorative trees yield to building footprints, while timber-bearing trees still have to be cleared normally. Short shared scenarios, patrol and escort orders, and regional rosters are promising next experiments. Deeper naval logistics also fit Harborfolk, though the direct popularity evidence is weaker.",
+      "The build passed 62 automated tests, the existing 29-check city playtest, and eighteen new browser checks covering real construction, scouting, staffed trade, actual raid damage and medic healing, saved reload, and narrow controls. Two separate browsers also built a Scout Lodge and trained a scout through the real co-op connection. The images below are gameplay captures. Human feedback, target-device frame rates, and physical headset comfort remain future checks."
+    ],
+    sources: [
+      {title:"Polyfork licensing",url:"https://polyfork.dev/licensing"},
+      {title:"Polyfork agent API and asset contracts",url:"https://polyfork.dev/agents"},
+      {title:"Age of Empires' popular mod spotlight",url:"https://www.ageofempires.com/news/mods-122020/"},
+      {title:"Popular usability features adopted into AoE",url:"https://www.ageofempires.com/news/e3-2019-demo-recap-with-forgotten-empires/"},
+      {title:"Forgotten Empires' original project history",url:"https://www.forgottenempires.net/fe"},
+      {title:"Mental Omega's project page",url:"https://www.moddb.com/mods/mental-omega"}
+    ],
+    images: [
+      {src:"/lab/harborfolk/scout-lodge.webp",alt:"Harborfolk's Scout Lodge built from a Polyfork shed and trail-map kiosk, with a newly trained scout",caption:"A compact lodge assembled from real-meter models, with the first scout outside."},
+      {src:"/lab/harborfolk/harbor-market.webp",alt:"A working Harbor Market with a trader, stalls, bread oven and drying-net rack",caption:"Asha has arrived at a market stall. Trading becomes available when the assigned person is there."},
+      {src:"/lab/harborfolk/infirmary.webp",alt:"The Harborfolk Infirmary with a medic and villager outside",caption:"A one-bay Beach Hut becomes the clinic, with access stairs and a medic carrying a potion bottle."},
+      {src:"/lab/harborfolk/medic.webp",alt:"A Harborfolk medic treating a surviving guard after a real land raid",caption:"A living guard was wounded in battle. The medic walked over and restored health within range."}
+    ]
+  },
   {
     id: "a-cart-that-knows-the-way-home", title: "A cart that knows the way home", date: "2026-10-11", version: "v0.3 automatic carts · shipped",
     paragraphs: [

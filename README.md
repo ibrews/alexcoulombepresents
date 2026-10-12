@@ -687,4 +687,4 @@ If you like seeing this kind of thing get built and shared, [donations are alway
 
 Built by [Alex Coulombe Presents](https://github.com/ibrews) — with an AI co-pilot, naturally.
 
-Harborfolk’s latest diary milestone records automatic round-trip timber hauling and additional carts assembled by villagers. Six diary entries use fifteen actual gameplay screenshots. Physical headset playtesting remains pending.
+Harborfolk’s latest diary milestone records six new free Polyfork assets, Scout Lodge/Market/Infirmary gameplay, scouts and medics, usability controls, and primary-source RTS research. Seven diary entries use nineteen actual gameplay screenshots; the latest includes linked sources and measured asset provenance for a possible independent case study. Physical headset playtesting remains pending.
