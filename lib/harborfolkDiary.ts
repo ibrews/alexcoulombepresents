@@ -1,6 +1,55 @@
 export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
+{
+  "id": "ships-with-jobs-and-company",
+  "title": "Ships with jobs, and company",
+  "date": "2026-10-12",
+  "version": "v0.3 convoys · shipped",
+  "paragraphs": [
+    "Up to six ships can share the harbor. The dock builds additional cargo boats and warships, each with its own berth and crew. Cargo boats need two people; warships need a rower, helmsman, and gunner. People walk to their assigned ship, and a hull waits until its crew is aboard.",
+    "A repeat trade route spends twenty actual supplies. Crew members carry exports aboard, sail to the outpost, and take them ashore. They then collect imports and bring them home. Timber and stone become spendable only when those imports are unloaded at the harbor. The route repeats while supplies and crew are available; a low stock pauses it rather than conjuring another load.",
+    "Select a crewed warship and right-click a cargo boat to escort it, or choose that boat in the ship panel. Its escort follows a reachable position with room between the hulls and engages the raider when the convoy is threatened. Multiple arrivals queue for the outpost berth. Stop disables repetition, while people finish handling a paid manifest safely.",
+    "This draws from Anno’s automatic trade routes, stock safeguards and separate piers, Homeworld’s guard and support orders, and 0 A.D.’s crewed trading ships. The research keeps official features, developer plans, qualitative requests and dated mod attention separate. These are useful references, rather than a ranking of every RTS player’s wishes.",
+    "The metre rule is still the center of the project. These boats retain their eight-metre hulls, human-sized people and individually visible crates. A much larger geography and evidence-backed Great Hall and Vasa-inspired ship are under development. Their roof, hull and mast dimensions will dictate the space they need. They are not yet part of this published convoy milestone.",
+    "The integrated build passed 104 automated tests. The browser checks exercise normal resource gathering, repeated paid trips, actual cargo handling, escort combat, reload and two-browser guest commands. Dock ship production still uses a timed assembly queue; arrived shipbuilders and staged construction are the next milestone. The screenshots below are real gameplay captures with the simulation advanced for testing."
+  ],
+  "sources": [
+    {
+      "title": "Anno: automatic trade routes",
+      "url": "https://www.anno-union.com/devblog-your-own-trading-empire/"
+    },
+    {
+      "title": "Anno: escort improvements",
+      "url": "https://www.anno-union.com/updates/10375/"
+    },
+    {
+      "title": "Homeworld: guard and support feedback",
+      "url": "https://www.homeworlduniverse.com/war-games-feedback/"
+    },
+    {
+      "title": "0 A.D.: trading ship components",
+      "url": "https://docs.wildfiregames.com/entity-docs/a25.html"
+    }
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/convoy-loading.webp",
+      "alt": "Villagers carrying individual export crates along a Harborfolk pier to their cargo boat",
+      "caption": "Loading starts with two people collecting real supplies and carrying them aboard."
+    },
+    {
+      "src": "/lab/harborfolk/convoy-home-unloading.webp",
+      "alt": "Two Harborfolk crew members unloading imported cargo at their home pier",
+      "caption": "A completed trade trip becomes spendable timber and stone as the crew unloads it."
+    },
+    {
+      "src": "/lab/harborfolk/convoy-fleet.webp",
+      "alt": "Multiple individually crewed cargo boats and a warship at separate Harborfolk piers",
+      "caption": "Each hull has its own berth, cargo, orders, and people."
+    }
+  ]
+},
   {
     "id": "small-plans-and-people-to-follow",
     "title": "Small plans, and people to follow",
