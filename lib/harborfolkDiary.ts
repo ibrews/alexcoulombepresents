@@ -2,6 +2,19 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
   {
+    id: "a-cart-that-knows-the-way-home", title: "A cart that knows the way home", date: "2026-10-11", version: "v0.3 automatic carts · shipped",
+    paragraphs: [
+      "The next request was to let the cart finish its own work loop. Moving it to a woodland loading spot now assigns a dedicated operator and enables automatic hauling. When twenty-four logs are aboard, that person pulls it home, unloads it one log at a time, and brings the empty cart back to the same spot.",
+      "The operator waits at the handles while gatherers fill it again. Each cart has an automatic-hauling toggle and a Stop button. Deliver timber can send a partial load home too. The timber stays aboard when a journey is stopped, and saved routes retain their loading spot and operator.",
+      "More carts can be built through Build, the storehouse, or a cart panel. Each costs twenty wood. A villager walks to the assembly site and builds its parts over eight seconds; interrupted work can resume without paying again. Up to six carts have their own loads, routes, and people. Gatherers choose the nearest useful parked cart.",
+      "This build passed fifty-seven automated tests, the fourteen manual-cart browser checks, and eighteen new checks covering repeated automatic deliveries, visible assembly, a second cart receiving real timber, saved loads, narrow controls, and reset cleanup. In two separate browsers, the guest also built and positioned a second cart through the shared game connection. The browser tests advance the actual simulation and use normal orders and harvested resources. Human playtesting is still ahead."
+    ],
+    images: [
+      { src: "/lab/harborfolk/automatic-haul.webp", alt: "A full Harborfolk timber cart with its assigned operator at the handles", caption: "The load is full. Its operator is starting the trip home, then will return to this loading spot." },
+      { src: "/lab/harborfolk/cart-assembly.webp", alt: "Mara assembling the wooden platform of an additional Harborfolk cart", caption: "A second cart begins with a frame. Its villager has arrived and is building the remaining parts." }
+    ]
+  },
+  {
     id: "bring-the-cart-to-the-woods", title: "Bring the cart to the woods", date: "2026-10-11", version: "v0.3 cart and chat · shipped",
     paragraphs: [
       "The cart can now go where the work is. Click it and right-click clear land near the woods. An available villager walks to its handles and pulls it along a land route. Nearby gatherers use the cart when it is closer than the storehouse.",
