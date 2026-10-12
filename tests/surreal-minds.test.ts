@@ -12,12 +12,13 @@ test("Surreal Minds is a labeled experiment with a reachable diary", () => {
   assert.match(product.status, /in progress/i);
 });
 
-test("backend scorecard leaves the unrun cloud route unmeasured", () => {
+test("backend scorecard keeps all three measured routes explicit", () => {
   assert.deepEqual(
     surrealMindsBackendRows.map((row) => row.status),
-    ["measured", "partial", "not-run"],
+    ["measured", "measured", "measured"],
   );
-  assert.equal(surrealMindsBackendRows[2].measured, "Not run yet");
+  assert.match(surrealMindsBackendRows[2].measured, /11\.9–20\.0 s/);
+  assert.match(surrealMindsBackendRows[2].result, /key never enters either app/i);
 });
 
 test("diary keeps editor, emulator, and headset evidence separate", () => {
