@@ -808,6 +808,18 @@ export const products: Product[] = [
     accent: "teal", experiment: true,
   },
   {
+    slug: "persona-live", name: "Persona Live", status: "visionOS app · private, in development",
+    tagline: "Your Vision Pro Persona, driving a live MetaHuman.",
+    pitch: "An Apple Vision Pro wearer's Persona becomes the performer for a MetaHuman character. The headset is a capture and display client: it streams what its sensors see to a desktop Unreal solver and renders back what the solver computes. Persona Live is the visionOS and RealityKit half of that live-performance pipeline.",
+    sections: [
+      { heading: "Face first, then body", body: "Face puppeteering works end to end: the headset evaluates MetaHuman face controls on device and skins one or more characters from the incoming stream, so a single performance can drive several MetaHumans at once. The newer body path streams head and hand tracking from the headset to a desktop Unreal pipeline that solves a full-body pose from that sparse input. It is still in progress." },
+      { heading: "Join a live show", body: "A separate path lets the app join a show over a relay as audience or as a password-gated performer, with audio and face controls arriving together. That path is verified in the visionOS Simulator only; a physical Vision Pro test and a deployed relay are the next gates." },
+    ],
+    bullets: ["Apple Vision Pro, visionOS and RealityKit", "Persona video, face and body streams run at the same time", "Face tracking proven end to end; body tracking in progress", "Not yet released"],
+    links: [{ label: "Hand tracking for it comes from the Ultimate OpenXR Template", url: "/lab/ultimate-openxr-template" }],
+    accent: "teal", experiment: true,
+  },
+  {
     slug: "nightbloom", name: "Nightbloom", status: "UE 5.8 experiment · private, in development",
     tagline: "Procedural fireworks in your real sky.",
     pitch: "A one-hour challenge from my wife: make an app that produces amazing fireworks, procedural so no show repeats, with great sound, from one codebase across iOS, Android, OpenXR headsets and visionOS. Nightbloom is that app, built on the Ultimate OpenXR Template's device profiles.",
@@ -1406,6 +1418,10 @@ export const products: Product[] = [
       {
         heading: "Hands first, everything else too",
         body: "Pinch to select with either hand, rays that stay steady while you pinch, and a two-hand hold that opens the comfort menu. Losing tracking releases whatever you were holding. Controllers, keyboard and gamepad all work the same map, and the comfort menu covers teleport, walk or fly, and snap or smooth turning.",
+      },
+      {
+        heading: "Hand tracking across runtimes",
+        body: "OpenXR runtimes disagree about which way a hand joint points, so a skinned hand mesh that looks right on one headset can twist on another. The template now carries the per-device joint correction I worked out on Apple Vision Pro, applied to the bundled hand meshes, with a runtime switch to compare raw against corrected. It compiles and passes its tests, but it has not yet had a wearer check on a physical Vision Pro, so treat it as a candidate.",
       },
       {
         heading: "Tested by AI, no headset on",

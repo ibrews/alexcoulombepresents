@@ -866,7 +866,7 @@
   - Install via git clone into ~/.claude/skills/usage-audit, or copy SKILL.md directly
   - Scriptable to run monthly as a standing self-audit
 
-### products  (20 entries — add or remove whole entries)
+### products  (21 entries — add or remove whole entries)
 
 - `[data.products.harborfolk.name]` ▸ Harborfolk
 - `[data.products.harborfolk.tagline]` ▸ A little world at human scale, with people at every station.
@@ -880,6 +880,20 @@
   - Fog of war and a first ship battle
 - `[data.products.harborfolk.links.0.label]` ▸ Play Harborfolk
 - `[data.products.harborfolk.links.1.label]` ▸ Development diary
+- `[data.products.persona-live.name]` ▸ Persona Live
+- `[data.products.persona-live.tagline]` ▸ Your Vision Pro Persona, driving a live MetaHuman.
+- `[data.products.persona-live.pitch]` ▸ An Apple Vision Pro wearer's Persona becomes the performer for a MetaHuman character. The headset is a capture and display client: it streams what its sensors see to a desktop Unreal solver and renders back what the solver computes. Persona Live is the visionOS and RealityKit half of that live-performance pipeline.
+- `[data.products.persona-live.sections.0.heading]` ▸ Face first, then body
+- `[data.products.persona-live.sections.0.body]` ▸ Face puppeteering works end to end: the headset evaluates MetaHuman face controls on device and skins one or more characters from the incoming stream, so a single performance can drive several MetaHumans at once. The newer body path streams head and hand tracking from the headset to a desktop Unreal pipeline that solves a full-body pose from that sparse input. It is still in progress.
+- `[data.products.persona-live.sections.1.heading]` ▸ Join a live show
+- `[data.products.persona-live.sections.1.body]` ▸ A separate path lets the app join a show over a relay as audience or as a password-gated performer, with audio and face controls arriving together. That path is verified in the visionOS Simulator only; a physical Vision Pro test and a deployed relay are the next gates.
+
+  **list: bullets** (4 items — add or remove lines freely)
+  - Apple Vision Pro, visionOS and RealityKit
+  - Persona video, face and body streams run at the same time
+  - Face tracking proven end to end; body tracking in progress
+  - Not yet released
+- `[data.products.persona-live.links.0.label]` ▸ Hand tracking for it comes from the Ultimate OpenXR Template
 - `[data.products.nightbloom.name]` ▸ Nightbloom
 - `[data.products.nightbloom.tagline]` ▸ Procedural fireworks in your real sky.
 - `[data.products.nightbloom.pitch]` ▸ A one-hour challenge from my wife: make an app that produces amazing fireworks, procedural so no show repeats, with great sound, from one codebase across iOS, Android, OpenXR headsets and visionOS. Nightbloom is that app, built on the Ultimate OpenXR Template's device profiles.
@@ -1208,8 +1222,10 @@
 - `[data.products.ultimate-openxr-template.sections.0.body]` ▸ Device profiles choose render scale and shadows for Quest, PICO and Android XR. The rooms use mobile forward rendering and simple materials, with warm architectural lighting and clear station markers. These are starting quality budgets; sustained performance and runtime compatibility still need checking on each headset. The release notes list what was tested. PCVR and Apple Vision Pro require separate builds.
 - `[data.products.ultimate-openxr-template.sections.1.heading]` ▸ Hands first, everything else too
 - `[data.products.ultimate-openxr-template.sections.1.body]` ▸ Pinch to select with either hand, rays that stay steady while you pinch, and a two-hand hold that opens the comfort menu. Losing tracking releases whatever you were holding. Controllers, keyboard and gamepad all work the same map, and the comfort menu covers teleport, walk or fly, and snap or smooth turning.
-- `[data.products.ultimate-openxr-template.sections.2.heading]` ▸ Tested by AI, no headset on
-- `[data.products.ultimate-openxr-template.sections.2.body]` ▸ Changes run through xrsim and the Meta XR Simulator: scripted hand poses drive the real Blueprint controls, and the checks read back actual game state instead of trusting a screenshot. The clips below are continuous, real-time takes of exactly that.
+- `[data.products.ultimate-openxr-template.sections.2.heading]` ▸ Hand tracking across runtimes
+- `[data.products.ultimate-openxr-template.sections.2.body]` ▸ OpenXR runtimes disagree about which way a hand joint points, so a skinned hand mesh that looks right on one headset can twist on another. The template now carries the per-device joint correction I worked out on Apple Vision Pro, applied to the bundled hand meshes, with a runtime switch to compare raw against corrected. It compiles and passes its tests, but it has not yet had a wearer check on a physical Vision Pro, so treat it as a candidate.
+- `[data.products.ultimate-openxr-template.sections.3.heading]` ▸ Tested by AI, no headset on
+- `[data.products.ultimate-openxr-template.sections.3.body]` ▸ Changes run through xrsim and the Meta XR Simulator: scripted hand poses drive the real Blueprint controls, and the checks read back actual game state instead of trusting a screenshot. The clips below are continuous, real-time takes of exactly that.
 
   **list: bullets** (5 items — add or remove lines freely)
   - Unreal Engine 5.8, Blueprint-only
