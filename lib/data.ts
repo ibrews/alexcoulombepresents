@@ -777,6 +777,7 @@ export type Product = {
   links: { label: string; url: string }[];
   accent: string; // tailwind-friendly hue token
   video?: string; // primary / featured YouTube id
+  showcaseClip?: string; // featured simulator/video walkthrough
   clips?: string[]; // self-hosted clips from lib/trailers.ts (public/trailers/<slug>.mp4)
   videos?: { id: string; title: string }[]; // additional updates, newest first
   // A big, prominent image right under the tagline — for products with no
@@ -1444,11 +1445,14 @@ export const products: Product[] = [
       "Tested in xrsim and the Meta XR Simulator, no headset needed",
     ],
     links: [
-      { label: "Download the Android preview APK", url: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-10" },
+      { label: "Download the Android preview APK", url: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-12" },
       { label: "Install guide, tested devices & known limits", url: "https://github.com/ibrews/uoxr-demo" },
+      { label: "Download the portrait simulator video", url: "https://github.com/ibrews/uoxr-demo/releases/download/preview-2026-10-12/UOXR-Simulator-Walkthrough-portrait-2026-10-12.mp4" },
       { label: "Built with it: Echo Cathedral", url: "/lab/echo-cathedral" },
     ],
     accent: "teal",
+    showcaseClip: "uoxr-simulator-walkthrough",
+    guide: { href: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-12", label: "Download Android preview · build 3" },
     clips: ["uoxr-menu-selection", "uoxr-pinch-gestures"],
     heroImage: { src: "/lab/uoxr/gallery-preview.jpg", alt: "UOXR tutorial gallery with warm ceiling lights, oak frames and a limestone walkway" },
     screenshots: [

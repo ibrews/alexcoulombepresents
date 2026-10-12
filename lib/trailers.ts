@@ -32,6 +32,15 @@ export const ACCESS_LABEL: Record<TrailerAccess, string> = {
 
 export const trailers: Trailer[] = [
   {
+    slug: "uoxr-simulator-walkthrough",
+    title: "UOXR, before the headset",
+    tagline: "A 59-second tour of hands, controllers, comfort settings, flight, teleport, props, doors and a working power puzzle. Recorded in Meta XR Simulator and xrsim, ending with the Android APK in PICO Emulator. Simulator labels and window frames stay visible.",
+    durationSec: 59,
+    access: "template",
+    href: "/lab/ultimate-openxr-template",
+  },
+
+  {
     slug: "become-a-member",
     title: "Become a member",
     tagline: "Tutorials go stale. Live classes don't.",

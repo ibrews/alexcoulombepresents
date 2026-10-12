@@ -44,11 +44,13 @@ cards at desktop and phone widths. Videos load on demand and preserve visible co
 
 ## Upcoming hellos
 
-The UOXR Lab page now includes actual gallery/Workshop screenshots and links to
-the separate public demo repository and Android preview release. Template source
-remains private. Its copy distinguishes starting device quality presets from
-continuous performance adaptation and directs readers to the release's tested
-device list and installation limits.
+The UOXR Lab page features the 59-second Meta/xrsim simulator walkthrough,
+with visible simulator labels/windows and a final PICO Android-emulator shot.
+It links build 3 of the separate public demo repository, plus the portrait video
+for sharing. The player loads on click; automatic playback/audio is not forced.
+Template source remains private. Copy retains the per-device compatibility and
+sustained-performance limits; device profiles are starting budgets.
+
 
 The homepage `#appearances` section lists ASAI (October 7–9, Washington, DC),
 Augmented Enterprise Summit with PICO (October 13–15, Atlanta), Android Dev Summit

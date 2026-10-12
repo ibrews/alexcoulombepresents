@@ -92,7 +92,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <p className={`mt-5 text-xl leading-relaxed md:text-2xl ${accent}`}>{renderBreaks(product.tagline)}</p>
       </Reveal>
 
-      {product.heroImage && (
+      {product.showcaseClip && (() => {
+        const t = trailer(product.showcaseClip);
+        return (
+          <Reveal>
+            <section className="mt-8" aria-label="Simulator walkthrough">
+              <p className="mb-4 font-mono text-xs uppercase tracking-widest text-teal">Recorded in simulators · 59 seconds</p>
+              <TrailerVideo slug={t.slug} title={t.title} />
+              <h2 className="mt-4 text-xl font-bold">{t.title}</h2>
+              <p className="mt-2 leading-relaxed text-mist">{t.tagline}</p>
+            </section>
+          </Reveal>
+        );
+      })()}
+
+      {product.heroImage && !product.showcaseClip && (
         <Reveal>
           <div className="mt-8 overflow-hidden rounded-3xl border border-line">
             <Image
