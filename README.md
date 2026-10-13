@@ -39,7 +39,11 @@ in-app, client and bridge measurements. The tools section separates emulator/des
 coverage from wearer-only acceptance. Source and edit provenance is in
 `public/lab/surreal-minds/PROVENANCE.md`.
 
-Try the diary's chapter links, play all three labeled clips, and compare the same-photo
+The October 13 update adds Alex's v15 Quest verdict and a native v16 three-backend
+comparison clip. It distinguishes grounded cloud/LAN layouts from caption-only
+approximation, explains removed objects and preserves the earlier timing study.
+
+Try the diary's chapter links, play the labeled clips, and compare the same-photo
 cards at desktop and phone widths. Videos load on demand and preserve visible controls.
 
 ## Upcoming hellos
