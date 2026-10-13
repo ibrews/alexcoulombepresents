@@ -4,7 +4,7 @@ subject: New classes! Exciting instructors! Membership updates!
 preheader: New classes! Exciting instructors! Membership updates!
 sentAt: 2026-10-13T05:11:53.000Z
 sentList: ai,unreal,forage,unrealitykit-bridge,renderman-bridge,pinchwork,unreal-visionos,avp-openxr,lab,skills,store,newsletter,members,team-training,receipt-reconciler,legacy-interest,aug5-free-class
-sentCount: 39
+sentCount: 97
 ---
 ![META VR GLASSES](/newsletter/meta-vr-glasses.jpg)
 
