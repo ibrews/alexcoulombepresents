@@ -2,6 +2,54 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "the-leviathans-have-jobs",
+  "title": "The leviathans have jobs",
+  "date": "2026-10-13",
+  "version": "v0.3 Fleet tactics & Leviathans · shipped",
+  "paragraphs": [
+    "The next overnight milestone puts something much bigger in the strait: two 128-metre ironclads, each with a 17.8-metre beam and 64 named playable crew. Ironclad Showdown is a new scenario; the original 69-metre Sovereign battle remains available. Cutters are still eight metres and people are still 1.717 metres. No zoom trick changes those relationships.",
+    "HMS Warrior supplied a useful scale reference. The National Museum of the Royal Navy procurement specification states 128 metres overall and 17.8 metres beam; Royal Museums Greenwich preserves the gun-deck plan. Our mesh is a stylized Warrior-inspired prototype, with a modeled 115.8-metre hull and an open machinery well. It is not a museum reconstruction, and 64 playable work stations are not the full historical complement.",
+    "Every crew member has a saved name, health and duty. Engineers and stokers power steam movement; gunners serve the two batteries. Deckhands help reload and marines reduce crew injuries. Helm, lookout, sail trimming, rigging, carpentry and quartermaster duties support steering, range, propulsion, repairs and resupply. Losing a required role affects the ship rather than leaving a decorative empty body. The crew manifest lets you click a person and inspect their station at human scale.",
+    "Fleet tactics now include line abreast, column, wedge and screen formations. Destination planning uses the actual hull clearance in metres, translates whole layouts at map edges and rejects impossible arrangements. A huge leader therefore needs a genuinely large amount of sea room. Ships still use conservative navigation circles rather than full rigid-body hull physics.",
+    "Attack-move engages along a route. Patrol alternates between two points. Shift-right-click queues up to eight further waypoints; right-clicking a friendly ship gives an escort duty. Escorts reserve stations around the actual leader and switch to guard when it sinks. Guard holds position while firing in range, and Engage, Defensive and Hold fire stances control pursuit and fire discipline. Selected hull health, route lines, steam and wakes add useful feedback.",
+    "Those tactics live in the simulation, not just in a menu. A guest can issue them to the shared fleet. Two independent browser processes verified 256 ships and 890 starting crew, guest formation/stance/queued orders, real combat damage, and exact named mid-battle saving. After a fresh invitation, hulls, named crew, duties, casualties, orders and projectiles matched the host again. Co-op remains one guest with manual signaling and local named saves/export, rather than a hosted public lobby.",
+    "The source passed 184 automated tests plus TypeScript and production build checks. Browser tests exercised actual pointer tactics, close crew views, save/reload, renderer switching, narrow-screen crew controls, existing menus, save/editor flows and deliberate loading recovery. The public build repeated the tactics, both maximum-fleet co-op presets, menus and recovery checks. These screenshots were captured from the published game.",
+    "The finished ironclad preset was measured after renderer warm-up at 48, 192 and 256 ships on actual WebGL2 and WebGPU. Both held about 60 FPS on the RTX 5090 at 1440 by 900, with up to 890 starting crew. That is a display-paced result, not a maximum throughput ceiling or a claim about another computer. Boarding battles, complete naval engineering, a full historical complement and physical XR acceptance remain future work."
+  ],
+  "sources": [
+    {
+      "title": "NMRN: HMS Warrior specification",
+      "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/9df4365c-7a38-4d1d-9ed4-7239eeb744e9"
+    },
+    {
+      "title": "Royal Museums Greenwich: Warrior gun-deck plan",
+      "url": "https://www.rmg.co.uk/collections/objects/rmgc-object-587100"
+    }
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/ironclad-128m-deck.webp",
+      "alt": "A full-size ironclad deck with dozens of small working crew members",
+      "caption": "128 metres overall, 64 named playable crew. The ship stays huge when the camera moves."
+    },
+    {
+      "src": "/lab/harborfolk/ironclad-human-scale.webp",
+      "alt": "Close view of the helmsman on the ironclad with the named crew manifest",
+      "caption": "Click a name to meet the person at their work station. People stay 1.717 metres tall."
+    },
+    {
+      "src": "/lab/harborfolk/ironclad-engine-room.webp",
+      "alt": "Engineers and stokers in the ironclad open machinery well",
+      "caption": "The open machinery well makes the steam crew visible; losing those roles affects movement."
+    },
+    {
+      "src": "/lab/harborfolk/ironclad-fleet-tactics.webp",
+      "alt": "Full-size ships with wedge formation route lines and tactical command controls",
+      "caption": "Attack-move, formations, stances and queued routes are saved orders for actual hulls."
+    }
+  ]
+},
+{
   "id": "the-captains-desk",
   "title": "The captain’s desk",
   "date": "2026-10-13",
