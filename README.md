@@ -23,7 +23,7 @@ boundaries are unchanged.
 `/lab/harborfolk` links to the playable browser strategy prototype. Its diary at
 `/lab/harborfolk/devlog` uses dated, shipped-build entries from
 `lib/harborfolkDiary.ts` and real captures in `public/lab/harborfolk/`.
-The latest entry documents the 128 m ironclads, 64 named crew per capital ship, formations, attack-move, patrol, escort and queued orders, with four real captures from the public game. Fourteen entries now contain 46 screenshots; source dimensions, representative crew limits, co-op/save validation and hardware performance conditions are explicit. Append verified milestones to that data file; label unfinished work explicitly.
+The latest entry documents the 128 m ironclads, 64 named crew per capital ship, formations, attack-move, patrol, escort, queued orders, host-controlled enemy doctrine and follow camera, with four real captures from the public game. Fourteen entries now contain 46 screenshots; source dimensions, representative crew limits, co-op/save validation and hardware performance conditions are explicit. Append verified milestones to that data file; label unfinished work explicitly.
 Keep `harborfolk` excluded from the generic Lab route's `generateStaticParams()`:
 its dedicated overview owns that URL. Verify its distinctive play/diary controls
 on a production build, as well as the diary images and mobile layout.
