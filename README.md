@@ -670,6 +670,19 @@ cd /Users/alex/GH/alexcoulombepresents
 npm run studio        # → http://localhost:4848
 ```
 
+**Sending to the whole list on Resend's free tier** (100/day, shared with login and
+purchase mail): Resend for non-US and bounce-prone subscribers, Gmail BCC drafts for
+everyone else. Step by step in the KB runbook
+`intelligence/runbooks/acp-newsletter-send-resend-plus-gmail.md`:
+
+```bash
+node --env-file=.env.studio scripts/newsletter-split-send.mjs <slug> --pick non-us --limit 40 --dry-run
+node --env-file=.env.studio scripts/newsletter-split-send.mjs <slug> --pick bounce-prone --limit 55
+node --env-file=.env.studio scripts/manual-send-kit.mjs <slug>
+~/dev/amex-reconciler/.venv/bin/python scripts/gmail-drafts-from-kit.py <slug> --groups 4
+~/dev/amex-reconciler/.venv/bin/python scripts/gmail-drafts-from-kit.py <slug> --check-sent
+```
+
 To keep it running without a terminal (it used to die whenever the terminal or
 a Claude preview pane that started it closed), install it as a LaunchAgent:
 
