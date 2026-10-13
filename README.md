@@ -7,6 +7,17 @@ Google Sites page with something interactive, dynamic, and worthy of the domain.
 Built with **Next.js 15, React 19, Tailwind CSS 4, and Three.js**. Deploys to Vercel;
 commerce and account features use the environment configuration described below.
 
+## UOXR showcase
+
+UOXR is featured in the homepage's latest updates, on `/videos` with a 15-second
+trailer, and on its Lab page with the full 59-second tour. Three downloadable GIFs
+show native pinch menus, grab-and-place and the powered workshop. Each GIF starts
+as a still and has explicit play/pause controls; the animated bytes load on demand.
+Simulator labels and real window frames remain visible in all media. The proof
+figures name the actual native hand-menu/switching checks, rather than promising
+untested headset performance. The existing Android preview and private source
+boundaries are unchanged.
+
 ## Harborfolk diary
 
 `/lab/harborfolk` links to the playable browser strategy prototype. Its diary at

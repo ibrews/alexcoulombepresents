@@ -143,14 +143,14 @@ export default function Home() {
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-5">
               <div>
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-teal">Field notes / September 2026</p>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-teal">Fresh from the Lab</p>
                 <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">Less friction. <span className="grad-text">More making.</span></h2>
-                <p className="mt-4 max-w-2xl text-mist">New tools from the workbench: smaller checkouts, readable GPU captures, and a second chance for a lost recording.</p>
+                <p className="mt-4 max-w-2xl text-mist">Playable XR, smaller checkouts, readable GPU captures, and a second chance for a lost recording.</p>
               </div>
               <Link href="/lab" className="font-mono text-sm text-teal hover:underline">Inside the lab →</Link>
             </div>
           </Reveal>
-          <div className="mt-9 grid gap-5 md:grid-cols-3">
+          <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {siteUpdates.map((update, index) => (
               <Reveal key={update.href} delay={index * 80}>
                 <Link href={update.href} className="group glass flex h-full flex-col rounded-2xl p-7 transition-colors hover:border-teal/50">

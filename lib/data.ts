@@ -1420,7 +1420,7 @@ export const products: Product[] = [
     slug: "ultimate-openxr-template",
     name: "Ultimate OpenXR Template",
     status: "Unreal Engine 5.8 template · in development",
-    tagline: "Start building XR.<br>Try the template in your headset.",
+    tagline: "Hands. Controllers. Your next XR project.<br>See it in action. Then make it yours.",
     pitch:
       "Every new XR project I start used to begin the same way: OpenXR loaders, Android packaging, and hand tracking that only behaved on one headset. The Ultimate OpenXR Template is the project I start from instead. Its Unreal Engine 5.8 core uses Blueprints, with shared controls for hands, controllers, keyboard and gamepad. Download the Android preview to explore the tutorial and three practice rooms without installing Unreal or downloading the project.",
     sections: [
@@ -1433,8 +1433,8 @@ export const products: Product[] = [
         body: "Pinch to select with either hand, rays that stay steady while you pinch, and a two-hand hold that opens the comfort menu. Losing tracking releases whatever you were holding. Controllers, keyboard and gamepad all work the same map, and the comfort menu covers teleport, walk or fly, and snap or smooth turning.",
       },
       {
-        heading: "Tested by AI, no headset on",
-        body: "Changes run through xrsim and the Meta XR Simulator: scripted hand poses drive the real Blueprint controls, and the checks read back actual game state instead of trusting a screenshot. The clips below are continuous, real-time takes of exactly that.",
+        heading: "Real input. Real game state.",
+        body: "Native simulated hand joints press the real buttons. Controller grips carry physics props. The workshop completes its own power puzzle. xrsim and Meta XR Simulator drive the input while checks read actual game state: 18 hand-menu checks and seven controller-to-hand switching checks passed. The tour is edited at normal speed; the longer regression clips below are continuous takes.",
       },
     ],
     bullets: [
@@ -1453,7 +1453,7 @@ export const products: Product[] = [
     accent: "teal",
     showcaseClip: "uoxr-simulator-walkthrough",
     guide: { href: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-12", label: "Download Android preview · build 3" },
-    clips: ["uoxr-menu-selection", "uoxr-pinch-gestures"],
+    clips: ["uoxr-in-15-seconds", "uoxr-menu-selection", "uoxr-pinch-gestures"],
     heroImage: { src: "/lab/uoxr/gallery-preview.jpg", alt: "UOXR tutorial gallery with warm ceiling lights, oak frames and a limestone walkway" },
     screenshots: [
       { src: "/lab/uoxr/gallery-preview.jpg", alt: "The UOXR tutorial gallery", caption: "Explore six guided stations, then choose another room from the comfort menu." },

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import UoxrSimulatorLoops from "@/components/UoxrSimulatorLoops";
 import Reveal from "@/components/Reveal";
 import Ethereal from "@/components/Ethereal";
 import WaitlistForm from "@/components/WaitlistForm";
@@ -96,7 +97,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         const t = trailer(product.showcaseClip);
         return (
           <Reveal>
-            <section className="mt-8" aria-label="Simulator walkthrough">
+            <section id="simulator-tour" className="mt-8 scroll-mt-28" aria-label="Simulator walkthrough">
               <p className="mb-4 font-mono text-xs uppercase tracking-widest text-teal">Recorded in simulators · 59 seconds</p>
               <TrailerVideo slug={t.slug} title={t.title} />
               <h2 className="mt-4 text-xl font-bold">{t.title}</h2>
@@ -105,6 +106,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </Reveal>
         );
       })()}
+
+      {product.slug === "ultimate-openxr-template" && (
+        <>
+          <Reveal>
+            <section className="mt-8 grid gap-4 sm:grid-cols-3" aria-label="What the simulator tests proved">
+              {[
+                { number: "4", label: "sample rooms to explore" },
+                { number: "18 / 18", label: "native hand-menu checks passed" },
+                { number: "7 / 7", label: "controller / hand switching checks passed" },
+              ].map((proof) => (
+                <div key={proof.label} className="border-l-2 border-teal/60 bg-panel/40 p-5">
+                  <p className="font-mono text-3xl font-bold text-teal">{proof.number}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-mist">{proof.label}</p>
+                </div>
+              ))}
+            </section>
+          </Reveal>
+          <Reveal><UoxrSimulatorLoops /></Reveal>
+        </>
+      )}
 
       {product.heroImage && !product.showcaseClip && (
         <Reveal>
