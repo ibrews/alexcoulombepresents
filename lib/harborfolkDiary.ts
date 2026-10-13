@@ -2,6 +2,66 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "the-captains-desk",
+  "title": "The captain’s desk",
+  "date": "2026-10-13",
+  "version": "v0.3 RTS front end & original score · shipped",
+  "paragraphs": [
+    "The next overnight request was for Harborfolk to feel more like an RTS from the moment it opens. We now have an original illustrated harbor cover, a loading screen with actual model progress, a vertical start menu, scenario selection, new-harbor setup, options and an in-game menu. Continue returns to the saved world rather than quietly starting another settlement.",
+    "The reference pass looked at Age of Empires II, StarCraft, Warcraft III, Command & Conquer and Rise of Nations. Their interfaces have different personalities, but several useful patterns recur: stable resource locations, commands that follow the selection, readable key hints, a minimap, and clear separation between starting, loading, configuring and playing. Those conventions informed the captain’s desk; their artwork and branding were not copied.",
+    "The game HUD now groups timber, supplies, stone, population capacity, age and time into a compact strip. A bottom dock gives the selection an identity and keeps the six primary actions in a consistent command grid beside the coast chart. Objectives open when wanted. The centre stays available for the people, construction and huge vessels that make this project interesting.",
+    "The naval battle gains a strait chart and local fleet control groups. Click the chart to move the camera, or right-click to order selected ships. Ctrl+1–4 saves a selection; 1–4 recalls its surviving ships. Those are commands for the actual existing hulls, not substitutes for their scale. The ship slider, crew duties, combat saving and WebGL2/WebGPU comparison remain intact.",
+    "Menu transitions needed careful treatment. A solo world waits without changing its saved pause flag or camera. In connected co-op, browsing a menu does not pause the shared battle for the other player. The title menu also leaves an existing autosave unchanged until the player continues. Native save dialogs retain their Escape behavior, and new world starts preserve the previous recovery snapshot.",
+    "There is also an original procedural nautical score: distinct menu, harbor, battle and victory phrases, layered soft synthesis, low percussion, compression and subtle reverb. It is synthesized orchestral-style music, not a recording of an orchestra. Menu music begins after a gesture, master mute is genuinely silent, and independent music/effects volumes persist. Opening the menu suppresses hidden chopping and battle-effect noise.",
+    "The cover is original illustration, not a gameplay screenshot or a new promise about historical engineering. The runtime still uses the same metre dimensions. These images are actual captures of the published interface; the command-desk views show the game itself. Desktop, narrow-screen and reduced-motion layouts were checked.",
+    "The shipped source passed 171 automated tests. Real browser checks covered normal boot, menu navigation, a saved-world round trip, onboarding, measured audio output and mute, loading recovery, existing editor flows and maximum-fleet co-op. That co-op check also opened the guest’s menu while the host’s simulation continued. The refreshed production UI held about 60 FPS in display-paced RTX 5090 tests at 48, 192 and 256 starting ships on both renderers; this still does not establish an uncapped performance ceiling. Family feedback on the score and controls remains the next human check."
+  ],
+  "sources": [
+    {
+      "title": "AoE II: resources and commands",
+      "url": "https://www.ageofempires.com/learn-to-play/control-resources-aoe2/"
+    },
+    {
+      "title": "StarCraft: hotkeys and control groups",
+      "url": "https://classic.battle.net/scc/gs/control.shtml"
+    },
+    {
+      "title": "Warcraft III: control conventions",
+      "url": "https://classic.battle.net/war3/basics/specialcommands.shtml"
+    },
+    {
+      "title": "C&C: menus, sidebar and saving",
+      "url": "https://help.ea.com/en/articles/command-and-conquer/command-and-conquer-remastered/how-to-play/"
+    },
+    {
+      "title": "Rise of Nations: original manual",
+      "url": "https://steamcdn-a.akamaihd.net/steam/apps/287450/manuals/Manual.PDF?t=1523572459"
+    }
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/rts-title-menu.webp",
+      "alt": "Harborfolk title menu over original dawn harbor illustration with a huge sailing ship",
+      "caption": "Original cover illustration, a familiar start menu, and a world that waits for Continue."
+    },
+    {
+      "src": "/lab/harborfolk/rts-scenario-selection.webp",
+      "alt": "Harborfolk scenario selection showing the naval battle and developed civilizations",
+      "caption": "Choose a first harbor, a developed world or a staffed naval battle."
+    },
+    {
+      "src": "/lab/harborfolk/rts-harbor-command-desk.webp",
+      "alt": "Harborfolk village with compact resource bar, minimap, selection card and command grid",
+      "caption": "The actual game: readable resources and commands around a clear playfield."
+    },
+    {
+      "src": "/lab/harborfolk/rts-options-menu.webp",
+      "alt": "Harborfolk options with independent audio sliders and keyboard control hints",
+      "caption": "An original synthesized score with separate persistent music and effects gains."
+    }
+  ]
+},
+{
   "id": "a-battle-worth-coming-back-to",
   "title": "A battle worth coming back to",
   "date": "2026-10-12",
