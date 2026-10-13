@@ -2,6 +2,49 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "a-battle-worth-coming-back-to",
+  "title": "A battle worth coming back to",
+  "date": "2026-10-12",
+  "version": "v0.3 epic naval battle · shipped",
+  "paragraphs": [
+    "The Azure Strait is our first fleet-sized battle: blue and red ships, two enormous flagships, visible sailors, physical shots and actual casualties. The Fleet & FPS slider chooses 6–128 ships per side: as many as 256 hulls and 778 people at the start. It adds complete ships and people to the simulation. It does not scale them down to fit the screen.",
+    "The little cutters are eight metres long. The two stylized great ships retain the existing 69-metre overall length, 11.3-metre beam, 18-metre yards and 52.4-metre keel-to-mainmast height. Every person is 1.717 metres tall. Up close, a sailor looks wonderfully small beside the hull. The large vessels use eight prototype work stations; they do not claim to reproduce the much larger historical crews or complete naval engineering.",
+    "Crew jobs matter. Without a living helmsman and rower, a cutter cannot move; without its gunner, it cannot fire. On a flagship, helm and sail handling permit movement, the two gun stations fire, the lookout extends range, the rigger improves speed, the carpenter repairs a living hull and the quartermaster improves reloading. Shots lead a moving target but must still physically reach it. Sinking leaves living survivors afloat, and repairs never bring back lost people.",
+    "Parent and child can command the same blue fleet through Co-op. A two-process browser test connected the maximum fleet, issued a guest order through a real right-click, fought, paused, and saved a named mid-battle moment. After disconnecting, the host reloaded it and created a fresh invitation. Ship positions, damage, velocities, orders, crew identities, jobs, casualties and in-flight projectiles matched exactly in the guest browser. Resumed combat then reached both players.",
+    "That larger state needed a transport change: snapshots now travel in bounded ordered pieces rather than assuming one enormous WebRTC message will arrive. Saves remain local to the browser profile, with JSON export for a portable backup. The connection still supports one guest with manual invitation and answer exchange, and there is no relay service. Those boundaries are worth understanding before planning a remote session.",
+    "The battle also has an actual WebGPU renderer beside WebGL2. Switching keeps the paused combat state and camera; each player chooses their own backend. Shared instanced geometry batches small hulls, limbs and shots. The original harbor keeps its established WebGL fog pipeline, and combat AI still runs on the CPU. The counter reports measured browser FPS, frame milliseconds and draw calls, and identifies a fallback honestly.",
+    "On Fort’s RTX 5090, production browser runs at 1440 × 900 held approximately 60 FPS with 48, 192 and 256 starting ships on both real hardware backends. The runs included moving ships, shots and casualties after warm-up. They were display-paced near 60 FPS, so they do not establish a throughput ceiling or a WebGPU speed advantage. Performance on the child’s computer is still a family playtest question.",
+    "The shipped build passed 169 automated tests, the maximum-fleet co-op save/resume round trip, backend-switch preservation and the existing eight save/editor browser checks. These images are captures of the public game. The earlier loading complaint resolved when Chrome was restarted; that human result does not establish a technical root cause. Naval headset rendering remains future work, while harbor scenarios retain the existing tabletop prototype."
+  ],
+  "sources": [
+    {
+      "title": "Three.js WebGPU renderer guide",
+      "url": "https://threejs.org/manual/pages/webgpurenderer.html"
+    },
+    {
+      "title": "Three.js instanced geometry",
+      "url": "https://threejs.org/docs/pages/InstancedMesh.html"
+    }
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/naval-fleet-laboratory.webp",
+      "alt": "Harborfolk naval fleet slider set to 128 ships per side with a real WebGPU FPS counter",
+      "caption": "Up to 256 starting ships and 778 crew. Combat changes the live counts; the hulls keep their metre dimensions."
+    },
+    {
+      "src": "/lab/harborfolk/naval-flagship-people.webp",
+      "alt": "Small sailors at their stations on a huge full-scale Harborfolk flagship",
+      "caption": "A 1.717-metre person on a 69-metre overall ship. Eight prototype jobs are visible and functional."
+    },
+    {
+      "src": "/lab/harborfolk/naval-shared-resumed-battle.webp",
+      "alt": "The guest browser showing a restored naval battle with surviving ships and crews",
+      "caption": "A named save restores the actual combat roster through a fresh multiplayer invitation."
+    }
+  ]
+},
+{
   "id": "a-world-to-return-to",
   "title": "A world to return to",
   "date": "2026-10-12",
