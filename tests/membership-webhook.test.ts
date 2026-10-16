@@ -466,6 +466,42 @@ test("subscription.deleted revokes membership + outstanding credits", async () =
   assert.deepEqual(called("revokeMembership")[0].args, [42]);
 });
 
+// ── cancellation notices (owner email) ──────────────────────────────────────
+
+test("subscription.deleted reports an 'ended' cancellation when something was revoked", async () => {
+  const { deps } = fakeDeps();
+  const result = await handleMembershipEvent(
+    subscriptionEvent("customer.subscription.deleted", { status: "canceled" }),
+    deps
+  );
+  assert.equal(result.handled && result.cancellation?.stage, "ended");
+  assert.equal(result.handled && result.cancellation?.customerId, 42);
+});
+
+test("subscription.deleted stays silent when an earlier event already revoked everything", async () => {
+  const { deps } = fakeDeps({ revokeMembership: () => Promise.resolve(0) });
+  const result = await handleMembershipEvent(
+    subscriptionEvent("customer.subscription.deleted", { status: "canceled" }),
+    deps
+  );
+  assert.equal(result.handled && result.cancellation, undefined);
+});
+
+test("subscription.updated reports a 'scheduled' cancellation only when cancel_at_period_end flips on", async () => {
+  const { deps } = fakeDeps();
+  const flipped = subscriptionEvent("customer.subscription.updated", { cancel_at_period_end: true });
+  flipped.data.previous_attributes = { cancel_at_period_end: false };
+  const result = await handleMembershipEvent(flipped, deps);
+  assert.equal(result.handled && result.cancellation?.stage, "scheduled");
+  assert.equal(result.handled && result.cancellation?.accessUntil, PAID_THROUGH.toISOString());
+
+  // An unrelated update on an already-cancelling subscription must not re-alert.
+  const unrelated = subscriptionEvent("customer.subscription.updated", { cancel_at_period_end: true });
+  unrelated.data.previous_attributes = { default_payment_method: "pm_old" };
+  const again = await handleMembershipEvent(unrelated, deps);
+  assert.equal(again.handled && again.cancellation, undefined);
+});
+
 test("subscription.deleted with an unresolvable customer is reported, not thrown", async () => {
   const { deps, called } = fakeDeps({
     customerIdForStripeCustomer: () => Promise.resolve(null),

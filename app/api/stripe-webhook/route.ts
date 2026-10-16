@@ -6,6 +6,7 @@ import {
   fulfillDigitalPurchase,
   revokeEntitlementsForPaymentIntent,
   findOrCreateCustomer,
+  getCustomer,
   setStripeCustomerId,
   customerIdForStripeCustomer,
   grantOrRefreshMemberLicense,
@@ -590,6 +591,36 @@ export async function POST(req: NextRequest) {
       const result = await handleMembershipEvent(event, membershipDeps());
       if (result.handled) {
         console.log(`[membership] ${event.type} → ${result.action}`);
+
+        if (result.cancellation) {
+          try {
+            const c = result.cancellation;
+            const who = await getCustomer(c.customerId);
+            const label = who ? `${who.name ?? "—"} <${who.email}>` : `customer #${c.customerId}`;
+            await sendOwnerAlert({
+              subject:
+                c.stage === "scheduled"
+                  ? `Member cancelled: ${who?.email ?? label} (${c.tier})`
+                  : `Membership ended: ${who?.email ?? label} (${c.tier})`,
+              body: [
+                c.stage === "scheduled"
+                  ? `${label} cancelled their ${c.tier} membership.`
+                  : `${label}'s ${c.tier} membership has ended and their access was revoked.`,
+                ...(c.stage === "scheduled" && c.accessUntil
+                  ? [`They keep access until ${c.accessUntil.slice(0, 10)}; it is revoked automatically then.`]
+                  : []),
+                "",
+                "Remember to remove any GitHub collaborator access (forage, promptbook, UnrealEngine)",
+                "they were given by hand.",
+                "",
+                `Event: ${event.id}`,
+              ].join("\n"),
+            });
+          } catch (err) {
+            // Never fail the webhook over a notice — the revoke already landed.
+            console.error("[membership] cancellation alert failed", err);
+          }
+        }
 
         // A renewal we could only attribute via the member's existing tier
         // means Stripe is charging them on a price this code doesn't know —

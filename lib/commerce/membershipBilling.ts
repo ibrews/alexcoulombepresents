@@ -40,6 +40,7 @@ export type StripeSubscription = {
   id: string;
   customer?: string | null;
   status: string;
+  cancel_at_period_end?: boolean | null;
   current_period_end?: number | null; // API ≤2024: period on the subscription
   items?: { data?: StripeSubscriptionItem[] | null } | null;
 };
@@ -66,7 +67,9 @@ export type StripeInvoice = {
 export type StripeEvent = {
   id: string;
   type: string;
-  data: { object: unknown };
+  // previous_attributes is only present on *.updated events: the prior value
+  // of every field that changed in this delivery.
+  data: { object: unknown; previous_attributes?: Record<string, unknown> | null };
 };
 
 export type MembershipBillingDeps = {
@@ -166,6 +169,12 @@ export type MembershipEventResult =
       tier?: MembershipTierId;
       amountCents?: number;
       recognizedBy?: MembershipRecognition;
+      // Set when this delivery is the one that records a member cancelling, so
+      // the webhook route can tell Alex. "scheduled" = they asked to cancel
+      // and keep access until `accessUntil`; "ended" = access was just revoked.
+      // Stripe fires several events per cancellation (updated, then deleted),
+      // so each stage is gated on a state change — a repeat delivery is silent.
+      cancellation?: { customerId: number; stage: "scheduled" | "ended"; tier: MembershipTierId; accessUntil?: string };
     };
 
 // Finds which configured tier (if any) an invoice's membership line or a
@@ -380,7 +389,14 @@ export async function handleMembershipEvent(
       sub.status === "incomplete_expired";
     if (dead) {
       const revoked = await deps.revokeMembership(customerId);
-      return { handled: true, action: `revoked ${revoked} entitlement(s)` };
+      return {
+        handled: true,
+        action: `revoked ${revoked} entitlement(s)`,
+        // revoked === 0 means an earlier event already ended this membership
+        // (or it was a comp that revokeMembership leaves alone): nothing new
+        // to report.
+        ...(revoked > 0 ? { cancellation: { customerId, stage: "ended" as const, tier } } : {}),
+      };
     }
 
     if (sub.status === "active" || sub.status === "trialing") {
@@ -388,7 +404,20 @@ export async function handleMembershipEvent(
       if (!periodEnd) return { handled: false, reason: "subscription has no period end" };
       const paidThrough = new Date(periodEnd * 1000);
       await deps.grantOrExtendMembership(customerId, paidThrough, tier);
-      return { handled: true, action: `active (${tier}) through ${paidThrough.toISOString()}` };
+      // The member clicked "cancel" but paid access runs to period end, so the
+      // revoke (and the "ended" stage) is weeks away. Report it now, once: only
+      // the delivery where cancel_at_period_end flipped false → true.
+      const justScheduledCancel =
+        event.type === "customer.subscription.updated" &&
+        sub.cancel_at_period_end === true &&
+        event.data.previous_attributes?.cancel_at_period_end === false;
+      return {
+        handled: true,
+        action: `active (${tier}) through ${paidThrough.toISOString()}`,
+        ...(justScheduledCancel
+          ? { cancellation: { customerId, stage: "scheduled" as const, tier, accessUntil: paidThrough.toISOString() } }
+          : {}),
+      };
     }
 
     // past_due / incomplete: no grant, no revoke — access simply lapses when
