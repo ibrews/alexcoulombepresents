@@ -2047,10 +2047,12 @@ export const trainingPlaylist = {
 // from trainingPlaylist above (conference talks), so /training links both.
 // Members only (Alex, 2026-10-06): linked from /members/recordings, never
 // from a public page — the videos are unlisted, and a public link to the
-// playlist would hand every recording to anyone.
+// playlist would hand every recording to anyone. Replaced 2026-10-16 (old
+// playlist deleted, new one Unlisted + not collaborative) so a cancelled
+// member's saved link to the old playlist stops showing new recordings.
 export const classRecordingsPlaylist = {
-  id: "PLEeiiIeoc4o4",
-  title: "Alex Coulombe Presents Unreal Engine Training",
+  id: "PLL1ZzvqIQiZU",
+  title: "ACP Members: Class Recordings",
 };
 
 export const playlists: { id: string; title: string; blurb: string }[] = [
