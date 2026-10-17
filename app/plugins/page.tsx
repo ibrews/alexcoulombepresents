@@ -89,7 +89,7 @@ export default function Plugins() {
           const info = PLUGIN_UPDATES[p.product];
           return (
             <Reveal key={p.product} delay={Math.min(i * 70, 280)}>
-              <div className="glass flex h-full flex-col rounded-2xl p-7">
+              <div id={p.product.toLowerCase()} className="glass flex h-full scroll-mt-24 flex-col rounded-2xl p-7">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h2 className="font-bold leading-snug">{p.displayName}</h2>
                   <span className="shrink-0 rounded-full border border-teal/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-teal">

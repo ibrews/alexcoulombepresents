@@ -19,33 +19,33 @@ export type PluginUpdateInfo = {
 
 export const PLUGIN_UPDATES: Record<PluginProduct, PluginUpdateInfo> = {
   URMBridge: {
-    latest: "1.0.0",
-    released: "2026-08-06",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/urmbridge/releases",
-    min_ue: "5.6",
+    latest: "0.2.0",
+    released: "2026-10-01",
+    notes_url: "https://www.alexcoulombepresents.com/plugins#urmbridge",
+    min_ue: "5.8",
   },
   SceneAudit: {
     latest: "0.1.0",
     released: "2026-08-10",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/sceneaudit/releases",
+    notes_url: "https://www.alexcoulombepresents.com/plugins#sceneaudit",
     min_ue: "5.6",
   },
   Forage: {
     latest: "0.1.0",
     released: "2026-08-07",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/forage/releases",
+    notes_url: "https://www.alexcoulombepresents.com/plugins#forage",
     min_ue: "5.8",
   },
   BPAutoLayout: {
     latest: "1.0.0",
     released: "2026-08-06",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/bpautolayout/releases",
+    notes_url: "https://www.alexcoulombepresents.com/plugins#bpautolayout",
     min_ue: "4.27",
   },
   URKPreviewer: {
     latest: "0.1.0",
     released: "2026-08-09",
-    notes_url: "https://www.alexcoulombepresents.com/plugins/urkpreviewer/releases",
+    notes_url: "https://www.alexcoulombepresents.com/plugins#urkpreviewer",
     min_ue: "5.7",
   },
 };
