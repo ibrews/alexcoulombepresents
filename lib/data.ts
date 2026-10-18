@@ -1475,13 +1475,13 @@ export const products: Product[] = [
     links: [
       { label: "Download the Android preview APK", url: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-12" },
       { label: "Install guide, tested devices & known limits", url: "https://github.com/ibrews/uoxr-demo" },
-      { label: "Download the portrait simulator video", url: "https://github.com/ibrews/uoxr-demo/releases/download/preview-2026-10-12/UOXR-Simulator-Walkthrough-portrait-2026-10-12.mp4" },
+      { label: "Download the portrait feature trailer", url: "https://github.com/ibrews/uoxr-demo/releases/download/media-2026-10-18/UOXR-Feature-Trailer-portrait-2026-10-18.mp4" },
       { label: "Built with it: Echo Cathedral", url: "/lab/echo-cathedral" },
     ],
     accent: "teal",
-    showcaseClip: "uoxr-simulator-walkthrough",
+    showcaseClip: "uoxr-feature-trailer",
     guide: { href: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-12", label: "Download Android preview · build 3" },
-    clips: ["uoxr-in-15-seconds", "uoxr-menu-selection", "uoxr-pinch-gestures"],
+    clips: ["uoxr-in-15-seconds", "uoxr-simulator-walkthrough", "uoxr-menu-selection", "uoxr-pinch-gestures"],
     heroImage: { src: "/lab/uoxr/gallery-preview.jpg", alt: "UOXR tutorial gallery with warm ceiling lights, oak frames and a limestone walkway" },
     screenshots: [
       { src: "/lab/uoxr/gallery-preview.jpg", alt: "The UOXR tutorial gallery", caption: "Explore six guided stations, then choose another room from the comfort menu." },
