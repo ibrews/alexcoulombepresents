@@ -62,7 +62,7 @@ cards at desktop and phone widths. Videos load on demand and preserve visible co
 
 The UOXR Lab page features the 112-second Meta/xrsim feature trailer,
 with visible simulator labels/windows and a final PICO Android-emulator shot.
-It links build 3 of the separate public demo repository, plus the portrait video
+It links build10 of the separate public demo repository, plus the portrait video
 for sharing. The player loads on click; automatic playback/audio is not forced.
 Template source remains private. Copy retains the per-device compatibility and
 sustained-performance limits; device profiles are starting budgets.
