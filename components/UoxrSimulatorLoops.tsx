@@ -3,8 +3,10 @@
 import { useState } from "react";
 
 const loops = [
-  { slug: "pinch-menu", title: "Your hands are the interface.", description: "Hold a pinch to open settings. Point, pinch, choose." },
+  { slug: "pinch-menu", title: "Your hands are the interface.", description: "Hold both pinches to open settings. Point, pinch, choose." },
   { slug: "grab-place", title: "Pick it up. Make it count.", description: "Carry a physics prop onto its pad and watch the lesson complete." },
+  { slug: "reset-ball", title: "Retry without guessing.", description: "Lift the coral reset ball, then release it to reset that exhibit." },
+  { slug: "door-response", title: "A small action opens a door.", description: "Place the cube on its pad. Reset the lesson and the door closes." },
   { slug: "power-workshop", title: "Bring the workshop to life.", description: "Power cells, an opening door, and a machine that answers your actions." },
 ];
 
@@ -47,7 +49,7 @@ export default function UoxrSimulatorLoops() {
     <section id="simulator-gifs" className="mt-14" aria-labelledby="uoxr-loops-title">
       <p className="font-mono text-xs uppercase tracking-widest text-teal">Real interactions / little loops</p>
       <h2 id="uoxr-loops-title" className="mt-3 text-3xl font-bold tracking-tight">See the input become action.</h2>
-      <p className="mt-3 max-w-2xl leading-relaxed text-mist">Three moments from the actual simulator run. Play a loop, pause on its still, or grab the GIF to share.</p>
+      <p className="mt-3 max-w-2xl leading-relaxed text-mist">Five moments from actual simulator runs. Play a loop, pause on its still, or grab the GIF to share.</p>
       <div className="mt-7 grid gap-5 lg:grid-cols-3">{loops.map((loop) => <Loop key={loop.slug} {...loop} />)}</div>
     </section>
   );

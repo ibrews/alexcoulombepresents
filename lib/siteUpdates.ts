@@ -4,10 +4,10 @@ export const siteUpdates = [
   {
     label: "XR / PLAYABLE PREVIEW",
     title: "An entire XR starting point.",
-    description: "Hands, controllers, comfortable movement and a power puzzle. Watch UOXR in 59 seconds, then try the Android preview.",
+    description: "Hands, controllers, comfortable movement and a power puzzle. Watch the full 1m 52s UOXR trailer, then try the Android preview.",
     href: "/lab/ultimate-openxr-template#simulator-tour",
     cta: "Watch the simulator tour",
-    source: "https://github.com/ibrews/uoxr-demo/releases/tag/preview-2026-10-12",
+    source: "https://github.com/ibrews/uoxr-demo/releases/tag/media-2026-10-18",
   },
 
   {

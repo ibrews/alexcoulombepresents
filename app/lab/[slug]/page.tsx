@@ -98,7 +98,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         return (
           <Reveal>
             <section id="simulator-tour" className="mt-8 scroll-mt-28" aria-label="Simulator walkthrough">
-              <p className="mb-4 font-mono text-xs uppercase tracking-widest text-teal">Recorded in simulators · 59 seconds</p>
+              <p className="mb-4 font-mono text-xs uppercase tracking-widest text-teal">Recorded in simulators · {Math.floor(t.durationSec / 60)}m {t.durationSec % 60}s</p>
               <TrailerVideo slug={t.slug} title={t.title} />
               <h2 className="mt-4 text-xl font-bold">{t.title}</h2>
               <p className="mt-2 leading-relaxed text-mist">{t.tagline}</p>

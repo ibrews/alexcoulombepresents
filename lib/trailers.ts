@@ -32,6 +32,14 @@ export const ACCESS_LABEL: Record<TrailerAccess, string> = {
 
 export const trailers: Trailer[] = [
   {
+    slug: "uoxr-feature-trailer",
+    title: "UOXR: from your first pinch to a powered world",
+    tagline: "A 1-minute 52-second tour: hands, controllers, comfort settings, walking, flight, teleport, dash, physics props, reset balls, doors and a complete power puzzle. Four sample rooms, desktop input and the Android APK in PICO Emulator. Actual simulator footage at normal speed, with simulator labels and window frames visible.",
+    durationSec: 112,
+    access: "template",
+    href: "/lab/ultimate-openxr-template#simulator-tour",
+  },
+  {
     slug: "uoxr-in-15-seconds",
     title: "Hands. Controllers. A world that responds.",
     tagline: "The quick cut: real simulated hands, teleport, physics props and a powered workshop. Fifteen seconds, normal playback speed, with simulator labels visible.",

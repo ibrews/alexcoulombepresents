@@ -52,11 +52,11 @@ export default function Videos() {
 
       <Reveal>
         <section id="uoxr" className="mt-12 grid items-start gap-8 rounded-3xl border border-teal/30 bg-panel/50 p-5 md:p-8 lg:grid-cols-[1.6fr_1fr]" aria-label="UOXR simulator trailer">
-          <TrailerVideo slug="uoxr-in-15-seconds" title="UOXR in 15 seconds — actual simulator footage" />
+          <TrailerVideo slug="uoxr-feature-trailer" title="UOXR feature trailer — actual simulator footage" />
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-teal">Fresh from the Lab · 15-second trailer</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight">Hands. Controllers. A world that responds.</h2>
-            <p className="mt-4 leading-relaxed text-mist">UOXR brings hand input, comfort settings, physics props and a working power puzzle into one Unreal OpenXR starting point. This is actual simulator footage, with the simulator frame left visible.</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-teal">Fresh from the Lab · 1m 52s feature trailer</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight">From your first pinch to a powered world.</h2>
+            <p className="mt-4 leading-relaxed text-mist">UOXR brings hands, controllers, comfort settings, four movement modes, physics props, reset balls, doors and a working power puzzle into one Unreal OpenXR starting point. This is actual simulator footage, with the simulator frame left visible.</p>
             <Link href="/lab/ultimate-openxr-template#simulator-tour" className="mt-6 inline-block font-semibold text-teal underline underline-offset-4">Watch the full tour + get the preview →</Link>
           </div>
         </section>

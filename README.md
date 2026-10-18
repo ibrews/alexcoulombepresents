@@ -9,9 +9,10 @@ commerce and account features use the environment configuration described below.
 
 ## UOXR showcase
 
-UOXR is featured in the homepage's latest updates, on `/videos` with a 15-second
-trailer, and on its Lab page with the full 59-second tour. Three downloadable GIFs
-show native pinch menus, grab-and-place and the powered workshop. Each GIF starts
+UOXR is featured in the homepage's latest updates, on `/videos` and on its Lab
+page with a 1-minute 52-second feature trailer. Five downloadable GIFs
+show native pinch menus, grab-and-place, the coral reset ball, a responding door
+and the powered workshop. The earlier 15- and 59-second cuts remain available. Each GIF starts
 as a still and has explicit play/pause controls; the animated bytes load on demand.
 Simulator labels and real window frames remain visible in all media. The proof
 figures name the actual native hand-menu/switching checks, rather than promising
@@ -59,7 +60,7 @@ cards at desktop and phone widths. Videos load on demand and preserve visible co
 
 ## Upcoming hellos
 
-The UOXR Lab page features the 59-second Meta/xrsim simulator walkthrough,
+The UOXR Lab page features the 112-second Meta/xrsim feature trailer,
 with visible simulator labels/windows and a final PICO Android-emulator shot.
 It links build 3 of the separate public demo repository, plus the portrait video
 for sharing. The player loads on click; automatic playback/audio is not forced.

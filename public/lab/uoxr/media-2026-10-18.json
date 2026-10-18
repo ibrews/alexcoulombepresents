@@ -1,0 +1,218 @@
+{
+  "title": "UOXR feature trailer and simulator interaction loops",
+  "date": "2026-10-18",
+  "durationSeconds": 112,
+  "scope": "Edited actual simulator footage at normal speed. Meta XR Simulator207 + xrsim0.7.13, Windows desktop PIE, and Android build6 in PICO Emulator0.13. Not physical-headset footage. Private template source remains private. Public accepted APK build3 is unchanged.",
+  "audio": "Original procedural instrumental score; no third-party music. No narration.",
+  "videoQA": "H264, yuv420p, 30fps, BT709/tv, AAC stereo48kHz, both files decode without warnings; timestamps continuous. Model visual review of all20 shot samples in both formats plus replacement workshop and GIF samples. Audio mean-22.8dBFS, peak-4.8dBFS.",
+  "sources": [
+    "afc5ac45c74f125810f1611b388f0d82e12437b2 model-preview take",
+    "74d029c24236006d8cafe4eb825f3f2e8e7b819e plus in-progress menu-focus edits for hands/labs",
+    "6293494 controller/desktop/movement/door takes",
+    "7fc39bc workshop-02 and packaged Android build6"
+  ],
+  "chapters": [
+    {
+      "start": 0,
+      "duration": 4,
+      "title": "Build your next XR experience",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 4,
+      "duration": 5,
+      "title": "One foundation. Familiar controllers.",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 9,
+      "duration": 5.8,
+      "title": "Use your hands",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 14.8,
+      "duration": 4.2,
+      "title": "Choose with either hand",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 19.0,
+      "duration": 7,
+      "title": "Make yourself comfortable",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 26.0,
+      "duration": 2.1,
+      "title": "Walk. Fly. Explore.",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 28.1,
+      "duration": 3.3,
+      "title": "Walk. Fly. Explore.",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 31.4,
+      "duration": 3.3,
+      "title": "Teleport. Or dash.",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 34.7,
+      "duration": 4.5,
+      "title": "Teleport. Or dash.",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 39.2,
+      "duration": 7.4,
+      "title": "Grab. Carry. Place.",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 46.6,
+      "duration": 3.5,
+      "title": "Try all three bays",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 50.1,
+      "duration": 5,
+      "title": "Retry with one clear gesture",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 55.1,
+      "duration": 9.8,
+      "title": "Make the world respond",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 64.9,
+      "duration": 7.4,
+      "title": "Power a complete mini puzzle",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 72.3,
+      "duration": 5.4,
+      "title": "Power a complete mini puzzle",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 77.7,
+      "duration": 10.3,
+      "title": "Bring the machine to life",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 88.0,
+      "duration": 7,
+      "title": "Four rooms to learn from",
+      "surface": "Meta XR Simulator + xrsim"
+    },
+    {
+      "start": 95.0,
+      "duration": 7,
+      "title": "Test without a headset",
+      "surface": "Unreal desktop simulator"
+    },
+    {
+      "start": 102.0,
+      "duration": 6,
+      "title": "Android preview",
+      "surface": "PICO Emulator 0.13"
+    },
+    {
+      "start": 108.0,
+      "duration": 4,
+      "title": "Make it your own",
+      "surface": "Meta XR Simulator + xrsim"
+    }
+  ],
+  "assets": [
+    {
+      "name": "UOXR-Feature-Trailer-landscape-2026-10-18.mp4",
+      "bytes": 16263395,
+      "sha256": "25a5623eb212b32be351e777257d6f060795e4833882e8190f9162f061ce56d3"
+    },
+    {
+      "name": "UOXR-Feature-Trailer-portrait-2026-10-18.mp4",
+      "bytes": 10398895,
+      "sha256": "bd1c3ec341f492f085a27cd8c481712a471363c95ea447413ba860e61648edc0"
+    },
+    {
+      "name": "UOXR-Feature-Trailer-landscape-cover.jpg",
+      "bytes": 194724,
+      "sha256": "331be0a53c70f9af60725e2ace04f483fdff7880bf142fd1f0e526964b0a552d"
+    },
+    {
+      "name": "UOXR-Feature-Trailer-portrait-cover.jpg",
+      "bytes": 167694,
+      "sha256": "6b85a4d8ab6ff52357d0ef0e94f9e58b97206799ff9f738ad23ba669d1cb0856"
+    },
+    {
+      "name": "UOXR-Feature-Trailer-captions.srt",
+      "bytes": 1988,
+      "sha256": "621078400003b73ac7f0bb81ec51cdb07aafd7156b3e5306c7cd1d24f5bb3fc9"
+    },
+    {
+      "name": "social-caption.txt",
+      "bytes": 528,
+      "sha256": "ac4aac7f73b32f560f7b27d912fe396c3f3410a4d88e8b5b2bc2c848096033ac"
+    },
+    {
+      "name": "UOXR-pinch-menu-2026-10-18.gif",
+      "bytes": 727151,
+      "sha256": "c394c45d614f874f0646148338340504419e9734829fa3839537c2eddf557a34"
+    },
+    {
+      "name": "UOXR-pinch-menu-2026-10-18.jpg",
+      "bytes": 72848,
+      "sha256": "7d660321741a16e1afe0f27a45ddf5a24ec077ae995e703dfa292c62dd992de9"
+    },
+    {
+      "name": "UOXR-grab-place-2026-10-18.gif",
+      "bytes": 1198939,
+      "sha256": "ace685719a80e93124f1e34dfe8e794d6d52adbe0f7c675971b30d48c3155cff"
+    },
+    {
+      "name": "UOXR-grab-place-2026-10-18.jpg",
+      "bytes": 47759,
+      "sha256": "3071557b0b3e4cc491085efbd259cda8952e412f12a51bf8e1d61227f53a3572"
+    },
+    {
+      "name": "UOXR-reset-ball-2026-10-18.gif",
+      "bytes": 1069878,
+      "sha256": "c29538e8e90eaeacc12200013f1b3c2a96d971407171f68604f6d760794a56b1"
+    },
+    {
+      "name": "UOXR-reset-ball-2026-10-18.jpg",
+      "bytes": 48691,
+      "sha256": "ef68ae0d2fc6d56f0fc790f6fa598dd52a56ceee54612c52552b9db6212100d1"
+    },
+    {
+      "name": "UOXR-door-response-2026-10-18.gif",
+      "bytes": 3025960,
+      "sha256": "f5819fa9f71633f45f845981abac2a91691cde2824ef21f4182c733074803169"
+    },
+    {
+      "name": "UOXR-door-response-2026-10-18.jpg",
+      "bytes": 45843,
+      "sha256": "bf427020625b6c8c748352ccb7baafa9646dcb0d65bd9077ac32149c95b6928a"
+    },
+    {
+      "name": "UOXR-power-workshop-2026-10-18.gif",
+      "bytes": 1072301,
+      "sha256": "4f4230b98a2949c11bc0094cc9ea9dbf9d0fd95ab70707072b483ac9a09d396d"
+    },
+    {
+      "name": "UOXR-power-workshop-2026-10-18.jpg",
+      "bytes": 42181,
+      "sha256": "b2bd4aedc54bc441e5fb4cc12a5c9788511b33d7999ec557999e806d8971f0c6"
+    }
+  ]
+}
