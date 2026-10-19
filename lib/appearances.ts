@@ -1121,6 +1121,21 @@ export const appearances: Appearance[] = [
     note: "Title is provisional. Part of MIA's new European Investment Hub, on how game and film IP grows into a cross-media business.",
     url: "https://www.miamarket.it/en/program/european-investment-hub/",
   },
+  // Thursday pitch in Rome. The start time differs across organizer emails
+  // (14:00, 15:00, 15:30), so the date is shown without a time and the window
+  // runs to the end of the day in Rome (CEST, UTC+2).
+  {
+    slug: "mia-2026-xr-collective-pitch",
+    role: "Speaker · Pitch",
+    title: "MIA XR Videogames Collective Pitch",
+    org: "MIA | Mercato Internazionale Audiovisivo — Westin Excelsior, Sala Trianon",
+    date: "Thu Oct 22, 2026",
+    startsISO: "2026-10-22T07:00:00Z",
+    endsISO: "2026-10-22T21:59:59Z",
+    location: "Rome, Italy",
+    note: "A 10-minute pitch to film and TV producers, distributors and IP holders on bringing beloved stories to new audiences in XR, followed by Q&A and a demo area.",
+    url: "https://www.miamarket.it/en/full-program-en/",
+  },
   // Alex confirmed he is hosting the pitch competition (2026-10-06). Session
   // title, day, time, and stage are from the UnitedXR agenda on awexr.com
   // (session 2730), read 2026-10-06; Brussels is on CET by December, so
