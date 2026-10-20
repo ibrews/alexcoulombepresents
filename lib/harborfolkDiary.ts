@@ -1,6 +1,140 @@
+import type { ArmyBenchmark } from '@/components/HarborfolkBenchmark';
 export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
-export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
+export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; benchmark?: ArmyBenchmark; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
+{
+  "id": "ten-thousand-little-people",
+  "title": "Ten thousand little people",
+  "date": "2026-10-20",
+  "version": "v0.3 Mass-battle laboratory · shipped",
+  "paragraphs": [
+    "My kid had a new question: could we have a Lord of the Rings sized battle with ten thousand active characters, without dropping below thirty frames per second? That is a useful challenge for Harborfolk. Adding more people only counts if they still move, fight, save and share a world at the same scale.",
+    "The Field of Ten Thousand is a separate land scenario. Its default is five thousand Azure soldiers against five thousand Crimson soldiers on a field measuring 1,024 metres across. Army & FPS offers one thousand to fifty thousand characters, a WebGL2/WebGPU comparison, resolution controls and a distant-detail switch. The upper slider limit is an experiment, rather than a promised frame rate. Both model detail levels keep a person 1.717 metres tall.",
+    "Each soldier has a position, heading, health, target, attack timer and replacement generation. Companies of up to one hundred share movement orders. Click a soldier to choose a company, Shift adds companies, and right-click sends them somewhere. Attack-move, Charge and Hold work on those actual people. The Crimson army runs its own simple combat behavior. Reinforcement mode keeps the selected population alive by bringing new soldiers from the rear; fallen soldiers and replacements are counted separately.",
+    "The architecture work, including an Astra review, concentrated on keeping repeated work small. Typed arrays store the people. A spatial grid and bounded neighborhood queries replace all-pairs searches. Shared meshes animate limbs in the vertex shader instead of maintaining a separate scene object for every limb. Companies share destinations, while individual soldiers still move and take damage. The crowd-pathfinding literature informed that division; this open field does not implement a complete tiled flow-field pathfinder.",
+    "The first WebGPU smoke check demonstrated why frame rate alone is weak evidence: a shader exceeded the portable vertex-buffer limit, the army failed to draw, and the browser still reported fast frames. That result was rejected. Interleaving the static attributes fixed the actual rendering failure. The measurements now check the real backend, living and drawn counts, camera coverage, skipped renders, frame intervals and simulation time. Autosaves stay on during a benchmark.",
+    "Named saves and exports preserve the exact authoritative soldier arrays, company orders, combat totals and random seed. The existing invitation-and-answer flow supports one other commander. The host runs combat and accepts the guest’s company orders; a local presentation layer smooths the guest between snapshots without inventing another battle. The large full-state snapshots use substantial bandwidth, so this is a direct two-person prototype rather than a claim about a public multiplayer service.",
+    "The source passes 212 automated tests. They include finite victories saved after a multi-tick update, exact codec restoration, malformed-data rejection and bounded transport at the maximum army size. Twenty existing browser suites passed 260 named checks plus networking and co-op integration reports; the new army mode adds seven solo and nine two-client checks. They cover real pointer commands, renderer switching, exact 50,000-person named saves, rejoining and the earlier harbor and naval modes. The original eight-metre cutters, 128-metre ironclads and their visible working crews keep their own rules.",
+    "On FORTRESS with an RTX 5090, the default ten-thousand-person battle held about sixty FPS for three minutes on each real renderer. The worst recorded frames were 17.2 ms on WebGL2 and 17.1 ms on WebGPU, with zero frames over the 33.3 ms budget and no dropped simulation time. At twenty thousand, WebGPU also passed its one-minute sample; WebGL2 had three borderline 33.4 ms frames. Fifty thousand averaged roughly forty-five to forty-six FPS, but dense combat produced substantial dips. It does not meet the thirty-FPS floor. The table keeps those failures visible.",
+    "Disabling distant simplification submitted 2.48 million triangles for ten thousand full-detail people. Both one-minute samples averaged about sixty FPS; WebGL2 recorded one 83.3 ms frame, while WebGPU recorded no frames over budget and a 17.3 ms worst frame. That is a separate test from the default-detail table. Two independent co-op clients on this same machine also shared thirty seconds of warmed ten-thousand-person combat near sixty FPS, with zero over-budget frames or dropped simulation time; it is a short local two-client diagnostic, not a wide-area network guarantee.",
+    "These are stylized low-poly people and simplified individual combat on open ground. A high-end RTX 5090 result does not establish the same limit on a laptop. Siege navigation, full soldier physics, richer troop artwork and large public multiplayer remain future work. The XR tabletop currently belongs to harbor scenarios and still awaits physical headset acceptance; these battle scenarios use the desktop view."
+  ],
+  "sources": [
+    {
+      "title": "Three.js: instanced geometry",
+      "url": "https://threejs.org/docs/pages/InstancedMesh.html"
+    },
+    {
+      "title": "Three.js: WebGPURenderer and TSL",
+      "url": "https://threejs.org/manual/pages/webgpurenderer"
+    },
+    {
+      "title": "Elijah Emerson: crowd pathfinding and steering",
+      "url": "https://www.gameaipro.com/GameAIPro/GameAIPro_Chapter23_Crowd_Pathfinding_and_Steering_Using_Flow_Field_Tiles.pdf"
+    }
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/mass-clash.webp",
+      "alt": "Thousands of full-size Azure and Crimson soldiers meeting on the battlefield",
+      "caption": "Actual published ten-thousand-person battle in Clash view. This gallery counter includes startup; the table samples reset after warm-up."
+    },
+    {
+      "src": "/lab/harborfolk/mass-overview.webp",
+      "alt": "The entire ten-thousand-person battlefield and its live WebGPU performance counters",
+      "caption": "The complete army remains submitted and simulated in overview. The displayed public verification sample is separate from the three-minute sustained tests."
+    },
+    {
+      "src": "/lab/harborfolk/mass-human.webp",
+      "alt": "One full-size animated soldier seen close to person height",
+      "caption": "A person stays 1.717 metres tall when you move from the whole army to Human view. This paused close view changes only the camera."
+    }
+  ],
+  "benchmark": {
+    "conditions": "FORTRESS · NVIDIA RTX 5090 · Chromium 156 · 1440 × 900 framebuffer · 100% resolution · default distant geometry · all living soldiers submitted and all army centers in view. Warm-up excluded; automatic saves enabled.",
+    "evidenceUrl": "/lab/harborfolk/performance-2026-10-20.json",
+    "rows": [
+      {
+        "units": 10000,
+        "backend": "WebGL2",
+        "seconds": 180,
+        "fps": 59.97255540308558,
+        "p99": 16.800000000017462,
+        "max": 17.200000000004366,
+        "slowFrames": 0
+      },
+      {
+        "units": 10000,
+        "backend": "WebGPU",
+        "seconds": 180,
+        "fps": 59.97254683897015,
+        "p99": 16.800000000046566,
+        "max": 17.100000000034925,
+        "slowFrames": 0
+      },
+      {
+        "units": 20000,
+        "backend": "WebGL2",
+        "seconds": 60,
+        "fps": 59.90569104064886,
+        "p99": 16.80000000000291,
+        "max": 33.400000000001455,
+        "slowFrames": 3
+      },
+      {
+        "units": 50000,
+        "backend": "WebGL2",
+        "seconds": 60,
+        "fps": 44.717421827691524,
+        "p99": 116.69999999999709,
+        "max": 166.8000000000029,
+        "slowFrames": 250
+      },
+      {
+        "units": 20000,
+        "backend": "WebGPU",
+        "seconds": 60,
+        "fps": 59.972612506955166,
+        "p99": 16.800000000017462,
+        "max": 17.10000000000582,
+        "slowFrames": 0
+      },
+      {
+        "units": 50000,
+        "backend": "WebGPU",
+        "seconds": 60,
+        "fps": 45.73221451053722,
+        "p99": 100,
+        "max": 116.80000000001746,
+        "slowFrames": 306
+      }
+    ]
+  }
+},
+{
+  "id": "across-the-plank",
+  "title": "Across the plank",
+  "date": "2026-10-20",
+  "version": "v0.3 Boarding Drill · shipped",
+  "paragraphs": [
+    "The cutters can now take a prize. Boarding Drill starts five Azure cutters opposite five anchored Crimson cutters, with Azure holding fire so there is time to practice. Select cutters, press B and click a red hull. The attackers take stations alongside it at real hull clearances and lay visible planks.",
+    "The whole three-person crew leaves its rowing, helm and gun stations to cross. A ship with its crew away cannot keep sailing or firing. Defenders leave their work too. Everyone remains 1.717 metres tall and the cutters remain eight metres long; the boarding gap is actual space between their hulls.",
+    "Casualties are permanent. Outnumbered defenders can strike their colors, changing the cutter’s ownership with surviving sailors aboard. Boarders fill missing crew duties and their companions return home. If every defender dies the hull is scuttled instead. Shots already in flight at surrender are removed so a newly captured prize is not immediately hit by its captors.",
+    "Plank progress, people crossing, deck fighting, casualties, captured ownership and crew rosters save with the battle. Browser checks verified a mid-fight reload and two independent commanders sharing the same boarding action. This remains cutter-to-cutter boarding; the enormous capital ships retain their much larger clearances and cannot use this tool."
+  ],
+  "images": [
+    {
+      "src": "/lab/harborfolk/boarding-crossing.webp",
+      "alt": "Full-size sailors crossing a plank between two eight-metre cutters",
+      "caption": "Actual published gameplay: crews leave their work stations and cross the boarding plank."
+    },
+    {
+      "src": "/lab/harborfolk/boarding-melee.webp",
+      "alt": "Cutters alongside one another with crew fighting on the defended deck",
+      "caption": "Deck fighting, casualties and captured ownership belong to the saved shared battle."
+    }
+  ]
+},
 {
   "id": "the-leviathans-have-jobs",
   "title": "The leviathans have jobs",
