@@ -3,6 +3,58 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; benchmark?: ArmyBenchmark; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  id: 'packing-the-army-for-a-phone',
+  title: 'Packing the army for a phone',
+  date: '2026-10-20',
+  version: 'v0.3 Portable rendering · first pass shipped',
+  paragraphs: [
+    'The RTX 5090 has been a useful place to build a ridiculous army. The next question is what it would take to play on a phone, or a MacBook from 2019. That changes the question to how little work a smaller computer can do while keeping the same people and world.',
+    'Graphics quality now offers High, Balanced and Low power in the main Options menu and Army & FPS. The choice stays in your browser and applies to harbor, naval and land rendering. Low power reduces pixel resolution and distant detail, turns off harbor shadows and targets thirty FPS. Touch-first browsers start there unless you choose otherwise. The cap limits unnecessary drawing, but it is a target rather than a frame-rate floor. The XR session bypasses that desktop cap.',
+    'None of those choices changes population, combat rules or physical dimensions. In Balanced and Low power, troops outside the camera keep moving and fighting while their models skip drawing. A close-camera check reduced drawing from six thousand soldiers to seventy nearby models, while preserving the exact paused battle and all thirty troop types. High keeps the earlier full-population submission path for comparisons.',
+    'Reusing indexed vertices keeps the same triangles, metre anatomy, equipment and animation channels. Across thirty models and both detail levels, stored vertices fall from 84,090 to 49,074. Static geometry plus index memory falls from 11.44 MB to 6.84 MB, about forty percent. That is a geometry-memory result, not a forty-percent FPS claim or the entire browser memory budget. Both-renderer galleries, motion captures and exact saves still pass.',
+    'The army also has a first touch control pass. One finger pans; two fingers pinch and rotate. Tap a soldier to select a company, then Move or Attack-move and tap a destination. A pan, pinch or cancelled gesture cannot issue an order. Portrait overview preserves the horizontal field, while close inspection keeps its normal field of view. A sticky Return to battle button keeps settings dismissible. Harbor interaction, naval tactics and the editor still need a complete touch pass.',
+    'Measure this battle records thirty seconds without restarting the current battle. Export keeps frame intervals, the actual graphics backend and framebuffer, quality, simulated time, dropped time, and minimum living and drawn populations. Menus, pauses, hidden tabs or changed settings invalidate a continuous active sample. Drawing an empty field is not proof that a thousand visible soldiers run quickly, so those counts stay separate.',
+    'The phone-shaped test uses a 390 by 844 viewport, touch, a device-pixel ratio of three, unavailable WebGPU and fourfold CPU throttling. It is still Chromium on the RTX 5090. It verifies gestures, fallback, state preservation and reporting; it cannot reproduce a phone GPU, memory pressure or sustained heat. Its thousand-person sample really draws and simulates all thousand troops, averages about thirty FPS at the cap and drops no simulation time, but includes a longer frame. The downloadable data keeps that hitch visible. No real-phone thirty-FPS pass is claimed.',
+    'A harder ten-thousand-person sample exposed the CPU limit: about 3.6 FPS under the fourfold main-thread throttle, with simulation falling behind. A CPU profile pointed mainly to avoidance and neighbour queries. Cached radii and conservative cell bounds remove impossible collision checks while preserving the original search budgets. Complete saved-state hashes still match the accepted simulation for legacy troops and six-thousand, ten-thousand and fifty-thousand-person cases. A repeated pressure sample reached about 6.6 FPS and still missed the target. These single synthetic samples are diagnostic, not a general speedup or a phone result. Guest snapshots also build their simulation grids lazily, so a rendering-only guest avoids that repeated allocation.',
+    'WebGPU is an option rather than an entrance requirement. WebKit documents it in Safari 26 on Apple platforms, and Chrome documents support for macOS and supported Android configurations. Capability detection and WebGL2 fallback stay in place. A 2019 MacBook is also a wide target: the Air has Intel UHD Graphics 617, while larger Pro models are different machines. Record the browser, operating system and GPU alongside any result.',
+    'The next physical-device gate is to warm the game, start with a thousand troops, then increase while recording frame times and the simulation clock. The complete thirty-type scenario starts at six thousand. Sustained battery and thermal testing, real Safari acceptance and the child’s computer remain open. For much larger phone battles, a cheaper distant representation, simulation workers and smaller co-op updates are candidates to measure. The existing PC can host while a guest chooses a lighter local profile; the guest still has network and rendering costs.'
+  ],
+  benchmark: {
+  "conditions": "Final optimized High profile \u00b7 FORTRESS / RTX 5090 \u00b7 hardware Chromium \u00b7 10,000 living/drawn troops across thirty types \u00b7 1440 \u00d7 900 \u00b7 default distant detail \u00b7 8 s warm-up excluded \u00b7 saves on. These are desktop measurements, not phone results.",
+  "evidenceUrl": "/lab/harborfolk/portable-performance-2026-10-20.json",
+  "rows": [
+    {
+      "units": 10000,
+      "backend": "WebGL2",
+      "seconds": 30,
+      "fps": 59.97226407798062,
+      "p99": 16.80000000000291,
+      "max": 17,
+      "slowFrames": 0
+    },
+    {
+      "units": 10000,
+      "backend": "WebGPU",
+      "seconds": 30,
+      "fps": 59.972612506955166,
+      "p99": 16.80000000000291,
+      "max": 17,
+      "slowFrames": 0
+    }
+  ]
+},
+  sources: [
+    {title:'WebKit: Safari 26 WebGPU',url:'https://webkit.org/blog/17333/webkit-features-in-safari-26-0/'},
+    {title:'Chrome: WebGPU browser support',url:'https://developer.chrome.com/docs/web-platform/webgpu/overview'},
+    {title:'Apple: 2019 MacBook Air specifications',url:'https://support.apple.com/en-us/111948'}
+  ],
+  images: [
+    {src:'/lab/harborfolk/portable-close.webp',alt:'Full-scale troops with conservative off-camera drawing',caption:'Actual game rendering: seventy nearby models drawn while six thousand soldiers and all thirty types remain simulated.'},
+    {src:'/lab/harborfolk/portable-phone.webp',alt:'Harborfolk army controls in a synthetic phone viewport',caption:'Phone-shaped Chromium QA on the RTX 5090, with touch and CPU throttling. This is not a hardware phone performance test.'},
+    {src:'/lab/harborfolk/portable-report.webp',alt:'Current-device report with separate living and drawn troop counts',caption:'The report records the actual sample and its conditions. A thirty-FPS cap does not guarantee every frame meets the budget.'}
+  ]
+},
+{
   "id": "thirty-ways-to-hold-the-field",
   "title": "Thirty ways to hold the field",
   "date": "2026-10-20",
