@@ -3,6 +3,65 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; benchmark?: ArmyBenchmark; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "thirty-ways-to-hold-the-field",
+  "title": "Thirty ways to hold the field",
+  "date": "2026-10-20",
+  "version": "v0.3 Thirty Banners · shipped",
+  "paragraphs": [
+    "The next request was to make the big battle into a scenario, then give it at least thirty different units with their own art and animations. Thirty Banners opens with three thousand Azure troops facing three thousand Crimson, split into thirty regiments on each side. The briefing waits while you look around. Reinforcements are off: defeat the Crimson army while keeping someone alive.",
+    "The roster runs from swords, pikes, shields and polearms through bows, crossbows, slings and early firearms to mounted scouts, lancers, armored cavalry, horse archers, a camel rider and a dragoon. A banner captain, duelist, staff fighter and torch raider complete the thirty. Each has original procedural geometry, defining equipment and individually authored movement and attack poses. Speed, armor, reach, range, damage and attack cadence give the models different combat profiles. This is still simplified combat rather than thirty finished special-ability systems.",
+    "Unit roster lets you meet them one at a time. Search for a name or weapon, orbit and zoom, and switch between Idle, Walk and Attack. These are the actual game models and shader motions, rather than artwork prepared for a separate gallery. Command this type selects that troop’s living Azure regiments. The inspector stays local to your camera, leaves a connected battle running, and hides the battle FPS counter so one person on an empty field cannot masquerade as a mass-battle result.",
+    "The size rule keeps applying. A standing person has 1.717 metres of anatomy, with helmets adding their own height. Riders keep full-length limbs, and the horses and camel occupy metre-scale footprints. A long pike remains long at both geometry detail levels. Pulling the camera back reduces detail, never the people’s world scale.",
+    "A long finite-combat soak found an enemy behavior problem: rear Crimson regiments could stop with nobody nearby. They now choose living Azure regiments to pursue, while your company orders remain yours. Left to its opening orders, this seeded scenario reaches a natural Crimson victory. Moving and combining the Azure regiments is part of the challenge. A full-population simulation test also proves the scenario can be won using ordinary repeated Charge orders, without altering troop health or enemy behavior. The result screen freezes the final pose and offers a rematch.",
+    "The first full-roster WebGPU check also caught a real portability failure. The shader used seventeen vertex-attribute locations, one beyond the default limit, although individual inspection models rendered. That build was rejected. Packing tint and team data together brought the complete layout to sixteen. The automated geometry checks now count actual attribute locations as well as buffer bindings. Rendered populations, shader errors and the real graphics backend are checked before accepting FPS evidence.",
+    "The same exact saves and direct two-person co-op carry this roster. A resumed battle retains its individual positions, health, targets, attack timers, replacement generations, regiments and random state. The original two-role Field of Ten Thousand and the harbor and naval scenarios remain available. The new army can also be restarted at other counts, finite or endless; the fifty-thousand slider ceiling remains an experiment.",
+    "Browser QA renders all thirty units on both WebGL2 and WebGPU, records their movement and attack poses over time, exercises type selection, restores exact six-thousand and fifty-thousand-person saves, and checks the narrow-screen inspector, finite result and rematch. The automated suite contains 229 tests. Two independent browser processes also exercise actual co-op commands, saved combat and reconnecting. The measurements below apply to this richer thirty-type roster; the previous entry’s simpler army has its own results.",
+    "Both real renderers passed the richer ten-thousand-person army for three minutes on FORTRESS with its RTX 5090: about sixty FPS, no frames over the thirty-FPS budget and no dropped simulation time. The worst frames were 17.1 ms on WebGL2 and 17.4 ms on WebGPU. Every frame submitted all ten thousand people across all thirty types, about 3.44 million triangles, with the complete army in view and autosaves enabled. This is a high-end desktop result, not a promised limit for a laptop or headset.",
+    "The art is deliberately low-poly and the simulation remains an open-field prototype. Ranged attacks use simplified damage, rather than full projectile flight; there is no siege pathfinding or dismounting system here. The ordinary harbor’s trainable units are a separate roster. Physical headset acceptance and performance on my kid’s computer still need their own tests."
+  ],
+  "benchmark": {
+  "conditions": "Thirty-type roster · 10,000 living troops with reinforcements · FORTRESS / RTX 5090 · Chromium 156 · 1440 × 900 framebuffer · default distant geometry · all army centers in view · 8 s warm-up excluded · autosaves on.",
+  "evidenceUrl": "/lab/harborfolk/thirty-banners-performance-2026-10-20.json",
+  "rows": [
+    {
+      "units": 10000,
+      "backend": "WebGL2",
+      "seconds": 180,
+      "fps": 59.972446893609465,
+      "p99": 16.800000000017462,
+      "max": 17.10000000000582,
+      "slowFrames": 0
+    },
+    {
+      "units": 10000,
+      "backend": "WebGPU",
+      "seconds": 180,
+      "fps": 59.972513523812914,
+      "p99": 16.800000000046566,
+      "max": 17.39999999999418,
+      "slowFrames": 0
+    }
+  ]
+},
+  "images": [
+    {
+      "src": "/lab/harborfolk/thirty-banners-clash.webp",
+      "alt": "Thirty Banners infantry and cavalry fighting at full metre scale",
+      "caption": "Actual published Thirty Banners battle in live play. Mounted and foot troops share the same scale. This on-screen counter includes first-use setup; the table measures separate warmed runs."
+    },
+    {
+      "src": "/lab/harborfolk/thirty-banners-lancer.webp",
+      "alt": "Full-size lancer and horse in the Harborfolk unit roster inspector",
+      "caption": "The inspector uses the same full-detail model, material and animation data as the army."
+    },
+    {
+      "src": "/lab/harborfolk/thirty-banners-camel.webp",
+      "alt": "Camel rider with full-size rider anatomy in Harborfolk",
+      "caption": "Different mount, different footprint and gait. Camera distance changes; the person and animal stay at world scale."
+    }
+  ]
+},
+{
   "id": "ten-thousand-little-people",
   "title": "Ten thousand little people",
   "date": "2026-10-20",
