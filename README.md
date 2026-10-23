@@ -769,3 +769,5 @@ The tenth Harborfolk diary milestone follows the convoy release with a 640 × 48
 Harborfolk’s seventeenth diary entry introduces Thirty Banners: a finite 6,000-person scenario with thirty original metre-native unit models and individually authored walk/attack poses, a model inspector, exact saved co-op battles and separate richer-roster performance measurements. Three captures come from the published game; the downloadable evidence retains the recorded frame intervals and source provenance. The previous classic-army benchmark remains available as its own result.
 
 The eighteenth entry records the first portability pass: quality presets, indexed troop geometry, off-camera drawing, army touch controls and downloadable device measurements. It distinguishes synthetic phone-shaped RTX5090 QA from unmeasured phone, older Intel Mac and thermal results.
+
+The nineteenth Harborfolk diary entry documents the CPU occupancy/trait changes, full-size tiny silhouette LOD, exact trajectory fixtures and fresh paired 10k synthetic results. Raw evidence retains the incomplete thirty-FPS result and the desktop WebGPU hitch; real older-device acceptance remains open.

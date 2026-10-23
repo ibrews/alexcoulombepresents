@@ -3,6 +3,36 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; benchmark?: ArmyBenchmark; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  id: 'less-work-for-ten-thousand-people',
+  title: 'Less work for ten thousand people',
+  date: '2026-10-23',
+  version: 'v0.3 CPU and distant detail · shipped',
+  paragraphs: [
+    'The next portability pass keeps every soldier and changes how much work the computer does for them. The CPU profile still points first to avoidance, followed by targeting and the main simulation loop. An early shared candidate-list cache preserved battle state but did not make the fixed-work test faster, so it was discarded.',
+    'The useful version remembers which nearby grid cells contain people. A small bit mask skips empty ground in the original query order, and changes only when cells gain or lose occupants. Cached troop traits avoid repeated catalog lookups. An enemy search can stop early when its complete rectangular search area contains no enemy cells. Movement lengths also use a direct square root in this bounded world. Candidate limits, thirty-Hz combat, physical dimensions and the number of people stay the same.',
+    'Three fixed-work CPU trials each warm ten thousand troops for three hundred ticks, then measure six hundred ticks with the same seed and commands. Mean tick cost falls from roughly 4.25 milliseconds to 2.88, about a third less work. All resulting packed-state hashes match. The accepted legacy, six-thousand, ten-thousand and fifty-thousand trajectory fixtures still match too, including combat and candidate-saturation counters. These are Node CPU measurements, separate from browser FPS.',
+    'Balanced and Low power now have a third drawing level for the thirty-type army. At eight projected pixels in Balanced, or twelve in Low power, each authored body and equipment part uses three intersecting physical planes with its original bounds, tint and animation channels. A simpler material avoids detailed surface lighting. Moving closer restores the original models; High keeps its earlier two levels. People, mounts and long weapons retain their metre dimensions. This extra representation uses memory of its own, so the saving here is drawing cost.',
+    'The paused six-thousand-person overview falls from 2,214,119 to 961,719 submitted triangles on both WebGL2 and WebGPU. All six thousand soldiers remain in the camera, and the saved battle stays exactly the same. At ten thousand, the distant view submits about 1.49 million triangles instead of 3.44 million. Close views and the model inspector continue to show the original art.',
+    'For the harder test, this session first remeasured the published v29 game under fourfold CPU throttling, with a phone-shaped viewport, unavailable WebGPU and every one of ten thousand troops drawn. That fresh baseline averages 21.0 FPS. The optimized candidate reaches 28.3 FPS, with the worst frame falling from 183.5 to 83.5 milliseconds. Both samples keep the simulation clock advancing without dropped time. It is closer, but the remaining hitch means this is not a steady thirty-FPS pass. The earlier 6.6-FPS diagnostic stays in the previous entry; today’s faster baseline is the comparator used here.',
+    'A subsequent check of the published optimized game averages 28.0 FPS under the same synthetic pressure, again with all ten thousand drawn and no dropped time. These are single synthetic runs on FORTRESS and its RTX 5090, not phone or 2019 MacBook measurements. CPU throttling cannot reproduce their GPUs, memory limits or sustained heat. The downloadable evidence retains every frame interval, living and drawn counts, and both fixed-work results. Warmed High-profile desktop samples remain near sixty FPS on both renderers, though WebGPU records one 33.4-millisecond frame; that hitch stays in the data too. Autosaves remain enabled.',
+    'Shared-battle checks also pass with a High host and Low power guest, each drawing ten thousand soldiers. Named mid-battle saves restore the same unit identities, health, targets and cooldowns, and a fresh co-op invitation resumes that restored battle. The graphics choice stays local to each player.',
+    'The next gate is still a real older laptop or phone: warm it, start smaller, then grow the army while measuring frame times and simulation progress. More work remains in save and snapshot packing, cheaper network updates and potentially simulation workers. Complete harbor, naval and editor touch interaction also remains open. No physical-phone ten-thousand-unit success is claimed.'
+  ],
+  benchmark: {
+    conditions: 'One 30 s sample per version · FORTRESS / RTX 5090 Chromium · main-thread CPU throttle 4× · touch viewport 390 × 844 / DPR 3 · actual framebuffer 253 × 548 · WebGPU deliberately unavailable · Low power / 30 FPS cap · 10,000 minimum living and drawn troops · warmed, autosaves on. Synthetic comparison, not a phone result.',
+    evidenceUrl: '/lab/harborfolk/cpu-distant-performance-2026-10-23.json',
+    rows: [
+      {units:10000,backend:'WebGL2 fallback · v29',seconds:30,fps:20.978811400485508,p99:100.2,max:183.5,slowFrames:473},
+      {units:10000,backend:'WebGL2 fallback · optimized',seconds:30,fps:28.288919729358234,p99:66.7,max:83.5,slowFrames:463}
+    ]
+  },
+  images: [
+    {src:'/lab/harborfolk/cpu-distant-overview.webp',alt:'Six thousand full-scale troops drawn with cheaper distant silhouettes',caption:'A paused army overview with all 6,000 soldiers drawn. Geometry detail changes; dimensions and battle state stay fixed.'},
+    {src:'/lab/harborfolk/cpu-distant-close.webp',alt:'Original full-detail swordsmen restored when the camera approaches',caption:'Approaching the same army restores the original models. Soldiers remain 1.717 metres tall.'},
+    {src:'/lab/harborfolk/cpu-distant-pressure.webp',alt:'Ten-thousand-troop synthetic CPU pressure report',caption:'Phone-shaped Chromium on the RTX 5090 under CPU throttling. This subsequent public recheck averages 28.0 FPS and preserves the remaining long frames. It is not a physical phone capture.'}
+  ]
+},
+{
   id: 'packing-the-army-for-a-phone',
   title: 'Packing the army for a phone',
   date: '2026-10-20',
