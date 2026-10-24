@@ -3,6 +3,79 @@ export const harborfolkUrl = "https://harborfolk-sam.ibrews.chatgpt.site";
 export type DiaryEntry = { id: string; title: string; date: string; version: string; paragraphs: string[]; benchmark?: ArmyBenchmark; sources?: {title:string;url:string}[]; images: { src: string; alt: string; caption: string }[] };
 export const harborfolkDiary: DiaryEntry[] = [
 {
+  "id": "same-battle-smaller-saves",
+  "title": "Same battle, smaller saves",
+  "date": "2026-10-23",
+  "version": "v0.3 Lossless save and snapshot packing · shipped",
+  "paragraphs": [
+    "Ten thousand people need to survive saving as well as fighting. This pass concentrates on the work between the simulation and its saved or shared snapshot. Positions, health, targets, attack timers, generations, orders and world dimensions stay intact. There is no new position rounding or smaller population hidden behind the performance result.",
+    "Fog and army data now pack directly from the live state before one JSON serialization. The older path built expanded JSON, parsed it, packed the fog and serialized it again. Restore can read the compact fog object directly. Earlier expanded autosaves and existing packed exports remain readable. Named saves retain validation and rollback when storage fails.",
+    "The established army layout is unchanged: twenty-three bytes per unit, with the same little-endian fields. Compatible hosts copy those array bytes in bulk; the portable field-by-field path remains available. Modern browsers can use native byte-array base64 when available. A bounded ASCII fallback covers browsers without those methods, and both paths retain input checks.",
+    "A fixed ten-thousand-person Node fixture measures sixty calls after five warm-ups. Mean army encoding falls from 8.33 to 0.63 milliseconds; snapshot preparation from 10.40 to 0.90; transport preparation from 10.59 to 0.90; receive and restore from 12.25 to 3.64. The packed army hashes and network bytes match exactly. Autosave JSON is about forty-five percent smaller in this fixture. These are CPU timings on this computer, not a tenfold browser-FPS claim.",
+    "Commands now perform one host save instead of two. Four-second autosaves, blur and page-hide writes remain active. A congested co-op link skips snapshot preparation before doing the work, and large snapshots go straight to the existing ordered chunks. Snapshot frequency and payload bytes are unchanged; a delta-based network protocol is still future work.",
+    "The fresh thirty-second synthetic comparison moves from 26.7 FPS on published v30 to 28.0 with packing alone, with all ten thousand troops living and drawn. A longer Balanced sample exposes later stalls and averages 26.1 FPS over two minutes. A late CPU profile still points mainly to collision avoidance. A tighter cell-bound experiment gave only a small, inconsistent gain and was discarded. The final rendering cleanup skips empty instance uploads and sphere tests for centers already known to be visible.",
+    "The final two-minute Low power test averages 29.6 FPS, with p99 at 50.1 milliseconds and a worst frame of 216.8 milliseconds. All ten thousand soldiers remain drawn, the simulation loses no time, and thirty autosaves succeed; the slowest save takes 22.1 milliseconds. This is not a steady thirty-FPS pass. The raw data keeps the long frames, the slower Balanced experiment and the different sample durations. FORTRESS has an RTX 5090; fourfold CPU throttling and a phone-shaped viewport cannot reproduce a phone GPU, older MacBook or sustained heat. No physical-phone ten-thousand-unit success is claimed.",
+    "Army & FPS now offers thirty-, sixty- and one-hundred-twenty-second measurements. Exports include actual save counts and cost, native codec availability, frame intervals, living and drawn populations, and simulation progress. Use those measurements to find a comfortable army size on your own machine. The full-size close models return as the camera approaches.",
+    "The release passes 240 automated tests plus browser checks for exact fifty-thousand-person solo saves, scenario editing, recovery, harbor menus, naval logistics and both graphics backends. Two real co-op browsers save a damaged ten-thousand-person battle, reload the same identities, health, targets and cooldowns, then share and resume it with a fresh invitation. One guest uses Low power while the host keeps its own graphics choice. Further work belongs in the remaining avoidance cost and smaller shared updates, followed by real older-device testing."
+  ],
+  "sources": [
+    {
+      "title": "TC39: byte-array base64 API and options",
+      "url": "https://tc39.es/proposal-arraybuffer-base64/"
+    }
+  ],
+  "benchmark": {
+    "conditions": "FORTRESS / RTX 5090 Chromium · main-thread CPU throttle 4× · touch viewport 390 × 844 / DPR 3 · 253 × 548 framebuffer · WebGPU unavailable · Low power / 30 FPS cap · all 10,000 living and drawn · 8 s warm-up excluded · autosaves on. First two rows: 30 s samples. Final row: 120 s, with rendering cleanup. Single synthetic runs, not a phone result or steady-30 pass.",
+    "evidenceUrl": "/lab/harborfolk/snapshot-packing-performance-2026-10-23.json",
+    "rows": [
+      {
+        "units": 10000,
+        "backend": "WebGL2 fallback · v30 · 30 s",
+        "seconds": 30,
+        "fps": 26.672793750374627,
+        "p99": 66.80000000000291,
+        "max": 83.40000000000873,
+        "slowFrames": 452
+      },
+      {
+        "units": 10000,
+        "backend": "WebGL2 fallback · Packing only · 30 s",
+        "seconds": 30,
+        "fps": 28.035950022002055,
+        "p99": 66.60000000000582,
+        "max": 100.09999999999127,
+        "slowFrames": 468
+      },
+      {
+        "units": 10000,
+        "backend": "WebGL2 fallback · Final · 120 s",
+        "seconds": 120,
+        "fps": 29.60709970417899,
+        "p99": 50.10000000000582,
+        "max": 216.79999999998836,
+        "slowFrames": 1779
+      }
+    ]
+  },
+  "images": [
+    {
+      "src": "/lab/harborfolk/snapshot-packing-battle.webp",
+      "alt": "Ten thousand full-scale soldiers in the final two-minute synthetic pressure test",
+      "caption": "Actual game capture after the two-minute CPU-pressure run. The models keep their metre scale; all ten thousand remain present."
+    },
+    {
+      "src": "/lab/harborfolk/snapshot-packing-coop.webp",
+      "alt": "Human-height view of the restored ten-thousand-person shared battle",
+      "caption": "The saved co-op battle resumes with the same unit identities and combat state. Close views still use the original full-detail models."
+    },
+    {
+      "src": "/lab/harborfolk/snapshot-packing-report.webp",
+      "alt": "Two-minute device measurement and export controls",
+      "caption": "29.6 FPS on average, with long frames retained. This is phone-shaped Chromium under CPU pressure on an RTX 5090, not a physical phone."
+    }
+  ]
+},
+{
   id: 'less-work-for-ten-thousand-people',
   title: 'Less work for ten thousand people',
   date: '2026-10-23',

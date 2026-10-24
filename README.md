@@ -771,3 +771,5 @@ Harborfolk’s seventeenth diary entry introduces Thirty Banners: a finite 6,000
 The eighteenth entry records the first portability pass: quality presets, indexed troop geometry, off-camera drawing, army touch controls and downloadable device measurements. It distinguishes synthetic phone-shaped RTX5090 QA from unmeasured phone, older Intel Mac and thermal results.
 
 The nineteenth Harborfolk diary entry documents the CPU occupancy/trait changes, full-size tiny silhouette LOD, exact trajectory fixtures and fresh paired 10k synthetic results. Raw evidence retains the incomplete thirty-FPS result and the desktop WebGPU hitch; real older-device acceptance remains open.
+
+The twentieth Harborfolk diary entry records direct lossless saves and shared snapshots, identical packed data, smaller autosaves and the remaining long frames in the two-minute 10k pressure sample. Raw evidence labels the different profiles and durations and retains fixed packing measurements and exact shared-battle save/resume checks. Physical older-device acceptance and steady 30 FPS under the synthetic CPU pressure remain open.
